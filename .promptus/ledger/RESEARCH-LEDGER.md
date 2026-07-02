@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (v0.5.2 released; editio designed, memo parsed into the stores)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (plugin boundary resolved: Organon carries promptus + editio as separate plugins)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,25 +25,26 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (v0.5.2 released; editio designed and stored; Phases 2-6 pending in a dedicated session)
+## NOW (v0.5.2 released; editio designed and stored; boundary resolved: two plugins under Organon)
 **v0.5.2 is released** (PR #8 -> main 0cdf49d): the Telos is non-optional at session start (the SessionStart
 hook injects it) and /checkpoint gained the drift check. 112 tests + CI green.
-**editio is designed and locked** (memo rev. 2 -> [[editio-design-memo]], parsed into the stores 2026-07-02:
-8 DECISION/RESOLVED + 3 DECISION/OPEN + the Phase 1 RESULT + the Phases 2-6 PLAN in the Log, 5 findings,
-2 lit, 1 memory): promptus's paper read-port — a writing family inside the one promptus plugin under the
-Organon marketplace (repo already renamed: Gavin-Qiao/organon). Spine: skills-not-stacks; per-section
-markdown -> disposable .tex; three renders (draft/publish/blind); the DoCO+DEO strict gate; the audit loop
-(recall grades claim-spans, publish gates on zero unsourced); humanizer joins the editio family; figures
-vector-PDF-first. Phase 1 built and DELIBERATELY UNCOMMITTED (schema, SKILL, /editio, editio.sty, main.tex,
-worked intro) — not compile-tested.
+**editio is designed and stored** (memo rev. 2 -> [[editio-design-memo]], parsed into the stores 2026-07-02;
+the distilled spine: [[editio-paper-read-port]], [[skills-not-stacks]], [[editio-audit-loop]],
+[[three-renders-one-source]], [[editio-structure-gate]]). **Boundary RESOLVED by the operator (2026-07-02),
+superseding the memo's one-plugin recommendation: Organon carries TWO plugins** — promptus, the store
+(recall, grannie, telos, research-ledger, kb-*, the grounded-writing-reviewer) and editio, the writing
+toolchain (editio-* skills + humanizer). promptus is editio's documented prerequisite; editio reuses
+promptus at the skill level (recall, the reviewer), never by importing its scripts or lib/; grannie's
+humanizer use goes soft. Phase 1 spine built and DELIBERATELY UNCOMMITTED — not compile-tested.
 **The use-first posture stands:** editio's audit loop is what will finally exercise RETRIEVE
 (kb-find/kb-get/recall) and the reviewer on real prose; v0.6 calibration machinery stays shelved.
 
 ## Open frontier
-- [ ] **editio Phases 2-6** (dedicated session; memo section 12): structure+latex -> figures ->
+- [ ] **editio Phases 2-6** (dedicated session; memo section 12, now as its own plugin — two-plugin
+  marketplace.json at Phase 6; the reinstall migration is operator-acked): structure+latex -> figures ->
   tables/bib/repro -> venue/rebuttal/lint -> wire+dogfood; record each build decision here via kb-add.
-- [ ] **Three OPEN editio decisions** (Log 2026-07-02): plugin boundary (memo recommends staying one
-  plugin), notation registry home, renderer reference impl.
+- [ ] **Two OPEN editio decisions** (Log 2026-07-02; agent recommendations recorded beside them):
+  notation registry home, renderer reference impl. Plugin boundary: resolved, split.
 - [ ] **Prove it in real use (the measured need).** A cold resume + a real Psi/Probatio pass that
   exercises retrieve (kb-find/kb-get/recall) and the grounded-writing-reviewer; let what breaks decide
   what's next.
@@ -59,18 +60,22 @@ worked intro) — not compile-tested.
 
 ## Next actions
 1. Operator review + merge of the editio design-store PR (docs/editio-design-store).
-2. A dedicated session runs the editio detailed design and Phases 2-6 per the memo, dogfooding kb-add as it goes.
+2. A dedicated session runs the editio detailed design as its own plugin (split resolved) and Phases 2-6
+   per the memo, dogfooding kb-add as it goes.
 3. (standing, operator-gated) the real-use Psi/Probatio pass that exercises cold-resume + retrieve + the reviewer.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**v0.5.2 RELEASED** (PR #8 -> 0cdf49d: Telos injected at session start; checkpoint drift check). **EDITIO
-DESIGNED, LOCKED, AND STORED** (2026-07-02): the full memo is [[editio-design-memo]]; the distilled spine is
-[[editio-paper-read-port]] + [[skills-not-stacks]] + [[editio-audit-loop]] + [[three-renders-one-source]] +
-[[editio-structure-gate]]; eight locked DECISIONs, three DECISION/OPEN questions (plugin boundary, notation
-home, renderer impl), the Phase 1 RESULT (built, NOT compile-tested), and the Phases 2-6 PLAN are in the Log
-at 2026-07-02. Phase 1 spine files exist UNCOMMITTED in the tree (skills/editio/, commands/editio.md,
+**v0.5.2 RELEASED** (PR #8 -> 0cdf49d). **EDITIO DESIGNED, STORED, AND RE-HOMED** (2026-07-02): the full memo
+is [[editio-design-memo]]; the spine findings are [[editio-paper-read-port]] + [[skills-not-stacks]] +
+[[editio-audit-loop]] + [[three-renders-one-source]] + [[editio-structure-gate]]. **The operator RESOLVED the
+plugin boundary AGAINST the memo: editio becomes ITS OWN plugin under Organon beside promptus** — humanizer
+ships WITH editio; grannie's humanizer use goes soft; promptus is editio's prerequisite; the
+grounded-writing-reviewer stays store-side; editio reuses promptus at the skill level only. The memo file
+keeps its rev. 2 one-plugin text — the ledger supersede chain (2026-07-02) is the correction of record. Two
+decisions still OPEN: notation registry home, renderer reference impl (agent recommendations beside them in
+the Log). Phase 1 spine files exist UNCOMMITTED in the tree (skills/editio/, commands/editio.md,
 templates/editio/) — leave them out of unrelated commits; Phases 2-6 run in a dedicated design session.
-Repo renamed Gavin-Qiao/organon; the marketplace.json rename to organon is Phase 6 wiring ([[organon-naming]]).
+Repo renamed Gavin-Qiao/organon; marketplace.json gains BOTH plugins at Phase 6 ([[organon-naming]]).
 Read `.promptus/TELOS.md` (the three commitments), then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
@@ -351,5 +356,12 @@ Agent recommendation (Claude Fable 5, 2026-07-02) on the open renderer decision:
 ### [2026-07-02 17:45:04] IDEA/OPEN — Phase 6 flag: the marketplace rename to organon breaks existing install references
 Agent flag (Claude Fable 5, 2026-07-02) for the Phase 6 wiring, raised during the design parse (not in the memo): renaming marketplace.json to organon changes the install namespace (promptus@promptus becomes promptus@organon), so existing installs' marketplace references break. Plan a remove-and-re-add migration note in the README/release notes, and consider a promptus-doctor check that detects a stale marketplace name. The same pass should update plugin.json homepage/repository, which still point at the promptus URL (GitHub redirects today, but they bake in the old name).
 ↳ relates-to event-20260702T213646Z-editio-build-sequence-phases-2-6-each-with-a-done-when
+
+### [2026-07-02 17:54:20] DECISION/RESOLVED — editio splits into its own plugin: promptus is the store, editio is the writing toolchain
+Operator decision (2026-07-02), resolving the plugin-boundary question AGAINST the memo's section-13.1 recommendation and the agent's concurrence: promptus is promptus and editio is editio — they serve different purposes, and a purpose-blended plugin reads wrong from both sides (a humanizer sitting in a store plugin; grannie pulled toward a writing family). Organon therefore carries TWO plugins. promptus, the store: promptus, recall, grannie, telos, research-ledger, the kb-* scripts, and the grounded-writing-reviewer (store-coupled — it audits via kb-find). editio, the writing toolchain: the editio-* skills, humanizer (its MIT NOTICE moves with it), the editio scripts and templates, and /editio. Consequences for the design session: promptus becomes editio's documented prerequisite; editio reuses promptus at the SKILL level (invoke recall and the reviewer by name), never by importing promptus's scripts or lib/ — editio's reference scripts own their own thin lib or stay dependency-free; grannie's humanizer use goes soft (dial editio's humanizer when installed, degrade to plain answers otherwise); marketplace.json gains the editio entry in the Phase 6 wiring, and the operator-acked reinstall migration covers both plugins. What stands unchanged: editio's adoption, thesis, scope, naming, and the five spine findings ([[editio-paper-read-port]], [[skills-not-stacks]], [[editio-audit-loop]], [[three-renders-one-source]], [[editio-structure-gate]]) — they are home-agnostic; only the HOME changed. The memo file keeps its rev. 2 text; this supersede chain is the correction of record.
+↳ supersedes event-20260702T213708Z-open-should-editio-ever-split-into-its-own-plugin-under-organon
+↳ supersedes event-20260702T213620Z-editio-adopted-the-paper-read-port-a-writing-family-inside-the-p
+↳ supersedes event-20260702T213646Z-humanizer-moves-into-the-editio-writing-family
+↳ supersedes event-20260702T214504Z-recommendation-keep-editio-inside-the-one-promptus-plugin
 
 <!-- kb:append-point -->

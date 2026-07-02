@@ -6,6 +6,6 @@
 
 - [Local plugin install and legacy backup](local-plugin-install-and-legacy-backup.md) — installed as a local Directory marketplace; legacy globals backed up at ~/.claude/_promptus-legacy-backup/
 
-- [Organon naming](organon-naming.md) — marketplace Organon (repo Gavin-Qiao/organon); plugin stays promptus; editio = the writing family; humanizer under editio
+- [Organon naming](organon-naming.md) — marketplace Organon (repo Gavin-Qiao/organon); two plugins — promptus (the store) + editio (the writing toolchain); humanizer ships with editio
 
 <!-- kb:append-point -->
