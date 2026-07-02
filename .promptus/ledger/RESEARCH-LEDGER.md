@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (spine parked; three decisions open: repo layout, notation home, renderer impl)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (all editio decisions resolved; spine discarded; WARP.md removed)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,28 +25,30 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (v0.5.2 released; editio designed and stored; two plugins under Organon; spine parked)
-**v0.5.2 is released** (PR #8 -> main 0cdf49d): the Telos is non-optional at session start (the SessionStart
-hook injects it) and /checkpoint gained the drift check. 112 tests + CI green.
-**editio is designed and stored** (memo rev. 2 -> [[editio-design-memo]], parsed into the stores 2026-07-02;
-the distilled spine: [[editio-paper-read-port]], [[skills-not-stacks]], [[editio-audit-loop]],
-[[three-renders-one-source]], [[editio-structure-gate]]). **Boundary RESOLVED by the operator (2026-07-02),
-superseding the memo's one-plugin recommendation: Organon carries TWO plugins** — promptus, the store
-(recall, grannie, telos, research-ledger, kb-*, the grounded-writing-reviewer) and editio, the writing
-toolchain (editio-* skills + humanizer). promptus is editio's documented prerequisite; editio reuses
-promptus at the skill level (recall, the reviewer), never by importing its scripts or lib/; grannie's
-humanizer use goes soft. **Phase 1 spine PARKED on branch spine/editio-phase1** (4f21fea, pushed; a
-pre-split draft — its same-plugin reuse framing is stale, revise when porting) — not compile-tested.
+## NOW (v0.5.2 released; editio fully decided — the decision queue is empty; execution is next)
+**v0.5.2 is released** (PR #8 -> main 0cdf49d): the Telos is non-optional at session start and /checkpoint
+gained the drift check. 112 tests + CI green.
+**editio is designed, stored, and fully decided** (memo rev. 2 -> [[editio-design-memo]], parsed 2026-07-02;
+spine findings: [[editio-paper-read-port]], [[skills-not-stacks]], [[editio-audit-loop]],
+[[three-renders-one-source]], [[editio-structure-gate]]). All boundary questions RESOLVED by the operator
+(2026-07-02): **two plugins under Organon** (promptus the store; editio the writing toolchain + humanizer;
+grannie's humanizer use soft; promptus is editio's prerequisite) · **monorepo** (marketplace.json at root,
+promptus/ + editio/ plugin dirs; restructure PR BEFORE Phase 2, folding the marketplace rename to organon
+into it — one reinstall migration) · **notation folds into editio-latex** (check in editio-lint; no store-side
+registry machinery) · **renderer = bespoke editio-render.ts** (pandoc+Lua documented as the swap).
+**The Phase 1 spine is DISCARDED** (operator: reimplement anyways; branch deleted local+remote) — the design
+survives in the memo + findings; the design session reimplements Phase 1 fresh inside the editio plugin.
+WARP.md removed and gitignored.
 **The use-first posture stands:** editio's audit loop is what will finally exercise RETRIEVE
 (kb-find/kb-get/recall) and the reviewer on real prose; v0.6 calibration machinery stays shelved.
 
 ## Open frontier
-- [ ] **Three OPEN editio decisions** (Log 2026-07-02; agent recommendations recorded beside them):
-  repo layout (monorepo vs separate repos — decide BEFORE Phase 2 builds), notation registry home,
-  renderer reference impl. Plugin boundary: resolved, split.
-- [ ] **editio Phases 2-6** (dedicated session; memo section 12, now as its own plugin — two-plugin
-  marketplace.json at Phase 6; the reinstall migration is operator-acked): structure+latex -> figures ->
-  tables/bib/repro -> venue/rebuttal/lint -> wire+dogfood; record each build decision here via kb-add.
+- [ ] **Merge the editio design-store PR** (docs/editio-design-store) — operator review.
+- [ ] **The monorepo restructure PR** (before Phase 2): marketplace.json to the root (name -> organon),
+  promptus/ + editio/ plugin dirs; hooks/tests/CI/doc paths follow; operator reinstalls after merge.
+- [ ] **editio Phases 1-6 in a dedicated design session** (memo section 12; Phase 1 reimplemented fresh,
+  post-split): structure+latex -> figures -> tables/bib/repro -> venue/rebuttal/lint -> wire+dogfood;
+  record each build decision here via kb-add.
 - [ ] **Prove it in real use (the measured need).** A cold resume + a real Psi/Probatio pass that
   exercises retrieve (kb-find/kb-get/recall) and the grounded-writing-reviewer; let what breaks decide
   what's next.
@@ -56,32 +58,27 @@ pre-split draft — its same-plugin reuse framing is stale, revise when porting)
 - [ ] **Psi content cleanup** — `psi-`-prefix dangling first (29 of 85); then orphans / latent links.
 - [ ] **Probatio** — same additive->finalize pattern, not started.
 - [ ] **v0.6 write-time calibration — SHELVED** (banked in [[write-time-calibration-design]]): unmeasured;
-  editio's audit loop is its soft default in practice — do NOT build the lattice until the reviewer
-  demonstrably misses an overclaim on a real draft.
+  editio's audit loop is its soft default in practice.
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Operator: resolve the three OPEN decisions (repo layout first — it gates the restructure PR), review +
-   merge the editio design-store PR (docs/editio-design-store).
-2. A dedicated session runs the editio detailed design as its own plugin and Phases 2-6 per the memo,
-   dogfooding kb-add as it goes.
-3. (standing, operator-gated) the real-use Psi/Probatio pass that exercises cold-resume + retrieve + the reviewer.
+1. Operator reviews + merges the design-store PR.
+2. The monorepo restructure PR (marketplace rename folded in); operator reinstalls both plugins.
+3. The dedicated design session builds editio Phases 1-6, dogfooding kb-add as it goes.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**v0.5.2 RELEASED** (PR #8 -> 0cdf49d). **EDITIO DESIGNED, STORED, AND RE-HOMED** (2026-07-02): the full memo
-is [[editio-design-memo]]; the spine findings are [[editio-paper-read-port]] + [[skills-not-stacks]] +
-[[editio-audit-loop]] + [[three-renders-one-source]] + [[editio-structure-gate]]. **The operator RESOLVED the
-plugin boundary AGAINST the memo: editio becomes ITS OWN plugin under Organon beside promptus** — humanizer
-ships WITH editio; grannie's humanizer use goes soft; promptus is editio's prerequisite; the
-grounded-writing-reviewer stays store-side; editio reuses promptus at the skill level only. The memo file
-keeps its rev. 2 one-plugin text — the ledger supersede chain (2026-07-02) is the correction of record.
-**THREE decisions OPEN** (agent recommendations beside them in the Log): repo layout (monorepo vs separate
-repos; gates the restructure PR, decide before Phase 2), notation registry home, renderer reference impl.
-**The Phase 1 spine is PARKED on branch spine/editio-phase1** (4f21fea; the working tree is clean) — a
-pre-split draft whose same-plugin framing needs revision when ported into the editio plugin; do NOT
-re-author it from scratch. Repo renamed Gavin-Qiao/organon; marketplace.json gains BOTH plugins at Phase 6
-([[organon-naming]]). Read `.promptus/TELOS.md` (the three commitments), then this header, then the Log
-since 2026-07-02.
+**v0.5.2 RELEASED** (PR #8 -> 0cdf49d). **EDITIO: DESIGN COMPLETE, DECISION QUEUE EMPTY** (2026-07-02).
+The full memo is [[editio-design-memo]]; the spine findings are [[editio-paper-read-port]] +
+[[skills-not-stacks]] + [[editio-audit-loop]] + [[three-renders-one-source]] + [[editio-structure-gate]].
+Operator resolutions, all 2026-07-02 in the Log: SPLIT (editio is its own plugin beside promptus under
+Organon; humanizer ships with editio; grannie soft-dials it; the reviewer stays store-side) · MONOREPO
+(marketplace.json at root + promptus/ + editio/ dirs; the restructure PR comes BEFORE Phase 2 and folds in
+the marketplace rename to organon — one reinstall) · NOTATION folds into editio-latex · RENDERER is the
+bespoke editio-render.ts. **The Phase 1 spine was DISCARDED at operator call — do NOT hunt for it;
+reimplement Phase 1 from the memo + findings inside the editio plugin.** The memo file keeps its rev. 2
+one-plugin/spine-built text — the ledger supersede chain is the correction of record. WARP.md removed and
+gitignored. Repo renamed Gavin-Qiao/organon ([[organon-naming]]). Read `.promptus/TELOS.md`, then this
+header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -378,5 +375,22 @@ The operator floated discarding the uncommitted Phase 1 files; parked them inste
 ### [2026-07-02 18:06:58] IDEA/OPEN — Recommendation: one organon monorepo hosting both plugins
 Agent recommendation (Claude Fable 5, 2026-07-02) on the repo-layout question: MONOREPO — marketplace.json at the root of the organon repo, promptus/ and editio/ as plugin directories (the claude-plugins-official pattern). One contributor, two plugins co-evolving through Phases 2-6, one CI and one release flow; separate repos would add cross-repo version coordination with no current payoff. Extract editio to its own repo later only if it grows an independent life — the marketplace entry is the only seam to cut. Cost named honestly: a one-time restructure PR that moves promptus off the repo root (hooks, tests, CI, and doc paths follow), best landed before Phase 2 starts building.
 ↳ relates-to event-20260702T220624Z-open-repo-layout-for-the-two-plugin-organon-monorepo-or-separate
+
+### [2026-07-02 18:12:32] DECISION/RESOLVED — Organon is a monorepo: marketplace root with promptus and editio plugin directories
+Operator resolution (2026-07-02), taking the recommendation: Organon is a MONOREPO — marketplace.json at the repo root, promptus/ and editio/ as plugin directories (the claude-plugins-official pattern). The restructure lands as its own PR BEFORE Phase 2 builds anything: promptus moves off the repo root, and hooks, tests, CI, and doc paths follow. Fold the marketplace rename (promptus to organon in marketplace.json, memo D10) into that same restructure PR — one breaking migration and one operator reinstall, instead of a second break at Phase 6.
+↳ supersedes event-20260702T220624Z-open-repo-layout-for-the-two-plugin-organon-monorepo-or-separate
+
+### [2026-07-02 18:12:32] DECISION/RESOLVED — Notation registry folds into editio-latex
+Operator resolution (2026-07-02), taking the recommendation: the notation registry FOLDS INTO editio-latex — the registry file and shared math macros land in the scaffold, the defined-once-and-used check lands in editio-lint; no standalone skill. Split it out only when a real paper shows notation as its own workflow. Store-side corollary from the same discussion: promptus builds NO registry machinery — a wikilink handle already is a defined-once symbol and kb-graph lint already runs the used-and-defined checks (dangling = used-never-defined, orphan = defined-never-used); the Psi cleanup is the measured gauge to watch; and editio's notation check should let a paper symbol trace to a store handle the way a claim traces to a unit — a convention, not machinery.
+↳ supersedes event-20260702T213708Z-open-notation-registry-its-own-skill-or-folded-into-editio-latex
+
+### [2026-07-02 18:12:32] DECISION/RESOLVED — Renderer reference impl: the bespoke editio-render.ts on bun
+Operator resolution (2026-07-02), taking the recommendation: the renderer reference implementation is the BESPOKE editio-render.ts on bun — stdlib-first, no prerequisite beyond the bun the plugins already require. pandoc + a Lua filter is documented in the SKILL as the supported swap; the supported markdown authoring subset is documented beside it; and the round-trip acceptance test (the worked introduction, md to tex, all three modes) stays implementation-agnostic, so any swapped-in renderer must pass the same contract.
+↳ supersedes event-20260702T213708Z-open-renderer-reference-impl-pandoc-plus-lua-filter-or-a-bespoke
+
+### [2026-07-02 18:12:45] DECISION/RESOLVED — Phase 1 spine discarded: the design session reimplements from the stores
+Operator call (2026-07-02): "I will reimplement anyways" — the Phase 1 spine is DISCARDED. Branch spine/editio-phase1 (4f21fea) deleted locally and on origin; the six artifacts (doco-deo.json, the editio SKILL orchestrator, /editio, editio.sty, main.tex, the worked introduction) no longer exist anywhere. Safe to lose: the DESIGN survives in [[editio-design-memo]] and the five spine findings ([[editio-paper-read-port]], [[editio-structure-gate]], [[three-renders-one-source]], [[editio-audit-loop]], [[skills-not-stacks]]) — only pre-split implementation text was discarded, and it needed revision for the two-plugin model regardless. The design session reimplements Phase 1 fresh inside the editio plugin, after the monorepo restructure PR.
+↳ supersedes event-20260702T220624Z-park-the-phase-1-spine-on-spineeditio-phase1-instead-of-discardi
+↳ supersedes event-20260702T213646Z-editio-phase-1-spine-built-uncommitted-schema-skill-command-rend
 
 <!-- kb:append-point -->
