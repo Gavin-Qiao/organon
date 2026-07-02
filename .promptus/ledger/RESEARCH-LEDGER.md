@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-06-30 (v0.5.1 released; assessing, not building v0.6)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (v0.5.2 released; editio designed, memo parsed into the stores)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,50 +25,53 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (v0.5.1 released; assessing before building — use, not machinery)
-**v0.5.1 is released** (PR #7 → main 16025e5, tagged, GitHub release published): kb-graph suggest
-hardening (mutual-kNN + `--soft` Mutual Proximity), the kb-index `[[link]]`-edge count, the mid-2026
-prior-art consolidation, the README bibliography, the AGENTS.md refresh. 110 tests + 4 CI green.
-**TELOS consolidated** to three commitments: (1) a memory system for long-running LLM agentic projects,
-measured by USE not novelty; (2) epistemic integrity by division of labor — the LLM only where judgment
-is needed, deterministic scripts for the rest; (3) stand on the shoulders of giants.
-**Assessment (operator-asked, before any v0.6):** we have built the tool, not used it — kb-graph rank
-shows the store's load-bearing units are ALL self-referential (zero operator research). Store/keep is
-heavily exercised; retrieve / read / write-honesty (kb-find/kb-get/recall/grannie/grounded-writing-reviewer)
-barely or never run. The measured need is USE + a cold resume, not more machinery.
+## NOW (v0.5.2 released; editio designed and stored; Phases 2-6 pending in a dedicated session)
+**v0.5.2 is released** (PR #8 -> main 0cdf49d): the Telos is non-optional at session start (the SessionStart
+hook injects it) and /checkpoint gained the drift check. 112 tests + CI green.
+**editio is designed and locked** (memo rev. 2 -> [[editio-design-memo]], parsed into the stores 2026-07-02:
+8 DECISION/RESOLVED + 3 DECISION/OPEN + the Phase 1 RESULT + the Phases 2-6 PLAN in the Log, 5 findings,
+2 lit, 1 memory): promptus's paper read-port — a writing family inside the one promptus plugin under the
+Organon marketplace (repo already renamed: Gavin-Qiao/organon). Spine: skills-not-stacks; per-section
+markdown -> disposable .tex; three renders (draft/publish/blind); the DoCO+DEO strict gate; the audit loop
+(recall grades claim-spans, publish gates on zero unsourced); humanizer joins the editio family; figures
+vector-PDF-first. Phase 1 built and DELIBERATELY UNCOMMITTED (schema, SKILL, /editio, editio.sty, main.tex,
+worked intro) — not compile-tested.
+**The use-first posture stands:** editio's audit loop is what will finally exercise RETRIEVE
+(kb-find/kb-get/recall) and the reviewer on real prose; v0.6 calibration machinery stays shelved.
 
 ## Open frontier
+- [ ] **editio Phases 2-6** (dedicated session; memo section 12): structure+latex -> figures ->
+  tables/bib/repro -> venue/rebuttal/lint -> wire+dogfood; record each build decision here via kb-add.
+- [ ] **Three OPEN editio decisions** (Log 2026-07-02): plugin boundary (memo recommends staying one
+  plugin), notation registry home, renderer reference impl.
 - [ ] **Prove it in real use (the measured need).** A cold resume + a real Psi/Probatio pass that
   exercises retrieve (kb-find/kb-get/recall) and the grounded-writing-reviewer; let what breaks decide
-  what's next. We have only ever had warm sessions — the retrieve tools' actual purpose is untested.
+  what's next.
 - [ ] **Psi finalize (remove-stale)** — operator-gated, AFTER Psi's 277-file WIP is parked: drop root
   `docs/`/`ledger/`/`schema/`/`TELOS.md` + stale root `.promptus/CATALOG.md`/`graph.json`, narrow
-  `.gitignore` → `/.promptus/cache/`. Additive `.promptus/` already in place (doctor `current`, 210 units).
+  `.gitignore` -> `/.promptus/cache/`. Additive `.promptus/` already in place (doctor `current`, 210 units).
 - [ ] **Psi content cleanup** — `psi-`-prefix dangling first (29 of 85); then orphans / latent links.
-- [ ] **Probatio** — same additive→finalize pattern, not started.
+- [ ] **Probatio** — same additive->finalize pattern, not started.
 - [ ] **v0.6 write-time calibration — SHELVED** (banked in [[write-time-calibration-design]]): unmeasured;
-  do NOT build until the grounded-writing-reviewer demonstrably misses an overclaim on a real draft.
+  editio's audit loop is its soft default in practice — do NOT build the lattice until the reviewer
+  demonstrably misses an overclaim on a real draft.
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. On operator go (Psi WIP parked) → a real Psi pass that exercises cold-resume + retrieve + the reviewer.
-2. Probatio when ready (mirror the Psi additive→finalize flow).
-3. Hold v0.6 until a real draft measures the need.
+1. Operator review + merge of the editio design-store PR (docs/editio-design-store).
+2. A dedicated session runs the editio detailed design and Phases 2-6 per the memo, dogfooding kb-add as it goes.
+3. (standing, operator-gated) the real-use Psi/Probatio pass that exercises cold-resume + retrieve + the reviewer.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**v0.5.1 RELEASED** (PR #7 → main 16025e5, tagged, GitHub release published). **TELOS consolidated** to
-three commitments — a memory system for long-running LLM agentic projects measured by USE not novelty;
-epistemic integrity by DIVISION OF LABOR (the LLM only where judgment is needed, deterministic scripts for
-the rest — "that division is the discipline"); stand on the shoulders of giants (adopt freely, don't rebuild
-the wheel). **ASSESSMENT (operator-asked, before opening v0.6):** we have built a finished, 110-test substrate
-(3 verbs + curation + migration + packaging) but USED it almost only to build itself — kb-graph rank shows
-every load-bearing unit is self-referential, zero operator research. Store/keep heavily exercised; RETRIEVE +
-read + write-honesty barely or never run (I reach for Read + context, not kb-find; grannie once; the
-grounded-writing-reviewer never). The measured need is USE + a COLD RESUME (never tested — only warm sessions),
-not machinery. **v0.6 calibration is SHELVED** — unmeasured, banked in [[write-time-calibration-design]]; build
-only once the reviewer misses on a real draft. Next: real-world use, all operator-gated (Psi finalize/cleanup,
-Probatio). Memory: [[utility-over-novelty]], [[promptus-doctor-and-pending-migration]], [[no-emoji-attribution]].
-Read `.promptus/TELOS.md` (the three commitments), then this header, then the Log.
+**v0.5.2 RELEASED** (PR #8 -> 0cdf49d: Telos injected at session start; checkpoint drift check). **EDITIO
+DESIGNED, LOCKED, AND STORED** (2026-07-02): the full memo is [[editio-design-memo]]; the distilled spine is
+[[editio-paper-read-port]] + [[skills-not-stacks]] + [[editio-audit-loop]] + [[three-renders-one-source]] +
+[[editio-structure-gate]]; eight locked DECISIONs, three DECISION/OPEN questions (plugin boundary, notation
+home, renderer impl), the Phase 1 RESULT (built, NOT compile-tested), and the Phases 2-6 PLAN are in the Log
+at 2026-07-02. Phase 1 spine files exist UNCOMMITTED in the tree (skills/editio/, commands/editio.md,
+templates/editio/) — leave them out of unrelated commits; Phases 2-6 run in a dedicated design session.
+Repo renamed Gavin-Qiao/organon; the marketplace.json rename to organon is Phase 6 wiring ([[organon-naming]]).
+Read `.promptus/TELOS.md` (the three commitments), then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -293,5 +296,44 @@ v0.5.2 (operator-directed): make the Telos NOT optional, and catch drift at chec
 (2) Checkpoint drift check. /checkpoint gains a judgement step (no script, no deps): weigh the session's recent ledger entries + the NOW-header against the Telos commitments + invariant, and surface a terse flag at the TOP of the report when the work has bent away — scope creep, machinery added without a measured threshold, novelty chased over utility, a never-bends rule contradicted; silent on course. Institutionalizes the novelty-vs-utility catch the operator made by hand across v0.5.x.
 
 Scope: main session only (subagents do not fire SessionStart). 112 tests green (+2 for telosBlock), validate-plugin green. The version bump 0.5.1 to 0.5.2 and the CHANGELOG [Unreleased] to [0.5.2] rename happen at the release cut (no commit/push until asked). The earlier cross-repo telos-as-graph-node gap is now moot — you hold the Telos, you do not navigate to it.
+
+### [2026-07-02 17:36:20] DECISION/RESOLVED — editio adopted: the paper read-port, a writing family inside the promptus plugin
+Locked the editio design (memo rev. 2, stored at [[editio-design-memo]]): editio turns what the store has VALIDATED into a defensible, submittable paper — the render side of the calibrate-to-evidence loop, CS-first but general-science applicable, full-lifecycle scope (structure, figures/tables/bib, repro, venue, rebuttal). Home: a skill family (editio-*) inside the ONE promptus plugin under the Organon marketplace — the GitHub repo is already renamed (Gavin-Qiao/organon, verified via gh 2026-07-02); the marketplace.json rename is Phase 6 wiring ([[organon-naming]]). The dependency direction seals the one-plugin call: editio uses recall and the lit store (store side), while grannie (store side) dials humanizer (now editio side) — one plugin dissolves that cycle. Thesis distilled in [[editio-paper-read-port]].
+
+### [2026-07-02 17:36:20] DECISION/RESOLVED — Skills, not stacks: editio ships portable expertise; the user owns the toolchain
+The editio guiding principle (memo D11): the SKILL is the deliverable; every bundled script is a thin, swappable reference implementation behind a stable interface; the concrete stack — the md-to-tex renderer, the plotting library, the TeX distribution, the venue class — is user-chosen, documented as a prerequisite, never vendored and never hard-required. Skills travel; stacks don't. Distilled in [[skills-not-stacks]].
+
+### [2026-07-02 17:36:20] DECISION/RESOLVED — Paper source of truth: per-section markdown; the .tex is derived and disposable
+Memo D5+D7+D13. A paper is per-section units — .editio/paper/sections/<slug>.md with front-matter (class, status, grounds, updated) — each rendered to a .tex sibling and assembled by a dumb main.tex (\InputIfFileExists, so a partial paper still builds; lock one section while another churns). Markdown is the only content source of truth; the .tex is derived and re-renderable; late pure-typesetting polish stays minimal so a re-render never stomps real work. Papers live in a per-project .editio/ namespace, parallel to .promptus/, never colliding with the host project. Extends the store invariant ([[markdown-is-the-graph]]) to the manuscript.
+
+### [2026-07-02 17:36:20] DECISION/RESOLVED — One source, three renders: draft, publish, blind via a single editiomode switch
+Memo D6+D9. main.tex sets \editiomode before \usepackage{editio}: draft is the author's instrument (claim tints, provenance stamps, TODOs on the page); publish collapses every annotation macro to identity (camera-ready); blind additionally masks self-citations and drops \blindhide blocks. Tints are Okabe-Ito colourblind-safe ([[okabe-ito-palette-wong-2011]]). The venue class is orthogonal to the mode — a seed menu of IEEE / arXiv / Nature / Elsevier / ACM, user-extensible per skills-not-stacks. Distilled in [[three-renders-one-source]].
+
+### [2026-07-02 17:36:20] DECISION/RESOLVED — Paper structure grounded in SPAR DoCO+DEO behind a strict gate
+Memo D4. Every section maps to a core/extended DEO/DoCO class in templates/editio/schema/doco-deo.json — policy strict, no ad-hoc sections — with archetype orders (imrad, cs-systems, theory) tunable per project like kb-vocab.json. The gate pattern is [[the-gate]] reused verbatim on manuscript structure; DoCO imports DEO, and SPAR is the same family as the CiTO/PROV-O that kb-export already emits, so structure, citation intent, and provenance speak one ontology stack ([[doco-and-deo-spar-document-ontologies]]). Distilled in [[editio-structure-gate]].
+
+### [2026-07-02 17:36:46] DECISION/RESOLVED — editio audit loop confirmed: recall grades every claim-span; publish gates on zero unsourced
+Memo D14 — the hinge that keeps a draft honest, six steps: draft (factual claims wrapped in spans) -> retrieve (recall: kb-find then kb-get, returning substrate:status) -> grade (the grounded-writing-reviewer sets .validated / .conjectured / .unsourced, flags DEADEND/REFUTED hits as overclaims, and runs the humanizer tells-audit in the same pass) -> override (the author accepts, overrides with a recorded reason, or fixes) -> render (graded spans become \claimV/\claimC/\claimU on the draft page) -> gate (publish target: zero .unsourced, no overclaims; publish/blind strip every tint). The status-to-confidence rubric is recall's; the reviewer is the enforcement pass. This is the invariant-clean soft default of [[write-time-calibration-design]] applied to papers — the deterministic lattice stays shelved. Distilled in [[editio-audit-loop]].
+
+### [2026-07-02 17:36:46] DECISION/RESOLVED — humanizer moves into the editio writing family
+Memo D12. humanizer is a writing tool, so it is reassigned from the store family to editio — the plugin now reads as two families: store (promptus, recall, grannie, telos, research-ledger) and writing (editio-*, humanizer). The reassignment is doc-level (README/AGENTS family grouping in Phase 6); skills/ stays flat and no path changes, so grannie keeps dialing humanizer unchanged — same plugin, no cross-plugin wiring. The blader/humanizer MIT NOTICE rides along intact under the editio family.
+
+### [2026-07-02 17:36:46] DECISION/RESOLVED — Figures default to vector PDF; PGF for exact font-match; raster only for pixel data
+Memo D15 + section 9. Default output is vector PDF — crisp at any zoom, fonts embedded and set to the body font. PGF/PGFPlots is the specialist upgrade when exact font/math match matters and the plot is light; raster (>=600 dpi) only for inherently pixel content (photos, microscopy, dense heatmaps). Figure-as-unit: .editio/paper/figures/<name>/ bundles data + plot script + caption + the claim it supports, regenerable by a build target; size to the column at creation, never post-scale (it desyncs fonts). Accessibility defaults: Okabe-Ito categorical cycle ([[okabe-ito-palette-wong-2011]]), viridis/cividis sequential, redundant encoding for greyscale. All user-choosable per skills-not-stacks.
+
+### [2026-07-02 17:36:46] RESULT/CONJECTURED — editio Phase 1 spine built, uncommitted: schema, SKILL, command, render layer
+Built the editio spine in the working tree, deliberately left uncommitted (this branch stores the design only): templates/editio/schema/doco-deo.json (the structure gate + orders + modes), skills/editio/SKILL.md (the orchestrator), commands/editio.md (/editio end to end), templates/editio/latex/editio.sty (the three-mode render layer + claim/stamp macros), templates/editio/latex/main.tex (per-section assembly), templates/editio/latex/sections/introduction.tex (worked example: stamp + graded claims + self-cite). CONJECTURED, not VALIDATED: none of it is compile-tested (no TeX distribution in the authoring sandbox) — Phase 6 dogfoods a real end-to-end build in all three modes.
+
+### [2026-07-02 17:36:46] PLAN/OPEN — editio build sequence: Phases 2-6, each with a done-when
+Memo section 12, to execute in a dedicated design session, dogfooding each build decision to this ledger as it lands. Phase 2 structure+latex: editio-structure, editio-latex, the scaffold script, the renderer contract + one reference impl — done when /editio arxiv on a real project yields a gate-valid section set and a draft build under .editio/paper/. Phase 3 figures: editio-figures + references/ + the mplstyle default — done when a reference-style figure drops into a column at the right size, fonts matched, colourblind-safe, vector PDF. Phase 4 tables/bib/repro: refs.bib resolves from the lit store; a numeric table and a grounded reproducibility statement render. Phase 5 submission loop: editio-venue (camera-ready per venue + checklist), editio-rebuttal (+ change-bar diff), notation registry, editio-lint. Phase 6 wire+dogfood: README/AGENTS/plugin.json edits, marketplace.json name to organon, the humanizer family reassignment, and a sample paper compile-tested end to end in all three modes with bun run check green.
+
+### [2026-07-02 17:37:08] DECISION/OPEN — Open: should editio ever split into its own plugin under Organon?
+The only structural question left (memo section 13.1). The memo recommends NO — grannie (store family) dials humanizer (editio family) while editio uses recall and the lit store, and one plugin dissolves that cycle; a split would need a second marketplace.json entry, promptus as a documented prerequisite, and grannie's humanizer use going soft. Revisit only if an independent consumer of editio appears. Operator decision pending; supersede this unit on resolve.
+
+### [2026-07-02 17:37:08] DECISION/OPEN — Open: notation registry — its own skill or folded into editio-latex?
+Memo section 13.2. The registry wants every symbol defined once, a notation table, shared math macros, and a defined-once-and-used check. Open whether that earns a standalone editio skill or folds into editio-latex until it demonstrates its own workflow. Operator decision pending; supersede this unit on resolve.
+
+### [2026-07-02 17:37:08] DECISION/OPEN — Open: renderer reference impl — pandoc plus Lua filter, or a bespoke editio-render.ts?
+Memo section 13.3. The contract is fixed either way (claim-spans + section front-matter map to editio.sty macros; tool-agnostic per skills-not-stacks): the open bit is only which thin reference implementation ships first — pandoc + a Lua filter (mature converter, adds an external prerequisite) or a bespoke editio-render.ts on bun (stdlib-first, house-native, narrower markdown coverage). Operator decision pending; supersede this unit on resolve.
 
 <!-- kb:append-point -->
