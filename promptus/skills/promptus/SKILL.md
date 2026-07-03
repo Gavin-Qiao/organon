@@ -29,6 +29,7 @@ This skill is the map: pick the verb, run the piece.
 | explain a stored concept to a human | read-port | `grannie` (`/grannie explain <concept>`) — grounds from the store |
 | audit a draft for AI-tells + unsourced claims | audit | the `grounded-writing-reviewer` agent (agent-side; checks the store) |
 | initialize Promptus in a repo | — | `/promptus-init` (runs the `telos` skill) |
+| change the project's direction (edit the Telos) | — | **operator-triggered**: record a ledger DECISION + propose (the `telos` skill's boundary); rewrite in place on the operator's word — the frontier goes to `kb-now`, never into `TELOS.md` |
 
 ## The four stores
 
