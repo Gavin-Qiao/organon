@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (editio spine built + verified)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (spine merged; v0.6.0 + v0.1.0 cut)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,7 +25,7 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (editio Phase 1-2 spine BUILT + COMPILE-VERIFIED; the spine PR awaits review)
+## NOW (spine MERGED; promptus-v0.6.0 + editio-v0.1.0 cut at operator direction; Phase 3 next)
 **The editio spine is real and validated** (feat/editio-spine, 2026-07-02): /editio, the orchestrator +
 editio-structure + editio-latex skills, editio-scaffold.ts + editio-render.ts, editio.sty, the DoCO/DEO
 gate, venues arxiv + tpami — and a scaffolded scratch paper **builds clean in all three modes on the
@@ -36,12 +36,14 @@ and the no-identity sweep. The five goal directives (2026-07-02) are executed: e
 (5 lit units + editio-structure/references/exemplars.md, pointers only) · TeX setup is a minimal in-skill
 capability (operator HAS MiKTeX) · arxiv + tpami seeded · paper meta = paper.json placeholders, nobody's
 identity by default · the first-article project still unnamed.
-**Gap ledger:** G1 G2 G3 G4 G5 G6 G10 closed; G7 G11 closed earlier by operator; G8 waits for Phase 4,
-G9 for Phase 3. **No releases until the build is gap-free** (operator).
+**Gap ledger:** G1-G7, G10, G11 closed; G8 waits for Phase 4, G9 for Phase 3. **Releases CUT at
+operator direction (2026-07-02, amending the gap-free-first call):** promptus-v0.6.0 (the monorepo
+split + the migration notes) and editio-v0.1.0 (the spine) — the per-plugin release flow exercised
+end to end for the first time.
 
 ## Open frontier
-- [ ] **Operator reviews + merges the spine PR** (feat/editio-spine -> main), then updates the plugins
-  (marketplace update organon; plugin update editio; /reload-plugins).
+- [ ] **Operator updates the plugins** (marketplace update organon; update promptus + editio;
+  /reload-plugins) to sit on promptus 0.6.0 + editio 0.1.0.
 - [ ] **Operator names the first-article project** (directive 4) — the article is the live dogfood and
   the first real exercise of retrieve + the reviewer.
 - [ ] **Phase 3 — editio-figures** (panel-first, venue widths from venue.json, caption grammar,
@@ -55,19 +57,20 @@ G9 for Phase 3. **No releases until the build is gap-free** (operator).
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Operator merges the spine PR and updates the editio plugin.
+1. Operator updates both plugins (0.6.0 / 0.1.0).
 2. Operator names the first-article project; the article starts as the live dogfood.
 3. Phase 3 (figures) builds next, article-driven, recording decisions via kb-add.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO PHASE 1-2 IS BUILT AND COMPILE-VERIFIED** (feat/editio-spine; three modes on the operator's
-MiKTeX; 144 tests; the golden render contract + no-identity sweep guard it). Read the Log since
-2026-07-02: the five goal directives, the authoring-subset decision (mode-invariant renders; prefix-
-dispatched refs; the audit step applies grades, the reviewer stays read-only), and the spine RESULT.
-The gap list stands at: G8 (Phase 4) + G9 (Phase 3) open, everything else closed. Next: operator merges
-the spine PR + updates plugins, names the first-article project; then Phase 3 figures, article-driven.
-No releases until gap-free. The exemplar craft lives in editio-structure/references/exemplars.md backed
-by 5 lit units. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-02.
+**EDITIO PHASE 1-2 IS MERGED AND RELEASED** — promptus-v0.6.0 + editio-v0.1.0 tagged at operator
+direction (2026-07-02, amending the gap-free-first call; the release DECISION in the Log). Three modes
+compile-verified on the operator's MiKTeX; 144 tests; the golden render contract + the no-identity
+sweep guard it. Read the Log since 2026-07-02: the five goal directives, the authoring-subset decision
+(mode-invariant renders; prefix-dispatched refs; the audit step applies grades, the reviewer stays
+read-only), the spine RESULT, and the release-point amendment. Gap list: G8 (Phase 4) + G9 (Phase 3)
+open, everything else closed. Next: operator updates plugins, names the first-article project; then
+Phase 3 figures, article-driven. The exemplar craft lives in editio-structure/references/exemplars.md
+backed by 5 lit units. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -427,5 +430,9 @@ Built on feat/editio-spine, executing the five goal directives. COMPONENTS: /edi
 
 ### [2026-07-02 23:15:43] RESULT/VALIDATED — README overhaul: one design language across root, editio, and promptus (hero, why, install, quick start, philosophy)
 The three READMEs now share one design language and order: a centered hero (name, one-line thesis, badges, family cross-links), an etymology epigraph, Why, Install (migration path collapsed behind details), a sixty-second Quick start, Philosophy (the invariant + the commitments), anatomy / what-ships tables, Development, License. The root README is the marketplace's face — the two-failure-modes pitch (the agent forgets; the write-up overclaims) and the one-epistemic-frame answer, with the two-plugin table. editio's README tells the claims-wearing-prose story with a live claim-span example, the three-renders table, the audit loop, and the skills-not-stacks section; identity policy stated (paper.json placeholders, the no-identity test). promptus's mature philosophy-first README stays as the deep read, gaining the family breadcrumb and monorepo-correct script paths. No emoji; badges consistent (CI, GPLv3, bun, requires-promptus); GPL + humanizer MIT attribution wherever it belongs.
+
+### [2026-07-02 23:22:26] DECISION/RESOLVED — Release point moved: ship the spine now - merge PR #12, tag editio-v0.1.0 + promptus-v0.6.0 (amends no-release-until-gap-free)
+Operator (2026-07-02): "You can merge, tag and release if you have no more questions." This amends item (4) of the earlier operator resolutions — the gap-free bar moves off the first release: the Phase 1-2 spine ships NOW as editio-v0.1.0 (pre-1.0 signals early; the spine is compile-verified end to end, and the remaining gaps G8/G9 are phase-scoped features of unbuilt phases, not defects in what ships). promptus cuts v0.6.0 in the same breath: the monorepo restructure and the humanizer move are live on main but unreleased, and the split is not fully released until promptus's changelog — which carries the migration instructions — is published; pre-1.0 breaking-in-MINOR per RELEASING.md. Both cuts exercise the per-plugin release flow (prefix-parsed tags, per-plugin manifest + changelog gates) end to end for the first time — the one piece no offline test could cover.
+↳ extends event-20260703T022715Z-operator-resolutions-merges-delegated-tex-is-interactive-not-ski
 
 <!-- kb:append-point -->

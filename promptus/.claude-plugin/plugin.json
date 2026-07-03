@@ -1,6 +1,6 @@
 {
   "name": "promptus",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "A file-based research knowledge system — a substrate for the LLM agent: store / keep / retrieve what a project knows as gated markdown, navigable by status and a [[link]] graph. grannie is the human read-port (plain-language, grounded answers).",
   "author": {
     "name": "Mohan Qiao",
