@@ -48,11 +48,24 @@ test("every venue file carries the fields scaffold and figures need", () => {
   expect(venues).toContain("tpami");
   for (const v of venues) {
     const j = JSON.parse(readFileSync(join(TEMPLATES, "venues", v, "venue.json"), "utf8"));
-    for (const f of ["id", "class", "bib_style", "columns", "column_width_mm", "author_format"]) {
+    for (const f of ["id", "class", "bib_style", "columns", "column_width_mm", "full_width_mm", "figure_font_pt", "author_format"]) {
       expect(j[f], `${v}: missing ${f}`).toBeDefined();
     }
     expect(j.id).toBe(v);
+    expect(j.full_width_mm, `${v}: full width narrower than a column`).toBeGreaterThanOrEqual(j.column_width_mm);
   }
+});
+
+test("the mplstyle template carries the venue tokens and the Okabe-Ito cycle", () => {
+  const mpl = readFileSync(join(TEMPLATES, "figures", "editio.mplstyle"), "utf8");
+  for (const token of ["EDITIO_VENUE", "EDITIO_FIG_W_IN", "EDITIO_FIG_H_IN", "EDITIO_FULL_W_IN", "EDITIO_FONT_PT"]) {
+    expect(mpl, `missing token ${token}`).toContain(token);
+  }
+  for (const hex of ["0072B2", "D55E00", "009E73", "E69F00", "56B4E9", "CC79A7", "F0E442"]) {
+    expect(mpl, `Okabe-Ito ${hex} missing from the cycle`).toContain(hex);
+  }
+  expect(mpl).toContain("figure.constrained_layout.use: True");
+  expect(mpl).not.toContain("bbox_inches: tight");
 });
 
 test("no-identity sweep: templates, skills, and scripts carry no real name", () => {

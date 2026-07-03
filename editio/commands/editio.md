@@ -23,6 +23,7 @@ Work through this checklist, then stop at the single next action.
    - graded and clean → render + build:
      `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all && latexmk main.tex`
      (run inside `.editio/paper/`);
-   - building fine → next phase work (figures/tables/bib) or `humanizer` for voice.
+   - building fine → figures through the `editio-figures` skill (claim-first, sized to the
+     venue slot, gated by `editio-figcheck.ts`), or `humanizer` for voice.
 6. **Before any submission talk**: the publish gate — no ungraded, no unsourced, no
    overclaims; build `publish` (and `blind` if the venue is double-blind) per `editio-latex`.

@@ -78,6 +78,27 @@ test("the gitignore line is added exactly once across runs", () => {
   expect(lines.length).toBe(1);
 });
 
+test("scaffold generates figures/editio.mplstyle sized to the venue column", () => {
+  const root = scratch();
+  expect(run(root, "--venue", "arxiv").status).toBe(0);
+  const mpl = read(paper(root, "figures", "editio.mplstyle"));
+  expect(mpl).toContain("for venue arxiv");
+  expect(mpl).toContain("figure.figsize: 6.50, 4.02"); // 165.1mm text width, golden-ratio height
+  expect(mpl).toContain("font.size: 9");
+  expect(mpl).toContain("0072B2"); // the Okabe-Ito cycle survived substitution
+  expect(mpl).not.toContain("EDITIO_"); // every token resolved
+});
+
+test("a venue swap with --force resizes the mplstyle", () => {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  expect(run(root, "--venue", "tpami", "--force").status).toBe(0);
+  const mpl = read(paper(root, "figures", "editio.mplstyle"));
+  expect(mpl).toContain("for venue tpami");
+  expect(mpl).toContain("figure.figsize: 3.50, 2.16"); // 88.9mm column = 3.5in
+  expect(mpl).toContain("font.size: 9"); // IEEE: figure type ~9-10pt at final size
+});
+
 test("generated metadata is blind-safe and placeholder-only", () => {
   const root = scratch();
   run(root, "--venue", "arxiv");

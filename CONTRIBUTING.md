@@ -49,7 +49,25 @@ front pages. Two standing rules, then the event map:
 | a release is cut | nothing — the badges update themselves (see `RELEASING.md`) |
 | a skill / command / script ships | the plugin's README (what-ships / commands tables) + its `CHANGELOG.md` `[Unreleased]` + `AGENTS.md`'s layout if the shape changed |
 | a plugin joins the marketplace | the root `README.md` (hero cross-link + a table row with a `<plugin>-v*`-filtered release badge) · `marketplace.json` · `AGENTS.md`'s layout · the new plugin's own README in the house shape (hero → epigraph → why → install → quick start → what ships → license) + its `CHANGELOG.md` |
+| a skill distills craft from a source | the source's full citation in the skill's `references/*.md` + an entry in the plugin README's **References** + a lit unit (`kb-add --substrate lit`) — see below |
 | behavior moves or reframes (a skill migrates, a verb changes meaning) | a **re-truth sweep**: grep the old claim across the READMEs / `AGENTS.md` / the Telos / skill descriptions, fix every hit in the same PR, and record the change in the ledger |
+
+### References are load-bearing
+
+The skills ship *distilled* craft, and every distillation names its sources — we want
+references. Credit is part of staying truthful: the citations are how a reader (or a future
+agent) audits what we adopted, and "stand on the shoulders of giants" means saying whose.
+When a PR distills guidance from a source, the same PR gives that source three homes:
+
+1. **the skill's `references/*.md`** — a full citation (authors, year, title, venue, DOI or
+   canonical URL) next to the distilled guidance;
+2. **the plugin README's References section** — the reader-facing bibliography;
+3. **the lit store** — a `kb-add --substrate lit` unit, so store retrieval can ground any
+   claim that leans on it.
+
+Distill in your own words: pointers and transferable moves, never reproduced text
+(copyright) — link the original and send readers to it. An uncited "best practice" in a
+skill is a claim without grounds; treat it exactly like one.
 
 ## Pull requests
 

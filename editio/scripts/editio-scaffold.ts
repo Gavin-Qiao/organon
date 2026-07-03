@@ -149,6 +149,24 @@ function main(argv: string[]): number {
     log("wrote front/metadata.tex (blind-masked via \\ifeditioblind)");
   }
 
+  // 6b. figures/editio.mplstyle — generated from venue widths, so figures are born at
+  //     the slot size (editio-figures; editio-figcheck gates the result).
+  if (typeof venue.column_width_mm === "number") {
+    const wIn = venue.column_width_mm / 25.4;
+    const fullIn = (venue.full_width_mm ?? venue.column_width_mm) / 25.4;
+    const mpl = readFileSync(join(TEMPLATES, "figures", "editio.mplstyle"), "utf8")
+      .replace("EDITIO_VENUE", venue.id)
+      .replace("EDITIO_FIG_W_IN", wIn.toFixed(2))
+      .replace("EDITIO_FIG_H_IN", (wIn / 1.618).toFixed(2))
+      .replace("EDITIO_FULL_W_IN", fullIn.toFixed(2))
+      .replace("EDITIO_FONT_PT", String(venue.figure_font_pt ?? 8));
+    if (generate(join(paper, "figures", "editio.mplstyle"), mpl, force)) {
+      log(`wrote figures/editio.mplstyle (${venue.column_width_mm}mm column, ${venue.figure_font_pt ?? 8}pt)`);
+    }
+  } else {
+    log(`venue "${venue.id}" has no column_width_mm — skipped figures/editio.mplstyle`);
+  }
+
   // 7. Section stubs — authored files, seeded once per order entry.
   const today = new Date().toISOString().slice(0, 10);
   let stubs = 0;

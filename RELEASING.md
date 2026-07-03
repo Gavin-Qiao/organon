@@ -54,6 +54,11 @@ calls it out.
 
 ## Notes
 
+- **A new plugin enters `main` at version `0.0.0`.** Its first release-cut PR stamps the real
+  version. The version string is the install **cache key** — updaters refresh a cached plugin
+  only when it moves — so one version string must never cover two different trees. (Learned
+  the hard way: an editio manifest born at `0.1.0` before the plugin's content landed froze
+  early installs on the wrong tree, invisibly to `plugin update`.)
 - The repo-level "Latest" badge on GitHub points at whichever plugin released most recently;
   release titles carry the plugin name, so the list stays unambiguous.
 - History: tags `v0.1.0` … `v0.5.2` predate the monorepo and refer to promptus releases cut
