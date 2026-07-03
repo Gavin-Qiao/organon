@@ -1,5 +1,5 @@
 ---
-description: Minimal pre-compaction flush — sweep the session for anything not yet stored and add it through kb-add, refresh the NOW-header, re-index, and run a short drift check against the Telos. Doesn't rebuild the wheel; the research-ledger skill owns the format.
+description: Minimal pre-compaction flush — sweep the session for anything not yet stored and add it through kb-add, refresh the NOW-header, keep memory fresh, re-index, and run a short drift check against the Telos (read-only — Telos edits are operator-triggered). Doesn't rebuild the wheel; the research-ledger skill owns the format.
 argument-hint: "[optional scope note]"
 ---
 
@@ -25,13 +25,18 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
      bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-now.ts" --note "<short, e.g. the version>"
    ```
    Never hand-type the `Updated:` stamp or a `### [ts]` log line — both are the gate's job.
-4. **Reconcile memory** only where the session clearly settled or overturned a fact
-   (`kb-add --substrate memory`, or flip a stale one to `status: retired`). Don't re-survey.
+4. **Keep memory fresh.** Memory is where the session's settled, durable truths live — sweep
+   what this session settled or overturned: new facts enter via `kb-add --substrate memory`,
+   stale ones flip to `status: retired`. State that would otherwise tempt a Telos edit ("how
+   we do X now", the current method or tool) belongs here or in the NOW-header — the Telos is
+   **read, never written, at a checkpoint** (its edits are operator-triggered; the `telos`
+   skill has the boundary). Reconcile what the session touched; don't re-survey the store.
 5. **Drift check (judgment — against the Telos).** Read `.promptus/TELOS.md` — the north star,
    the commitments, and the rules that never bend — and weigh it against this session's recent
    ledger entries and the NOW-header. Ask one question: *is the work still in service of the Telos,
    or has a commitment quietly bent* — scope creep, machinery added without a measured threshold,
-   novelty chased over utility, a "never bends" rule contradicted, a stated direction abandoned?
+   novelty chased over utility, a "never bends" rule contradicted, a stated direction abandoned,
+   or a `TELOS.md` edit nobody asked for (Telos edits are operator-triggered)?
    This is judgement, not a script — the one place worth the LLM's eye.
    - **On course** → one line, no noise (`Drift check: on course`).
    - **Drift** → a terse, specific flag: name the tension, the commitment or invariant at stake,

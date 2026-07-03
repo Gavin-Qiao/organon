@@ -1,6 +1,6 @@
 ---
 name: telos
-description: Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first — and maintain the Telos as direction shifts. Use when initializing Promptus in a repo, AND whenever about to edit `.promptus/TELOS.md`: the skill's second half is the boundary — what belongs in the Telos (direction, rewritten in place) versus what routes to the ledger (events, via kb-add), the NOW-header (the live frontier, via kb-now), or memory (settled facts). Drives the templates/ scaffolds. Telos comes first because every other store answers to the direction it sets.
+description: Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first — and maintain the Telos as direction shifts. Use when initializing Promptus in a repo, AND whenever about to edit `.promptus/TELOS.md`: Telos edits are OPERATOR-TRIGGERED — the agent registers evidence in the research ledger (kb-add) and proposes; the boundary routes everything else to the ledger (events), the NOW-header (the live frontier, kb-now), or memory (settled facts, kept fresh at /checkpoint). Drives the templates/ scaffolds. Telos comes first because every other store answers to the direction it sets.
 ---
 
 # telos — scaffold the stores, keep the compass clean
@@ -48,15 +48,22 @@ the north star, the commitments, scope, the rules that never bend — and when d
 it is REWRITTEN in place, never amended with a date.** The history of the change is the
 ledger's job, not the Telos's.
 
+**Who edits it: the operator triggers, the agent proposes.** The agent never rewrites the
+Telos on its own initiative. When the work suggests the direction shifted, register the
+evidence in the research ledger first (the `research-ledger` skill owns the habit; `kb-add`
+is the gate) and **propose** the Telos change — the rewrite happens on the operator's word.
+At a checkpoint the Telos is read (the drift check), never written; **memory** is what gets
+refreshed there.
+
 Route by what you are about to type:
 
 | you are about to write… | it belongs in |
 |---|---|
-| "this happened / we ran / we measured / we decided" | the ledger — `kb-add --substrate ledger` (the gate owns the date) |
+| "this happened / we ran / we measured / we decided" | the ledger — the `research-ledger` skill / `kb-add --substrate ledger` (the gate owns the date) |
 | "where we are now / the frontier / next actions" | the ledger **NOW-header** — `kb-now` (never a Telos section) |
-| a settled, durable fact the project should never relearn | memory — `kb-add --substrate memory` |
+| a settled, durable fact the project should never relearn | memory — `kb-add --substrate memory` (kept fresh at every `/checkpoint`) |
 | a date, an `event-…` id, a session stamp (`cont.N`), "Updated:" | nowhere in the Telos — each is a ledger line in disguise |
-| a genuine change of direction | rewrite the Telos section in place, **and in the same breath** record the change as a ledger DECISION — the date, the why, the `[[links]]` live there |
+| a genuine change of direction | record a ledger DECISION (the date, the why, the `[[links]]`) and **propose**; on the operator's word, rewrite the Telos section in place |
 
 The tell: **if you are typing a date into `TELOS.md`, you are writing a ledger line into the
 wrong store.** `promptus-doctor check` flags event-shaped Telos lines (dates, event ids,

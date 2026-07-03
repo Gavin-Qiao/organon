@@ -34,6 +34,10 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
   Telos amendment), and a trigger that fires when editing `TELOS.md`, not only at init.
 - The `TELOS.md` template states the boundary inline ("What lives here — and what doesn't"),
   and the orchestrator's decision table routes "change the project's direction" through it.
+- **Telos edits are operator-triggered**: the agent registers evidence in the research ledger
+  and *proposes* — the rewrite happens on the operator's word. `/checkpoint`'s memory step is
+  now a freshness duty (the session's settled facts land in memory, stale ones retire) and
+  reads the Telos without ever writing it.
 
 ## [0.6.0] - 2026-07-02
 
