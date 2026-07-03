@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (editio designed; restructure next)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (restructure built; two PRs await review)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,7 +25,7 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (editio fully decided + build designs recorded; the restructure PR is next)
+## NOW (editio decided + designed; the restructure is BUILT — two PRs await operator review)
 **v0.5.2 released and live** (operator's plugin on 0.5.2). **editio: design complete, decision queue empty**
 (memo rev. 2 = [[editio-design-memo]]; spine findings [[editio-paper-read-port]], [[skills-not-stacks]],
 [[editio-audit-loop]], [[three-renders-one-source]], [[editio-structure-gate]]). Resolved 2026-07-02: TWO
@@ -38,14 +38,19 @@ Session additions (2026-07-02, operator-adopted, all in the Log): seven build re
 grounds; grades/overrides in the markdown; render-never-blocks + a lint-profile gate; venues as data;
 engine-agnostic authoring subset; float manifests; submission git-tags; the renderer contract fixture),
 the panel-first figure system, and the big-LaTeX writing design.
+**The monorepo restructure is BUILT** (feat/organon-monorepo, stacked on PR #9): organon marketplace at
+the root, promptus/ + editio/ plugin dirs, humanizer moved (editio ships it day one), grannie soft-dials,
+per-plugin release flow (promptus-v* / editio-v*), marketplace-aware validator — bun run check green,
+112 tests, zero test edits (the suite proved location-independent).
 **Prior art settled (2026-06-30, merged from the stashed session):** Google OKF is a near-twin substrate;
 NOT adopting ("good in our own way"); an okf export + 3 lessons banked. **Psi (227u) and Probatio (292u)
 are finalized on .promptus/** — dogfood is real; retrieve + the reviewer still barely run.
 
 ## Open frontier
 - [ ] **Merge PR #9** (docs/editio-design-store) — operator review.
-- [ ] **The monorepo restructure PR** (stacked on #9): root marketplace.json (organon), promptus/ + editio/
-  dirs (humanizer moves; grannie soft-dial; per-plugin release flow); operator reinstalls both after merge.
+- [ ] **Merge the restructure PR** (feat/organon-monorepo, stacked on #9; retargets to main when #9
+  merges); after merge the operator reinstalls: /plugin marketplace remove promptus, add
+  Gavin-Qiao/organon, install promptus@organon + editio@organon.
 - [ ] **editio Phases 1-6** post-restructure (memo section 12 + the recorded refinements), dogfooding kb-add.
 - [ ] **Real use (the measured-need loop):** a cold resume + a real Psi/Probatio pass exercising retrieve
   (kb-find/kb-get/recall) + the grounded-writing-reviewer; editio's audit loop is what will finally run them.
@@ -57,20 +62,22 @@ are finalized on .promptus/** — dogfood is real; retrieve + the reviewer still
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Operator merges PR #9; the restructure PR retargets to main.
-2. Operator merges the restructure PR, then reinstalls promptus + editio from the organon marketplace.
-3. The design session builds editio Phases 1-6, recording each build decision via kb-add.
+1. Operator reviews + merges PR #9; the restructure PR retargets to main.
+2. Operator reviews + merges the restructure PR, then reinstalls promptus + editio from organon.
+3. The design session builds editio Phases 1-6 inside editio/, recording each build decision via kb-add.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO DECIDED + DESIGNED; EXECUTION NEXT.** Two plugins under Organon (promptus the store / editio the
-writing toolchain incl. humanizer), monorepo with the root marketplace renamed organon, the restructure PR
-before any build (one reinstall), notation inside editio-latex, the bespoke editio-render.ts, the spine
-DISCARDED — reimplement Phase 1 fresh from [[editio-design-memo]] + the five spine findings. Per-plugin
-tags promptus-v* / editio-v*. The seven build refinements + the figure system + the big-LaTeX design are
-DECISION/RESOLVED units in the Log (2026-07-02) — read them before building. OKF prior art settled
-2026-06-30 (not adopting; banked as an interop target + 3 lessons). Psi/Probatio finalized; retrieve + the
-reviewer still barely run — editio's audit loop is the use-first path. Read .promptus/TELOS.md, then this
-header, then the Log since 2026-07-02.
+**EDITIO DECIDED + DESIGNED; RESTRUCTURE BUILT; TWO PRS AWAIT THE OPERATOR.** Two plugins under Organon
+(promptus the store / editio the writing toolchain incl. humanizer), monorepo with the root marketplace
+renamed organon — BUILT on feat/organon-monorepo, stacked on PR #9 (docs/editio-design-store), checks
+green. After both merge the operator reinstalls (remove promptus marketplace, add Gavin-Qiao/organon,
+install both plugins). Then reimplement Phase 1 fresh inside editio/ from [[editio-design-memo]] + the
+five spine findings (the old spine is DISCARDED — do not hunt for it), and run Phases 2-6. Notation folds
+into editio-latex; the renderer is the bespoke editio-render.ts; per-plugin tags promptus-v* / editio-v*.
+The seven build refinements + the figure system + the big-LaTeX design are DECISION/RESOLVED units in the
+Log (2026-07-02) — read them before building. OKF prior art settled 2026-06-30 (not adopting; banked).
+Psi/Probatio finalized; retrieve + the reviewer still barely run — editio's audit loop is the use-first
+path. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -405,5 +412,8 @@ editio-figures is a system, not just a references menu — five commitments, all
 ### [2026-07-02 21:51:40] DECISION/RESOLVED — The big-LaTeX writing design: SI as a second render target, hygiene as lint, fast section previews, budgets, prose craft, bib discipline
 How editio handles a big paper, adopted 2026-07-02 — all of it conventions, thin scripts, lint checks, and references per [[skills-not-stacks]]. (1) SUPPLEMENTARY INFORMATION is a first-class second assembly (si.tex sharing editio.sty, S-prefixed numbering, xr-style cross-refs between main and SI); venue.json declares inline-appendix vs separate-SI, since Nature/Science demand a separate document. (2) HYGIENE AS LINT: enforced label namespaces (sec:/fig:/tab:/eq:/si:), cleveref by default, and editio-lint fails on ??, unused labels, hardcoded "Figure 3" strings in prose, and unreferenced floats — the classic big-project rot, caught mechanically. (3) FAST ITERATION: out-of-tree build dir under .editio/paper/build/; editio-latex preview <section> compiles one section inside a standalone harness so a 40-page paper iterates at single-section latency; latexmk is the swappable reference driver. (4) NOTATION (per the resolved fold into editio-latex): macros.tex and the notation table generate from notation.md (symbol | meaning | store handle) — markdown stays the source of truth; the defined-once-and-used check runs in editio-lint; a symbol may trace to a store handle the way a claim traces to a unit. (5) BUDGETS: per-section budget: front-matter plus venue word/figure limits in venue.json; lint reports per-section and total against the venue cap; the Nature summary-paragraph template ships as the abstract reference, and editio-structure checks the funnel and the 1:1 contribution-to-results map. (6) PROSE CRAFT as references plus reviewer checks, never machinery: Gopen & Swan (the reader-expectation frame), Mensh & Kording (ten simple rules for structuring papers), Whitesides (outline-first); one claim per paragraph with topic-sentence skimmability; tense and voice conventions per DEO section type. (7) BIB DISCIPLINE at scale: canonical keys generated from the lit store, journal refs flagged when DOI-less, cite-dumps flagged (many citations with no individual discussion), CiTO-typed related work; own papers marked in the lit store feed the blind-mode self-cite mask. (8) An optional reference CI workflow builds all three modes plus lint on push, for paper repos that want it.
 ↳ relates-to event-20260702T213646Z-editio-build-sequence-phases-2-6-each-with-a-done-when
+
+### [2026-07-02 22:07:22] RESULT/VALIDATED — Monorepo restructure built: organon marketplace root, promptus/ + editio/ plugins, per-plugin release flow
+Built the monorepo restructure on feat/organon-monorepo (stacked on the design-store PR), executing the resolved split + monorepo decisions. MOVED: the whole promptus plugin off the repo root into promptus/ (pure git renames — .claude-plugin/plugin.json, skills, commands, agents, hooks, scripts, templates, CHANGELOG, README); humanizer + the blader/humanizer MIT NOTICE into editio/. SEEDED editio/: plugin.json (v0.1.0), README, CHANGELOG — the writing plugin ships humanizer from day one, so the operator migration stays exactly one reinstall. MARKETPLACE: the root .claude-plugin/marketplace.json renamed promptus -> organon with ./promptus + ./editio entries; promptus plugin.json homepage/repository re-pointed at the organon repo; the JSON-LD vocab namespace IRI updated in the template and the live schema. SOFT-DIAL: grannie, the promptus orchestrator, recall, /help, and the grounded-writing-reviewer now reference editio's humanizer conditionally (the reviewer keeps its core tells inline so the store-side audit works alone); two leftover render-for-an-audience lines re-truthed to the agent-substrate framing; the TELOS notes humanizer ships with editio. RELEASE FLOW: per-plugin tags (promptus-v* / editio-v*) — release.yml derives the plugin from the tag prefix, asserts tag == that plugin's manifest, and extracts notes from that plugin's CHANGELOG (changelog.ts gained an optional path argument); RELEASING.md rewritten for per-plugin cuts; per-plugin CHANGELOGs, with the breaking-migration notes under promptus [Unreleased]. VALIDATOR: validate-plugin.ts is marketplace-aware — it validates the root manifest, then every referenced plugin (manifest, components, hooks, vocab). Verified: bun run check green — marketplace + both plugins validated, 112 tests pass, zero test edits needed (the suite proved location-independent). Migration on merge: /plugin marketplace remove promptus, add Gavin-Qiao/organon, install promptus@organon + editio@organon. Executes [[editio-design-memo]] section 10 as corrected by the split/monorepo supersede chain; see [[organon-naming]].
 
 <!-- kb:append-point -->
