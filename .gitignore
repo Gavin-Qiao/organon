@@ -5,3 +5,6 @@
 # Node / bun
 node_modules/
 *.log
+
+# Warp terminal agent file — local-only, not part of the repo
+WARP.md
