@@ -6,6 +6,25 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- **Phase 3 — `editio-figures`**: figures as arguments. The skill (claim-first captions,
+  panel-first composition, the figure-as-unit provenance contract
+  `figures/<name>/{data,plot,caption.md,pdf}`, statistical honesty in captions) plus cited
+  craft references: principles (Rougier · Tufte · Cleveland & McGill · Wilke), color +
+  accessibility (Okabe-Ito · viridis/cividis · redundant encoding), chart selection (the FT
+  Visual Vocabulary), tools by job, and per-domain conventions.
+- **`editio-figcheck.ts`** — the figure-size gate: reads a PDF's `/MediaBox` and fails any
+  figure whose physical width doesn't match the venue slot (`column_width_mm` /
+  `full_width_mm`, ±1mm) — post-scaling is caught at the source, before it shrinks fonts.
+- **`figures/editio.mplstyle`** — generated per venue by the scaffold: single-column figsize
+  from `venue.json`, print-size fonts (`figure_font_pt`), the Okabe-Ito color cycle,
+  constrained layout (and a warning against `bbox_inches='tight'`).
+- **Venue data** grew figure fields: `full_width_mm` and `figure_font_pt` on every venue.
+- **References discipline**: the README now carries a real bibliography; every skill's
+  distilled craft cites its sources (see the repo `CONTRIBUTING.md`, "References are
+  load-bearing").
+
 ## [0.1.0] - 2026-07-02
 
 ### Added

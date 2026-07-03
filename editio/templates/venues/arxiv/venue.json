@@ -5,7 +5,9 @@
   "class": "article",
   "class_options": ["11pt"],
   "columns": 1,
-  "column_width_mm": 127,
+  "column_width_mm": 165.1,
+  "full_width_mm": 165.1,
+  "figure_font_pt": 9,
   "bib_style": "plainnat",
   "packages": ["natbib", "[margin=1in]{geometry}"],
   "author_format": "plain",
@@ -13,6 +15,7 @@
   "limits": {},
   "notes": [
     "one-column preprint; the arXiv cleaner strips comments on submission",
-    "geometry sets 1in margins; drop it if the venue class you swap in owns layout"
+    "geometry sets 1in margins; drop it if the venue class you swap in owns layout",
+    "widths measured on the scaffolded class (article 11pt + geometry margin=1in -> \\textwidth 469.755pt = 6.5in = 165.1mm); a full-line figure is the slot - go narrower per figure in plot.py if the content wants it"
   ]
 }

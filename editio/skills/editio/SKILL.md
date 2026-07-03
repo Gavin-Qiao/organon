@@ -26,7 +26,9 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | ground a claim before it hits the page | promptus's `recall` (kb-find → kb-get) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
-| figures, tables, bibliography, venue packaging, rebuttal | `editio-figures` / `editio-tables` / `editio-bib` / `editio-venue` / `editio-rebuttal` (later phases; not yet shipped) |
+| design, size, caption, or color a figure | the `editio-figures` skill (claim-first; venue widths from `venue.json`) |
+| verify a figure PDF is the slot size | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-figcheck.ts" <fig.pdf> --slot single` |
+| tables, bibliography, venue packaging, rebuttal | `editio-tables` / `editio-bib` / `editio-venue` / `editio-rebuttal` (later phases; not yet shipped) |
 
 ## The invariant (inherited from promptus, applied to manuscripts)
 

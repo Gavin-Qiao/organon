@@ -5,7 +5,9 @@
   "class": "IEEEtran",
   "class_options": ["10pt", "journal", "compsoc"],
   "columns": 2,
-  "column_width_mm": 88,
+  "column_width_mm": 88.9,
+  "full_width_mm": 182,
+  "figure_font_pt": 9,
   "bib_style": "IEEEtran",
   "packages": [],
   "author_format": "ieee-journal",
@@ -16,6 +18,8 @@
   },
   "notes": [
     "compsoc journal mode changes abstract/title layout - do not fight it",
+    "widths measured from IEEEtran (10pt journal compsoc): \\columnwidth 252.945pt = 3.5in = 88.9mm, \\textwidth 517.935pt = 182.0mm - and confirmed by the IEEE author center (resolution-and-size)",
+    "IEEE graphics guidance: figure type ~9-10pt at final size; raster >300dpi (color/grayscale), >600dpi (line art); vector preferred",
     "figures must survive B&W print; Okabe-Ito + redundant encoding covers this",
     "IEEEtran class and bibliography style ship with TeX Live / MiKTeX"
   ]

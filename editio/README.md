@@ -82,7 +82,7 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 5. **Render** — grades become `\claimV / \claimC / \claimU / \claimG` in draft.
 6. **Gate** — publish requires **no ungraded, no unsourced, no overclaims**.
 
-## What ships — the Phase 1–2 spine, compile-verified in all three modes
+## What ships — Phases 1–3 (the spine compile-verified in all three modes)
 
 | piece | what it does |
 |---|---|
@@ -90,16 +90,17 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 | `editio` skill | the orchestrator — decision table, invariant, the audit loop |
 | `editio-structure` | the argument before the prose: orders (imrad / cs-systems / theory), contribution-first framing, the abstract formula — plus craft distilled from exemplary papers ([`references/exemplars.md`](skills/editio-structure/references/exemplars.md)) |
 | `editio-latex` | TeX setup, venue scaffolding, mode builds, single-section previews, notation conventions; the authoring subset is a written contract ([`references/authoring-subset.md`](skills/editio-latex/references/authoring-subset.md)) |
-| `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files refresh only with `--force` |
+| `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |
+| `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files (incl. the per-venue `figures/editio.mplstyle`) refresh only with `--force` |
 | `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass |
+| `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
 | `editio.sty` | the three-mode render layer |
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
-| venues | `arxiv`, `tpami` — venues are **data folders**, add one without touching a script |
+| venues | `arxiv`, `tpami` — venues are **data folders** (widths, fonts, class, bib style); add one without touching a script |
 
-**Roadmap** (built in phases, driven by real papers): **next → `editio-figures`**
-(panel-first composition, venue widths from `venue.json`, caption grammar, statistical
-honesty) → `editio-tables` · `editio-bib` (refs.bib from the lit store) · `editio-repro` →
-`editio-venue` · `editio-rebuttal` · `editio-lint` (the publish gate, mechanized).
+**Roadmap** (built in phases, driven by real papers): **next → `editio-tables`** ·
+`editio-bib` (refs.bib from the lit store) · `editio-repro` → `editio-venue` ·
+`editio-rebuttal` · `editio-lint` (the publish gate, mechanized).
 
 ## Skills, not stacks
 
@@ -109,6 +110,67 @@ generated `.latexmkrc` is three lines), the renderer (pandoc + a Lua filter is t
 documented swap — the golden contract keeps any replacement honest), the plotting library.
 Venue rules are JSON data. Nothing is vendored, and a `no-identity` test enforces that
 nobody's name ships in the templates.
+
+## References
+
+editio's skills are *distilled* from the sources below — pointers and transferable moves in
+our own words, never their text; read the originals. Every distillation cites its source at
+the point of use (each skill's `references/*.md`) and lands in the lit store, per the repo
+rule ([CONTRIBUTING — "References are load-bearing"](../CONTRIBUTING.md#references-are-load-bearing)).
+
+**Structure & writing craft**
+
+- Mensh B, Kording K (2017). Ten simple rules for structuring papers. *PLoS Computational
+  Biology* 13(9): e1005619. <https://doi.org/10.1371/journal.pcbi.1005619>
+- Gopen GD, Swan JA (1990). The Science of Scientific Writing. *American Scientist* 78(6):
+  550–558.
+- Whitesides GM (2004). Whitesides' Group: Writing a Paper. *Advanced Materials* 16(15):
+  1375–1377. <https://doi.org/10.1002/adma.200400767>
+- Nature Portfolio. Formatting guide (incl. the annotated summary-paragraph template).
+  <https://www.nature.com/nature/for-authors/formatting-guide>
+- Constantin A, Peroni S, Pettifer S, Shotton D, Vitali F (2016). The Document Components
+  Ontology (DoCO). *Semantic Web* 7(2): 167–181 — with the companion Discourse Elements
+  Ontology (DEO), <http://purl.org/spar/deo>. The structure gate's vocabulary.
+
+**Exemplary papers the craft is distilled from** ([`exemplars.md`](skills/editio-structure/references/exemplars.md))
+
+- Watson JD, Crick FHC (1953). A Structure for Deoxyribose Nucleic Acid. *Nature* 171:
+  737–738. <https://doi.org/10.1038/171737a0>
+- Shannon CE (1948). A Mathematical Theory of Communication. *Bell System Technical
+  Journal* 27: 379–423, 623–656.
+- Ongaro D, Ousterhout J (2014). In Search of an Understandable Consensus Algorithm.
+  *USENIX ATC '14*.
+- Vaswani A, et al. (2017). Attention Is All You Need. *NeurIPS 30*. arXiv:1706.03762.
+- Jumper J, et al. (2021). Highly accurate protein structure prediction with AlphaFold.
+  *Nature* 596: 583–589. <https://doi.org/10.1038/s41586-021-03819-2>
+
+**Figures** ([`editio-figures/references/`](skills/editio-figures/references/))
+
+- Rougier NP, Droettboom M, Bourne PE (2014). Ten Simple Rules for Better Figures. *PLoS
+  Computational Biology* 10(9): e1003833. <https://doi.org/10.1371/journal.pcbi.1003833>
+- Cleveland WS, McGill R (1984). Graphical Perception: Theory, Experimentation, and
+  Application to the Development of Graphical Methods. *JASA* 79(387): 531–554.
+  <https://doi.org/10.1080/01621459.1984.10478080>
+- Okabe M, Ito K (2002, rev. 2008). Color Universal Design (CUD).
+  <https://jfly.uni-koeln.de/color/> — popularized by Wong B (2011). Points of view: Color
+  blindness. *Nature Methods* 8: 441. <https://doi.org/10.1038/nmeth.1618>
+- Nuñez JR, Anderton CR, Renslow RS (2018). Optimizing colormaps with consideration for
+  color vision deficiency… (cividis). *PLOS ONE* 13(7): e0199239.
+  <https://doi.org/10.1371/journal.pone.0199239>
+- Krzywinski M, Altman N (2013). Points of Significance: Error bars. *Nature Methods*
+  10(10): 921–922. <https://doi.org/10.1038/nmeth.2659>
+- Tufte ER (1983). *The Visual Display of Quantitative Information*. Graphics Press.
+- Wilke CO (2019). *Fundamentals of Data Visualization*. O'Reilly.
+  Free online: <https://clauswilke.com/dataviz/>
+- Financial Times Visual Journalism. Visual Vocabulary.
+  <https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary>
+- Garrett JD. SciencePlots. <https://github.com/garrettj403/SciencePlots>
+  <https://doi.org/10.5281/zenodo.4106649>
+
+**Upstream code**
+
+- [blader/humanizer](https://github.com/blader/humanizer) (© 2025 Siqi Chen, MIT) — the
+  base of the `humanizer` skill; notice preserved in [`NOTICE`](NOTICE).
 
 ## License
 

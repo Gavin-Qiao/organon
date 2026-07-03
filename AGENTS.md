@@ -10,8 +10,8 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
 > (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`; skills `promptus`, `recall`, `grannie`, `telos`,
 > `research-ledger`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
-> `editio-structure` + `editio-latex` skills, the scaffold + renderer scripts, `humanizer`;
-> figures/tables/bib land in later phases (design of record:
+> `editio-structure` + `editio-latex` + `editio-figures` skills, the scaffold + renderer +
+> figcheck scripts, `humanizer`; tables/bib land in later phases (design of record:
 > `.promptus/docs/editio-design-memo.md` + the ledger's supersede chain). The agent operates
 > the verbs; `grannie` is the one human read-port. Embedding-scale machinery stays deferred
 > (the invariant).
@@ -59,8 +59,9 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
   `templates/` (per-project four-store scaffolds incl. `schema/kb-vocab.json`).
 - `editio/` — the writing plugin: `commands/` (`/editio`), `skills/` (`editio` the orchestrator,
   `editio-structure` + its exemplar craft references, `editio-latex` + the authoring-subset
-  contract, `humanizer`), `scripts/` (`editio-scaffold`, `editio-render`, own thin `lib.ts`),
-  `templates/` (the DoCO/DEO gate, `editio.sty` + `main.tex`, `paper.json`, venues, the golden
-  contract). Figures/tables/bib arrive with later phases.
+  contract, `editio-figures` + its cited craft references, `humanizer`), `scripts/`
+  (`editio-scaffold`, `editio-render`, `editio-figcheck` the size gate, own thin `lib.ts`),
+  `templates/` (the DoCO/DEO gate, `editio.sty` + `main.tex`, `paper.json`, venues, the
+  per-venue `editio.mplstyle`, the golden contract). Tables/bib arrive with later phases.
 - `.promptus/` — Organon's own knowledge (TELOS, ledger, findings + `lit/`, memory, schema),
   maintained via `kb-add` and shared by both plugins' development.
