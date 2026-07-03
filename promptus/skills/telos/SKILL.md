@@ -1,9 +1,9 @@
 ---
 name: telos
-description: Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first. Use when initializing Promptus in a repo — write `.promptus/TELOS.md` (direction + invariant), the append-only ledger with its sentinel, the docs/ + docs/lit/ knowledge indexes, the memory store, and the vocab. Drives the templates/ scaffolds. Telos comes first because every other store answers to the direction it sets.
+description: Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first — and maintain the Telos as direction shifts. Use when initializing Promptus in a repo, AND whenever about to edit `.promptus/TELOS.md`: the skill's second half is the boundary — what belongs in the Telos (direction, rewritten in place) versus what routes to the ledger (events, via kb-add), the NOW-header (the live frontier, via kb-now), or memory (settled facts). Drives the templates/ scaffolds. Telos comes first because every other store answers to the direction it sets.
 ---
 
-# telos — scaffold the stores
+# telos — scaffold the stores, keep the compass clean
 
 Initialize Promptus in a project, in dependency order. Everything Promptus owns lives under one
 `.promptus/` namespace, so it never collides with the host project's own `docs/`, `memory/`, or
@@ -38,3 +38,28 @@ mandate — as `kb-add --substrate ledger --kind DECISION`, and run
 `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` to prove the loop closes.
 
 Pairs with the `/promptus-init` command, which runs this end to end against the current repo.
+
+## Maintaining the Telos — the boundary
+
+The Telos is the one freehand store, which makes it the one store that can silently rot: with
+no gate, live state gravitates into it ("where the frontier is now", dated amendments, session
+stamps) until the compass reads like a dashboard. The rule: **the Telos holds direction only —
+the north star, the commitments, scope, the rules that never bend — and when direction changes
+it is REWRITTEN in place, never amended with a date.** The history of the change is the
+ledger's job, not the Telos's.
+
+Route by what you are about to type:
+
+| you are about to write… | it belongs in |
+|---|---|
+| "this happened / we ran / we measured / we decided" | the ledger — `kb-add --substrate ledger` (the gate owns the date) |
+| "where we are now / the frontier / next actions" | the ledger **NOW-header** — `kb-now` (never a Telos section) |
+| a settled, durable fact the project should never relearn | memory — `kb-add --substrate memory` |
+| a date, an `event-…` id, a session stamp (`cont.N`), "Updated:" | nowhere in the Telos — each is a ledger line in disguise |
+| a genuine change of direction | rewrite the Telos section in place, **and in the same breath** record the change as a ledger DECISION — the date, the why, the `[[links]]` live there |
+
+The tell: **if you are typing a date into `TELOS.md`, you are writing a ledger line into the
+wrong store.** `promptus-doctor check` flags event-shaped Telos lines (dates, event ids,
+session stamps, NOW-shaped headings) with this routing — report-only; moving the content is
+judgment, usually one `kb-now` refresh plus a few `kb-add`s, then deleting the lines from the
+Telos.

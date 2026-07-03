@@ -23,3 +23,11 @@
 > server · add machinery only past a threshold you've **measured**.
 
 <Add any project-specific rules that never bend.>
+
+## What lives here — and what doesn't
+
+Direction only, **rewritten in place** when it changes. Events, results, and
+decisions-with-dates go through `kb-add` into the ledger; the live frontier ("where we are
+now", next actions) is the ledger's **NOW-header** (`kb-now`); settled durable facts go to
+memory. If you are typing a date into this file, you are writing a ledger line into the
+wrong store — `promptus-doctor check` flags it.

@@ -187,7 +187,7 @@ The invariant still governs. The full roadmap and the prior-art audit are in
 | `/promptus:help` | the map — stores, verbs, and where to start |
 | `/promptus:promptus-init` | scaffold the four stores + the `AGENTS.md` cadence in a repo (idempotent) |
 | `/promptus:checkpoint` | minimal pre-compaction flush — store what's unrecorded, refresh the NOW-header |
-| `/promptus:promptus-doctor` | diagnose & migrate a repo's Promptus layout to the current namespace + vocab |
+| `/promptus:promptus-doctor` | diagnose & migrate a repo's Promptus layout to the current namespace + vocab; flags event-shaped Telos lines (dates, event ids, NOW-shaped headings) with their routing |
 | `/promptus:promptus-ingest` | curate deep-research notes into `lit:` units (backfill sources, promote findings) |
 | `/promptus:promptus-graph` | inspect the knowledge graph — `rank` (PageRank), `lint` (health), `suggest` (latent links) |
 
@@ -197,7 +197,7 @@ The invariant still governs. The full roadmap and the prior-art audit are in
 | `research-ledger` | the store-as-you-go recording habit (append via `kb-add`, never freehand) |
 | `recall` | retrieval reasoning — decompose → `kb-find` → verify each claim → synthesize |
 | `grannie` | plain-language ELI90 renderer for a stored concept |
-| `telos` | scaffold a project's four stores, Telos first |
+| `telos` | scaffold a project's four stores, Telos first — then keep the Telos direction-only as it evolves (events → ledger, frontier → NOW-header) |
 
 Plus the **`grounded-writing-reviewer`** agent — audits a draft for AI-writing tells *and* for
 unsourced or over-confident claims, checking each against the store.

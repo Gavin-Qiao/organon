@@ -266,3 +266,40 @@ test("post-migration: every doc is parseable + retrievable, including frontmatte
   const byLedger = run("kb-find.ts", ["--root", root, "median", "ARI"]);
   expect(byLedger.stdout).toContain(".promptus/ledger/RESEARCH-LEDGER.md");
 });
+
+// ── Telos hygiene (report-only: the Telos is direction; events route elsewhere) ──
+
+function scaffoldCurrent(telosBody: string): string {
+  const root = mkTmp("promptus-doc-cur-");
+  mkdirSync(join(root, ".promptus", "schema"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "ledger"), { recursive: true });
+  writeFileSync(join(root, ".promptus", "schema", "kb-vocab.json"), readFileSync(join(REPO, "templates", "schema", "kb-vocab.json")));
+  writeFileSync(join(root, ".promptus", "TELOS.md"), telosBody);
+  writeFileSync(join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md"), "# Ledger\n\n<!-- kb:append-point -->\n");
+  return root;
+}
+
+test("check: flags event-shaped Telos content with line numbers and the routing", () => {
+  const root = scaffoldCurrent([
+    "# Telos — polluted",
+    "## Where the frontier is now (cont.18)",
+    "- The shine (the North Star, 2026-06-28): a dated amendment.",
+    "- traced in event-20260703T090447Z.",
+    "## North star",
+    "Direction prose with no events.",
+  ].join("\n"));
+  const r = doctor(root, ["check"]);
+  expect(r.status).toBe(0); // report-only — hygiene never fails the check
+  expect(r.stdout).toContain("telos hygiene: 3 event-shaped line(s)");
+  expect(r.stdout).toContain("L2 (a session stamp + a NOW-shaped heading)");
+  expect(r.stdout).toContain("L3 (a date)");
+  expect(r.stdout).toContain("L4 (a ledger event id)");
+  expect(r.stdout).toContain("kb-now");
+});
+
+test("check: a clean Telos — and the shipping template itself — raise no hygiene flags", () => {
+  const clean = scaffoldCurrent("# Telos — clean\n\n## North star\nDirection, no dates.\n\n## Rules that never bend\n- provable > tuned\n");
+  expect(doctor(clean, ["check"]).stdout).not.toContain("telos hygiene");
+  const template = scaffoldCurrent(readFileSync(join(REPO, "templates", "TELOS.md"), "utf8"));
+  expect(doctor(template, ["check"]).stdout).not.toContain("telos hygiene");
+});

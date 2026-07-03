@@ -10,9 +10,13 @@
  *
  *   check    (default) READ-ONLY: locate the vocab, name the layout + version, report
  *            health (is the gate reachable? is the whole `.promptus/` wrongly gitignored?
- *            which stores are missing?), and — if the repo is on an older layout — print
- *            the migration plan WITHOUT touching anything. `--strict` exits non-zero when
- *            a migration is needed (so CI / a checkpoint can gate on it).
+ *            which stores are missing? is the Telos polluted with event-shaped content —
+ *            dates, ledger event ids, session stamps, NOW-shaped headings — that belongs
+ *            in the ledger / NOW-header / memory?), and — if the repo is on an older
+ *            layout — print the migration plan WITHOUT touching anything. `--strict`
+ *            exits non-zero when a migration is needed (so CI / a checkpoint can gate on
+ *            it). Telos hygiene is report-only: moving the content is judgment, so the
+ *            doctor names the lines and the routing but never edits them.
  *   migrate  plan the moves that bring the repo to the canonical `.promptus/` layout, then
  *            print them. DRY-RUN by default; pass `--apply` to perform them. Idempotent:
  *            a repo already on the current layout is a no-op (only the index is refreshed).
@@ -80,9 +84,31 @@ interface Diagnosis {
   gitignoreHazard: boolean;
   stores: Record<string, { src: string; rel: string; exists: boolean }>;
   telos: string | null;
+  telosHygiene: TelosFlag[];
   migrationNeeded: boolean;
   plan: Step[];
   notes: string[];
+}
+
+interface TelosFlag { line: number; sample: string; why: string }
+
+/** Telos hygiene: the Telos holds direction and changes rarely, rewritten in place. Flag
+ *  event-shaped content that belongs in the other stores — dates and event ids are ledger
+ *  lines (kb-add), NOW-shaped headings are the ledger NOW-header (kb-now), session stamps
+ *  are neither. Report-only: what to move where is judgment, so the doctor never edits. */
+function telosHygiene(telosPath: string | null): TelosFlag[] {
+  if (!telosPath || !existsSync(telosPath)) return [];
+  const flags: TelosFlag[] = [];
+  readFileSync(telosPath, "utf8").split(/\r?\n/).forEach((raw, i) => {
+    const l = raw.trim();
+    const why: string[] = [];
+    if (/\b20\d{2}-\d{2}-\d{2}\b/.test(l)) why.push("a date");
+    if (/\bevent-\d{8}T\d{6}Z?\b/.test(l)) why.push("a ledger event id");
+    if (/\bcont\.\d+\b/i.test(l)) why.push("a session stamp");
+    if (/^#{1,6}\s/.test(l) && /\b(now|frontier|status|next actions|updated)\b/i.test(l)) why.push("a NOW-shaped heading");
+    if (why.length) flags.push({ line: i + 1, sample: l.length > 72 ? `${l.slice(0, 69)}…` : l, why: why.join(" + ") });
+  });
+  return flags;
 }
 
 // ── Locate the project the way the doctor must: recognize BOTH the current
@@ -283,7 +309,8 @@ function diagnose(start: string): Diagnosis {
 
   return {
     root, vocabPath: loc.vocabPath, vocabLocation: loc.location, vocabVersion: old?.version ?? null, targetVersion,
-    layout, gateReachable, gitignoreHazard, stores, telos: telosOrig, migrationNeeded, plan, notes,
+    layout, gateReachable, gitignoreHazard, stores, telos: telosOrig, telosHygiene: telosHygiene(telosOrig),
+    migrationNeeded, plan, notes,
   };
 }
 
@@ -330,6 +357,12 @@ function reportCheck(d: Diagnosis): void {
   console.log(`  ${sym(!d.gitignoreHazard)} gitignore: ${d.gitignoreHazard ? "/.promptus/ is broadly ignored — migrated stores would NOT be committed" : "stores are not wrongly ignored"}`);
   console.log("  stores:");
   for (const [k, v] of Object.entries(d.stores)) console.log(`    ${v.exists ? "·" : "×"} ${k.padEnd(8)} ${v.rel}${v.exists ? "" : "  (missing)"}`);
+  if (d.telosHygiene.length) {
+    console.log(`  telos hygiene: ${d.telosHygiene.length} event-shaped line(s) — the Telos is direction, rewritten in place;`);
+    console.log("    route events to the ledger (kb-add), the frontier to the NOW-header (kb-now), settled facts to memory:");
+    for (const h of d.telosHygiene.slice(0, 8)) console.log(`    L${h.line} (${h.why}): ${h.sample}`);
+    if (d.telosHygiene.length > 8) console.log(`    … and ${d.telosHygiene.length - 8} more`);
+  }
   if (d.migrationNeeded && d.plan.length) {
     console.log(`\n  migration plan (${d.plan.length} steps) — run \`promptus-doctor migrate --apply\`:`);
     for (const s of d.plan) console.log(`    - ${s.what}`);
