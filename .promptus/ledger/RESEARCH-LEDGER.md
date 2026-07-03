@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (spine merged; v0.6.0 + v0.1.0 cut)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (checkpoint: released + migrated; article next)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,7 +25,7 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (spine MERGED; promptus-v0.6.0 + editio-v0.1.0 cut at operator direction; Phase 3 next)
+## NOW (released AND the operator migrated - promptus 0.6.0 + editio 0.1.0 live; name the article, then Phase 3)
 **The editio spine is real and validated** (feat/editio-spine, 2026-07-02): /editio, the orchestrator +
 editio-structure + editio-latex skills, editio-scaffold.ts + editio-render.ts, editio.sty, the DoCO/DEO
 gate, venues arxiv + tpami — and a scaffolded scratch paper **builds clean in all three modes on the
@@ -36,16 +36,15 @@ and the no-identity sweep. The five goal directives (2026-07-02) are executed: e
 (5 lit units + editio-structure/references/exemplars.md, pointers only) · TeX setup is a minimal in-skill
 capability (operator HAS MiKTeX) · arxiv + tpami seeded · paper meta = paper.json placeholders, nobody's
 identity by default · the first-article project still unnamed.
-**Gap ledger:** G1-G7, G10, G11 closed; G8 waits for Phase 4, G9 for Phase 3. **Releases CUT at
-operator direction (2026-07-02, amending the gap-free-first call):** promptus-v0.6.0 (the monorepo
-split + the migration notes) and editio-v0.1.0 (the spine) — the per-plugin release flow exercised
-end to end for the first time.
+**Gap ledger:** G1-G7, G10, G11 closed; G8 waits for Phase 4, G9 for Phase 3. **Released and
+migrated:** promptus-v0.6.0 + editio-v0.1.0 published (the per-plugin flow verified end to end, the
+badges self-update per the docs-stay-truthful convention in CONTRIBUTING); the operator reinstalled
+once and sits on both, hooks live. No organon-level release series (the marketplace is a directory,
+not a product — decided).
 
 ## Open frontier
-- [ ] **Operator updates the plugins** (marketplace update organon; update promptus + editio;
-  /reload-plugins) to sit on promptus 0.6.0 + editio 0.1.0.
 - [ ] **Operator names the first-article project** (directive 4) — the article is the live dogfood and
-  the first real exercise of retrieve + the reviewer.
+  the first real exercise of retrieve + the reviewer (still the oldest open item).
 - [ ] **Phase 3 — editio-figures** (panel-first, venue widths from venue.json, caption grammar,
   statistical honesty, provenance; G9 MediaBox lint lands here), driven by what the article needs.
 - [ ] **Phases 4-6**: tables/bib/repro (G8 own-paper marker) -> venue/rebuttal/lint (the publish gate) ->
@@ -57,20 +56,22 @@ end to end for the first time.
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Operator updates both plugins (0.6.0 / 0.1.0).
-2. Operator names the first-article project; the article starts as the live dogfood.
-3. Phase 3 (figures) builds next, article-driven, recording decisions via kb-add.
+1. Operator names the first-article project; the article starts as the live dogfood.
+2. Phase 3 (figures) builds next, article-driven, recording decisions via kb-add.
+3. Land the checkpoint's uncommitted ledger writes with the next PR (they sit on main's working tree).
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO PHASE 1-2 IS MERGED AND RELEASED** — promptus-v0.6.0 + editio-v0.1.0 tagged at operator
-direction (2026-07-02, amending the gap-free-first call; the release DECISION in the Log). Three modes
-compile-verified on the operator's MiKTeX; 144 tests; the golden render contract + the no-identity
-sweep guard it. Read the Log since 2026-07-02: the five goal directives, the authoring-subset decision
-(mode-invariant renders; prefix-dispatched refs; the audit step applies grades, the reviewer stays
-read-only), the spine RESULT, and the release-point amendment. Gap list: G8 (Phase 4) + G9 (Phase 3)
-open, everything else closed. Next: operator updates plugins, names the first-article project; then
-Phase 3 figures, article-driven. The exemplar craft lives in editio-structure/references/exemplars.md
-backed by 5 lit units. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-02.
+**EDITIO PHASE 1-2 RELEASED; OPERATOR MIGRATED (promptus 0.6.0 + editio 0.1.0 live, hooks on).**
+Three modes compile-verified on the operator's MiKTeX; 144 tests; the golden render contract + the
+no-identity sweep guard it. Read the Log since 2026-07-02: the five goal directives, the
+authoring-subset decision (mode-invariant renders; prefix-dispatched refs; the audit step applies
+grades, the reviewer stays read-only), the spine RESULT, the release-point amendment, the
+docs-stay-truthful convention (CONTRIBUTING — docs ride the change; versions never in prose), and the
+stacked-PR gotcha (deleting a merged base branch closes dependents — recreate, don't reopen). Gap
+list: G8 (Phase 4) + G9 (Phase 3) open, everything else closed. Next: operator names the
+first-article project; then Phase 3 figures, article-driven. The exemplar craft lives in
+editio-structure/references/exemplars.md backed by 5 lit units. Read .promptus/TELOS.md, then this
+header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -443,5 +444,14 @@ Released the first per-plugin cuts (2026-07-02, operator-directed): promptus-v0.
 
 ### [2026-07-02 23:35:30] DECISION/RESOLVED — Docs-stay-truthful convention: docs ride the change, versions never in prose, the event map lives in CONTRIBUTING
 Operator direction (2026-07-02): note down, somewhere like CONTRIBUTING, how READMEs get updated when an update lands or a new plugin is added — 'funnily, it's part of promptus' philosophy'. Exactly so: the store's no-drift discipline applied to the repo's own front pages. Codified as the Docs-stay-truthful convention, home in CONTRIBUTING.md with pointers from RELEASING.md and AGENTS.md. Two standing rules: (1) DOCS RIDE THE CHANGE — a PR that alters what ships updates the affected READMEs and AGENTS.md in the same PR, never in a follow-up; (2) VERSIONS NEVER LIVE IN PROSE — the tag-prefix-filtered release badges and each plugin.json carry them (the structural fix for the staleness the operator caught twice). Plus the event map: release cut -> nothing (badges self-update); a skill/command/script ships -> that plugin's README tables + CHANGELOG [Unreleased] + AGENTS layout; a plugin joins the marketplace -> root README hero + table row with a filtered badge, marketplace.json, AGENTS layout, and the new plugin's own README in the house shape (hero, epigraph, why, install, quick start, what ships, license) + CHANGELOG; behavior moves or reframes -> a re-truth sweep (grep the old claim across READMEs/AGENTS/Telos/skills, fix every hit in the same PR, record here). Precedents that shaped it: the v0.5.0 re-truthing pass, the humanizer soft-dial sweep, the badge fix.
+
+### [2026-07-02 23:39:40] MISTAKE/RESOLVED — Stacked-PR gotcha: deleting the base branch on merge closes the dependent PR unrecoverably - recreate, do not reopen
+Merging PR #9 with --delete-branch CLOSED the stacked PR #10 instead of retargeting it: GitHub auto-closes an open PR whose base branch is deleted, and a closed PR cannot be reopened or retargeted once its base is gone — reopen and edit-base both fail. Recovery: recreate the PR from the same branch against main (became #11; the branch needed a merge-from-main first because the required checks are strict). Lesson for stacked PRs here: either merge the base WITHOUT deleting its branch and retarget the dependent manually, or expect to recreate; the recreate is cheap since the branch survives. Cost: one PR number and five minutes.
+
+### [2026-07-02 23:39:40] RESULT/VALIDATED — Operator migrated: promptus 0.6.0 + editio 0.1.0 installed from the organon marketplace, hooks live
+The operator completed the one-reinstall migration and sits on the released versions: marketplace organon re-added, promptus 0.6.0 + editio 0.1.0 installed and reloaded (6 plugins, 10 hooks live; the /checkpoint command now resolves scripts from the plugin cache at .../organon/promptus/0.6.0/). The migration designed into the restructure PR - one break, one reinstall - executed exactly once, as intended. All promptus:* skills and editio:humanizer register; the editio spine skills ship with the installed 0.1.0.
+
+### [2026-07-02 23:53:47] MISTAKE/RESOLVED — editio cache froze pre-spine - the version string is the install cache key; 0.1.0 covered two trees
+The operator's editio install was frozen on the pre-spine tree and /editio never appeared: editio's manifest entered main already stamped 0.1.0 in the restructure merge (PR #11, fe351ff) when the plugin held only humanizer; the spine (PR #12) then changed content without moving the version, and the plugin updater keys refresh on the version string - promptus re-fetched on 0.5.2->0.6.0 while editio 0.1.0 read as "already latest" forever (claude plugin update confirmed the no-op). Amends the 2026-07-02 migration RESULT: editio was installed, but stale. Fixed by uninstall+reinstall from the current marketplace clone (c9bf0b7); a session restart loads the commands. Durable rule for RELEASING.md (proposed): a new plugin's manifest carries 0.0.0 until its first release-cut PR stamps the real version - one version string must never cover two different trees, because the version IS the cache key.
 
 <!-- kb:append-point -->
