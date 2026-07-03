@@ -5,8 +5,10 @@
 **Store what your research knows. Retrieve it with its confidence attached. Write only what you can defend.**
 
 [![CI](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml/badge.svg)](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml)
-[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](../LICENSE)
 [![runtime: bun](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh)
+
+Part of [**Organon**](../README.md), beside [**editio**](../editio/README.md) — the writing toolchain that publishes from this store.
 
 </div>
 
@@ -82,17 +84,17 @@ gate. The three verbs, under the hood:
 ```bash
 # STORE — body on stdin; the script owns the timestamp, id, placement, and the gate
 echo "Chose bun so bun:sqlite is a one-line upgrade later." \
-  | bun scripts/kb-add.ts --substrate ledger --kind DECISION --status VALIDATED --title "Chose bun"
+  | bun promptus/scripts/kb-add.ts --substrate ledger --kind DECISION --status VALIDATED --title "Chose bun"
 
 # KEEP — rebuild the derived card-catalog + link graph
-bun scripts/kb-index.ts
+bun promptus/scripts/kb-index.ts
 
 # RETRIEVE — header-first, every hit tagged substrate:status
-bun scripts/kb-find.ts "bun"
+bun promptus/scripts/kb-find.ts "bun"
 ```
 
-(Inside the Promptus repo the scripts are `bun scripts/…`; inside another project the skills
-resolve them via `${CLAUDE_PLUGIN_ROOT}`.) Before you compact a session,
+(Those paths are from the organon repo root; inside another project the skills
+resolve them via `${CLAUDE_PLUGIN_ROOT}` — nothing to copy in.) Before you compact a session,
 `/promptus:checkpoint` flushes anything unrecorded into the stores. New to the system?
 `/promptus:help`.
 
