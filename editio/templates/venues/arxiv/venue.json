@@ -1,0 +1,18 @@
+{
+  "_note": "arXiv preprint — the default first target. Venue files are data, not code: add a venue by adding a folder like this one. Widths in mm feed figure sizing (editio-figures).",
+  "id": "arxiv",
+  "name": "arXiv preprint",
+  "class": "article",
+  "class_options": ["11pt"],
+  "columns": 1,
+  "column_width_mm": 127,
+  "bib_style": "plainnat",
+  "packages": ["natbib", "[margin=1in]{geometry}"],
+  "author_format": "plain",
+  "engine": "pdflatex",
+  "limits": {},
+  "notes": [
+    "one-column preprint; the arXiv cleaner strips comments on submission",
+    "geometry sets 1in margins; drop it if the venue class you swap in owns layout"
+  ]
+}

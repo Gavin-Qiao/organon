@@ -1,0 +1,71 @@
+% editio.sty — the three-mode render layer: one source, three artifacts.
+%
+%   \def\editiomode{draft|publish|blind}   BEFORE \usepackage{editio}
+%
+%   draft    the author's instrument: claim tints, provenance stamps, TODOs on the page
+%   publish  camera-ready: every annotation macro collapses to identity
+%   blind    publish + self-citations masked + \blindhide{...} dropped
+%
+% The render never blocks: an unsourced claim still typesets (vermilion in draft,
+% clean in publish). Enforcement — zero unsourced, no overclaims at publish — is
+% editio-lint's job, not this package's. Tints are Okabe-Ito (colourblind-safe).
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{editio}[2026/07/03 v0.1.0 editio three-mode render layer]
+\RequirePackage{xcolor}
+
+% ── Mode resolution ─────────────────────────────────────────────────────────
+\providecommand{\editiomode}{draft}
+\newif\ifeditiodraft
+\newif\ifeditiopublish
+\newif\ifeditioblind
+\edef\editio@mode{\editiomode}
+\def\editio@draft{draft}
+\def\editio@publish{publish}
+\def\editio@blind{blind}
+\ifx\editio@mode\editio@draft\editiodrafttrue\else
+\ifx\editio@mode\editio@publish\editiopublishtrue\else
+\ifx\editio@mode\editio@blind\editioblindtrue\else
+\PackageWarning{editio}{unknown \string\editiomode\space"\editio@mode" - falling back to draft}%
+\editiodrafttrue
+\fi\fi\fi
+
+% ── Okabe-Ito tints ──────────────────────────────────────────────────────────
+\definecolor{editioAmber}{HTML}{E69F00}
+\definecolor{editioVermilion}{HTML}{D55E00}
+\definecolor{editioSky}{HTML}{56B4E9}
+\definecolor{editioGrey}{HTML}{888888}
+
+% ── Claim spans (graded by the audit loop; see the editio skill) ────────────
+% \claimV validated (clean everywhere) · \claimC conjectured (amber in draft)
+% \claimU unsourced (vermilion + tag in draft) · \claimG ungraded (grey in draft)
+\ifeditiodraft
+  \newcommand{\claimV}[1]{#1}
+  \newcommand{\claimC}[1]{\textcolor{editioAmber}{#1}}
+  \newcommand{\claimU}[1]{\textcolor{editioVermilion}{#1\textsuperscript{[unsourced]}}}
+  \newcommand{\claimG}[1]{\textcolor{editioGrey}{#1\textsuperscript{[ungraded]}}}
+  \newcommand{\editiogrounds}[1]{\textcolor{editioSky}{\textsuperscript{[#1]}}}
+  \newcommand{\editiostamp}[2]{\par\noindent{\scriptsize\color{editioGrey}\textit{updated #1\ifx\relax#2\relax\else\ -- grounds: #2\fi}}\par}
+  \newcommand{\editiotodo}[1]{\textcolor{editioVermilion}{[TODO: #1]}}
+\else
+  \newcommand{\claimV}[1]{#1}
+  \newcommand{\claimC}[1]{#1}
+  \newcommand{\claimU}[1]{#1}
+  \newcommand{\claimG}[1]{#1}
+  \newcommand{\editiogrounds}[1]{}
+  \newcommand{\editiostamp}[2]{}
+  \newcommand{\editiotodo}[1]{}
+\fi
+
+% ── Blind masking ────────────────────────────────────────────────────────────
+% \selfcite{key} cites normally except in blind, where it prints an anonymous
+% marker. \blindhide{...} content is dropped in blind (acknowledgements, grant
+% numbers, links that deanonymize).
+\ifeditioblind
+  \newcommand{\selfcite}[1]{[anonymized]}
+  \newcommand{\blindhide}[1]{}
+\else
+  \newcommand{\selfcite}[1]{\cite{#1}}
+  \newcommand{\blindhide}[1]{#1}
+\fi
+
+\endinput

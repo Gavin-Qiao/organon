@@ -1,0 +1,22 @@
+{
+  "_note": "IEEE Transactions on Pattern Analysis and Machine Intelligence — IEEEtran in Computer-Society journal mode.",
+  "id": "tpami",
+  "name": "IEEE TPAMI (journal)",
+  "class": "IEEEtran",
+  "class_options": ["10pt", "journal", "compsoc"],
+  "columns": 2,
+  "column_width_mm": 88,
+  "bib_style": "IEEEtran",
+  "packages": [],
+  "author_format": "ieee-journal",
+  "engine": "pdflatex",
+  "limits": {
+    "pages_regular": 14,
+    "note": "over-length page charges past 14 pages (double-column); check the current IEEE author kit"
+  },
+  "notes": [
+    "compsoc journal mode changes abstract/title layout - do not fight it",
+    "figures must survive B&W print; Okabe-Ito + redundant encoding covers this",
+    "IEEEtran class and bibliography style ship with TeX Live / MiKTeX"
+  ]
+}

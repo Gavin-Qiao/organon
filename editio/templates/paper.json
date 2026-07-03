@@ -1,0 +1,20 @@
+{
+  "_note": "editio paper metadata — the one place identity lives. Scaffolded with placeholders (never anyone's real name); edit freely. editio-scaffold generates front/metadata.tex from this; re-run with --force after edits.",
+  "title": "Untitled",
+  "short_title": "",
+  "authors": [
+    {
+      "name": "Author One",
+      "affiliation": "Affiliation One",
+      "email": "",
+      "orcid": ""
+    }
+  ],
+  "keywords": [],
+  "venue": "arxiv",
+  "order": "cs-systems",
+  "bibliography": "refs.bib",
+  "blind": {
+    "label": "Anonymous Authors"
+  }
+}
