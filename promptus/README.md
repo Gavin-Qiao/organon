@@ -5,6 +5,7 @@
 **Store what your research knows. Retrieve it with its confidence attached. Write only what you can defend.**
 
 [![CI](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml/badge.svg)](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=promptus-v%2A&label=release)](https://github.com/Gavin-Qiao/organon/releases)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](../LICENSE)
 [![runtime: bun](https://img.shields.io/badge/runtime-bun-black.svg)](https://bun.sh)
 
