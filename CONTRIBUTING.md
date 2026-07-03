@@ -34,8 +34,25 @@ CI runs the same hooks, so a clean local run should mean a clean PR.
   hand-edit the ledger log lines or `.promptus/` (it's derived and gitignored).
 - **Scripts** are TypeScript on bun, stdlib-first.
 
+## Docs stay truthful
+
+The store's discipline — no drift between the record and reality — applies to the repo's own
+front pages. Two standing rules, then the event map:
+
+- **Docs ride the change.** A PR that alters what ships updates the affected READMEs (and
+  `AGENTS.md`) *in the same PR* — never "in a follow-up".
+- **Versions never live in prose.** The tag-prefix-filtered release badges and each plugin's
+  `plugin.json` carry them. If you are about to type a version number into a README, stop.
+
+| when this lands… | update this |
+|---|---|
+| a release is cut | nothing — the badges update themselves (see `RELEASING.md`) |
+| a skill / command / script ships | the plugin's README (what-ships / commands tables) + its `CHANGELOG.md` `[Unreleased]` + `AGENTS.md`'s layout if the shape changed |
+| a plugin joins the marketplace | the root `README.md` (hero cross-link + a table row with a `<plugin>-v*`-filtered release badge) · `marketplace.json` · `AGENTS.md`'s layout · the new plugin's own README in the house shape (hero → epigraph → why → install → quick start → what ships → license) + its `CHANGELOG.md` |
+| behavior moves or reframes (a skill migrates, a verb changes meaning) | a **re-truth sweep**: grep the old claim across the READMEs / `AGENTS.md` / the Telos / skill descriptions, fix every hit in the same PR, and record the change in the ledger |
+
 ## Pull requests
 
 Keep them focused. When you change something user-facing, add a line under `## [Unreleased]`
-in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`). See `RELEASING.md` for how
-per-plugin releases are cut.
+in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`) and keep the docs truthful
+(the section above). See `RELEASING.md` for how per-plugin releases are cut.
