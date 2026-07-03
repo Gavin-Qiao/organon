@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-07-03
+
 ### Added
 
 - **Phase 3 — `editio-figures`**: figures as arguments. The skill (claim-first captions,
@@ -57,5 +59,6 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.1.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.2.0...HEAD
+[0.2.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.2.0
 [0.1.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.1.0
