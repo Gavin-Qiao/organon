@@ -17,6 +17,22 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Changed
+
+- **Monorepo restructure — breaking for installs.** The repo is now the **Organon marketplace**:
+  `marketplace.json` (renamed `promptus` → `organon`) lives at the repo root and the promptus
+  plugin moved into `promptus/`. Migrate with `/plugin marketplace remove promptus`, then
+  `/plugin marketplace add Gavin-Qiao/organon` and `/plugin install promptus@organon`.
+- Releases are now per-plugin tags (`promptus-vX.Y.Z`); the pre-monorepo `v0.1.0`–`v0.5.2` tags
+  remain valid history.
+
+### Removed
+
+- **`humanizer` moved to the editio plugin** (same marketplace, `/plugin install editio@organon`):
+  it is a writing tool, and editio is the writing toolchain. `grannie` now dials it *softly* —
+  full pattern set when editio is installed, plain grounded answers otherwise. Its upstream MIT
+  notice moved with it to `editio/NOTICE`.
+
 ## [0.5.2] - 2026-06-30
 
 ### Added
@@ -322,13 +338,13 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/promptus/compare/v0.5.2...HEAD
-[0.5.2]: https://github.com/Gavin-Qiao/promptus/compare/v0.5.1...v0.5.2
-[0.5.1]: https://github.com/Gavin-Qiao/promptus/compare/v0.5.0...v0.5.1
-[0.5.0]: https://github.com/Gavin-Qiao/promptus/compare/v0.4.1...v0.5.0
-[0.4.1]: https://github.com/Gavin-Qiao/promptus/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/Gavin-Qiao/promptus/compare/v0.3.0...v0.4.0
-[0.3.0]: https://github.com/Gavin-Qiao/promptus/compare/v0.2.0...v0.3.0
-[0.2.0]: https://github.com/Gavin-Qiao/promptus/compare/v0.1.1...v0.2.0
-[0.1.1]: https://github.com/Gavin-Qiao/promptus/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/Gavin-Qiao/promptus/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/Gavin-Qiao/organon/compare/v0.5.1...v0.5.2
+[0.5.1]: https://github.com/Gavin-Qiao/organon/compare/v0.5.0...v0.5.1
+[0.5.0]: https://github.com/Gavin-Qiao/organon/compare/v0.4.1...v0.5.0
+[0.4.1]: https://github.com/Gavin-Qiao/organon/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/Gavin-Qiao/organon/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/Gavin-Qiao/organon/compare/v0.2.0...v0.3.0
+[0.2.0]: https://github.com/Gavin-Qiao/organon/compare/v0.1.1...v0.2.0
+[0.1.1]: https://github.com/Gavin-Qiao/organon/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/Gavin-Qiao/organon/releases/tag/v0.1.0

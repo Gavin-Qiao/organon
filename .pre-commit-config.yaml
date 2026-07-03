@@ -1,4 +1,4 @@
-# Promptus repository checks.
+# Organon repository checks.
 #
 # On the operator's machine the shared global Git hooks (core.hooksPath) auto-run this
 # config — the pre-commit-stage hooks on `git commit`, the pre-push-stage hooks on
@@ -24,8 +24,8 @@ repos:
   - repo: local
     hooks:
       - id: validate-plugin
-        name: validate plugin (manifests + components)
-        entry: bun scripts/validate-plugin.ts
+        name: validate marketplace + plugins (manifests + components)
+        entry: bun promptus/scripts/validate-plugin.ts
         language: system
         pass_filenames: false
         always_run: true # run on every push, not only when a matching file changed

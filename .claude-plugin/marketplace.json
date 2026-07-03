@@ -1,6 +1,6 @@
 {
-  "name": "promptus",
-  "description": "Promptus — a file-based research knowledge system for Claude Code: a substrate for the LLM agent that stores / keeps / retrieves a project's knowledge as gated markdown, navigable by status and a [[link]] graph. grannie is the human read-port; the humanizer is a bundled style toolkit.",
+  "name": "organon",
+  "description": "Organon — the research toolbox for Claude Code: promptus stores / keeps / retrieves a project's knowledge as gated markdown; editio turns what the store has validated into defensible, submittable papers.",
   "owner": {
     "name": "Gavin-Qiao",
     "url": "https://github.com/Gavin-Qiao"
@@ -8,8 +8,13 @@
   "plugins": [
     {
       "name": "promptus",
-      "source": "./",
-      "description": "Store / keep / retrieve a research project's knowledge as gated markdown — a substrate for the LLM agent; grannie is the human read-port (plain-language, grounded answers), the humanizer a bundled style toolkit."
+      "source": "./promptus",
+      "description": "Store / keep / retrieve a research project's knowledge as gated markdown — a substrate for the LLM agent; grannie is the human read-port (plain-language, grounded answers)."
+    },
+    {
+      "name": "editio",
+      "source": "./editio",
+      "description": "The academic-writing toolchain: turn a promptus store's validated knowledge into defensible, submittable papers — structure, three renders (draft/publish/blind), figures, tables, bibliography, venue packaging, rebuttals. Ships the humanizer style toolkit. Requires the promptus plugin."
     }
   ]
 }

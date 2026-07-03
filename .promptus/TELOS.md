@@ -11,8 +11,9 @@ so its reasoning and writing stay honest, grounded, and resumable.
 The agent is the user. A human reads in through **one port: grannie** (`/grannie
 explain …`), which answers from the store in plain language, honest about confidence.
 The humanizer is a **style toolkit** grannie dials (and the agent applies to its own
-prose) — not a verb of its own. There is no separate "render for an audience": the
-agent grounds its writing by retrieving; grannie is the one human-facing read.
+prose) — not a verb of its own; it ships with **editio**, the writing plugin, and grannie
+degrades to plain answers when editio is absent. There is no separate "render for an
+audience": the agent grounds its writing by retrieving; grannie is the one human-facing read.
 
 ## The three commitments
 
@@ -55,7 +56,7 @@ spans all four.
 ## The human read-port + the skills around it
 
 - **grannie** (`/grannie explain …`) — the one human-facing port: explain a stored concept in plain language, grounded by judgement (auto-looks-up the store) and honest about its status. *Real.*
-- **humanizer** (`/humanizer`) — a style toolkit (de-AI, human voice) grannie dials and the agent applies to its own prose. Not a knowledge verb. *Real.*
+- **humanizer** (`/humanizer`) — a style toolkit (de-AI, human voice) grannie dials and the agent applies to its own prose. Not a knowledge verb. *Real; ships with the editio plugin.*
 - **grounded-writing-reviewer** — an agent-side audit: check a draft's claims against the store. *Real.*
 - **overnight-handoff** — terse resumable state for the next agent (agent-to-agent, a checkpoint variant). *Deferred.*
 

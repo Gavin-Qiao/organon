@@ -6,7 +6,7 @@ description: Retrieve what a project already knows, with provenance and status, 
 # recall — retrieval reasoning
 
 Turn a question into grounded, cited knowledge. This is the reasoning layer over
-`scripts/kb-find.ts` — and where grounding lives (the humanizer stays pure style). It is
+`scripts/kb-find.ts` — and where grounding lives (style stays with editio's humanizer). It is
 **auto-invoked by judgement**: if a claim under discussion could be checked against the
 store, check it rather than asserting from memory.
 
@@ -35,7 +35,7 @@ store, check it rather than asserting from memory.
 4. **Verify.** Read each unit you cite — its body via `kb-get` (a page or a ledger slice), or a
    lit unit's `source#anchor` at the real source. Do **not** pass through a unit you didn't read.
    If the store doesn't back the claim, say *unsupported*, don't invent.
-5. **Synthesize.** Answer in the form the caller (humanizer, grannie, a reviewer) can render
+5. **Synthesize.** Answer in the form the caller (grannie, a reviewer, editio's humanizer) can render
    honestly: each point carries its `substrate:status` and its citation.
 
 ## Output shape

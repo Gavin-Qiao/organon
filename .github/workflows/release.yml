@@ -2,7 +2,7 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    tags: ["promptus-v*", "editio-v*"]
 
 permissions:
   contents: write
@@ -17,32 +17,34 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Derive version from tag
+      - name: Derive plugin + version from tag
         id: ver
-        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "plugin=${GITHUB_REF_NAME%-v*}" >> "$GITHUB_OUTPUT"
+          echo "version=${GITHUB_REF_NAME##*-v}" >> "$GITHUB_OUTPUT"
 
-      - name: Validate plugin (manifests + components)
-        run: bun scripts/validate-plugin.ts
+      - name: Validate marketplace + plugins (manifests + components)
+        run: bun promptus/scripts/validate-plugin.ts
 
       - name: Run tests
         run: bun test
 
-      - name: Tag must match plugin.json version
+      - name: Tag must match the plugin manifest version
         run: |
-          manifest="$(bun -e "console.log(JSON.parse(await Bun.file('.claude-plugin/plugin.json').text()).version)")"
+          manifest="$(bun -e "console.log(JSON.parse(await Bun.file('${{ steps.ver.outputs.plugin }}/.claude-plugin/plugin.json').text()).version)")"
           if [ "$manifest" != "${{ steps.ver.outputs.version }}" ]; then
-            echo "::error::tag ${GITHUB_REF_NAME} does not match plugin.json version ${manifest}"
+            echo "::error::tag ${GITHUB_REF_NAME} does not match ${{ steps.ver.outputs.plugin }}/plugin.json version ${manifest}"
             exit 1
           fi
 
       - name: Release-note sanity + extract notes
-        run: bun scripts/changelog.ts extract "${{ steps.ver.outputs.version }}" | tee RELEASE_NOTES.md
+        run: bun promptus/scripts/changelog.ts extract "${{ steps.ver.outputs.version }}" "${{ steps.ver.outputs.plugin }}/CHANGELOG.md" | tee RELEASE_NOTES.md
 
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${GITHUB_REF_NAME}" \
-            --title "Promptus ${GITHUB_REF_NAME}" \
+            --title "${{ steps.ver.outputs.plugin }} v${{ steps.ver.outputs.version }}" \
             --notes-file RELEASE_NOTES.md \
             --verify-tag

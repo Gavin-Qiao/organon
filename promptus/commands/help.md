@@ -5,8 +5,8 @@ argument-hint: "[topic]"
 
 # /promptus:help — what's in the box
 
-Promptus **stores / keeps / retrieves** what a research project knows as gated markdown, and
-**renders** it for an audience. If `$ARGUMENTS` names a topic, focus the answer there;
+Promptus **stores / keeps / retrieves** what a research project knows as gated markdown — a
+substrate for the agent; `grannie` is the one human read-port. If `$ARGUMENTS` names a topic, focus the answer there;
 otherwise give the map below and end at the single next step.
 
 ## The model
@@ -22,8 +22,8 @@ otherwise give the map below and end at the single next step.
   - **RETRIEVE** → `kb-find` (header-first) → `kb-get` (fetch one unit's body) and the `recall` skill;
     `kb-graph rank`/`suggest` to navigate the `[[link]]` graph.
 - A human reads in through **`grannie`** (`/grannie explain <concept>`) — plain-language, grounded
-  answers; the one human port. The `humanizer` is a bundled style toolkit, the
-  `grounded-writing-reviewer` an agent-side audit.
+  answers; the one human port. The `grounded-writing-reviewer` is an agent-side audit; the
+  `humanizer` style toolkit ships with the editio plugin (grannie dials it when installed).
 
 ## Commands & skills
 
@@ -33,7 +33,7 @@ otherwise give the map below and end at the single next step.
 | record a decision / run / finding | the `research-ledger` skill → `kb-add` |
 | flush state before compaction | `/promptus:checkpoint` |
 | find what we already know | the `recall` skill → `kb-find` |
-| write something grounded and human | `recall` (grounds it) → `humanizer` (styles it) |
+| write something grounded and human | `recall` (grounds it) → editio's `humanizer` (styles it, when installed) |
 | explain a concept plainly | the `grannie` skill (`explain <concept>`) |
 | audit a draft | the `grounded-writing-reviewer` agent |
 | inspect or heal the knowledge graph | `/promptus:promptus-graph` (`rank` · `lint` · `suggest`) |

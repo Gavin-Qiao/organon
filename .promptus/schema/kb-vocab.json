@@ -68,7 +68,7 @@
   "export_context": {
     "cito": "http://purl.org/spar/cito/",
     "prov": "http://www.w3.org/ns/prov#",
-    "promptus": "https://github.com/Gavin-Qiao/promptus#"
+    "promptus": "https://github.com/Gavin-Qiao/organon#"
   },
   "sentinel": "<!-- kb:append-point -->"
 }
