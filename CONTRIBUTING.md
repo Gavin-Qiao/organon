@@ -1,12 +1,13 @@
-# Contributing to Promptus
+# Contributing to Organon
 
-Promptus is a small, opinionated system; the bar is "honest, grounded, and tested."
+Organon (the promptus + editio plugins) is a small, opinionated system; the bar is "honest,
+grounded, and tested."
 
 ## Setup
 
 - Install [bun](https://bun.sh) (≥ 1.3).
-- `bun test` runs the suite; `bun run check` runs the plugin validator **and** the tests.
-- With the Claude CLI, `claude plugin validate` runs the full plugin check.
+- `bun test` runs the suite; `bun run check` validates the marketplace + both plugins **and** runs the tests.
+- With the Claude CLI, `claude plugin validate <plugin-dir>` runs the full per-plugin check.
 
 ## Local checks (pre-commit / pre-push)
 
@@ -36,4 +37,5 @@ CI runs the same hooks, so a clean local run should mean a clean PR.
 ## Pull requests
 
 Keep them focused. When you change something user-facing, add a line under `## [Unreleased]`
-in `CHANGELOG.md`. See `RELEASING.md` for how releases are cut.
+in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`). See `RELEASING.md` for how
+per-plugin releases are cut.

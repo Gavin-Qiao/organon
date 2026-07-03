@@ -1,42 +1,56 @@
-# Releasing Promptus
+# Releasing from the Organon monorepo
 
-A release is a Git tag `vX.Y.Z`. Pushing it runs `.github/workflows/release.yml`, which
-re-checks everything, verifies the tag agrees with the manifest **and** the changelog, and
-publishes a GitHub release whose notes come straight from `CHANGELOG.md`. Nothing is
-published until the checks pass.
+Releases are **per plugin**. A release is a Git tag `<plugin>-vX.Y.Z` — `promptus-v0.6.0`,
+`editio-v0.1.0`. Pushing one runs `.github/workflows/release.yml`, which re-checks everything,
+verifies the tag agrees with that plugin's manifest **and** its changelog, and publishes a
+GitHub release whose notes come straight from `<plugin>/CHANGELOG.md`. Nothing is published
+until the checks pass. The plugins version independently — cutting one never forces the other.
 
-## Versioning ([SemVer](https://semver.org))
+> The marketplace never consumes releases: installs and updates pull from the repo source, and
+> the version of record is each `<plugin>/.claude-plugin/plugin.json`. Tags + releases are the
+> human-facing record and the discipline gate.
+
+## Versioning ([SemVer](https://semver.org), per plugin)
 
 - **MAJOR** — incompatible change to the store layout, the controlled vocab, or a script's CLI.
 - **MINOR** — a new substrate / skill / command / renderer, backward compatible.
 - **PATCH** — fixes and docs that don't change the contracts.
 
-While the project is pre-1.0, a breaking change may ride in a MINOR bump; the changelog
+While a plugin is pre-1.0, a breaking change may ride in a MINOR bump; the changelog
 calls it out.
 
-## Cutting a release
+## Cutting a release (for plugin `P`)
 
 1. **Land everything on `main`** and confirm CI is green.
-2. **Finalize the changelog.** Rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, open a
-   fresh empty `## [Unreleased]` above it, and update the link references at the bottom (the
-   `[Unreleased]` compare URL and a new `[X.Y.Z]` tag URL).
-3. **Bump the manifest.** Set `version` in `.claude-plugin/plugin.json` to `X.Y.Z`.
+2. **Finalize the changelog.** In `P/CHANGELOG.md`, rename `## [Unreleased]` to
+   `## [X.Y.Z] - YYYY-MM-DD`, open a fresh empty `## [Unreleased]` above it, and update the
+   link references at the bottom (the `[Unreleased]` compare URL and a new `[X.Y.Z]` tag URL,
+   tags shaped `P-vX.Y.Z`).
+3. **Bump the manifest.** Set `version` in `P/.claude-plugin/plugin.json` to `X.Y.Z`.
 4. **Sanity-check locally:**
    ```bash
-   bun run check                          # plugin validator + tests
-   bun scripts/changelog.ts check X.Y.Z   # release-note gate
+   bun run check                                            # marketplace + plugins validated, tests
+   bun promptus/scripts/changelog.ts check X.Y.Z P/CHANGELOG.md   # release-note gate
    ```
-5. **Commit** with `chore(release): vX.Y.Z` (scope required; flat `- ` bullet body).
+5. **Commit** with `chore(release): cut P vX.Y.Z` (scope required; flat `- ` bullet body).
 6. **Tag and push:**
    ```bash
-   git tag vX.Y.Z
-   git push origin vX.Y.Z
+   git tag P-vX.Y.Z
+   git push origin P-vX.Y.Z
    ```
 7. **Watch the workflow.** It validates, checks the version + changelog, and creates the
-   release. If the `[X.Y.Z]` changelog section is missing or empty, it stops *before* publishing.
+   release titled `P vX.Y.Z`. If the `[X.Y.Z]` section in `P/CHANGELOG.md` is missing or
+   empty, it stops *before* publishing.
 
 ## What the release workflow guards
 
-- Plugin structure (`bun scripts/validate-plugin.ts`) and tests (`bun test`).
-- The tag `vX.Y.Z` matches `plugin.json`'s `version`.
-- `CHANGELOG.md` has a non-empty `## [X.Y.Z]` section — and that section *is* the release note.
+- Marketplace + plugin structure (`bun promptus/scripts/validate-plugin.ts`) and tests (`bun test`).
+- The tag `P-vX.Y.Z` matches `P/.claude-plugin/plugin.json`'s `version`.
+- `P/CHANGELOG.md` has a non-empty `## [X.Y.Z]` section — and that section *is* the release note.
+
+## Notes
+
+- The repo-level "Latest" badge on GitHub points at whichever plugin released most recently;
+  release titles carry the plugin name, so the list stays unambiguous.
+- History: tags `v0.1.0` … `v0.5.2` predate the monorepo and refer to promptus releases cut
+  when the repo *was* the promptus plugin.

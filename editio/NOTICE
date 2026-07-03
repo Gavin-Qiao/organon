@@ -1,9 +1,9 @@
-Promptus
+editio (part of the Organon toolbox)
 Copyright (C) 2026 Mohan Qiao (https://github.com/Gavin-Qiao)
 
-Promptus is free software, licensed under the GNU General Public License v3.0
-(see LICENSE). You may redistribute it and/or modify it under those terms; any
-distributed derivative work must also be licensed under GPL-3.0.
+editio is free software, licensed under the GNU General Public License v3.0
+(see the repo-root LICENSE). You may redistribute it and/or modify it under
+those terms; any distributed derivative work must also be licensed under GPL-3.0.
 
 --------------------------------------------------------------------------------
 Third-party components
@@ -16,7 +16,7 @@ skills/humanizer — extended fork of blader/humanizer
   AI-generated writing, based on Wikipedia's "Signs of AI writing" guide)
   originates upstream and was published under the MIT License. Per that license,
   the original copyright and permission notice are retained in full below. The
-  combined work (Promptus) is distributed under GPL-3.0, which is compatible with
+  combined work (editio) is distributed under GPL-3.0, which is compatible with
   incorporating MIT-licensed material.
 
   ----- Upstream MIT license (governs the Part I material) -----
@@ -54,7 +54,8 @@ skills/humanizer — extended fork of blader/humanizer
     and philosophy of mind.
   - Added a calibrated-confidence step, a positive pass, and a read-it-aloud
     (spoken-language) test to the process.
-  - Integrated the skill as one renderer within Promptus.
+  - Integrated the skill as the style toolkit of the Organon toolbox — first
+    inside promptus, now shipped by the editio plugin.
 
   Part II is this fork's own contribution, licensed under GPL-3.0 with the rest
-  of Promptus.
+  of editio.

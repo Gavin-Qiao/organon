@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (editio designed; restructure next)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (merges delegated; build next)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,7 +25,7 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (editio fully decided + build designs recorded; the restructure PR is next)
+## NOW (merges delegated to the agent and executing; the editio build is next)
 **v0.5.2 released and live** (operator's plugin on 0.5.2). **editio: design complete, decision queue empty**
 (memo rev. 2 = [[editio-design-memo]]; spine findings [[editio-paper-read-port]], [[skills-not-stacks]],
 [[editio-audit-loop]], [[three-renders-one-source]], [[editio-structure-gate]]). Resolved 2026-07-02: TWO
@@ -38,14 +38,22 @@ Session additions (2026-07-02, operator-adopted, all in the Log): seven build re
 grounds; grades/overrides in the markdown; render-never-blocks + a lint-profile gate; venues as data;
 engine-agnostic authoring subset; float manifests; submission git-tags; the renderer contract fixture),
 the panel-first figure system, and the big-LaTeX writing design.
+**The monorepo restructure is BUILT** (feat/organon-monorepo, stacked on PR #9): organon marketplace at
+the root, promptus/ + editio/ plugin dirs, humanizer moved (editio ships it day one), grannie soft-dials,
+per-plugin release flow (promptus-v* / editio-v*), marketplace-aware validator — bun run check green,
+124 tests (the validator + changelog gate gained their own fixture tests; the original 112 needed zero
+edits). **Operator resolutions (2026-07-02, in the Log):** the agent merges #9 + #10 · TeX is handled
+interactively at compile time, out of skill scope (closes G7) · Phase 6 keeps a minimal organon-grounded
+sample plus an exemplar corpus of well-written papers as craft references (closes G11) · NO releases
+until the gap-free build. The remaining gap list (G1-G6, G8-G10) is the build session's worklist.
 **Prior art settled (2026-06-30, merged from the stashed session):** Google OKF is a near-twin substrate;
 NOT adopting ("good in our own way"); an okf export + 3 lessons banked. **Psi (227u) and Probatio (292u)
 are finalized on .promptus/** — dogfood is real; retrieve + the reviewer still barely run.
 
 ## Open frontier
-- [ ] **Merge PR #9** (docs/editio-design-store) — operator review.
-- [ ] **The monorepo restructure PR** (stacked on #9): root marketplace.json (organon), promptus/ + editio/
-  dirs (humanizer moves; grannie soft-dial; per-plugin release flow); operator reinstalls both after merge.
+- [ ] **Operator reinstall after the merges land:** /plugin marketplace remove promptus, add
+  Gavin-Qiao/organon, install promptus@organon + editio@organon (the old install is dark on the
+  restructured tree until then).
 - [ ] **editio Phases 1-6** post-restructure (memo section 12 + the recorded refinements), dogfooding kb-add.
 - [ ] **Real use (the measured-need loop):** a cold resume + a real Psi/Probatio pass exercising retrieve
   (kb-find/kb-get/recall) + the grounded-writing-reviewer; editio's audit loop is what will finally run them.
@@ -57,20 +65,25 @@ are finalized on .promptus/** — dogfood is real; retrieve + the reviewer still
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Operator merges PR #9; the restructure PR retargets to main.
-2. Operator merges the restructure PR, then reinstalls promptus + editio from the organon marketplace.
-3. The design session builds editio Phases 1-6, recording each build decision via kb-add.
+1. Agent merges PR #9, then the retargeted PR #10 (operator-delegated, 2026-07-02).
+2. Operator reinstalls promptus + editio from the organon marketplace.
+3. The design session builds editio Phases 1-6 inside editio/, working the gap list (G1-G6, G8-G10)
+   and recording each build decision via kb-add. No release until the build is gap-free.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO DECIDED + DESIGNED; EXECUTION NEXT.** Two plugins under Organon (promptus the store / editio the
-writing toolchain incl. humanizer), monorepo with the root marketplace renamed organon, the restructure PR
-before any build (one reinstall), notation inside editio-latex, the bespoke editio-render.ts, the spine
-DISCARDED — reimplement Phase 1 fresh from [[editio-design-memo]] + the five spine findings. Per-plugin
-tags promptus-v* / editio-v*. The seven build refinements + the figure system + the big-LaTeX design are
-DECISION/RESOLVED units in the Log (2026-07-02) — read them before building. OKF prior art settled
-2026-06-30 (not adopting; banked as an interop target + 3 lessons). Psi/Probatio finalized; retrieve + the
-reviewer still barely run — editio's audit loop is the use-first path. Read .promptus/TELOS.md, then this
-header, then the Log since 2026-07-02.
+**EDITIO DECIDED + DESIGNED; RESTRUCTURE BUILT; MERGES DELEGATED TO THE AGENT.** Two plugins under
+Organon (promptus the store / editio the writing toolchain incl. humanizer), monorepo with the root
+marketplace renamed organon — built on feat/organon-monorepo stacked on PR #9, 124 tests green, agent
+merging both at operator delegation. After the merges the operator reinstalls (remove promptus
+marketplace, add Gavin-Qiao/organon, install both plugins). Then reimplement Phase 1 fresh inside
+editio/ from [[editio-design-memo]] + the five spine findings (the old spine is DISCARDED — do not hunt
+for it), and run Phases 2-6 against the gap list (G1-G6, G8-G10 in the Log; G7/G11 closed by operator:
+TeX is interactive at compile time, out of skill scope; Phase 6 = a minimal organon-grounded sample + an
+exemplar corpus of well-written papers as craft references). Notation folds into editio-latex; the
+renderer is the bespoke editio-render.ts; per-plugin tags promptus-v* / editio-v*; NO release until the
+build is gap-free. The seven build refinements + the figure system + the big-LaTeX design are
+DECISION/RESOLVED units in the Log (2026-07-02) — read them before building. Read .promptus/TELOS.md,
+then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -405,5 +418,16 @@ editio-figures is a system, not just a references menu — five commitments, all
 ### [2026-07-02 21:51:40] DECISION/RESOLVED — The big-LaTeX writing design: SI as a second render target, hygiene as lint, fast section previews, budgets, prose craft, bib discipline
 How editio handles a big paper, adopted 2026-07-02 — all of it conventions, thin scripts, lint checks, and references per [[skills-not-stacks]]. (1) SUPPLEMENTARY INFORMATION is a first-class second assembly (si.tex sharing editio.sty, S-prefixed numbering, xr-style cross-refs between main and SI); venue.json declares inline-appendix vs separate-SI, since Nature/Science demand a separate document. (2) HYGIENE AS LINT: enforced label namespaces (sec:/fig:/tab:/eq:/si:), cleveref by default, and editio-lint fails on ??, unused labels, hardcoded "Figure 3" strings in prose, and unreferenced floats — the classic big-project rot, caught mechanically. (3) FAST ITERATION: out-of-tree build dir under .editio/paper/build/; editio-latex preview <section> compiles one section inside a standalone harness so a 40-page paper iterates at single-section latency; latexmk is the swappable reference driver. (4) NOTATION (per the resolved fold into editio-latex): macros.tex and the notation table generate from notation.md (symbol | meaning | store handle) — markdown stays the source of truth; the defined-once-and-used check runs in editio-lint; a symbol may trace to a store handle the way a claim traces to a unit. (5) BUDGETS: per-section budget: front-matter plus venue word/figure limits in venue.json; lint reports per-section and total against the venue cap; the Nature summary-paragraph template ships as the abstract reference, and editio-structure checks the funnel and the 1:1 contribution-to-results map. (6) PROSE CRAFT as references plus reviewer checks, never machinery: Gopen & Swan (the reader-expectation frame), Mensh & Kording (ten simple rules for structuring papers), Whitesides (outline-first); one claim per paragraph with topic-sentence skimmability; tense and voice conventions per DEO section type. (7) BIB DISCIPLINE at scale: canonical keys generated from the lit store, journal refs flagged when DOI-less, cite-dumps flagged (many citations with no individual discussion), CiTO-typed related work; own papers marked in the lit store feed the blind-mode self-cite mask. (8) An optional reference CI workflow builds all three modes plus lint on push, for paper repos that want it.
 ↳ relates-to event-20260702T213646Z-editio-build-sequence-phases-2-6-each-with-a-done-when
+
+### [2026-07-02 22:07:22] RESULT/VALIDATED — Monorepo restructure built: organon marketplace root, promptus/ + editio/ plugins, per-plugin release flow
+Built the monorepo restructure on feat/organon-monorepo (stacked on the design-store PR), executing the resolved split + monorepo decisions. MOVED: the whole promptus plugin off the repo root into promptus/ (pure git renames — .claude-plugin/plugin.json, skills, commands, agents, hooks, scripts, templates, CHANGELOG, README); humanizer + the blader/humanizer MIT NOTICE into editio/. SEEDED editio/: plugin.json (v0.1.0), README, CHANGELOG — the writing plugin ships humanizer from day one, so the operator migration stays exactly one reinstall. MARKETPLACE: the root .claude-plugin/marketplace.json renamed promptus -> organon with ./promptus + ./editio entries; promptus plugin.json homepage/repository re-pointed at the organon repo; the JSON-LD vocab namespace IRI updated in the template and the live schema. SOFT-DIAL: grannie, the promptus orchestrator, recall, /help, and the grounded-writing-reviewer now reference editio's humanizer conditionally (the reviewer keeps its core tells inline so the store-side audit works alone); two leftover render-for-an-audience lines re-truthed to the agent-substrate framing; the TELOS notes humanizer ships with editio. RELEASE FLOW: per-plugin tags (promptus-v* / editio-v*) — release.yml derives the plugin from the tag prefix, asserts tag == that plugin's manifest, and extracts notes from that plugin's CHANGELOG (changelog.ts gained an optional path argument); RELEASING.md rewritten for per-plugin cuts; per-plugin CHANGELOGs, with the breaking-migration notes under promptus [Unreleased]. VALIDATOR: validate-plugin.ts is marketplace-aware — it validates the root manifest, then every referenced plugin (manifest, components, hooks, vocab). Verified: bun run check green — marketplace + both plugins validated, 112 tests pass, zero test edits needed (the suite proved location-independent). Migration on merge: /plugin marketplace remove promptus, add Gavin-Qiao/organon, install promptus@organon + editio@organon. Executes [[editio-design-memo]] section 10 as corrected by the split/monorepo supersede chain; see [[organon-naming]].
+
+### [2026-07-02 22:15:13] PLAN/OPEN — Gap list for the editio build: eleven design gaps (G1-G11) + four operator notes, from the 2026-07-02 gap analysis
+Gap analysis after the design-store + restructure work (2026-07-02); the doc-path defects it surfaced are already fixed on the restructure branch. What remains, for the build session to resolve in-phase: (G1, Phase 2) the authoring markdown SUBSET is named but not specified — decide the citation syntax in the .md source, the cross-reference syntax, math delimiters, and the exact construct list, then write it down in the renderer SKILL beside the contract fixture. (G2, Phase 2) ungraded claim spans need a defined render distinct from .unsourced — an ungraded span is not yet an offense; draft should show it neutrally, the audit grades it. (G3, contradiction to resolve) the grounded-writing-reviewer is read-only by design, but the adopted refinement says grades are written back into the span — resolution: the reviewer emits a machine-readable grade report and the editio audit step applies it to the .md; record when built. (G4, Phase 2) .editio/ commit policy: paper source committed, .editio/paper/build/ derived and gitignored — make the scaffold write that .gitignore entry. (G5, Phase 5) venue.json has no schema and nothing validates editio's template JSONs — extend the validator or add a bun test. (G6, accepted cost) editio scripts may not import promptus lib/, so a small frontmatter parser gets duplicated — keep it honest with its own tests. (G7, decide before Phase 6) no TeX in CI and the operator machine's TeX state is unverified — the three-mode compile test needs operator-local TeX or a texlive CI job. (G8, Phase 4) the blind-mode self-cite mask needs an own-paper marker in lit frontmatter — add the field when editio-bib lands, not before. (G9, implementation risk) the figure MediaBox lint means parsing PDF bytes dependency-free; matplotlib PDFs are friendly, but plan a warn-and-pass fallback for compressed PDFs. (G10, named, acceptable) grannie's editio-installed detection is judgment-based, not mechanical. (G11, recommendation) the Phase 6 sample paper should be grounded in the organon store itself — it closes the dogfood loop and finally exercises retrieve + the reviewer, the standing use-first gap. Operational, for the operator: if PR #9 merges without deleting its branch, the restructure PR needs a manual retarget to main; the locally-installed promptus plugin goes dark on the restructured tree until the one-time reinstall; consider cutting editio-v0.1.0 right after merge so the per-plugin release flow gets exercised once end to end; and verify the Psi/Probatio finalized claim against their own ledgers on next touch (it entered via the merged stash header).
+↳ relates-to event-20260702T213646Z-editio-build-sequence-phases-2-6-each-with-a-done-when
+
+### [2026-07-02 22:27:15] DECISION/RESOLVED — Operator resolutions: merges delegated; TeX is interactive, not skill-scoped; a minimal store-grounded sample plus an exemplar corpus; no release until gap-free
+Operator resolutions (2026-07-02) on the restructure-era questions — they close G7 and G11 of the gap list and set release policy. (1) MERGES DELEGATED: the operator authorized the agent to merge PR #9 and PR #10 ("you can merge for me") — the explicit per-PR human go the auto-mode classifier requires. (2) TeX IS INTERACTIVE, NOT SKILL-SCOPED (closes G7): TeX distribution handling is out of scope for the editio skills — no texlive CI job, no vendored or hard-required distribution; at compile time Claude interacts with the user to locate, choose, or install their TeX. This is [[skills-not-stacks]] applied to the compiler itself: the skill documents that a TeX distribution is the user's prerequisite and the agent helps arrange it in conversation. The three-mode compile acceptance therefore runs in the dogfood session against the operator's own TeX, arranged interactively. (3) SAMPLE PAPER, AMENDED (closes G11): asked whether a sample is absolutely needed, the resolution is a MINIMAL sample grounded in the organon store itself — a paper needs a store behind it for the audit loop to mean anything, and skipping it entirely would ship editio end-to-end untested, against the house bar. Per the operator's ask, the build additionally curates an EXEMPLAR CORPUS of known well-written papers as craft references (candidates: Watson & Crick 1953 for one-page brevity, Shannon 1948 for structure at scale, Ongaro & Ousterhout's Raft paper for understandability-first writing, Jumper et al. AlphaFold 2021 for Nature-grade multi-panel figures, Vaswani et al. 2017 for economy of structure) — ingested as lit:CITE pointer units plus distilled notes in the editio-structure / editio-figures references. Pointers and analysis only, never redistributed PDFs; exemplars cannot BE the acceptance sample because their content is not grounded in any store and rebuilding them through editio would prove typesetting, not the audit loop. (4) NO RELEASE UNTIL GAP-FREE (supersedes the cut-editio-v0.1.0-early suggestion): no editio tag until the build is complete and the gap list is closed — "wait for the complete, no-gap version". The release-flow tag parsing gets its first real exercise at that cut.
+↳ relates-to event-20260703T021513Z-gap-list-for-the-editio-build-eleven-design-gaps-g1-g11-four-ope
 
 <!-- kb:append-point -->

@@ -7,14 +7,15 @@ tools: Read, Grep, Glob, Bash
 # grounded-writing-reviewer
 
 Two passes over a draft, reported together. Read-only — you audit, you don't rewrite (hand the
-fixes to `humanizer` for style and `recall` for grounding).
+fixes to `recall` for grounding, and to editio's `humanizer` for style when that plugin is installed).
 
 ## Pass 1 — style audit (the humanizer's lens)
 
 Scan for Part I AI-tells (inflated significance, em-dash overuse, the rule of three, vague
 attributions, copula avoidance, signposting, …) and for missing Part II human factors
 (calibrated confidence, concrete worked detail, real rhythm, a first-person thinker where the
-register allows). Reference `skills/humanizer/SKILL.md` for the full pattern set.
+register allows). The tells listed here are the core set; the full Part I/II pattern set lives in
+the editio plugin's `humanizer` skill — reference it when editio is installed.
 
 ## Pass 2 — grounding audit (the store's lens)
 

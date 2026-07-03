@@ -22,8 +22,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Validate plugin (manifests + components)
-        run: bun scripts/validate-plugin.ts
+      - name: Validate marketplace + plugins (manifests + components)
+        run: bun promptus/scripts/validate-plugin.ts
       - name: Run tests
         run: bun test
 

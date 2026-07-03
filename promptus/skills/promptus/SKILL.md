@@ -1,12 +1,13 @@
 ---
 name: promptus
-description: Orchestrator and map for the Promptus research knowledge system — a substrate for the LLM agent. Use at the start of research book-keeping to choose the right verb/script/skill — STORE (kb-add), BOOK-KEEP (kb-index + kb-graph lint + /checkpoint), RETRIEVE (kb-find → kb-get + recall, kb-graph rank/suggest). grannie is the one human read-port; the humanizer is a bundled style toolkit. Knows the four stores (Telos, Ledger, Knowledge, Memory), the substrate:status tagging, the [[link]] graph, and the invariant.
+description: Orchestrator and map for the Promptus research knowledge system — a substrate for the LLM agent. Use at the start of research book-keeping to choose the right verb/script/skill — STORE (kb-add), BOOK-KEEP (kb-index + kb-graph lint + /checkpoint), RETRIEVE (kb-find → kb-get + recall, kb-graph rank/suggest). grannie is the one human read-port (it dials editio's humanizer style toolkit when that plugin is installed). Knows the four stores (Telos, Ledger, Knowledge, Memory), the substrate:status tagging, the [[link]] graph, and the invariant.
 ---
 
 # Promptus — orchestrator
 
-Promptus stores / keeps / retrieves what a research project knows as gated markdown, and
-renders it for an audience. Read `.promptus/TELOS.md` for the canonical statement and the invariant.
+Promptus stores / keeps / retrieves what a research project knows as gated markdown — a
+substrate for the agent; grannie is the one human read-port. Read `.promptus/TELOS.md` for the
+canonical statement and the invariant.
 This skill is the map: pick the verb, run the piece.
 
 ## Decision table — intent → do this
@@ -24,7 +25,7 @@ This skill is the map: pick the verb, run the piece.
 | read one unit's body without opening the whole ledger | RETRIEVE | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-get.ts" "<path>"` (the `path` column `kb-find` prints) |
 | find the load-bearing units (what to read first) | RETRIEVE | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-graph.ts" rank` |
 | find related-but-unlinked notes to connect | RETRIEVE | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-graph.ts" suggest` |
-| write something the project already knows | RETRIEVE | `recall` to ground it, then `humanizer` for style |
+| write something the project already knows | RETRIEVE | `recall` to ground it; editio's `humanizer` for style, when installed |
 | explain a stored concept to a human | read-port | `grannie` (`/grannie explain <concept>`) — grounds from the store |
 | audit a draft for AI-tells + unsourced claims | audit | the `grounded-writing-reviewer` agent (agent-side; checks the store) |
 | initialize Promptus in a repo | — | `/promptus-init` (runs the `telos` skill) |

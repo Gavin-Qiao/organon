@@ -53,7 +53,7 @@ it to `.promptus/schema/kb-vocab.json` if it's here to stay. (finding / lit / me
 **RELATION (`--rel <type>:<id>`, or `--supersedes <id>`)** — typed edges between units:
 `supersedes` (marks the target `SUPERSEDED` — this is the correction mechanism), `refutes`,
 `challenges`, `supports`, `extends`, `fixes`. They export to CiTO / PROV-O via
-`bun scripts/kb-export.ts`. Example headers: `RESULT/VALIDATED`, `DEADEND/REFUTED`, `RESULT/CONFOUNDED`.
+`bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-export.ts"`. Example headers: `RESULT/VALIDATED`, `DEADEND/REFUTED`, `RESULT/CONFOUNDED`.
 
 ## Disciplines that make it worth keeping
 
