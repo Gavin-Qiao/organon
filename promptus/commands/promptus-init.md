@@ -30,4 +30,4 @@ initialized (a `.promptus/TELOS.md` exists), report what's there and don't clobb
 Promptus is a Claude Code plugin: installing it bundles `scripts/` (kb-add / kb-index / kb-find
 + `lib/`), and the skills, commands, and templates call them via `${CLAUDE_PLUGIN_ROOT}/scripts/…`
 — so they resolve from any project with nothing copied in. (For raw development *inside* the
-Promptus repo itself, the scripts are just `bun scripts/…` relative to the repo root.)
+Organon repo itself, the scripts are `bun promptus/scripts/…` from the repo root.)
