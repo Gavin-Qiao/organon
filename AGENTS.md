@@ -44,6 +44,9 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
 - License: GPL-3.0 (© 2026 Mohan Qiao). The `editio/skills/humanizer` fork includes Part I from
   blader/humanizer (© 2025 Siqi Chen, MIT); that upstream notice is preserved in `editio/NOTICE`.
 - Releases are **per-plugin tags** — `promptus-vX.Y.Z` / `editio-vX.Y.Z` (see `RELEASING.md`).
+- **Docs ride the change**: a PR that alters what ships updates the affected READMEs /
+  `AGENTS.md` in the same PR; versions never in prose — the badges + `plugin.json` carry them
+  (see `CONTRIBUTING.md`, "Docs stay truthful").
 - Don't commit or push unless asked.
 
 ## Layout

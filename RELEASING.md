@@ -42,6 +42,10 @@ calls it out.
    release titled `P vX.Y.Z`. If the `[X.Y.Z]` section in `P/CHANGELOG.md` is missing or
    empty, it stops *before* publishing.
 
+> **READMEs need nothing at a release.** The version badges are tag-prefix filtered and
+> update themselves; versions never live in prose (see `CONTRIBUTING.md`, "Docs stay
+> truthful").
+
 ## What the release workflow guards
 
 - Marketplace + plugin structure (`bun promptus/scripts/validate-plugin.ts`) and tests (`bun test`).
