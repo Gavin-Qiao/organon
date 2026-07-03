@@ -1,0 +1,88 @@
+/**
+ * scaffold.test.ts — editio-scaffold's contract: idempotent, venue-driven,
+ * and identity-clean (placeholders only; blind masking wired in the generated
+ * metadata). Runs the real script through the bun binary against temp roots.
+ */
+import { test, expect, afterAll } from "bun:test";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+
+const SCRIPT = join(import.meta.dir, "..", "editio-scaffold.ts");
+const tmps: string[] = [];
+afterAll(() => { for (const d of tmps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* ignore */ } } });
+
+function scratch(): string {
+  const d = mkdtempSync(join(tmpdir(), "editio-scaffold-test-"));
+  tmps.push(d);
+  return d;
+}
+function run(root: string, ...args: string[]) {
+  const r = spawnSync(process.execPath, [SCRIPT, "--root", root, ...args], { encoding: "utf8" });
+  return { status: r.status ?? -1, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+}
+const paper = (root: string, ...p: string[]) => join(root, ".editio", "paper", ...p);
+const read = (p: string) => readFileSync(p, "utf8");
+
+test("scaffold lays down the arxiv workspace: gate, meta, sty, main, rc, stubs, bib, gitignore", () => {
+  const root = scratch();
+  expect(run(root, "--venue", "arxiv").status).toBe(0);
+  for (const f of ["paper.json", "editio.sty", "main.tex", ".latexmkrc", "refs.bib", join("front", "metadata.tex"), join("sections", "introduction.md")]) {
+    expect(existsSync(paper(root, f))).toBe(true);
+  }
+  expect(existsSync(join(root, ".editio", "schema", "doco-deo.json"))).toBe(true);
+  const main = read(paper(root, "main.tex"));
+  expect(main).toContain("\\documentclass[11pt]{article}");
+  expect(main).toContain("\\usepackage{natbib}");
+  expect(main).toContain("\\InputIfFileExists{sections/introduction}{}{}");
+  expect(main).toContain("\\bibliographystyle{plainnat}");
+  expect(read(join(root, ".gitignore"))).toContain("/.editio/paper/build/");
+});
+
+test("authored files survive re-runs; generated files refresh only with --force", () => {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  const meta = paper(root, "paper.json");
+  writeFileSync(meta, read(meta).replace("Untitled", "My Real Title"));
+  const intro = paper(root, "sections", "introduction.md");
+  writeFileSync(intro, read(intro) + "\nReal prose.\n");
+
+  expect(run(root, "--venue", "arxiv").status).toBe(0); // plain re-run
+  expect(read(meta)).toContain("My Real Title");
+  expect(read(intro)).toContain("Real prose.");
+
+  expect(run(root, "--venue", "arxiv", "--force").status).toBe(0); // force refreshes generated only
+  expect(read(meta)).toContain("My Real Title");
+  expect(read(intro)).toContain("Real prose.");
+  expect(read(paper(root, "front", "metadata.tex"))).toContain("My Real Title");
+});
+
+test("tpami venue swaps the class and bib style; unknown venues list what exists", () => {
+  const root = scratch();
+  expect(run(root, "--venue", "tpami").status).toBe(0);
+  const main = read(paper(root, "main.tex"));
+  expect(main).toContain("\\documentclass[10pt,journal,compsoc]{IEEEtran}");
+  expect(main).toContain("\\bibliographystyle{IEEEtran}");
+  const bad = run(scratch(), "--venue", "nope");
+  expect(bad.status).toBe(1);
+  expect(bad.out).toContain("arxiv");
+  expect(bad.out).toContain("tpami");
+});
+
+test("the gitignore line is added exactly once across runs", () => {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  run(root, "--venue", "arxiv");
+  const lines = read(join(root, ".gitignore")).split(/\r?\n/).filter((l) => l === "/.editio/paper/build/");
+  expect(lines.length).toBe(1);
+});
+
+test("generated metadata is blind-safe and placeholder-only", () => {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  const md = read(paper(root, "front", "metadata.tex"));
+  expect(md).toContain("\\ifeditioblind");
+  expect(md).toContain("Anonymous Authors");
+  expect(md).toContain("Author One");
+});

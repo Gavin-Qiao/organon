@@ -1,0 +1,91 @@
+{
+  "_note": "The editio structure gate: every paper section maps to a DEO/DoCO class, like kb-vocab.json gates store writes. policy strict = no ad-hoc sections; tune extended and add orders per project. Class inventory from the published SPAR specs: DoCO https://sparontologies.github.io/doco/current/doco.html (imports DEO), DEO https://sparontologies.github.io/deo/current/deo.html",
+  "policy": "strict",
+  "classes": {
+    "core": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:Motivation",
+      "deo:Background",
+      "deo:RelatedWork",
+      "deo:ProblemStatement",
+      "deo:Methods",
+      "deo:Materials",
+      "deo:Model",
+      "deo:Results",
+      "deo:Evaluation",
+      "deo:Discussion",
+      "deo:Conclusion",
+      "deo:FutureWork",
+      "deo:Contribution",
+      "deo:Acknowledgements",
+      "doco:Appendix",
+      "doco:BibliographicReferenceList"
+    ],
+    "extended": [
+      "deo:DatasetDescription",
+      "deo:ExternalResourceDescription",
+      "deo:SupplementaryInformationDescription",
+      "deo:Scenario",
+      "deo:Data",
+      "deo:AuthorContribution",
+      "deo:Postscript"
+    ]
+  },
+  "orders": {
+    "imrad": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:Methods",
+      "deo:Results",
+      "deo:Discussion",
+      "deo:Conclusion",
+      "deo:Acknowledgements",
+      "doco:BibliographicReferenceList"
+    ],
+    "cs-systems": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:Motivation",
+      "deo:Background",
+      "deo:Methods",
+      "deo:Evaluation",
+      "deo:RelatedWork",
+      "deo:Conclusion",
+      "doco:BibliographicReferenceList"
+    ],
+    "theory": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:Background",
+      "deo:ProblemStatement",
+      "deo:Model",
+      "deo:Results",
+      "deo:Discussion",
+      "deo:RelatedWork",
+      "deo:Conclusion",
+      "doco:BibliographicReferenceList"
+    ]
+  },
+  "section_slugs": {
+    "doco:Abstract": "abstract",
+    "deo:Introduction": "introduction",
+    "deo:Motivation": "motivation",
+    "deo:Background": "background",
+    "deo:RelatedWork": "related-work",
+    "deo:ProblemStatement": "problem-statement",
+    "deo:Methods": "methods",
+    "deo:Materials": "materials",
+    "deo:Model": "model",
+    "deo:Results": "results",
+    "deo:Evaluation": "evaluation",
+    "deo:Discussion": "discussion",
+    "deo:Conclusion": "conclusion",
+    "deo:FutureWork": "future-work",
+    "deo:Contribution": "contribution",
+    "deo:Acknowledgements": "acknowledgements",
+    "doco:Appendix": "appendix",
+    "doco:BibliographicReferenceList": "references"
+  },
+  "modes": ["draft", "publish", "blind"]
+}
