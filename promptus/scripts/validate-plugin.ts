@@ -8,13 +8,19 @@
  * change without needing the Claude CLI, an account, or the network. Mirrors the
  * structural half of `claude plugin validate` (run that locally for the full
  * check). Exits non-zero on any problem, printing each one.
+ *
+ * Usage: validate-plugin.ts [--root <repo>]   (default: this script's own repo)
  */
 import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./lib/frontmatter.ts";
 
-const repo = join(dirname(fileURLToPath(import.meta.url)), "..", "..");
+function arg(argv: string[], k: string): string | undefined {
+  const i = argv.indexOf(`--${k}`);
+  return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
+}
+const repo = arg(process.argv.slice(2), "root") ?? join(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const problems: string[] = [];
 const pass = (m: string) => console.log(`  ok   ${m}`);
 const fail = (m: string) => {
