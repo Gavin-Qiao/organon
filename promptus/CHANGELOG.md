@@ -17,6 +17,8 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-02
+
 ### Changed
 
 - **Monorepo restructure — breaking for installs.** The repo is now the **Organon marketplace**:
@@ -25,6 +27,9 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
   `/plugin marketplace add Gavin-Qiao/organon` and `/plugin install promptus@organon`.
 - Releases are now per-plugin tags (`promptus-vX.Y.Z`); the pre-monorepo `v0.1.0`–`v0.5.2` tags
   remain valid history.
+- `validate-plugin.ts` is marketplace-aware (validates the root manifest, then every referenced
+  plugin) and gained `--root` for fixture testing; `changelog.ts` accepts a per-plugin changelog
+  path — both serving the per-plugin release flow.
 
 ### Removed
 
@@ -338,7 +343,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/v0.5.2...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.0...HEAD
+[0.6.0]: https://github.com/Gavin-Qiao/organon/compare/v0.5.2...promptus-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/Gavin-Qiao/organon/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/Gavin-Qiao/organon/compare/v0.4.1...v0.5.0

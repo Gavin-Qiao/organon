@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-02
+
 ### Added
 
 - **The Phase 1–2 spine, compile-verified in all three modes** (draft / publish / blind) on a
@@ -36,4 +38,5 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/commits/main
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.1.0...HEAD
+[0.1.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.1.0
