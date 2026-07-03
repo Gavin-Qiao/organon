@@ -6,6 +6,7 @@
 One markdown source · three renders · every claim graded against your store.
 
 [![CI](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml/badge.svg)](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml)
+[![release](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=editio-v%2A&label=release)](https://github.com/Gavin-Qiao/organon/releases)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](../LICENSE)
 [![requires: promptus](https://img.shields.io/badge/requires-promptus-8A2BE2.svg)](../promptus/README.md)
 
@@ -54,8 +55,8 @@ Then, in a repo that has a `.promptus/` store:
 Write `sections/*.md`, then render and build (from `.editio/paper/`):
 
 ```bash
-bun ".../scripts/editio-render.ts" --all      # md → tex (skills resolve the real path)
-latexmk main.tex                              # → build/main.pdf, draft mode
+bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all   # md → tex
+latexmk main.tex                                             # → build/main.pdf, draft mode
 latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
 ```
 
@@ -81,7 +82,7 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 5. **Render** — grades become `\claimV / \claimC / \claimU / \claimG` in draft.
 6. **Gate** — publish requires **no ungraded, no unsourced, no overclaims**.
 
-## What ships today — the Phase 1–2 spine, compile-verified in all three modes
+## What ships — the Phase 1–2 spine, compile-verified in all three modes
 
 | piece | what it does |
 |---|---|
@@ -95,10 +96,10 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
 | venues | `arxiv`, `tpami` — venues are **data folders**, add one without touching a script |
 
-**Roadmap** (built in phases, driven by real papers): `editio-figures` (panel-first,
-venue-sized, statistically honest) → `editio-tables` · `editio-bib` (refs.bib from the lit
-store) · `editio-repro` → `editio-venue` · `editio-rebuttal` · `editio-lint` (the publish
-gate, mechanized).
+**Roadmap** (built in phases, driven by real papers): **next → `editio-figures`**
+(panel-first composition, venue widths from `venue.json`, caption grammar, statistical
+honesty) → `editio-tables` · `editio-bib` (refs.bib from the lit store) · `editio-repro` →
+`editio-venue` · `editio-rebuttal` · `editio-lint` (the publish gate, mechanized).
 
 ## Skills, not stacks
 

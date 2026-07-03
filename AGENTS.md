@@ -4,12 +4,14 @@ This repo dogfoods its own methodology. When you work here, you are both buildin
 the toolbox and using it. This file is the portable read surface (the `AGENTS.md`
 convention); the fuller map is `/promptus:help` and the `promptus` skill.
 
-> **Current state: a marketplace monorepo.** Two plugins under the `organon` marketplace
-> (`.claude-plugin/marketplace.json` at the root): **`promptus/`** — the store, v0.5.2: STORE
-> `kb-add` (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
+> **Current state: a marketplace monorepo, both plugins released** (per-plugin tags; versions
+> live in each `plugin.json`, never in prose). Two plugins under the `organon` marketplace
+> (`.claude-plugin/marketplace.json` at the root): **`promptus/`** — the store: STORE `kb-add`
+> (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`; skills `promptus`, `recall`, `grannie`, `telos`,
-> `research-ledger`; and **`editio/`** — the writing toolchain, pre-release: `humanizer` today,
-> the `editio-*` skills land in phases (design of record:
+> `research-ledger`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
+> `editio-structure` + `editio-latex` skills, the scaffold + renderer scripts, `humanizer`;
+> figures/tables/bib land in later phases (design of record:
 > `.promptus/docs/editio-design-memo.md` + the ledger's supersede chain). The agent operates
 > the verbs; `grannie` is the one human read-port. Embedding-scale machinery stays deferred
 > (the invariant).
@@ -52,7 +54,10 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
   `promptus-doctor`, and `lib/`), `skills/` (`promptus` the orchestrator, `recall`, `grannie`,
   `research-ledger`, `telos`), `commands/`, `agents/` (`grounded-writing-reviewer`), `hooks/`,
   `templates/` (per-project four-store scaffolds incl. `schema/kb-vocab.json`).
-- `editio/` — the writing plugin: `skills/humanizer` today; the `editio-*` skills, scripts, and
-  templates arrive with the build phases.
+- `editio/` — the writing plugin: `commands/` (`/editio`), `skills/` (`editio` the orchestrator,
+  `editio-structure` + its exemplar craft references, `editio-latex` + the authoring-subset
+  contract, `humanizer`), `scripts/` (`editio-scaffold`, `editio-render`, own thin `lib.ts`),
+  `templates/` (the DoCO/DEO gate, `editio.sty` + `main.tex`, `paper.json`, venues, the golden
+  contract). Figures/tables/bib arrive with later phases.
 - `.promptus/` — Organon's own knowledge (TELOS, ledger, findings + `lit/`, memory, schema),
   maintained via `kb-add` and shared by both plugins' development.

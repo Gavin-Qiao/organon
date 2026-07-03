@@ -26,10 +26,10 @@ decisions, dead-ends get re-explored, settled questions quietly reopen. And the 
 answer to both: **every claim traces to evidence at a known status** — stored that way,
 retrieved that way, and rendered that way on the page.
 
-| plugin | job | status |
+| plugin | job | release |
 |---|---|---|
-| [**promptus**](promptus/README.md) | Store / keep / retrieve what a project knows as gated markdown — events, literature, findings, memory — every unit tagged with its epistemic status, navigable by a `[[link]]` graph. `grannie` is the one human read-port. | v0.5.2 |
-| [**editio**](editio/README.md) | Turn what the store has validated into a defensible, submittable paper — DoCO/DEO-gated structure, one markdown source with three renders (draft / publish / blind), and an audit loop that grades every claim against the store. Ships the `humanizer` style toolkit. | pre-release — the spine is live |
+| [**promptus**](promptus/README.md) | Store / keep / retrieve what a project knows as gated markdown — events, literature, findings, memory — every unit tagged with its epistemic status, navigable by a `[[link]]` graph. `grannie` is the one human read-port. | [![promptus](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=promptus-v%2A&label=promptus)](https://github.com/Gavin-Qiao/organon/releases) |
+| [**editio**](editio/README.md) | Turn what the store has validated into a defensible, submittable paper — DoCO/DEO-gated structure, one markdown source with three renders (draft / publish / blind), and an audit loop that grades every claim against the store. The spine ships today; figures, tables, and bibliography land in phases. Includes `humanizer`. | [![editio](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=editio-v%2A&label=editio)](https://github.com/Gavin-Qiao/organon/releases) |
 
 ## Install
 
