@@ -6,17 +6,28 @@ read-port: it turns what the store has **validated** into a defensible, submitta
 every claim on the page traces to a store unit at a known status, and the draft render makes
 that status visible before a reviewer does.
 
-**Status: pre-release.** The design is complete and stored in the organon research ledger
-(`.promptus/` at the repo root; the memo is `.promptus/docs/editio-design-memo.md`); the build
-lands in phases. What ships today:
+**Status: pre-release** (the design of record is `.promptus/docs/editio-design-memo.md` plus
+the organon research ledger). What ships today — the Phase 1–2 spine, compile-verified in all
+three modes:
 
-- **`humanizer`** — the style toolkit (Part I de-AI patterns + Part II positive human
-  patterns), moved here from promptus. Invoked directly, or dialed by promptus's `grannie`.
+- **`/editio`** — start or resume a paper end to end.
+- **`editio`** (orchestrator) — the map, the invariant, and the audit loop that grades every
+  claim span against the store.
+- **`editio-structure`** — the argument before the prose: orders (imrad / cs-systems /
+  theory), contribution-first framing, the abstract formula, and craft distilled from
+  exemplary papers (`references/exemplars.md`).
+- **`editio-latex`** — TeX setup in minutes (the toolchain stays yours), venue-driven
+  scaffolding, three-mode builds, single-section previews, notation conventions.
+- **`editio-scaffold.ts` / `editio-render.ts`** — the reference scripts: an idempotent
+  workspace scaffold (identity lives in `paper.json` only, placeholders by default) and the
+  bespoke md→tex renderer behind a golden contract (`templates/contract/`) any swapped-in
+  renderer must pass.
+- **`humanizer`** — the style toolkit (Part I de-AI + Part II positive human patterns),
+  moved here from promptus. Invoked directly, or dialed by promptus's `grannie`.
 
-What the phases add: `editio-structure` (DoCO/DEO-gated sections), `editio-latex` + the
-renderer (one markdown source, three renders — draft / publish / blind), `editio-figures`
-(panel-first, venue-sized, statistically honest), `editio-tables`, `editio-bib` (`refs.bib`
-from the lit store), `editio-repro`, `editio-venue`, `editio-rebuttal`, `editio-lint`.
+Later phases add: `editio-figures` (panel-first, venue-sized, statistically honest),
+`editio-tables`, `editio-bib` (`refs.bib` from the lit store), `editio-repro`,
+`editio-venue`, `editio-rebuttal`, `editio-lint` (the publish gate).
 
 ## Prerequisite: promptus
 
