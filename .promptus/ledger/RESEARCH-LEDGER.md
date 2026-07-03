@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-02 (merges delegated; build next)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-02 (editio spine built + verified)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,65 +25,49 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (merges delegated to the agent and executing; the editio build is next)
-**v0.5.2 released and live** (operator's plugin on 0.5.2). **editio: design complete, decision queue empty**
-(memo rev. 2 = [[editio-design-memo]]; spine findings [[editio-paper-read-port]], [[skills-not-stacks]],
-[[editio-audit-loop]], [[three-renders-one-source]], [[editio-structure-gate]]). Resolved 2026-07-02: TWO
-plugins under Organon (promptus = store + reviewer; editio = writing + humanizer; grannie soft-dials;
-promptus is editio's documented prerequisite) · MONOREPO (marketplace.json at the root as organon;
-promptus/ + editio/ plugin dirs; the restructure PR lands BEFORE any build, rename folded in — one
-reinstall) · notation folds into editio-latex · renderer = the bespoke editio-render.ts · the Phase 1 spine
-is DISCARDED (reimplement fresh; do not hunt for it) · per-plugin release tags (promptus-v* / editio-v*).
-Session additions (2026-07-02, operator-adopted, all in the Log): seven build refinements (per-claim
-grounds; grades/overrides in the markdown; render-never-blocks + a lint-profile gate; venues as data;
-engine-agnostic authoring subset; float manifests; submission git-tags; the renderer contract fixture),
-the panel-first figure system, and the big-LaTeX writing design.
-**The monorepo restructure is BUILT** (feat/organon-monorepo, stacked on PR #9): organon marketplace at
-the root, promptus/ + editio/ plugin dirs, humanizer moved (editio ships it day one), grannie soft-dials,
-per-plugin release flow (promptus-v* / editio-v*), marketplace-aware validator — bun run check green,
-124 tests (the validator + changelog gate gained their own fixture tests; the original 112 needed zero
-edits). **Operator resolutions (2026-07-02, in the Log):** the agent merges #9 + #10 · TeX is handled
-interactively at compile time, out of skill scope (closes G7) · Phase 6 keeps a minimal organon-grounded
-sample plus an exemplar corpus of well-written papers as craft references (closes G11) · NO releases
-until the gap-free build. The remaining gap list (G1-G6, G8-G10) is the build session's worklist.
-**Prior art settled (2026-06-30, merged from the stashed session):** Google OKF is a near-twin substrate;
-NOT adopting ("good in our own way"); an okf export + 3 lessons banked. **Psi (227u) and Probatio (292u)
-are finalized on .promptus/** — dogfood is real; retrieve + the reviewer still barely run.
+## NOW (editio Phase 1-2 spine BUILT + COMPILE-VERIFIED; the spine PR awaits review)
+**The editio spine is real and validated** (feat/editio-spine, 2026-07-02): /editio, the orchestrator +
+editio-structure + editio-latex skills, editio-scaffold.ts + editio-render.ts, editio.sty, the DoCO/DEO
+gate, venues arxiv + tpami — and a scaffolded scratch paper **builds clean in all three modes on the
+operator's own MiKTeX 25.4**, with pdftotext confirming the semantics (draft: tints + 8 stamps; publish:
+annotations stripped; blind: grant dropped, Anonymous Authors, [anonymized], zero author mentions).
+[[three-renders-one-source]] is VALIDATED on real PDFs. Suite 144 green incl. the golden render contract
+and the no-identity sweep. The five goal directives (2026-07-02) are executed: exemplar craft distilled
+(5 lit units + editio-structure/references/exemplars.md, pointers only) · TeX setup is a minimal in-skill
+capability (operator HAS MiKTeX) · arxiv + tpami seeded · paper meta = paper.json placeholders, nobody's
+identity by default · the first-article project still unnamed.
+**Gap ledger:** G1 G2 G3 G4 G5 G6 G10 closed; G7 G11 closed earlier by operator; G8 waits for Phase 4,
+G9 for Phase 3. **No releases until the build is gap-free** (operator).
 
 ## Open frontier
-- [ ] **Operator reinstall after the merges land:** /plugin marketplace remove promptus, add
-  Gavin-Qiao/organon, install promptus@organon + editio@organon (the old install is dark on the
-  restructured tree until then).
-- [ ] **editio Phases 1-6** post-restructure (memo section 12 + the recorded refinements), dogfooding kb-add.
-- [ ] **Real use (the measured-need loop):** a cold resume + a real Psi/Probatio pass exercising retrieve
-  (kb-find/kb-get/recall) + the grounded-writing-reviewer; editio's audit loop is what will finally run them.
-- [ ] **Banked (build only on a measured need):** per-directory progressive-disclosure indexes; a telos
-  graph node; an okf export (on a real consumer); v0.6 write-time calibration
-  ([[write-time-calibration-design]] — editio's audit loop is its soft default in practice).
-- [ ] **Psi/Probatio content** — the dangling handles are the sessions' own distill-me worklist; heal only
-  the true noise, leave the seams.
+- [ ] **Operator reviews + merges the spine PR** (feat/editio-spine -> main), then updates the plugins
+  (marketplace update organon; plugin update editio; /reload-plugins).
+- [ ] **Operator names the first-article project** (directive 4) — the article is the live dogfood and
+  the first real exercise of retrieve + the reviewer.
+- [ ] **Phase 3 — editio-figures** (panel-first, venue widths from venue.json, caption grammar,
+  statistical honesty, provenance; G9 MediaBox lint lands here), driven by what the article needs.
+- [ ] **Phases 4-6**: tables/bib/repro (G8 own-paper marker) -> venue/rebuttal/lint (the publish gate) ->
+  wire + the organon-grounded sample + exemplar corpus.
+- [ ] **Banked:** per-directory progressive-disclosure indexes; a telos graph node; an okf export;
+  v0.6 write-time calibration ([[write-time-calibration-design]] — the editio audit loop is its soft default).
+- [ ] **Psi/Probatio content** — dangling handles are the sessions' own worklist; verify the finalized
+  claim against their own ledgers on next touch.
 - [ ] **(deferred)** Norma seam (external grounding).
 
 ## Next actions
-1. Agent merges PR #9, then the retargeted PR #10 (operator-delegated, 2026-07-02).
-2. Operator reinstalls promptus + editio from the organon marketplace.
-3. The design session builds editio Phases 1-6 inside editio/, working the gap list (G1-G6, G8-G10)
-   and recording each build decision via kb-add. No release until the build is gap-free.
+1. Operator merges the spine PR and updates the editio plugin.
+2. Operator names the first-article project; the article starts as the live dogfood.
+3. Phase 3 (figures) builds next, article-driven, recording decisions via kb-add.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO DECIDED + DESIGNED; RESTRUCTURE BUILT; MERGES DELEGATED TO THE AGENT.** Two plugins under
-Organon (promptus the store / editio the writing toolchain incl. humanizer), monorepo with the root
-marketplace renamed organon — built on feat/organon-monorepo stacked on PR #9, 124 tests green, agent
-merging both at operator delegation. After the merges the operator reinstalls (remove promptus
-marketplace, add Gavin-Qiao/organon, install both plugins). Then reimplement Phase 1 fresh inside
-editio/ from [[editio-design-memo]] + the five spine findings (the old spine is DISCARDED — do not hunt
-for it), and run Phases 2-6 against the gap list (G1-G6, G8-G10 in the Log; G7/G11 closed by operator:
-TeX is interactive at compile time, out of skill scope; Phase 6 = a minimal organon-grounded sample + an
-exemplar corpus of well-written papers as craft references). Notation folds into editio-latex; the
-renderer is the bespoke editio-render.ts; per-plugin tags promptus-v* / editio-v*; NO release until the
-build is gap-free. The seven build refinements + the figure system + the big-LaTeX design are
-DECISION/RESOLVED units in the Log (2026-07-02) — read them before building. Read .promptus/TELOS.md,
-then this header, then the Log since 2026-07-02.
+**EDITIO PHASE 1-2 IS BUILT AND COMPILE-VERIFIED** (feat/editio-spine; three modes on the operator's
+MiKTeX; 144 tests; the golden render contract + no-identity sweep guard it). Read the Log since
+2026-07-02: the five goal directives, the authoring-subset decision (mode-invariant renders; prefix-
+dispatched refs; the audit step applies grades, the reviewer stays read-only), and the spine RESULT.
+The gap list stands at: G8 (Phase 4) + G9 (Phase 3) open, everything else closed. Next: operator merges
+the spine PR + updates plugins, names the first-article project; then Phase 3 figures, article-driven.
+No releases until gap-free. The exemplar craft lives in editio-structure/references/exemplars.md backed
+by 5 lit units. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-02.
 
 <!-- now:end -->
 
@@ -429,5 +413,16 @@ Gap analysis after the design-store + restructure work (2026-07-02); the doc-pat
 ### [2026-07-02 22:27:15] DECISION/RESOLVED — Operator resolutions: merges delegated; TeX is interactive, not skill-scoped; a minimal store-grounded sample plus an exemplar corpus; no release until gap-free
 Operator resolutions (2026-07-02) on the restructure-era questions — they close G7 and G11 of the gap list and set release policy. (1) MERGES DELEGATED: the operator authorized the agent to merge PR #9 and PR #10 ("you can merge for me") — the explicit per-PR human go the auto-mode classifier requires. (2) TeX IS INTERACTIVE, NOT SKILL-SCOPED (closes G7): TeX distribution handling is out of scope for the editio skills — no texlive CI job, no vendored or hard-required distribution; at compile time Claude interacts with the user to locate, choose, or install their TeX. This is [[skills-not-stacks]] applied to the compiler itself: the skill documents that a TeX distribution is the user's prerequisite and the agent helps arrange it in conversation. The three-mode compile acceptance therefore runs in the dogfood session against the operator's own TeX, arranged interactively. (3) SAMPLE PAPER, AMENDED (closes G11): asked whether a sample is absolutely needed, the resolution is a MINIMAL sample grounded in the organon store itself — a paper needs a store behind it for the audit loop to mean anything, and skipping it entirely would ship editio end-to-end untested, against the house bar. Per the operator's ask, the build additionally curates an EXEMPLAR CORPUS of known well-written papers as craft references (candidates: Watson & Crick 1953 for one-page brevity, Shannon 1948 for structure at scale, Ongaro & Ousterhout's Raft paper for understandability-first writing, Jumper et al. AlphaFold 2021 for Nature-grade multi-panel figures, Vaswani et al. 2017 for economy of structure) — ingested as lit:CITE pointer units plus distilled notes in the editio-structure / editio-figures references. Pointers and analysis only, never redistributed PDFs; exemplars cannot BE the acceptance sample because their content is not grounded in any store and rebuilding them through editio would prove typesetting, not the audit loop. (4) NO RELEASE UNTIL GAP-FREE (supersedes the cut-editio-v0.1.0-early suggestion): no editio tag until the build is complete and the gap list is closed — "wait for the complete, no-gap version". The release-flow tag parsing gets its first real exercise at that cut.
 ↳ relates-to event-20260703T021513Z-gap-list-for-the-editio-build-eleven-design-gaps-g1-g11-four-ope
+
+### [2026-07-02 22:44:52] DECISION/RESOLVED — Goal directives for the editio build: exemplar distillation, a minimal TeX-setup capability, arXiv+TPAMI first, paper meta as JSON with no identity defaults
+Operator goal (2026-07-02, /goal) amending the design at build start — five directives. (1) EXEMPLAR DISTILLATION: distill good-writing practices from known well-written papers into editio's shipped references (editio-structure/references/exemplars.md feeding structure and prose guidance; the humanizer fork stays untouched — paper-voice practices land in the structure references it is dialed alongside). Pointers plus practices in our own words only, never reproduced content (copyright); the exemplar papers also enter the organon lit store as CITE units grounding the design. (2) TeX SETUP IS A MINIMAL IN-SKILL CAPABILITY: amends the TeX-out-of-scope resolution — still no vendored toolchain and no CI TeX job, but editio-latex gains a short setup procedure (detect latexmk/pdflatex; guide MiKTeX / TeX Live / MacTeX per OS, interactively with the user). The operator believes LaTeX is already on their machine; the build session probes and uses it if present. (3) VENUES: arXiv and TPAMI (IEEEtran, journal/compsoc mode) are the first-class seed venues built in Phase 2; the rest of the menu (Nature, Elsevier, ACM) follows in Phase 5. (4) FIRST-ARTICLE TARGET: the operator names the project later; Phase 2 acceptance runs on a scratch project meanwhile. (5) PAPER META IS CONFIGURABLE DATA, NO IDENTITY DEFAULTS: .editio/paper/paper.json — JSON chosen over YAML (bun-native parse, zero new dependencies, matches the doco-deo/venue/kb-vocab house pattern) — holds title, authors with affiliations/emails/ORCIDs, keywords, venue, mode, and section order. Scaffolds ship placeholder values only (Author One / Affiliation One); blind mode masks through an \ifeditioblind guard in the generated metadata; and a no-identity regression test asserts the operator's name appears nowhere under editio's templates — an open-source project assumes nobody's identity and exposes nobody's by default.
+
+### [2026-07-02 23:06:12] DECISION/RESOLVED — Authoring subset v1 locked: claim-span grammar, prefix-dispatched refs, the latex escape hatch; rendered output is mode-invariant (closes G1, G2)
+The renderer contract is now a written spec (editio-latex/references/authoring-subset.md) plus a golden fixture (editio/templates/contract/) any swapped-in renderer must pass. Constructs: section front-matter (class/status/grounds/updated/budget); one # heading per section, with class doco:Abstract rendering the abstract environment instead of a numbered section; ##/### subsections; single-level lists; latex fences as the raw escape hatch and other fences as verbatim; blindhide fenced divs; inline emphasis/code; math passthrough; citations [@key] with PREFIX DISPATCH — fig:/tab:/sec:/eq: keys become \cref, everything else \cite, and mixing the two in one group is refused; self-cites [@key]{.self} become \selfcite (masked in blind). Claim spans carry the grade as a class plus a per-claim grounds= attribute and an override="reason" attribute; the audit step applies grades into the source while the grounded-writing-reviewer stays read-only — G3's resolution, now implemented in the skill text. G2 closed: an ungraded span renders \claimG (grey, draft-only tag) — ungraded means the loop has not run yet, distinct from unsourced; the publish gate requires no ungraded, no unsourced, no overclaims. CORRECTION to the earlier contract-fixture framing: rendered .tex is MODE-INVARIANT — draft/publish/blind collapse inside editio.sty at compile time, so the golden is ONE .tex and mode verification is a compile-level check (done; see the spine RESULT). Not in v1, use the escape hatch: markdown tables/figures (they arrive as units with editio-tables/editio-figures), nested lists, footnotes, nested spans. Closes G1 and G2 of the gap list.
+↳ relates-to event-20260703T021513Z-gap-list-for-the-editio-build-eleven-design-gaps-g1-g11-four-ope
+
+### [2026-07-02 23:06:12] RESULT/VALIDATED — editio Phase 1-2 spine built and compile-verified in all three modes on the operator's MiKTeX
+Built on feat/editio-spine, executing the five goal directives. COMPONENTS: /editio (start/resume, store-first, one next action); the editio orchestrator SKILL (the invariant applied to manuscripts, the six-step audit loop with the read-only-reviewer / session-applies-grades split); editio-structure plus references/exemplars.md — practices distilled in our own words from Watson & Crick 1953 ([[watson-crick-1953-brevity-as-confidence-exemplar]]), Shannon 1948 ([[shannon-1948-vocabulary-before-machinery-exemplar]]), the Raft paper ([[ongaro-ousterhout-2014-raft-understandability-as-a-goal-exemplar]]), Vaswani et al. 2017 ([[vaswani-et-al-2017-economy-of-structure-exemplar]]), and AlphaFold 2021 ([[jumper-et-al-2021-alphafold-figures-that-argue-exemplar]]) plus the Gopen-Swan / Mensh-Kording / Whitesides canon, pointers only, no reproduced content (directive 1); editio-latex plus the authoring-subset spec, with TeX setup as a minimal in-skill capability (directive 2); editio-scaffold.ts — idempotent (authored files seeded once, generated files refresh only with --force), venue-driven main.tex, a generated .latexmkrc (out-of-tree build + BIBINPUTS so bibtex finds sources — a real bug the smoke test caught and fixed), paper.json seeded placeholder-only with blind masking via \ifeditioblind (directive 5), the structure gate copied project-tunable to .editio/schema/, and the build-dir gitignore line (closes G4); editio-render.ts — the bespoke renderer with NUL-marker token protection behind the golden contract; editio.sty — three modes, \providecommand default so the mode overrides from the CLI without editing (the git-bash leading-backslash caveat documented); venue data arxiv + tpami (directive 3); editio's own thin lib.ts with tests (closes G6). VERIFIED end to end on the operator's MiKTeX 25.4 + latexmk 4.87: a scaffolded scratch paper carrying the contract introduction builds clean in draft, publish, AND blind; pdftotext confirms the semantics — draft shows the unsourced tag and 8 provenance stamps; publish strips every annotation while keeping author and funding; blind drops the grant line, prints Anonymous Authors and [anonymized], and the author name appears zero times. This validates [[three-renders-one-source]] and the render half of [[editio-audit-loop]] on real PDFs — the acceptance the discarded spine never reached. TESTS: 20 new (the golden render contract, scaffold idempotency + venue swap + gitignore-once, template schemas — closing G5's validation home — and the no-identity sweep, which caught its own regex on first run); the suite grows 124 to 144 green and the marketplace validator covers every new component. Remaining phases: 3 figures (G9 MediaBox lands there), 4 tables/bib/repro (G8 own-paper marker), 5 venue/rebuttal/lint, 6 wire + the organon-grounded sample; the first-article project is still the operator's to name (directive 4).
+↳ relates-to event-20260703T024452Z-goal-directives-for-the-editio-build-exemplar-distillation-a-min
 
 <!-- kb:append-point -->
