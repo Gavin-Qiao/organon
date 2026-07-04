@@ -28,6 +28,12 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ### Fixed
 
+- **tpami venue data corrected against live IEEE policy (verified 2026-07)**: the regular-paper
+  limit is **12** formatted double-column pages, not 14 (submit up to 18; USD 220/page past 12),
+  and review is **single-anonymous by default** (double-anonymous on justified request — the
+  `blind` render is opt-in for this venue). The template itself was re-verified current:
+  `[10pt,journal,compsoc]{IEEEtran}` + `IEEEtran.bst` is still what the IEEE Template
+  Selector serves for TPAMI.
 - **Claim spans parse balanced brackets** — `[… ([@sec:x]) …]{.claim}` no longer leaks a
   literal `]{.claim}` into the PDF (the dogfood's bug; now a golden-contract case), and the
   renderer **warns on stderr** when any unrendered span survives (it still never blocks).
