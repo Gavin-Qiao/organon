@@ -37,3 +37,13 @@ This work was funded by Grant 12-345 at Affiliation One.
 ```
 
 The bound in @eq:entropy holds for any finite alphabet.
+
+[The gate refuses off-vocab writes even under load ([@sec:methods]), as prior
+work anticipated [@shannon1948]]{.claim .validated grounds=the-gate}.
+
+```latex+
+\begin{table}[tb]
+  \caption{Grounding beats retrieval alone [@vaswani2017]; details in @sec:methods.}
+  \label{tab:grounding}
+\end{table}
+```

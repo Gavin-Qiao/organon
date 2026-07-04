@@ -18,7 +18,7 @@
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
-import { parseFrontmatter, paperDir, slugify, texEscape } from "./lib.ts";
+import { findRoot, parseFrontmatter, paperDir, slugify, texEscape } from "./lib.ts";
 
 // ── Token protection ─────────────────────────────────────────────────────────
 // Protected segments (math, code, raw LaTeX, resolved macros) are swapped for
@@ -72,9 +72,31 @@ function inline(s: string, ctx: string): string {
 // ── Claim spans ──────────────────────────────────────────────────────────────
 // [text]{.claim .validated grounds=h1,h2} → \claimV{...}\editiogrounds{h1, h2}
 // [text]{.claim} → \claimG{...}   ·   [@key]{.self} → \selfcite{key}
-const SPAN = /\[([^\[\]]+)\]\{([^{}]*)\}/g;
 
-function parseAttrs(raw: string): { classes: string[]; attrs: Record<string, string> } {
+/** Find `[text]{attrs}` spans with BALANCED brackets — claim text may nest
+ *  citations like `([@sec:theory])`, whose inner `]` must not close the span
+ *  (the first dogfood's bug). Outermost spans only; attrs never contain braces. */
+export function findSpans(s: string): { start: number; end: number; text: string; rawAttrs: string }[] {
+  const out: { start: number; end: number; text: string; rawAttrs: string }[] = [];
+  let i = 0;
+  while (i < s.length) {
+    if (s[i] !== "[") { i++; continue; }
+    let depth = 0;
+    let j = i;
+    for (; j < s.length; j++) {
+      if (s[j] === "[") depth++;
+      else if (s[j] === "]" && --depth === 0) break;
+    }
+    if (depth !== 0 || s[j + 1] !== "{") { i++; continue; }
+    const close = s.indexOf("}", j + 2);
+    if (close < 0 || s.slice(j + 2, close).includes("{")) { i++; continue; }
+    out.push({ start: i, end: close + 1, text: s.slice(i + 1, j), rawAttrs: s.slice(j + 2, close) });
+    i = close + 1;
+  }
+  return out;
+}
+
+export function parseAttrs(raw: string): { classes: string[]; attrs: Record<string, string> } {
   const classes: string[] = [];
   const attrs: Record<string, string> = {};
   const re = /\.([\w-]+)|([\w-]+)=(?:"([^"]*)"|([^\s"]+))/g;
@@ -87,31 +109,42 @@ function parseAttrs(raw: string): { classes: string[]; attrs: Record<string, str
 }
 
 function spans(s: string, ctx: string): string {
-  return s.replace(SPAN, (whole, text: string, rawAttrs: string) => {
-    const { classes, attrs } = parseAttrs(rawAttrs);
+  const found = findSpans(s);
+  if (!found.length) return s;
+  let out = "";
+  let pos = 0;
+  for (const f of found) {
+    out += s.slice(pos, f.start);
+    const { classes, attrs } = parseAttrs(f.rawAttrs);
     if (classes.includes("self")) {
-      const key = text.trim().replace(/^@/, "");
-      return protect(`\\selfcite{${key}}`);
+      out += protect(`\\selfcite{${f.text.trim().replace(/^@/, "")}}`);
+    } else if (classes.includes("claim")) {
+      const grade = classes.includes("validated") ? "\\claimV"
+        : classes.includes("conjectured") ? "\\claimC"
+        : classes.includes("unsourced") ? "\\claimU"
+        : "\\claimG";
+      const body = inline(f.text.replace(/\n/g, " "), ctx);
+      const grounds = attrs.grounds ? protect(`\\editiogrounds{${attrs.grounds.split(",").map((g) => g.trim()).join(", ")}}`) : "";
+      out += protect(`${grade}{${body}}${grounds}`);
+    } else {
+      out += s.slice(f.start, f.end); // not ours — leave for later passes
     }
-    if (!classes.includes("claim")) return whole; // not ours — leave for later passes
-    const grade = classes.includes("validated") ? "\\claimV"
-      : classes.includes("conjectured") ? "\\claimC"
-      : classes.includes("unsourced") ? "\\claimU"
-      : "\\claimG";
-    const body = inline(text.replace(/\n/g, " "), ctx);
-    const grounds = attrs.grounds ? protect(`\\editiogrounds{${attrs.grounds.split(",").map((g) => g.trim()).join(", ")}}`) : "";
-    return protect(`${grade}{${body}}${grounds}`);
-  });
+    pos = f.end;
+  }
+  return out + s.slice(pos);
 }
 
 // ── Section rendering ────────────────────────────────────────────────────────
-export function renderSection(md: string, fileSlug: string): string {
+export function renderSection(md: string, fileSlug: string, warn?: (msg: string) => void): string {
   tokens.length = 0;
   const { data, body } = parseFrontmatter(md);
   const ctx = `${fileSlug}.md`;
   let s = body;
 
   // 1. protect raw LaTeX fences, other fences (verbatim), display + inline math, inline code
+  //    ```latex+ opts INTO the citation/crossref transforms (captions want [@key] and
+  //    @fig: too — the dogfood's split-brain papercut); plain ```latex stays fully raw.
+  s = s.replace(/```latex\+\n([\s\S]*?)```/g, (_, tex) => `\n${protect(cites(tex.trimEnd(), ctx))}\n`);
   s = s.replace(/```latex\n([\s\S]*?)```/g, (_, tex) => `\n${protect(tex.trimEnd())}\n`);
   s = s.replace(/```(\w*)\n([\s\S]*?)```/g, (_, _lang, code) => `\n${protect(`\\begin{verbatim}\n${code.trimEnd()}\n\\end{verbatim}`)}\n`);
   s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => protect(`\\[${math.trim()}\\]`));
@@ -176,8 +209,13 @@ export function renderSection(md: string, fileSlug: string): string {
     "",
   ];
   // collapse runs of blank lines, restore protected segments
-  const tex = head.concat(out).join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
-  return restore(tex);
+  const tex = restore(head.concat(out).join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n");
+
+  // leftover-span lint: an unbalanced or malformed span leaves `]{.claim}` (or kin)
+  // in the output — visible only by eye in the built PDF, so say it here instead.
+  const leftovers = tex.match(/\]\{\.(?:claim|self|validated|conjectured|unsourced)\b|\{\.claim\b/g);
+  if (leftovers?.length) warn?.(`${ctx}: ${leftovers.length} span(s) survived unrendered (check bracket balance): ${[...new Set(leftovers)].join(" · ")}`);
+  return tex;
 }
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
@@ -186,29 +224,62 @@ function arg(argv: string[], k: string): string | undefined {
   return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
 }
 
+/** Section slugs in build order — read from main.tex when present, else alphabetical. */
+export function sectionOrder(paper: string): string[] {
+  const dir = join(paper, "sections");
+  const onDisk = readdirSync(dir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, ""));
+  const mainTex = join(paper, "main.tex");
+  if (!existsSync(mainTex)) return onDisk.sort();
+  const ordered = [...readFileSync(mainTex, "utf8").matchAll(/sections\/([\w-]+)/g)].map((m) => m[1]).filter((s) => onDisk.includes(s));
+  return [...ordered, ...onDisk.filter((s) => !ordered.includes(s)).sort()];
+}
+
+const HELP = `editio-render — the reference md -> tex renderer (see editio-latex/references/authoring-subset.md)
+usage:
+  editio-render.ts [--root <dir>] --all          render every sections/*.md next to its source
+  editio-render.ts --file <path> [--stdout]      render one file (stdout = print, no write)
+  editio-render.ts --concat [out.md]             concatenate sections (main.tex order) into one
+                                                 markdown file (stdout when no path) — for reviews
+                                                 and end-to-end reads
+--root defaults to the nearest ancestor containing .editio/ or .promptus/, so running
+from inside .editio/paper/ works. Warnings (unrendered spans) go to stderr; the renderer
+never blocks — enforcement is editio-status --gate.`;
+
 if (import.meta.main) {
   const argv = process.argv.slice(2);
-  const root = arg(argv, "root") ?? process.cwd();
+  if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); process.exit(0); }
+  const root = arg(argv, "root") ?? findRoot(process.cwd());
   const file = arg(argv, "file");
   const toStdout = argv.includes("--stdout");
-  const sections = join(paperDir(root), "sections");
+  const paper = paperDir(root);
+  const sections = join(paper, "sections");
+
+  if (!file && !existsSync(sections)) {
+    console.error(`editio-render: no ${sections} — not an editio workspace (searched upward from the cwd). Run editio-scaffold at the project root, or pass --root <dir>.`);
+    process.exit(1);
+  }
+
+  if (argv.includes("--concat")) {
+    const outPath = arg(argv, "concat");
+    const doc = sectionOrder(paper)
+      .map((slug) => `<!-- sections/${slug}.md -->\n\n${readFileSync(join(sections, `${slug}.md`), "utf8").trim()}\n`)
+      .join("\n");
+    if (outPath) { writeFileSync(outPath, doc); console.log(`editio-render: concatenated ${sectionOrder(paper).length} section(s) -> ${outPath}`); }
+    else process.stdout.write(doc);
+    process.exit(0);
+  }
 
   const targets: string[] = [];
   if (file) targets.push(file);
-  else {
-    if (!existsSync(sections)) {
-      console.error(`editio-render: no ${sections} — run editio-scaffold first`);
-      process.exit(1);
-    }
-    for (const f of readdirSync(sections)) if (f.endsWith(".md")) targets.push(join(sections, f));
-  }
+  else for (const slug of sectionOrder(paper)) targets.push(join(sections, `${slug}.md`));
 
+  const warn = (m: string) => console.error(`editio-render: warning — ${m}`);
   for (const t of targets) {
     if (!existsSync(t)) { console.error(`editio-render: missing ${t}`); process.exit(1); }
     const slug = basename(t).replace(/\.md$/, "");
     let tex: string;
     try {
-      tex = renderSection(readFileSync(t, "utf8"), slugify(slug));
+      tex = renderSection(readFileSync(t, "utf8"), slugify(slug), warn);
     } catch (e) {
       console.error(`editio-render: ${(e as Error).message}`);
       process.exit(1);

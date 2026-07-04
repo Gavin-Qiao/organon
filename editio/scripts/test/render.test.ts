@@ -69,6 +69,24 @@ test("blindhide divs wrap their content in \\blindhide", () => {
   expect(tex).toContain("\\blindhide{Funded by Grant 1.}");
 });
 
+test("claim text may nest citations and crossrefs (balanced brackets, the dogfood bug)", () => {
+  const tex = renderSection("# T\n\n[the same percept ([@sec:theory]), as shown [@wagemans2012]]{.claim .validated grounds=g1}.\n", "t");
+  expect(tex).toContain("\\claimV{the same percept (\\cref{sec:theory}), as shown \\cite{wagemans2012}}\\editiogrounds{g1}");
+  expect(tex).not.toContain("]{.claim");
+});
+
+test("a malformed span leaves residue AND raises the leftover-span warning", () => {
+  const warnings: string[] = [];
+  renderSection("# T\n\n[unbalanced (]( bracket]{.claim}\n", "t", (m) => warnings.push(m));
+  expect(warnings.length).toBe(1);
+  expect(warnings[0]).toContain("survived unrendered");
+});
+
+test("latex+ fences transform citations and crossrefs but nothing else stays raw", () => {
+  const tex = renderSection("# T\n\n```latex+\n\\caption{Beats baseline [@vaswani2017]; see @fig:main & $x_i$.}\n```\n", "t");
+  expect(tex).toContain("\\caption{Beats baseline \\cite{vaswani2017}; see \\cref{fig:main} & $x_i$.}"); // & unescaped: raw LaTeX
+});
+
 test("lib: front-matter lists and scalars parse; slugify is label-safe", () => {
   const { data } = parseFrontmatter("---\nclass: deo:Methods\ngrounds: [a-b, c]\nupdated: 2026-07-03\n---\nbody");
   expect(data.class).toBe("deo:Methods");

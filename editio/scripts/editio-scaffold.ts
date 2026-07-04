@@ -14,7 +14,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { paperDir, readJSON, texEscape } from "./lib.ts";
+import { findRoot, paperDir, readJSON, texEscape } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TEMPLATES = join(PLUGIN, "templates");
@@ -73,7 +73,9 @@ function metadataTex(meta: any, authorFormat: string): string {
 }
 
 function main(argv: string[]): number {
-  const root = arg(argv, "root") ?? process.cwd();
+  // walk up to an existing project root so a run from inside .editio/paper/ extends
+  // that workspace instead of nesting a second one under it
+  const root = arg(argv, "root") ?? findRoot(process.cwd());
   const force = argv.includes("--force");
   const paper = paperDir(root);
 
@@ -121,15 +123,26 @@ function main(argv: string[]): number {
   const packages = (venue.packages ?? [])
     .map((p: string) => (p.startsWith("[") ? `\\usepackage${p}` : `\\usepackage{${p}}`))
     .join("\n");
+  const preamble = (venue.preamble ?? []).join("\n");
   const mainTex = readFileSync(join(TEMPLATES, "latex", "main.tex"), "utf8")
     .replace("EDITIO_VENUE", venue.id)
     .replace("EDITIO_CLASS_OPTIONS", (venue.class_options ?? []).join(","))
     .replace("EDITIO_CLASS", venue.class)
     .replace("EDITIO_EXTRA_PACKAGES\n", packages ? `${packages}\n` : "")
+    .replace("EDITIO_VENUE_PREAMBLE\n", preamble ? `${preamble}\n` : "")
     .replace("EDITIO_SECTIONS", inputs)
     .replace("EDITIO_BIBSTYLE", venue.bib_style)
     .replace("EDITIO_BIB", String(meta.bibliography ?? "refs.bib").replace(/\.bib$/, ""));
   if (generate(join(paper, "main.tex"), mainTex, force)) log(`wrote main.tex (venue ${venue.id}, order ${orderId})`);
+
+  // 5a. front/macros.tex — the AUTHORED extension point (the first dogfood reached
+  //     for it): seeded once, \InputIfFileExists'd by main.tex, never regenerated.
+  if (seed(join(paper, "front", "macros.tex"), [
+    "% front/macros.tex — YOURS. Seeded once; the scaffold never touches it again,",
+    "% and main.tex \\InputIfFileExists's it before the document starts. Put your",
+    "% macros, float tuning, and package tweaks here — they survive --force.",
+    "",
+  ].join("\n"))) log("seeded front/macros.tex (your standing extension point)");
 
   // 5b. .latexmkrc — the reference build driver config (out-of-tree build;
   //     bibtex runs in build/ and finds sources through BIBINPUTS).

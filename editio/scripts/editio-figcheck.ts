@@ -14,7 +14,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { paperDir, readJSON } from "./lib.ts";
+import { findRoot, paperDir, readJSON } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MM_PER_PT = 25.4 / 72;
@@ -50,7 +50,7 @@ function main(argv: string[]): number {
   let label = `--width-mm`;
 
   if (Number.isNaN(expected)) {
-    const root = arg(argv, "root") ?? process.cwd();
+    const root = arg(argv, "root") ?? findRoot(process.cwd());
     const paperMetaPath = join(paperDir(root), "paper.json");
     const venueId = arg(argv, "venue") ?? (existsSync(paperMetaPath) ? readJSON(paperMetaPath).venue : undefined) ?? "arxiv";
     const venuePath = join(PLUGIN, "templates", "venues", venueId, "venue.json");

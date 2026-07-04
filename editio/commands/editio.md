@@ -15,8 +15,9 @@ Work through this checklist, then stop at the single next action.
 3. **Workspace.** No `.editio/paper/` → scaffold it (venue from `$ARGUMENTS`, default arxiv):
    `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" --venue <id>` — then tell the user
    `paper.json` is where title/authors go (placeholders ship; nobody's identity is assumed).
-4. **Resume report.** Read `sections/*.md` front-matter and give a one-line status per
-   section: class · status · grounds count · a claim-span tally (graded vs ungraded).
+4. **Resume report.** Run `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` — one line
+   per section (class · status · grounds count · claim tally) plus grounds health against
+   the store; `--claims` locates each ungraded span when the audit loop is next.
 5. **Route the next step**, exactly one:
    - skeleton just created → `editio-structure` (contribution list + funnel intro first);
    - sections drafted but ungraded spans remain → the audit loop (`editio` skill, step 2–4);
@@ -25,5 +26,7 @@ Work through this checklist, then stop at the single next action.
      (run inside `.editio/paper/`);
    - building fine → figures through the `editio-figures` skill (claim-first, sized to the
      venue slot, gated by `editio-figcheck.ts`), or `humanizer` for voice.
-6. **Before any submission talk**: the publish gate — no ungraded, no unsourced, no
-   overclaims; build `publish` (and `blind` if the venue is double-blind) per `editio-latex`.
+6. **Before any submission talk**: the publish gate —
+   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` must pass (no ungraded, no
+   unsourced, no overclaims); then build `publish` (and `blind` if the venue is
+   double-blind) per `editio-latex`.

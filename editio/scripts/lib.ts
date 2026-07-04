@@ -2,7 +2,7 @@
 // scripts/lib (the plugins reuse each other at the SKILL level, never by import),
 // so this stays small and carries its own tests.
 import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 
 /** Minimal front-matter parser: a leading `---` block of `key: value` lines.
  *  Values: plain strings, [a, b] inline lists, quoted strings. Enough for
@@ -42,6 +42,21 @@ export function readJSON(path: string): any {
 /** The paper workspace under a project root. */
 export function paperDir(root: string): string {
   return join(root, ".editio", "paper");
+}
+
+/** Walk up from `start` to the nearest project root — the first ancestor holding
+ *  `.editio/` or `.promptus/`. Makes every CLI cwd-proof: run from inside
+ *  `.editio/paper/` and the scripts still find the workspace instead of nesting
+ *  a second one (the dogfood papercut). Falls back to `start` when nothing marks
+ *  a root. */
+export function findRoot(start: string): string {
+  let dir = resolve(start);
+  for (;;) {
+    if (existsSync(join(dir, ".editio")) || existsSync(join(dir, ".promptus"))) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) return resolve(start);
+    dir = parent;
+  }
 }
 
 /** Load and lightly validate .editio/paper/paper.json. */
