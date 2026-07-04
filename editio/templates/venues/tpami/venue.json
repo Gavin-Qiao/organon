@@ -9,7 +9,14 @@
   "full_width_mm": 182,
   "figure_font_pt": 9,
   "bib_style": "IEEEtran",
-  "packages": [],
+  "packages": ["dblfloatfix"],
+  "preamble": [
+    "% two-column float discipline (first dogfood: figure* stranded after the references without it)",
+    "\\setcounter{dbltopnumber}{2}",
+    "\\renewcommand{\\dbltopfraction}{0.9}",
+    "\\renewcommand{\\textfraction}{0.07}",
+    "\\renewcommand{\\floatpagefraction}{0.85}"
+  ],
   "author_format": "ieee-journal",
   "engine": "pdflatex",
   "limits": {
@@ -20,6 +27,7 @@
     "compsoc journal mode changes abstract/title layout - do not fight it",
     "widths measured from IEEEtran (10pt journal compsoc): \\columnwidth 252.945pt = 3.5in = 88.9mm, \\textwidth 517.935pt = 182.0mm - and confirmed by the IEEE author center (resolution-and-size)",
     "IEEE graphics guidance: figure type ~9-10pt at final size; raster >300dpi (color/grayscale), >600dpi (line art); vector preferred",
+    "double-column floats: \\begin{figure*}[tb], never bare [t]; dblfloatfix + the preamble tuning keep them from stranding past the references",
     "figures must survive B&W print; Okabe-Ito + redundant encoding covers this",
     "IEEEtran class and bibliography style ship with TeX Live / MiKTeX"
   ]

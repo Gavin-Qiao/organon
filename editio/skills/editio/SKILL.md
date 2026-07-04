@@ -24,7 +24,9 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | render markdown sections to LaTeX | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all` |
 | build the PDF, preview one section, set up TeX, notation | the `editio-latex` skill |
 | ground a claim before it hits the page | promptus's `recall` (kb-find → kb-get) |
+| see where the paper stands (per-section claim tallies, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded span at file:line) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
+| run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
 | design, size, caption, or color a figure | the `editio-figures` skill (claim-first; venue widths from `venue.json`) |
 | verify a figure PDF is the slot size | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-figcheck.ts" <fig.pdf> --slot single` |
@@ -51,8 +53,9 @@ Identity lives in `paper.json` only, scaffolded as placeholders.
    (`override="holds for our corpus"`), or fixes the prose / stores the evidence.
 5. **Render** — grades become `\claimV` (clean) / `\claimC` (amber) / `\claimU` (vermilion) /
    `\claimG` (grey, ungraded) on the draft page.
-6. **Gate** — publish target: zero unsourced, zero overclaims, nothing left ungraded.
-   `publish`/`blind` strip every tint either way.
+6. **Gate** — `editio-status --gate`: zero unsourced, zero overclaims (a `.validated` claim
+   over weak or unknown grounds), nothing left ungraded — an in-span `override="reason"`
+   passes on the record. `publish`/`blind` strip every tint either way.
 
 ## Three renders, one source
 

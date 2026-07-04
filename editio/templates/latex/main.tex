@@ -13,8 +13,10 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 EDITIO_EXTRA_PACKAGES
+EDITIO_VENUE_PREAMBLE
 \usepackage{hyperref}
 \usepackage[capitalise]{cleveref}
+\InputIfFileExists{front/macros}{}{}% your extension point — authored, survives --force
 \input{front/metadata}
 \begin{document}
 \maketitle

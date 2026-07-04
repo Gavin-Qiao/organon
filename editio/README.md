@@ -92,15 +92,18 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 | `editio-latex` | TeX setup, venue scaffolding, mode builds, single-section previews, notation conventions; the authoring subset is a written contract ([`references/authoring-subset.md`](skills/editio-latex/references/authoring-subset.md)) |
 | `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |
 | `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files (incl. the per-venue `figures/editio.mplstyle`) refresh only with `--force` |
-| `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass |
+| `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass; cwd-proof, warns on unrendered spans, `--concat` exports one reviewable markdown file |
+| `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies, every ungraded span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims) |
 | `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
 | `editio.sty` | the three-mode render layer |
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
 | venues | `arxiv`, `tpami` — venues are **data folders** (widths, fonts, class, bib style); add one without touching a script |
 
-**Roadmap** (built in phases, driven by real papers): **next → `editio-tables`** ·
-`editio-bib` (refs.bib from the lit store) · `editio-repro` → `editio-venue` ·
-`editio-rebuttal` · `editio-lint` (the publish gate, mechanized).
+**Roadmap** (built in phases, driven by real papers — the claim gate arrived early because
+the first dogfood demanded it): **next → `editio-tables`** (a data→booktabs unit; the first
+dogfood's request) · `editio-bib` (refs.bib from the lit store) · `editio-repro` →
+`editio-venue` · `editio-rebuttal` · `editio-lint` (structure/notation lint; the claim gate
+already ships as `editio-status --gate`).
 
 ## Skills, not stacks
 

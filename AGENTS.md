@@ -60,7 +60,8 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
 - `editio/` — the writing plugin: `commands/` (`/editio`), `skills/` (`editio` the orchestrator,
   `editio-structure` + its exemplar craft references, `editio-latex` + the authoring-subset
   contract, `editio-figures` + its cited craft references, `humanizer`), `scripts/`
-  (`editio-scaffold`, `editio-render`, `editio-figcheck` the size gate, own thin `lib.ts`),
+  (`editio-scaffold`, `editio-render`, `editio-status` the claim report + publish gate,
+  `editio-figcheck` the size gate, own thin `lib.ts`),
   `templates/` (the DoCO/DEO gate, `editio.sty` + `main.tex`, `paper.json`, venues, the
   per-venue `editio.mplstyle`, the golden contract). Tables/bib arrive with later phases.
 - `.promptus/` — Organon's own knowledge (TELOS, ledger, findings + `lit/`, memory, schema),

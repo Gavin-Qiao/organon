@@ -6,6 +6,35 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- **`editio-status.ts` — the grounding layer, tooled** (the first dogfood's top finding: the
+  feature editio is named for lived only in skill prose). Per-section class / status /
+  grounds / claim tallies, every ungraded or unsourced span at `file:line` (`--claims`),
+  grounds handles resolved against the promptus store (file units by slug, ledger entries by
+  title), weak/unknown-grounds reporting — and the **publish gate as a command** (`--gate`:
+  exit 1 on ungraded, unsourced, or overclaims; in-span `override="reason"` passes on the
+  record).
+- **```` ```latex+ ```` fences** (authoring subset v1.1): raw LaTeX plus the citation and
+  crossref transforms, so `[@key]` and `@fig:x` work inside float captions — one citation
+  syntax for prose and floats.
+- **`editio-render --concat [out.md]`** — concatenate the sections (build order from
+  `main.tex`) into one markdown file for reviews and end-to-end reads; plus a real `--help`.
+- **`front/macros.tex`** — the authored extension point, now actually wired:
+  seeded once, `\InputIfFileExists`'d by `main.tex`, survives `--force`.
+- **tpami float discipline by construction**: `dblfloatfix` + double-float fraction tuning
+  ship in the venue data (`figure*` stranded past the references in the dogfood), and the
+  venue `preamble` field is now general venue data.
+
+### Fixed
+
+- **Claim spans parse balanced brackets** — `[… ([@sec:x]) …]{.claim}` no longer leaks a
+  literal `]{.claim}` into the PDF (the dogfood's bug; now a golden-contract case), and the
+  renderer **warns on stderr** when any unrendered span survives (it still never blocks).
+- **Every CLI is cwd-proof**: run from inside `.editio/paper/` and the scripts walk up to
+  the project root instead of nesting a second workspace, with an honest error when there
+  is genuinely no workspace.
+
 ## [0.2.0] - 2026-07-03
 
 ### Added

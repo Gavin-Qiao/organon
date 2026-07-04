@@ -56,11 +56,12 @@ Sections are markdown; figures enter through the ```` ```latex ```` escape hatch
 draft render carries provenance via the same stamp machinery as sections:
 
 ````markdown
-```latex
-\begin{figure}[t]
+```latex+
+\begin{figure}[tb]
   \centering
   \includegraphics{figures/ablation/ablation.pdf}% sized to the slot — no width= post-scaling
-  \caption{Grounded rendering removes 90\% of unsourced claims before review.
+  \caption{Grounded rendering removes 90\% of unsourced claims before review
+           (protocol from [@krzywinski2013]; setup in @sec:methods).
            (a) Claim grades across ten drafts; (b) time-to-audit per section.
            Error bars: 95\% CI over 10 runs; n=40 sections.}
   \label{fig:ablation}
@@ -69,8 +70,11 @@ draft render carries provenance via the same stamp machinery as sections:
 ```
 ````
 
-Reference it in prose as `@fig:ablation`. The stamp prints grey in draft and vanishes in
-publish/blind — honesty scaffolding, not reader furniture.
+The `latex+` fence keeps `[@key]` and `@sec:x` working inside captions — floats and prose
+share one citation syntax. Reference the figure in prose as `@fig:ablation`. Use `[tb]`
+placement (double-column `figure*` especially — bare `[t]` strands wide floats past the
+references; the tpami venue also ships `dblfloatfix` for exactly this). The stamp prints
+grey in draft and vanishes in publish/blind — honesty scaffolding, not reader furniture.
 
 ## Output format (the default and its two exceptions)
 

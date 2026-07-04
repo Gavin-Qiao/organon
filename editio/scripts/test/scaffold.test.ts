@@ -64,6 +64,8 @@ test("tpami venue swaps the class and bib style; unknown venues list what exists
   const main = read(paper(root, "main.tex"));
   expect(main).toContain("\\documentclass[10pt,journal,compsoc]{IEEEtran}");
   expect(main).toContain("\\bibliographystyle{IEEEtran}");
+  expect(main).toContain("\\usepackage{dblfloatfix}"); // figure* discipline ships by construction
+  expect(main).toContain("\\renewcommand{\\dbltopfraction}{0.9}");
   const bad = run(scratch(), "--venue", "nope");
   expect(bad.status).toBe(1);
   expect(bad.out).toContain("arxiv");
@@ -76,6 +78,17 @@ test("the gitignore line is added exactly once across runs", () => {
   run(root, "--venue", "arxiv");
   const lines = read(join(root, ".gitignore")).split(/\r?\n/).filter((l) => l === "/.editio/paper/build/");
   expect(lines.length).toBe(1);
+});
+
+test("front/macros.tex is a seeded extension point: wired into main.tex, survives --force", () => {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  expect(read(paper(root, "main.tex"))).toContain("\\InputIfFileExists{front/macros}");
+  const macros = paper(root, "front", "macros.tex");
+  expect(existsSync(macros)).toBe(true);
+  writeFileSync(macros, "% mine\n\\newcommand{\\mymacro}{x}\n");
+  expect(run(root, "--venue", "arxiv", "--force").status).toBe(0);
+  expect(read(macros)).toContain("\\mymacro"); // authored: --force never touches it
 });
 
 test("scaffold generates figures/editio.mplstyle sized to the venue column", () => {
