@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-04
+
 ### Added
 
 - **`editio-status.ts` — the grounding layer, tooled** (the first dogfood's top finding: the
@@ -94,6 +96,7 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.2.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.3.0...HEAD
+[0.3.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.2.0...editio-v0.3.0
 [0.2.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.2.0
 [0.1.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.1.0
