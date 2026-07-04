@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-03 (editio 0.2.0 released + migrated)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-04 (dogfood 1 processed)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,46 +25,48 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (editio 0.2.0 released AND installed - figures live; name the article, then Phase 4)
-**Phase 3 shipped, released, and on the operator's machine** (2026-07-03): editio-v0.2.0 is Latest
-(PR #16 figures + references discipline, PR #17 the cut; workflow-published, changelog as notes), and
-the operator's install moved 0.1.0 -> 0.2.0 via plugin update - the version bump was seen immediately,
-proving the RELEASING cache-key rule from the same morning's stale-cache MISTAKE. The plugin now
-carries editio-figures (claim-first captions, six moves, figure-as-unit) + five cited references,
-editio-figcheck.ts (G9 closed; MediaBox lint ±1mm), and the scaffold-generated per-venue
-figures/editio.mplstyle. **Venue widths are measured, not guessed** (arxiv 165.1mm was 127; tpami
-88.9mm column + 182mm text, IEEE triple-confirmed; figure_font_pt 9; pt-vs-bp documented). **The
-references discipline is standing**: editio README bibliography, CONTRIBUTING "References are
-load-bearing" (three homes, same PR), 13 lit units wikilinked from the Phase 3 RESULT. Suite 155
-green. **Gap ledger: only G8 (Phase 4 own-paper marker) remains.** 177 units in the store.
+## NOW (dogfood 1 processed - the grounding layer is tooled; TPAMI venue verified; Phase 4 next)
+**The first article happened**: Psi wrote a real TPAMI paper on editio 0.2.0 (~40 rebuilds) and
+reported with reproductions; the response is feat/editio-dogfood-1. **The grounding layer is now
+tooled** - editio-status.ts: per-section claim tallies, ungraded spans at file:line (--claims),
+grounds resolved against the store (file slugs + ledger title-slugs), and the publish gate as a
+command (--gate: ungraded/unsourced/overclaims fail; in-span override passes on the record).
+Renderer: balanced-bracket claim spans (the ]{.claim} leak fixed, golden-contract case), latex+
+opt-in fences (cites/crossrefs in captions), leftover-span warnings (never blocks), --concat,
+--help; every CLI walks up to the root (cwd-proof). Scaffold: front/macros.tex seeded +
+InputIfFileExists'd (survives --force); venue preamble is data - tpami ships dblfloatfix + float
+fractions. **TPAMI verified 2026-07** ([10pt,journal,compsoc]{IEEEtran} + IEEEtran.bst still what
+the Template Selector serves; page limit corrected 14 -> 12 formatted pages, 18 max at USD
+220/page past 12; single-anonymous default - blind render opt-in). Authoring subset v1.1. Suite
+166 green; end-to-end smoke on MiKTeX (scaffold -> render from inside paper dir -> gate ->
+compile with dblfloatfix). Gap ledger: G8 (Phase 4) only.
 
 ## Open frontier
-- [ ] **Operator names the first-article project** (directive 4, the oldest open item) - the article
-  dogfoods the whole chain now: structure -> claims -> figures (the six moves) -> figcheck -> audit.
-- [ ] **Phase 4 - editio-tables / editio-bib / editio-repro** (G8 own-paper lit marker; refs.bib from
-  the lit store), article-driven.
-- [ ] **Phases 5-6**: venue/rebuttal/lint (the mechanized publish gate) -> wire + the organon-grounded
-  sample + exemplar corpus.
-- [ ] **Banked:** per-directory progressive-disclosure indexes; a telos graph node; an okf export;
-  v0.6 write-time calibration ([[write-time-calibration-design]]).
-- [ ] **Psi/Probatio content** - dangling handles are the sessions' own worklist; verify on next touch.
-- [ ] **(deferred)** Norma seam (external grounding).
+- [ ] **Phase 4 - editio-tables / editio-bib / editio-repro** (G8 own-paper marker; refs.bib from
+  the lit store); first requirement recorded from the dogfood: CSV/JSON -> booktabs with
+  significance marking.
+- [ ] **editio 0.2.1 or 0.3.0 cut** when the operator says - the dogfood fixes + grounding layer
+  are on main only after the PR merges; Psi's next session wants them.
+- [ ] **Psi/Probatio Telos cleanup** - the 0.6.1 doctor hands them the worklist (Psi 2 lines,
+  Probatio 3); their sessions' judgment or ours on the operator's word.
+- [ ] **Phases 5-6**: venue/rebuttal/structure-lint -> wire + sample + exemplar corpus (the claim
+  gate already shipped early as editio-status --gate).
+- [ ] **Banked:** progressive-disclosure indexes; telos graph node; okf export; write-time
+  calibration ([[write-time-calibration-design]]).
+- [ ] **(deferred)** Norma seam.
 
 ## Next actions
-1. Operator restarts (or /reload-plugins) to load 0.2.0, then names the first-article project.
-2. The article's first figure walks editio-figures + figcheck end to end (the live dogfood).
-3. Phase 4 (tables/bib) builds next, article-driven; land these uncommitted ledger writes with its PR.
+1. Merge feat/editio-dogfood-1 (PR pending), cut editio when the operator says.
+2. Phase 4 (tables/bib) builds article-driven - the dogfood's booktabs request is the spec seed.
+3. Land these uncommitted ledger writes with this branch's docs commit (done if you read this on main).
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO 0.2.0 (FIGURES) RELEASED AND INSTALLED; 155 TESTS; ONLY G8 OPEN.** Read the Log since
-2026-07-03: the stale-cache MISTAKE -> the RELEASING cache-key rule (new plugins enter at 0.0.0),
-the Phase 3 DECISION (per-venue mplstyle, MediaBox lint, escape-hatch placement, no renderer growth),
-the Phase 3 RESULT (venue widths measured on the real classes; the canon cited end to end,
-agent-verified), and the 0.2.0 release RESULT (the cache-key rule proven: the updater saw the bump).
-The references discipline lives in CONTRIBUTING ("References are load-bearing"). Two ledger units
-(the release RESULT + this header) sit uncommitted on main - land them with the next PR. Next:
-operator names the first-article project; then Phase 4 (tables/bib), article-driven.
-Read .promptus/TELOS.md, then this header, then the Log since 2026-07-03.
+**DOGFOOD 1 PROCESSED; GROUNDING LAYER TOOLED (editio-status + gate); TPAMI VERIFIED (12-page
+limit, single-anonymous default); SUBSET v1.1; SUITE 166.** Read the Log since 2026-07-04: the
+dogfood FINDING (grounding was prose-only; three renderer papercuts; floats), the response
+DECISION (status owns report+gate; latex+ opt-in; balanced brackets; cwd-proof CLIs; venue
+preamble as data), and the TPAMI lit unit (template current; limits corrected). Phase 4 next,
+article-driven (booktabs first). Read .promptus/TELOS.md, then this header, then the Log.
 
 <!-- now:end -->
 
@@ -464,5 +466,14 @@ Three surfaces, one mechanical check - see [[telos-pollution-the-one-freehand-st
 
 ### [2026-07-03 10:48:38] DECISION/RESOLVED — Telos governance: operator-triggered edits, agent registers-and-proposes, checkpoint keeps memory fresh; ships as a patch
 Operator refinements on the telos-hygiene patch, all at the skill level (guidance, not enforcement). (1) Telos edits are OPERATOR-TRIGGERED: the agent never rewrites TELOS.md on its own initiative - it registers the evidence in the research ledger (kb-add, the research-ledger habit) and proposes; the rewrite happens on the operator's word. (2) The redirect is explicit at the skill level: event-shaped writes route to the research-ledger skill, the frontier to kb-now. (3) /checkpoint's memory step is a freshness duty - the session's settled durable facts land in memory, stale ones retire - and the checkpoint reads the Telos (drift check) without ever writing it; a TELOS.md edit nobody asked for is itself a drift flag. (4) Release intent: this ships as a PATCH (promptus 0.6.1), the operator's call over the MINOR rubric - guidance sharpening, not new surface.
+
+### [2026-07-03 10:54:52] RESULT/VALIDATED — promptus-v0.6.1 released and installed: telos hygiene live on the operator's machine
+PR #18 (the hygiene patch + governance refinements) and PR #19 (the cut) merged green; tag promptus-v0.6.1 workflow-published as a PATCH per [[telos-governance-operator-triggered-edits-agent-registers-and-pr]] (concept-handle), now Latest. The operator's install moved 0.6.0 -> 0.6.1 - second consecutive proof of the cache-key rule. The doctor's telos-hygiene check, the operator-triggered-edit rule, and the checkpoint memory-freshness duty now govern every promptus consumer (Psi and Probatio included, once their sessions update); their polluted Teloi remain their sessions' cleanup, with the doctor handing the worklist.
+
+### [2026-07-04 11:00:30] FINDING/VALIDATED — First dogfood (Psi's paper): the grounding layer was prose-only; three renderer papercuts; float defaults missing
+Psi wrote a real paper on editio 0.2.0 (~40 rebuilds, IEEEtran/tpami venue) and reported with reproductions. Top finding - the differentiator was untooled: grounds frontmatter, claim spans, and the publish gate existed only in skill prose; no status/gate script, so claims stayed ungraded, grounds were never checked at render, and the auditing fell entirely to the promptus reviewer agent. Direct bugs: (1) editio-render was silently cwd-sensitive with a misleading re-scaffold error (and --help did not exist, reproducing the same error); (2) claim spans broke on nested brackets - [@sec:x] inside a claim closed the span early and leaked a literal ]{.claim} into the built PDF, caught only by eye; (3) no citations/crossrefs inside latex fences forced hand-written \cite/\ref in every caption - a split-brain between prose and floats. Venue gap: four figure* floats stranded after the references until dblfloatfix + double-float fraction tuning were hand-added; front/macros.tex was the natural extension point but was not wired into main.tex. What worked: the authoring subset kept the writing on content, the escape hatch was reliable, section-per-file made the multi-agent review clean, and across ~40 rebuilds no undefined-ref ever surprised. Wanted later: a CSV->booktabs table unit with significance marking - recorded as editio-tables' (Phase 4) first article-driven requirement.
+
+### [2026-07-04 11:00:46] DECISION/RESOLVED — Dogfood response: editio-status owns report and gate; latex+ opts in; subset v1.1; CLIs walk up to the root
+Design calls answering [[first-dogfood-psis-paper-the-grounding-layer-was-prose-only-thre]] (concept-handle). (1) ONE new script, editio-status, owns the report + --claims + --gate rather than three scripts; the renderer stays never-blocking - it warns on stderr when an unrendered span survives (the ]{.claim} residue lint), and enforcement lives only in the gate. (2) Citation transforms inside plain latex fences would silently rewrite user LaTeX, so latex+ is an OPT-IN fence; ```latex stays byte-raw - the contract is preserved, not bent. (3) Balanced-bracket span parsing, latex+, and a nested-citation claim extended the golden contract deliberately: authoring subset v1.1. (4) Every CLI resolves the project root by walking up to .editio/ or .promptus/ (lib.findRoot) - running from inside .editio/paper/ now works, and the scaffold extends the existing workspace instead of nesting one. (5) venue.preamble is general venue data: tpami ships dblfloatfix + double-float fraction tuning, and figure* guidance is [tb]; front/macros.tex is seeded and \InputIfFileExists'd - the authored extension point survives --force. (6) The gate's overclaim rule: a .validated claim over WEAK store statuses (REFUTED/SUPERSEDED/DEADEND/CONFOUNDED/CONTESTED/retired) or unknown/absent grounds fails; an in-span override="reason" passes on the record. (7) CSV->booktabs deferred to Phase 4 (editio-tables) as its first requirement. Suite 157 -> 166.
 
 <!-- kb:append-point -->
