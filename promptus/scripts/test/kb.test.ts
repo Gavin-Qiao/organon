@@ -216,3 +216,26 @@ test("kb-add memory → one file per fact + a MEMORY.md index pointer", () => {
   expect(read(root, ".promptus", "memory", "prefers-bun.md")).toContain("type: feedback");
   expect(read(root, ".promptus", "memory", "MEMORY.md")).toContain("- [Prefers bun](prefers-bun.md) — uses bun + uv");
 });
+
+test("kb-add with a missing vocab re-seeds the template instead of hard-failing (the hand-append trap)", () => {
+  const root = scaffold();
+  rmSync(join(root, ".promptus", "schema", "kb-vocab.json")); // fresh-clone / repo-split state: Telos marks the root, the vocab is gone
+  const r = add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "gate survives a missing vocab"], "written through the re-seeded gate");
+  expect(r.status).toBe(0);
+  expect(r.stderr).toContain("re-seeded the template vocab");
+  expect(existsSync(join(root, ".promptus", "schema", "kb-vocab.json"))).toBe(true);
+  expect(read(root, ".promptus", "ledger", "RESEARCH-LEDGER.md")).toContain("gate survives a missing vocab");
+  // and the next write is quiet — the marker is back
+  const again = add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "second write is quiet"], "no warning now");
+  expect(again.status).toBe(0);
+  expect(again.stderr).not.toContain("re-seeded");
+});
+
+test("kb-find --help names the flags that already existed (discoverability, not new machinery)", () => {
+  const r = run("kb-find.ts", ["--help"]);
+  expect(r.status).toBe(0);
+  expect(r.stdout).toContain("--substrate");
+  expect(r.stdout).toContain("--status");
+  expect(r.stdout).toContain("--snippet");
+  expect(r.stdout).toContain("kb-get");
+});

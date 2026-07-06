@@ -10,8 +10,11 @@
  *
  *   check    (default) READ-ONLY: locate the vocab, name the layout + version, report
  *            health (is the gate reachable? is the whole `.promptus/` wrongly gitignored?
- *            which stores are missing? is the Telos polluted with event-shaped content —
- *            dates, ledger event ids, session stamps, NOW-shaped headings — that belongs
+ *            which stores are missing? is the derived catalog lagging the ledger —
+ *            hand-appends at the sentinel skip the incremental index? do root-level
+ *            twins of namespaced stores linger from before a migration? is the Telos
+ *            polluted with event-shaped content — dates, ledger event ids, session
+ *            stamps, NOW-shaped headings — that belongs
  *            in the ledger / NOW-header / memory?), and — if the repo is on an older
  *            layout — print the migration plan WITHOUT touching anything. `--strict`
  *            exits non-zero when a migration is needed (so CI / a checkpoint can gate on
@@ -85,6 +88,12 @@ interface Diagnosis {
   stores: Record<string, { src: string; rel: string; exists: boolean }>;
   telos: string | null;
   telosHygiene: TelosFlag[];
+  /** ledger units the derived catalog doesn't carry (hand-appends at the sentinel,
+   *  or a stale/absent cache) — 0/null when current. */
+  catalogLag: number | null;
+  /** root-level twins of namespaced stores (pre-migration leftovers that diverge
+   *  silently — the gate only ever writes .promptus/). */
+  rootTwins: string[];
   migrationNeeded: boolean;
   plan: Step[];
   notes: string[];
@@ -246,7 +255,37 @@ function diagnose(start: string): Diagnosis {
 
   const migrationNeeded = layout !== "current";
 
+  // Hand-edits at the sentinel skip kb-add's incremental catalog append, so the
+  // derived catalog silently falls behind the ledger (a real project sat ~10 stale
+  // before anyone noticed). Count both sides; the fix is always just kb-index.
+  let catalogLag: number | null = null;
+  if (layout === "current") {
+    const nsLedger = join(root, CANON.ledger);
+    if (existsSync(nsLedger)) {
+      const ledgerUnits = (readFileSync(nsLedger, "utf8").match(/^### \[/gm) ?? []).length;
+      const catalogPath = join(root, CANON.cache, "CATALOG.md");
+      const catLedger = existsSync(catalogPath)
+        ? readFileSync(catalogPath, "utf8").split(/\r?\n/).filter((l) => l.startsWith("ledger:")).length
+        : 0;
+      if (ledgerUnits > catLedger) catalogLag = ledgerUnits - catLedger;
+    }
+  }
+
+  // A root-level twin of a namespaced store is a pre-migration leftover that can only
+  // diverge (the gate writes .promptus/ alone); one real repo needed a 264-reference
+  // dedup after its twins drifted. Named here so it never gets that far again.
+  const rootTwins: string[] = [];
+  if (layout === "current") {
+    for (const t of ["schema/kb-vocab.json", "ledger/RESEARCH-LEDGER.md", "TELOS.md"]) {
+      if (existsSync(join(root, t))) rootTwins.push(t);
+    }
+  }
+
   // ── Build the plan (computed statically; paths reflect the order of execution). ──
+  // If a future step ever rewrites path STRINGS inside unit prose, mind the recorded
+  // lesson: a blind rewrite corrupts prose that NAMES a path as an object ("delete
+  // root docs/" → "delete root .promptus/docs/") — that class needs its own check,
+  // beyond link/URL contexts.
   const plan: Step[] = [];
   if (migrationNeeded && (old || telosOrig)) {
     const P = (rel: string) => join(root, rel);
@@ -310,6 +349,7 @@ function diagnose(start: string): Diagnosis {
   return {
     root, vocabPath: loc.vocabPath, vocabLocation: loc.location, vocabVersion: old?.version ?? null, targetVersion,
     layout, gateReachable, gitignoreHazard, stores, telos: telosOrig, telosHygiene: telosHygiene(telosOrig),
+    catalogLag, rootTwins,
     migrationNeeded, plan, notes,
   };
 }
@@ -357,6 +397,12 @@ function reportCheck(d: Diagnosis): void {
   console.log(`  ${sym(!d.gitignoreHazard)} gitignore: ${d.gitignoreHazard ? "/.promptus/ is broadly ignored — migrated stores would NOT be committed" : "stores are not wrongly ignored"}`);
   console.log("  stores:");
   for (const [k, v] of Object.entries(d.stores)) console.log(`    ${v.exists ? "·" : "×"} ${k.padEnd(8)} ${v.rel}${v.exists ? "" : "  (missing)"}`);
+  if (d.catalogLag) {
+    console.log(`  FLAG catalog: ${d.catalogLag} ledger unit(s) missing from the derived catalog (hand-appended at the sentinel, or a stale/absent cache) — run kb-index`);
+  }
+  if (d.rootTwins.length) {
+    console.log(`  FLAG twins: root-level ${d.rootTwins.join(", ")} shadow the namespaced store(s) — the gate only writes .promptus/, so twins diverge; reconcile, then remove the root copy`);
+  }
   if (d.telosHygiene.length) {
     console.log(`  telos hygiene: ${d.telosHygiene.length} event-shaped line(s) — the Telos is direction, rewritten in place;`);
     console.log("    route events to the ledger (kb-add), the frontier to the NOW-header (kb-now), settled facts to memory:");

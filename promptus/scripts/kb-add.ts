@@ -27,8 +27,9 @@
  * style. Low friction is a hard requirement — friction is what made the old script drift.
  */
 
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 import { nowISO, stampUTC, nowLocalStamp } from "./lib/clock.ts";
 import { mintId, slugify } from "./lib/ids.ts";
 import { extractLinks } from "./lib/links.ts";
@@ -101,9 +102,21 @@ function appendCatalog(root: string, line: string): string {
   return catalog;
 }
 
+const TEMPLATE_VOCAB = join(dirname(fileURLToPath(import.meta.url)), "..", "templates", "schema", "kb-vocab.json");
+
 function main(argv: string[]): number {
   const a = parseArgs(argv);
   const root = findProjectRoot(str(a, "root") ?? process.cwd());
+  // The root can resolve off the Telos while the vocab file itself is gone (a fresh
+  // clone whose schema was git-ignored, a repo split). The gate is the ONE write
+  // path — a hard fail here is what pushed a real project into hand-appending at
+  // the sentinel. Degrade gracefully: re-seed the template vocab, loudly.
+  const vocabFile = join(root, ".promptus", "schema", "kb-vocab.json");
+  if (!existsSync(vocabFile)) {
+    mkdirSync(dirname(vocabFile), { recursive: true });
+    copyFileSync(TEMPLATE_VOCAB, vocabFile);
+    console.error(`kb-add: warning: no vocab at ${rel(root, vocabFile)} — re-seeded the template vocab so the gate stays usable; if this project had a tuned vocab, restore it (git checkout, or promptus-doctor check)`);
+  }
   const vocab = loadVocab(root);
   const relations = parseRelations(argv);
 

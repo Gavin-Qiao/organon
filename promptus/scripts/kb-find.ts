@@ -60,7 +60,23 @@ function snippetOf(root: string, card: Card, terms: string[]): string {
   return "";
 }
 
+// The flags existed since day one but nothing advertised them — a real sweep agent
+// eyeballed 30-line result lists for want of --substrate. Discoverability is the fix.
+const HELP = `kb-find — header-first retrieval over the derived catalog
+usage:
+  kb-find "<query>" [--substrate <s>] [--status <st>] [--hops <n>] [--limit <n>] [--snippet] [--root <dir>]
+  kb-find                       no query lists every card (slice it with the flags below)
+flags:
+  --substrate ledger|finding|lit|memory   only that store's cards
+  --status <STATUS>                       only that epistemic status (exact match)
+  --hops <n>                              also walk [[links]] n hops out from the hits
+  --limit <n>                             cap the list (reports "N of M shown")
+  --snippet                               attach the matched line under each hit
+  --root <dir>                            project root (default: walk up from the cwd)
+then: kb-get "<path from a hit>" fetches that unit's body.`;
+
 function main(argv: string[]): number {
+  if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
   const flags: Record<string, string> = {};
   const positionals: string[] = [];
   for (let i = 0; i < argv.length; i++) {

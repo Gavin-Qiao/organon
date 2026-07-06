@@ -303,3 +303,35 @@ test("check: a clean Telos — and the shipping template itself — raise no hyg
   const template = scaffoldCurrent(readFileSync(join(REPO, "templates", "TELOS.md"), "utf8"));
   expect(doctor(template, ["check"]).stdout).not.toContain("telos hygiene");
 });
+
+// ──────────────────────── 0.6.2: current-layout health flags ────────────────────────
+
+test("a hand-appended ledger entry shows as catalog lag; kb-index clears it", () => {
+  const root = scaffoldLegacy("root");
+  doctor(root, ["migrate", "--apply"]); // lands on the current layout with a fresh catalog
+  // the failure mode from the field: an entry written at the sentinel by hand, not kb-add
+  const ledger = join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md");
+  writeFileSync(ledger, readFileSync(ledger, "utf8").replace(
+    "<!-- kb:append-point -->",
+    "### [2026-06-28 19:14:03] FINDING/OPEN — hand-appended at the sentinel\nbody\n\n<!-- kb:append-point -->",
+  ));
+  const r = doctor(root, ["check"]);
+  expect(r.stdout).toContain("FLAG catalog: 1 ledger unit(s) missing");
+  expect(r.stdout).toContain("run kb-index");
+  run("kb-index.ts", ["--root", root]);
+  expect(doctor(root, ["check"]).stdout).not.toContain("FLAG catalog");
+});
+
+test("root-level twins of namespaced stores are flagged by name on a current layout", () => {
+  const root = scaffoldLegacy("root");
+  doctor(root, ["migrate", "--apply"]);
+  expect(doctor(root, ["check"]).stdout).not.toContain("FLAG twins"); // clean after migration
+  writeFileSync(join(root, "TELOS.md"), "# Telos — a stale pre-migration copy\n");
+  mkdirSync(join(root, "ledger"), { recursive: true });
+  writeFileSync(join(root, "ledger", "RESEARCH-LEDGER.md"), "# stale twin\n");
+  const r = doctor(root, ["check"]);
+  expect(r.stdout).toContain("FLAG twins");
+  expect(r.stdout).toContain("ledger/RESEARCH-LEDGER.md");
+  expect(r.stdout).toContain("TELOS.md");
+  expect(r.stdout).toContain("the gate only writes .promptus/");
+});
