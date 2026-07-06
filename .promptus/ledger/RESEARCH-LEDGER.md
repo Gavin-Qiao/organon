@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-04 (dogfood 1 processed)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-06 (editio 0.3.0 released + installed)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,48 +25,51 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (dogfood 1 processed - the grounding layer is tooled; TPAMI venue verified; Phase 4 next)
-**The first article happened**: Psi wrote a real TPAMI paper on editio 0.2.0 (~40 rebuilds) and
-reported with reproductions; the response is feat/editio-dogfood-1. **The grounding layer is now
-tooled** - editio-status.ts: per-section claim tallies, ungraded spans at file:line (--claims),
-grounds resolved against the store (file slugs + ledger title-slugs), and the publish gate as a
-command (--gate: ungraded/unsourced/overclaims fail; in-span override passes on the record).
-Renderer: balanced-bracket claim spans (the ]{.claim} leak fixed, golden-contract case), latex+
-opt-in fences (cites/crossrefs in captions), leftover-span warnings (never blocks), --concat,
---help; every CLI walks up to the root (cwd-proof). Scaffold: front/macros.tex seeded +
-InputIfFileExists'd (survives --force); venue preamble is data - tpami ships dblfloatfix + float
-fractions. **TPAMI verified 2026-07** ([10pt,journal,compsoc]{IEEEtran} + IEEEtran.bst still what
-the Template Selector serves; page limit corrected 14 -> 12 formatted pages, 18 max at USD
-220/page past 12; single-anonymous default - blind render opt-in). Authoring subset v1.1. Suite
-166 green; end-to-end smoke on MiKTeX (scaffold -> render from inside paper dir -> gate ->
-compile with dblfloatfix). Gap ledger: G8 (Phase 4) only.
+## NOW (editio 0.3.0 released AND installed - the dogfood loop closed same-day; Phase 4 next)
+**The first dogfood loop is fully closed** (2026-07-04): Psi wrote a real TPAMI paper on 0.2.0,
+reported with reproductions, and the response shipped as **editio-v0.3.0** (PR #20 + cut PR #21,
+workflow-published, now Latest; operator's install moved 0.2.0 -> 0.3.0 - third cache-key proof).
+What 0.3.0 carries: **the grounding layer, tooled** - editio-status.ts (per-section claim tallies,
+ungraded spans at file:line via --claims, grounds resolved against the store, and the publish gate
+as a command: --gate fails on ungraded/unsourced/overclaims; in-span override passes on the
+record); balanced-bracket claim spans (the ]{.claim} PDF leak fixed, golden-contract case); latex+
+opt-in fences (cites/crossrefs in captions); leftover-span warnings; --concat/--help; cwd-proof
+CLIs (findRoot walks up); front/macros.tex seeded + wired (survives --force); venue preamble as
+data (tpami ships dblfloatfix + float fractions). **TPAMI verified 2026-07**: template current
+([10pt,journal,compsoc]{IEEEtran} + IEEEtran.bst); page limit corrected 14 -> 12 formatted pages
+(18 max, USD 220/page past 12); single-anonymous default - blind render OPT-IN for this venue.
+Authoring subset v1.1. Suite 166 green; end-to-end smoke on MiKTeX. **Gap ledger: G8 only.**
+Also this session: promptus-v0.6.1 (telos hygiene: doctor check + operator-triggered-edit rule +
+checkpoint memory freshness) released and installed; organon's own doctor check reads healthy.
 
 ## Open frontier
 - [ ] **Phase 4 - editio-tables / editio-bib / editio-repro** (G8 own-paper marker; refs.bib from
-  the lit store); first requirement recorded from the dogfood: CSV/JSON -> booktabs with
-  significance marking.
-- [ ] **editio 0.2.1 or 0.3.0 cut** when the operator says - the dogfood fixes + grounding layer
-  are on main only after the PR merges; Psi's next session wants them.
-- [ ] **Psi/Probatio Telos cleanup** - the 0.6.1 doctor hands them the worklist (Psi 2 lines,
-  Probatio 3); their sessions' judgment or ours on the operator's word.
+  the lit store), article-driven; first requirement recorded from the dogfood: CSV/JSON -> booktabs
+  with significance marking (auto-bold best, stars).
+- [ ] **Psi's paper continues on 0.3.0** - the gate + status now real; the 12-page limit and
+  opt-in blind are new constraints its session should read.
+- [ ] **Psi/Probatio Telos cleanup** - the 0.6.1 doctor hands the worklist (Psi 2 lines, Probatio
+  3); their sessions' judgment or ours on the operator's word.
 - [ ] **Phases 5-6**: venue/rebuttal/structure-lint -> wire + sample + exemplar corpus (the claim
-  gate already shipped early as editio-status --gate).
+  gate shipped early as editio-status --gate).
 - [ ] **Banked:** progressive-disclosure indexes; telos graph node; okf export; write-time
   calibration ([[write-time-calibration-design]]).
 - [ ] **(deferred)** Norma seam.
 
 ## Next actions
-1. Merge feat/editio-dogfood-1 (PR pending), cut editio when the operator says.
-2. Phase 4 (tables/bib) builds article-driven - the dogfood's booktabs request is the spec seed.
-3. Land these uncommitted ledger writes with this branch's docs commit (done if you read this on main).
+1. Phase 4 (tables/bib) builds article-driven - the dogfood's booktabs request is the spec seed.
+2. Land this checkpoint's uncommitted ledger writes (the 0.3.0 RESULT + this header) with the
+   next PR.
+3. On operator word: clean the Psi/Probatio Teloi from the doctor's flagged lines.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**DOGFOOD 1 PROCESSED; GROUNDING LAYER TOOLED (editio-status + gate); TPAMI VERIFIED (12-page
-limit, single-anonymous default); SUBSET v1.1; SUITE 166.** Read the Log since 2026-07-04: the
-dogfood FINDING (grounding was prose-only; three renderer papercuts; floats), the response
-DECISION (status owns report+gate; latex+ opt-in; balanced brackets; cwd-proof CLIs; venue
-preamble as data), and the TPAMI lit unit (template current; limits corrected). Phase 4 next,
-article-driven (booktabs first). Read .promptus/TELOS.md, then this header, then the Log.
+**EDITIO 0.3.0 RELEASED AND INSTALLED (grounding layer tooled: editio-status + --gate); PROMPTUS
+0.6.1 LIVE (telos hygiene); SUITE 166; ONLY G8 OPEN.** The dogfood loop closed same-day: Psi's
+report -> fixes -> subset v1.1 -> release. Read the Log since 2026-07-04: the dogfood FINDING,
+the response DECISION (status owns report+gate; latex+ opt-in; balanced brackets; cwd-proof),
+the TPAMI lit unit (12-page limit; single-anonymous default), and the two release RESULTs.
+Phase 4 next, article-driven (booktabs first from the dogfood's request). Uncommitted ledger
+writes ride the next PR. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-04.
 
 <!-- now:end -->
 
@@ -475,5 +478,26 @@ Psi wrote a real paper on editio 0.2.0 (~40 rebuilds, IEEEtran/tpami venue) and 
 
 ### [2026-07-04 11:00:46] DECISION/RESOLVED — Dogfood response: editio-status owns report and gate; latex+ opts in; subset v1.1; CLIs walk up to the root
 Design calls answering [[first-dogfood-psis-paper-the-grounding-layer-was-prose-only-thre]] (concept-handle). (1) ONE new script, editio-status, owns the report + --claims + --gate rather than three scripts; the renderer stays never-blocking - it warns on stderr when an unrendered span survives (the ]{.claim} residue lint), and enforcement lives only in the gate. (2) Citation transforms inside plain latex fences would silently rewrite user LaTeX, so latex+ is an OPT-IN fence; ```latex stays byte-raw - the contract is preserved, not bent. (3) Balanced-bracket span parsing, latex+, and a nested-citation claim extended the golden contract deliberately: authoring subset v1.1. (4) Every CLI resolves the project root by walking up to .editio/ or .promptus/ (lib.findRoot) - running from inside .editio/paper/ now works, and the scaffold extends the existing workspace instead of nesting one. (5) venue.preamble is general venue data: tpami ships dblfloatfix + double-float fraction tuning, and figure* guidance is [tb]; front/macros.tex is seeded and \InputIfFileExists'd - the authored extension point survives --force. (6) The gate's overclaim rule: a .validated claim over WEAK store statuses (REFUTED/SUPERSEDED/DEADEND/CONFOUNDED/CONTESTED/retired) or unknown/absent grounds fails; an in-span override="reason" passes on the record. (7) CSV->booktabs deferred to Phase 4 (editio-tables) as its first requirement. Suite 157 -> 166.
+
+### [2026-07-04 11:17:01] RESULT/VALIDATED — editio-v0.3.0 released and installed - the dogfood loop closed inside one day
+PR #20 (the dogfood response) and PR #21 (the cut) merged green; tag editio-v0.3.0 workflow-published, now Latest; the operator's user-scoped install moved 0.2.0 -> 0.3.0 (third consecutive cache-key proof), so every project on this machine - Psi's paper session included - picks up the grounding layer (editio-status + --gate), the balanced-bracket/latex+ renderer, cwd-proof CLIs, the macros extension point, the tpami float defaults, and the corrected TPAMI policy data (12-page limit, single-anonymous default) on its next reload. Full loop: Psi dogfooded 0.2.0 -> reported with reproductions -> fixes designed, built, contract-extended (subset v1.1), smoke-compiled on MiKTeX -> released as 0.3.0, same day.
+
+### [2026-07-06 12:55:35] RESULT/VALIDATED — Second dogfood: editio 0.3.0 verified end-to-end on Psi's real paper; 5-agent ledger mine complete
+Ran the 0.3.0 toolchain live on Psi's real TPAMI paper, then mined Psi's full ledger (4023 lines, 522 units) with a 5-agent Sonnet team (4 linear slices + 1 kb-find/kb-get cross-cut). Every 0.3.0 fix confirmed on the real artifact: editio-status resolves all 17 grounds handles against Psi's store (docs + memory file units verified by hand); --gate exits 0 publish-clean (28 claims: 26V 2C 0U 0G); render from two levels deep is cwd-proof, byte-identical re-render, zero leftover-span warnings, the nested-bracket claim (discussion.md:45) renders to \claimV with no residue; --concat stitches 10 sections in build order. Psi's own ledger independently logs the gate having teeth: the 2026-07-05 grading run caught an unbanked Gaia 62% figure, the coarse-grid DBSCAN 0.908-vs-0.942 under-report, and a ToMATo misattribution — and the Telos contradiction it surfaced was routed operator-owned, exactly the 0.6.1 boundary. Psi's sections still use plain latex fences with hand \cite (predate latex+; migration optional). See [[editio-worklist-from-psi]] and [[promptus-worklist-from-psi]].
+
+### [2026-07-06 12:55:57] FINDING/OPEN — editio worklist from Psi's ledger: nine items — tables spec, SM scaffold, page-budget, freshness, bib-verify, float upstream, latexmk, overflow, path lint
+Nine items mined from Psi's ledger (evidence = Psi ledger timestamps), ranked. (1) editio-tables, now with a real spec: Psi hand-built emit_bakeoff_table/fill_meanshift_dpc/swap_table/reconcile_numbers.py + a gen/ convention — the primitive is an id-addressed generated-table block (never line-number splicing; swap_table asserts on line 23), CSV/JSON -> booktabs with per-column best-marking (bold/underline), live-number captions, and prose-number sync [2026-07-06T01:01:13, 12:10:07]. (2) Supplement scaffold (explicit ask): TPAMI has no SM template; Psi hand-built supplement.tex — article class, S-numbering, shared refs.bib, excluded from the 12pp, plain-text main->SM crossrefs; scaffold should offer a venue-aware supplement target [SM-PLAN.md; 2026-07-06T12:10:07]. (3) Page-budget surfacing: limits are venue data since 0.3.0 but nothing reads them — editio-status should count built-PDF pages and warn N-over-free -> USD; the 15pp->12pp trim was manual and float-bound-by-trial [2026-07-06T00:22:49]. (4) Numeric freshness: benchmark numbers shipped stale (table 0.866 vs fresh 0.872 after a src change) — bind generated-table numbers to source script/data hash-or-mtime and flag drift in status; the grounding layer's next frontier [2026-07-06T12:08:54]. (5) editio-bib verification: Psi ran a 44-agent Crossref/DBLP sweep on refs.bib (23 clean, 14 DOIs, 6 corrections) — pairs with the planned refs.bib-from-lit-store (G8) [~L3672, L3921]. (6) Upstream Psi's float tuning into tpami venue data: single-column fractions (topfraction .92, bottomfraction .55, topnumber 3, totalnumber 5) + hidelinks for camera-ready; note stfloats FATALLY conflicts with IEEEtran (\c@dblbotnumber) [macros.tex; ~L3622]. (7) Windows driver gotcha: latexmk only reliable via Git-Bash perl; MiKTeX latexmk from PowerShell finds no perl; manual pdflatex leaves ?? silently — document in editio-latex, or detect [~L3627]. (8) Table-overflow lint/helper (repeated hand p{dimexpr} surgery, table* conversions) — fold into editio-tables [~L3636-3654]. (9) Path-leak lint: hard-coded local paths in prose hand-stripped on operator order — cheap render-time warn, kin to the leftover-span lint [2026-07-06T02:33:44]. Non-item: 100% of figure PRODUCTION was bespoke domain scripts — likely intentional scope (figcheck gates, does not build); recorded for awareness. Operator decision: worklist only this session; nothing built.
+
+### [2026-07-06 12:56:21] FINDING/OPEN — promptus worklist from Psi's ledger: vocab-marker root-detection, hand-edit reconciliation, kb-find scoping, migration prose class, plan artifact
+Six items from the same mine (Psi ledger evidence + the retrieval agent's own dogfood). (1) kb-add root-detection hard-fails when the git-ignored .promptus/schema/kb-vocab.json is absent (fresh clone / repo split), forcing hand-appends mid-session; regenerate the marker or degrade gracefully with a one-line remediation [2026-06-28 19:52:39]. (2) Hand-edits at the sentinel silently stale the catalog (~10 entries) with no reminder; want a hook/doctor check that detects direct RESEARCH-LEDGER.md appends and reconciles or nags [2026-06-28 19:14:03]. (3) kb-find precision on big corpora: our own sweep agent had to eyeball 20-30-line result lists per query — no --substrate/--kind scoping exists; a filter flag would have saved read-and-discard cycles (its praise: the find-prints-exact-get-ids pairing is genuinely good). (4) Historical: root docs/+ledger/ duplicated .promptus/ and required a 264-reference dedup [2026-06-29 21:15:12] — likely covered by the 0.5.0 doctor migration since, but doctor could flag root-store duplication proactively; verify before building. (5) Path-rewrite migrations corrupt verb+path-as-object prose ('delete root docs/' -> 'delete root .promptus/docs/') — a known false-positive class for any future migration tooling [2026-06-29 22:28:55]. (6) Banked: Psi invented SM-PLAN.md, a self-contained compaction-surviving plan file, because nothing first-class holds an in-flight multi-session plan — overlaps the NOW-header/checkpoint; think before adding machinery (invariant: measured threshold). Positive: the Telos operator-owned boundary held under a real editio audit — the contradiction was flagged, parked, and resolved only by operator edit [2026-07-05 20:16:50 -> 22:57:52].
+
+### [2026-07-06 13:01:17] DECISION/RESOLVED — v0.4.0 scope: all nine Psi worklist items enter; promptus fixes ship as the 0.6.2 patch
+Operator: ALL items enter. The nine editio items ([[editio-worklist-from-psi]]) are the v0.4.0 / Phase 4 scope — tables (id-addressed generated blocks + best-marking + prose sync + overflow help), supplement scaffold, page-budget surfacing, numeric freshness, bib verification, tpami float upstream (+ stfloats conflict note), latexmk gotcha, path-leak lint. The promptus items ([[promptus-worklist-from-psi]]) ship as a PATCH (0.6.2, operator's explicit call): vocab-marker root-detection graceful degrade, hand-edit-at-sentinel detection, kb-find --substrate/--kind scoping, migration prose-class note; verify whether root-store duplication is already doctor-covered before building; the plan-artifact idea stays banked (invariant: measured threshold). Build order within v0.4.0 stays article-driven — Psi's live needs sequence it.
+
+### [2026-07-06 13:01:55] FINDING/OPEN — editio improvement candidates from the toolsmith's own review: build command, version stamp, gate umbrella, blind-leak, budget frontmatter, dual-venue
+Beyond [[editio-worklist-from-psi]], from direct contact with the 0.3.0 code and Psi's workspace this session. (1) editio-build: there is no build command — Psi hand-invoked latexmk and hit the perl trap; the mode incantation (-usepretex def editiomode) lives only in a main.tex comment. A thin mode-aware wrapper that also parses the .log afterward (undefined refs/citations = the silent-?? class, overfull hboxes = the table-overflow class, missing perl = the Windows class) subsumes three worklist items in one tool. (2) Workspace version stamp + upgrade: Psi's main.tex is a pre-0.3.0 scaffold with no EDITIO_VENUE_PREAMBLE and nothing can tell — scaffold should stamp the generating version and offer an upgrade that re-expands new tokens without clobbering authored files. (3) Gate umbrella: --gate covers claims only; Psi's desk-reject audit was manual. One pre-submission command composing claims gate + span-residue check + figcheck + page budget + blind-leak = the desk-reject audit as code. (4) Blind-leak check: blind mode masks the author block but nothing verifies the built blind PDF (text or metadata) is free of the names in paper.json — cheap and desk-reject-grade for double-anonymous venues. (5) Adopt Psi's budget: frontmatter — all ten sections carry an invented per-section word budget (250..1900) that editio ignores; status should report actual vs budget words per section (the section-level face of the page-budget item). (6) Dual-venue builds: venues are data but a workspace binds exactly one — Psi's obvious next need is an arXiv preprint of the same sections; same sources, two venue targets. (7) When the supplement scaffold lands, status/gate must read it too (today they follow main.tex order only — SM claims would ship ungated). (8) latex+ migration lint: Psi's fences are still plain latex with hand-cite; status could count raw fences containing cite/ref and nudge. Proposals, not scope — operator picks.
+
+### [2026-07-06 13:08:31] DECISION/RESOLVED — editio-doctor enters v0.4.0 as the opening PR: workspace health, version stamp, drift and leak checks
+Operator: editio-doctor enters v0.4.0 and opens it. Mirrors promptus-doctor (report-only v1): workspace health for .editio/paper — scaffold version stamp (scaffold learns to stamp; doctor reads it and flags pre-0.3.0 workspaces like Psi's missing EDITIO_VENUE_PREAMBLE), template signature drift, stale editio.sty vs the plugin's, stale renders (md newer than tex), section wiring both ways (md not in main.tex / main.tex entry without md), latex+ migration nudge (cite/ref inside plain latex fences), identity leak (paper.json names inside sections/). Absorbs the version-stamp+upgrade candidate from [[editio-improvement-candidates]]. Then the rest of v0.4.0 proceeds per [[v040-scope]].
 
 <!-- kb:append-point -->

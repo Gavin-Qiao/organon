@@ -125,6 +125,7 @@ function main(argv: string[]): number {
     .join("\n");
   const preamble = (venue.preamble ?? []).join("\n");
   const mainTex = readFileSync(join(TEMPLATES, "latex", "main.tex"), "utf8")
+    .replace("EDITIO_VERSION", String(readJSON(join(PLUGIN, ".claude-plugin", "plugin.json")).version))
     .replace("EDITIO_VENUE", venue.id)
     .replace("EDITIO_CLASS_OPTIONS", (venue.class_options ?? []).join(","))
     .replace("EDITIO_CLASS", venue.class)
