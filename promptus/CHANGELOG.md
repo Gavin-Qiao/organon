@@ -17,6 +17,8 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.6.2] - 2026-07-07
+
 ### Fixed
 
 - **The checkpoint now owns research digestion** (a real project's findings substrate went
@@ -396,7 +398,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.1...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.2...HEAD
+[0.6.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.1...promptus-v0.6.2
 [0.6.1]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.0...promptus-v0.6.1
 [0.6.0]: https://github.com/Gavin-Qiao/organon/compare/v0.5.2...promptus-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/v0.5.1...v0.5.2
