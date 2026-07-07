@@ -26,7 +26,10 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
   `finding` unit; the `research-ledger` skill states the rule as a table — a research
   effort has **three homes** (event → ledger, sources → lit, digested reasoning →
   finding), and the closing "not part of the minimal flush" carve-out no longer exempts
-  perishable reports.
+  perishable reports. Because prose duties drift, the doctor carries the mechanical
+  tripwire: **`check` flags digest lag** — five or more lit units postdating the newest
+  finding unit means research is landing as citations without digests (the judgment can't
+  be scripted; the lag can be measured).
 
 - **kb-add degrades gracefully when the vocab marker is gone** (a fresh clone whose
   schema was git-ignored, a repo split): instead of the hard root-detection failure
