@@ -24,10 +24,10 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | render markdown sections to LaTeX | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all` |
 | build the PDF, preview one section, set up TeX, notation | the `editio-latex` skill |
 | ground a claim before it hits the page | promptus's `recall` (kb-find → kb-get) |
-| see where the paper stands (per-section claim tallies, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded span at file:line) |
+| see where the paper stands (per-section claim tallies, drafted words vs `budget:`, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded/unsourced span at file:line) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
 | run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
-| check the workspace against the installed plugin (stale scaffold, venue drift, unrendered/unwired sections, identity in prose) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
+| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
 | bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts" --write` |
 | verify the paper's numbers still match their sources | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
@@ -48,7 +48,8 @@ Identity lives in `paper.json` only, scaffolded as placeholders.
 1. **Draft** — write prose in `sections/<slug>.md`; wrap checkable claims in spans:
    `[the gate refuses off-vocab writes]{.claim}` (ungraded is fine — grading comes next).
 2. **Retrieve** — `recall` looks each claim up (`kb-find` → `kb-get`), returns `substrate:status`.
-3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports a grade per span:
+3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports findings per
+   *flagged* span (unsupported / over-confident / style tells); *you* map them to grades:
    `finding:VALIDATED`/`lit:CITE` → `.validated` · `CONJECTURED`/provisional → `.conjectured`
    · nothing found → `.unsourced` · `DEADEND`/`REFUTED` backing the claim → an **overclaim** flag.
 4. **Apply + override** — *you* (the session) write the grades back into the spans, adding
@@ -56,9 +57,13 @@ Identity lives in `paper.json` only, scaffolded as placeholders.
    (`override="holds for our corpus"`), or fixes the prose / stores the evidence.
 5. **Render** — grades become `\claimV` (clean) / `\claimC` (amber) / `\claimU` (vermilion) /
    `\claimG` (grey, ungraded) on the draft page.
-6. **Gate** — `editio-status --gate`: zero unsourced, zero overclaims (a `.validated` claim
-   over weak or unknown grounds), nothing left ungraded — an in-span `override="reason"`
-   passes on the record. `publish`/`blind` strip every tint either way.
+6. **Gate** — `editio-status --gate`: zero overclaims (a `.validated` claim over weak,
+   unknown, or **absent** grounds), nothing left ungraded, and every `.unsourced` claim
+   either fixed or explicitly accepted. `override="reason"` passes the gate **on the
+   record** exactly twice over: on an `.unsourced` claim (the author's acceptance, printed
+   in the gate output) and on a `.validated` claim's weak/unknown grounds — never on an
+   ungraded span (ungraded means the loop hasn't run; the fix is running it, not excusing
+   it). `publish`/`blind` strip every tint either way.
 
 ## Three renders, one source
 

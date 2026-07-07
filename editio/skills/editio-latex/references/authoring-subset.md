@@ -22,13 +22,13 @@ budget: 800                 # advisory word budget (lint, Phase 5)
 
 | construct | renders to |
 |---|---|
-| `# Title` (first) | `\section{Title}\label{sec:<file-slug>}` — or `\begin{abstract}` when `class: doco:Abstract` |
+| `# Title` (first) | `\section{Title}\label{sec:<file-slug>}` — or `\begin{abstract}` when `class: doco:Abstract` (the abstract keeps the environment only: no `\section`, no label, no provenance stamp). One `#` per file — a second warns and demotes to `\subsection`; `####`+ is not a heading (warns, renders as prose) |
 | `## / ###` | `\subsection` / `\subsubsection` |
-| `- item` / `1. item` | `itemize` / `enumerate` (one level) |
+| `- item` / `1. item` | `itemize` / `enumerate` (one level, column 0 — an indented bullet warns and flattens into the line above) |
 | blank line | paragraph break |
-| ```` ```latex … ``` ```` | raw passthrough — the escape hatch for equations, floats, anything beyond the subset |
-| ```` ```latex+ … ``` ```` | raw passthrough **plus** the citation/crossref transforms — `[@key]` and `@fig:x` work inside captions, so floats and prose share one citation syntax (v1.1) |
-| ```` ```other … ``` ```` | `verbatim` |
+| ```` ```latex … ``` ```` | raw passthrough — the escape hatch for equations, floats, anything beyond the subset. **The fence body is LaTeX, not prose**: escape your own `%` `&` `_` `#` (a bare `%` in a caption swallows the rest of the line and the build) |
+| ```` ```latex+ … ``` ```` | raw passthrough **plus** the citation/crossref/`@num:` transforms — `[@key]`, `@fig:x`, `@num:h` work inside captions, so floats and prose share one syntax (v1.1). Same rule: the body is LaTeX; escape your own specials |
+| ```` ```other … ``` ```` | `verbatim` (any tag, symbols included — `c++`, `c#`) |
 | `::: blindhide … :::` | `\blindhide{…}` (dropped in blind mode) |
 
 ## Inline
@@ -36,11 +36,11 @@ budget: 800                 # advisory word budget (lint, Phase 5)
 | construct | renders to |
 |---|---|
 | `**b**` / `*i*` / `` `c` `` | `\textbf` / `\emph` / `\texttt` |
-| `$…$` and `$$…$$` | inline math (verbatim) and `\[…\]` |
+| `$…$` and `$$…$$` | inline math (verbatim, except a bare `%` is auto-escaped — it would comment out its own closing `$`) and `\[…\]`. **Currency needs `\$`**: two literal dollars on one line pair into a math span and typeset the prose between them as math (the renderer warns when a `$…$` looks like captured prose) |
 | `[@key]`, `[@a; @b]` | `\cite{key}` / `\cite{a,b}` |
-| `[@fig:x]` · bare `@fig:x @tab:y @sec:z @eq:w` | `\cref{…}` (prefix-dispatched; mixing cite and cref keys in one group is an error) |
-| `[@key]{.self}` | `\selfcite{key}` (masked in blind) |
-| bare `@num:handle` | `\editionum{handle}` — the value bound in `front/numbers.tex` (v1.2; one source of truth per number, see the `editio-numbers` skill). Works in prose, inside `$…$`, and in ```` ```latex+ ```` fences; never bracketed (`[@num:x]` is an error); plain ```` ```latex ```` stays byte-raw |
+| `[@fig:x]` · bare `@fig:x @tab:y @sec:z @eq:w` | `\cref{…}` (prefix-dispatched; mixing cite and cref keys in one group is an error). Bare form fires after any non-word neighbour — space, `(`, quotes, dashes |
+| `[@key]{.self}` | `\selfcite{key}` (masked in blind) — **single key**; a `;` in a self span is an error, split into separate spans |
+| bare `@num:handle` | `\editionum{handle}` — the value bound in `front/numbers.tex` (v1.2; one source of truth per number, see the `editio-numbers` skill). Works in prose, inside `$…$`, and in ```` ```latex+ ```` fences; never bracketed (`[@num:x]` is an error); plain ```` ```latex ```` stays byte-raw (write `\editionum{handle}` there — it's scanned too). Handles are kebab-case `[a-z0-9-]`, no leading/trailing hyphen; a near-miss (`@num:Uppercase`) warns at render and ships as literal text if ignored |
 | everything else | escaped automatically (`% & # _ { } ~ ^ \` are safe in prose) |
 
 ## Claim spans (the audit loop's carrier)
@@ -60,11 +60,17 @@ gate is a command, not prose: `editio-status --gate` (report: `editio-status`, u
 locations: `--claims`).
 
 Span text may nest citations and crossrefs — `[the same percept ([@sec:theory])]{.claim}`
-parses by balanced brackets (v1.1; the first dogfood's bug). A span that still fails to
-parse leaves `]{.claim}` residue in the output, and the renderer now **warns on stderr**
-when any survives — it never blocks (that stays the gate's job).
+parses by balanced brackets (v1.1; the first dogfood's bug). A span that fails to parse —
+missing dot (`{claim}`), misspelled class, unbalanced brackets — leaves escaped residue in
+the output, and the renderer **warns on stderr** on any residue shape (not a keyword
+list), while `{.claim}` quoted in inline code stays warning-free. A typo'd *grade*
+(`.validatd`) is a syntactically valid span that renders ungraded — the renderer warns on
+unknown claim classes so the downgrade is never silent. A claim span nested INSIDE another
+claim span is not supported: the inner span's markup leaks as literal text into the outer
+claim (and warns) — split the sentence instead.
 
 ## Not in v1.2 (use the ```latex / ```latex+ escape hatch)
 
 Markdown tables and figures (they arrive with editio-tables / editio-figures as units),
-nested lists, footnotes, nested claim spans.
+nested lists, footnotes, nested claim spans. `\editiotodo{…}` (the draft-mode TODO tint)
+has no markdown form — write it directly inside a fence when you want it.

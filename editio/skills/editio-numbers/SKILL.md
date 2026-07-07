@@ -42,7 +42,10 @@ correctly (`"0.872"`, `"8\\times10^{-4}"`, `"62\\%"`).
 - math: `$\Delta = @num:bakeoff-mean-ari$` — binds inside `$…$` too
 - captions/floats: works in ```` ```latex+ ```` fences (plain ```` ```latex ```` is
   byte-raw by contract — the report flags `@num:` there; use `\editionum{handle}`
-  directly if the fence must stay plain)
+  directly if the fence must stay plain, **and it is scanned as a real use**)
+- the scan covers every `sections/*.md` (wired into `main.tex` or not), both
+  spellings (`@num:` and direct `\editionum{…}` in raw fences), and
+  `front/macros.tex` — an unknown handle anywhere in that surface fails the gate
 - an unbound handle typesets as a boxed `??handle??` and a package warning — the
   render never blocks; the gate is the enforcement
 
@@ -52,13 +55,22 @@ correctly (`"0.872"`, `"8\\times10^{-4}"`, `"62\\%"`).
    deltas, p-values, counts that a reviewer would quote. (Page numbers, years,
    section counts don't earn handles.)
 2. `editio-numbers --write` after any `numbers.json` edit — regenerates the
-   bindings and locks the source hashes.
+   bindings and locks, per handle, the bound value plus a hash of each source.
+   Values are validated at the door (unbalanced braces, an unescaped `%`, or a
+   control character would fatally break the LaTeX build — write `\%`, `\$`…).
 3. **When sources change** (the gate goes STALE): re-run the pipeline named in
-   `computed_by`, verify fresh==frozen, update the value in `numbers.json`, `--write`.
-   A deliberate freeze is `"pinned": "reason"` — it passes the gate *on the record*.
+   `computed_by`, verify fresh==frozen, **update the value**, `--write`. Running
+   `--write` *without* updating the value is refused — a drifted source under an
+   unchanged value is a stale number about to be re-blessed, and the tool won't
+   launder it. A deliberate freeze is `"pinned": "reason"` — it passes the gate
+   *on the record*. (The lock is a tripwire against accidents, not a security
+   boundary — it defends the honest author from drift, like `.git`, not against
+   deliberate tampering.)
 4. **Before submission**: `editio-numbers --gate` — exit 1 on unknown handles,
-   `@num:` in byte-raw fences, stale unpinned sources, or bindings older than
-   `numbers.json`. Runs beside `editio-status --gate`.
+   `@num:` in byte-raw fences, stale *or claimed-but-never-hashed* sources, and
+   a `front/numbers.tex` that doesn't match what `numbers.json` implies
+   (hand-edits and bad merges surface; content is diffed, never mtimes). Runs
+   beside `editio-status --gate`.
 
 ## What binding does NOT absolve
 

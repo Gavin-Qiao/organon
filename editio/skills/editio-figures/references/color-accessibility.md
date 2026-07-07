@@ -1,6 +1,6 @@
 # Color & accessibility — the palette and the rules
 
-About 8% of men and 0.5% of women have a color-vision deficiency; IEEE venues still print
+About 8% of men and 0.5% of women have a color-vision deficiency (Wong, 2011 — full citation below); IEEE venues still print
 in black and white. Color is therefore never the *only* encoding, and the categorical
 palette is fixed by default rather than re-invented per figure.
 

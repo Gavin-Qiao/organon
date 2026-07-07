@@ -121,3 +121,71 @@ test("@num:handle binds in prose, math, claim spans, and latex+ captions — nev
 test("a bracketed [@num:x] is refused — handles go bare", () => {
   expect(() => renderSection("# T\n\n[@num:x]\n", "t")).toThrow(/bare/);
 });
+
+// ──────────── audit hardening: the renderer warns where it used to be silent ────────────
+
+test("AUDIT: near-miss @num handles, unknown claim classes, and heading/list edge cases all warn", () => {
+  const warnings: string[] = [];
+  const warn = (m: string) => warnings.push(m);
+  renderSection([
+    "# T",
+    "",
+    "Wrong case @num:Bakeoff-Mean and a typo grade next.",
+    "",
+    "[claim text]{.claim .validatd}",
+    "",
+    "# Second Top Heading",
+    "",
+    "#### four hashes",
+    "",
+    "- top item",
+    "  - indented item",
+    "",
+  ].join("\n"), "t", warn);
+  expect(warnings.some((w) => w.includes("@num:Bakeoff-Mean") && w.includes("kebab-case"))).toBe(true);
+  expect(warnings.some((w) => w.includes(".validatd") && w.includes("UNGRADED"))).toBe(true);
+  expect(warnings.some((w) => w.includes("second top-level"))).toBe(true);
+  expect(warnings.some((w) => w.includes("headings stop at ###"))).toBe(true);
+  expect(warnings.some((w) => w.includes("indented list item"))).toBe(true);
+});
+
+test("AUDIT: corrupted spans warn even without the literal '{.claim' spelling; quoted syntax in code does not", () => {
+  const warnings: string[] = [];
+  renderSection("# T\n\n[missing dot]{claim}\n\n[misspelled]{.clam}\n", "t", (m) => warnings.push(m));
+  expect(warnings.some((w) => w.includes("survived unrendered"))).toBe(true);
+  const clean: string[] = [];
+  const tex = renderSection("# T\n\nThe subset renders `{.claim}` spans in prose.\n", "t", (m) => clean.push(m));
+  expect(tex).toContain("\\texttt{\\{.claim\\}}"); // renders fine
+  expect(clean.length).toBe(0); // and no false-positive warning
+});
+
+test("AUDIT: inline-math % is escaped (fatal downstream otherwise); prose-as-math warns; grounds attrs are escaped", () => {
+  const warnings: string[] = [];
+  const tex = renderSection([
+    "# T",
+    "",
+    "Error rate $e = 5% \\pm 1%$ across folds.",
+    "",
+    "The pilot cost $5 in region A and $10 in region B.",
+    "",
+    "[needs checking]{.claim .validated grounds=needs_check}",
+    "",
+  ].join("\n"), "t", (m) => warnings.push(m));
+  expect(tex).toContain("$e = 5\\% \\pm 1\\%$");
+  expect(warnings.some((w) => w.includes("prose captured as math"))).toBe(true);
+  expect(tex).toContain("\\editiogrounds{needs\\_check}"); // escaped like the frontmatter path
+});
+
+test("AUDIT: symbol fence tags (c++) stay fenced; quote-glued crossrefs resolve; multi-key self-cites are refused", () => {
+  const tex = renderSection("# T\n\n```c++\nint x = 1;\n```\n\nSee \"@sec:methods\" and results--@sec:setup.\n", "t");
+  expect(tex).toContain("\\begin{verbatim}\nint x = 1;\n\\end{verbatim}");
+  expect(tex).toContain("\\cref{sec:methods}");
+  expect(tex).toContain("\\cref{sec:setup}");
+  expect(() => renderSection("# T\n\n[@a; @b]{.self}\n", "t")).toThrow(/single key/);
+});
+
+test("AUDIT: the abstract carries no provenance stamp inside its environment", () => {
+  const tex = renderSection("---\nclass: doco:Abstract\nupdated: 2026-07-06\ngrounds: [g]\n---\n# Abstract\n\nOne sentence.\n", "abstract");
+  expect(tex).toContain("\\begin{abstract}");
+  expect(tex).not.toContain("\\editiostamp");
+});

@@ -51,3 +51,25 @@ leads at @num:bakeoff-mean-ari]{.claim .validated grounds=the-gate}.
   \label{tab:grounding}
 \end{table}
 ```
+
+## Scope of the contract
+
+1. The subset stays small
+2. The fixture stays byte-exact
+
+Symbols survive prose: ~40 runs, x^2, a\b path, {braces} — and the table in
+[@tab:grounding] is crossref-able like "@sec:methods" in quotes.
+
+$$
+J(\theta) = \sum_i \|x_i\|^2
+$$
+
+[Ablations confirm the trend]{.claim .conjectured override="narrower unit; kept plain"}.
+
+```c++
+int x = 1; // fence tags may carry symbols
+```
+
+### Coda
+
+Done.

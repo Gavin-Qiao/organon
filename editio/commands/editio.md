@@ -17,11 +17,13 @@ Work through this checklist, then stop at the single next action.
    `paper.json` is where title/authors go (placeholders ship; nobody's identity is assumed).
 4. **Resume report.** Run `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` — one line
    per section (class · status · grounds count · claim tally) plus grounds health against
-   the store; `--claims` locates each ungraded span when the audit loop is next. On an
+   the store; `--claims` locates each ungraded/unsourced span when the audit loop is next.
+   The per-section **words** column is the resume signal: ~0 words everywhere = a fresh
+   skeleton (route to structure), words without claims = drafted but unaudited. On an
    existing workspace, also `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` — it
-   names any drift between the workspace and the installed plugin (stale scaffold, missing
-   venue discipline, unrendered or unwired sections, identity in prose); surface its flags,
-   the fixes are the author's call.
+   names any drift between the workspace and the installed plugin (stale scaffold,
+   declared-order drift, missing venue discipline, hand-finished metadata, unrendered or
+   unwired sections, identity in prose); surface its flags, the fixes are the author's call.
 5. **Route the next step**, exactly one:
    - skeleton just created → `editio-structure` (contribution list + funnel intro first);
    - sections drafted but ungraded spans remain → the audit loop (`editio` skill, step 2–4);

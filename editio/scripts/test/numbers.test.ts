@@ -1,10 +1,10 @@
 /**
  * numbers.test.ts — editio-numbers' contract: one source of truth per value.
- * The scenarios mirror the second dogfood's failure modes: a headline number
- * typed into many sentences (binding kills the copies), sources changing after
- * values were written (the lock catches what luck caught in the field), and a
- * deliberate freeze (pinned passes on the record). Runs the real script through
- * the bun binary against temp roots.
+ * Half these tests replay the adversarial audit's verified attacks by name
+ * (laundering via --write, unverified provenance passing, hand-edited
+ * bindings, the invisible \editionum escape hatch, build-breaking values,
+ * the frontmatter false-fail). Runs the real script through the bun binary
+ * against temp roots.
  */
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
@@ -50,8 +50,9 @@ function run(root: string, ...args: string[]) {
   return { status: r.status ?? -1, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
 }
 const paper = (root: string, ...p: string[]) => join(root, ".editio", "paper", ...p);
+const setJSON = (root: string, obj: unknown) => writeFileSync(paper(root, "numbers.json"), JSON.stringify(obj, null, 2));
 
-test("--write binds values into front/numbers.tex (csname defs) and locks source hashes", () => {
+test("--write binds values into front/numbers.tex (csname defs) and locks value + source hashes per handle", () => {
   const root = scaffold();
   const r = run(root, "--write");
   expect(r.status).toBe(0);
@@ -60,7 +61,8 @@ test("--write binds values into front/numbers.tex (csname defs) and locks source
   expect(tex).toContain("\\expandafter\\gdef\\csname editionum@mean-ari\\endcsname{0.872}");
   expect(tex).toContain("\\csname editionum@volcano-ari\\endcsname{0.622}");
   const lock = JSON.parse(readFileSync(paper(root, "front", "numbers.lock.json"), "utf8"));
-  expect(Object.keys(lock.sources)).toEqual(["results/baseline.json"]);
+  expect(lock.handles["mean-ari"].value).toBe("0.872");
+  expect(Object.keys(lock.handles["mean-ari"].sources)).toEqual(["results/baseline.json"]);
 });
 
 test("the report names usage, freshness, and unused handles; the gate passes clean", () => {
@@ -87,33 +89,134 @@ test("a changed source flips the handle to STALE and fails the gate — pinning 
   const nj = JSON.parse(readFileSync(paper(root, "numbers.json"), "utf8"));
   nj["mean-ari"].pinned = "frozen with the submission tag 2026-07-04";
   writeFileSync(paper(root, "numbers.json"), JSON.stringify(nj, null, 2));
-  run(root, "--write");
+  expect(run(root, "--write").status).toBe(0);
   const r2 = run(root, "--gate");
   expect(r2.status).toBe(0);
   expect(r2.out).toContain("PINNED (frozen with the submission tag 2026-07-04)");
 });
 
-test("unknown handles and @num inside a byte-raw fence fail the gate at file:line", () => {
+test("AUDIT: --write refuses to launder — a drifted source under an unchanged value is not re-blessed", () => {
+  const root = scaffold();
+  run(root, "--write");
+  writeFileSync(join(root, "results", "baseline.json"), JSON.stringify({ mean_ari: 0.874 })); // drift
+  const w = run(root, "--write"); // the laundering move: --write with no value edit
+  expect(w.status).toBe(1);
+  expect(w.out).toContain("WRITE REFUSED");
+  expect(w.out).toContain("source changed but the value didn't");
+  expect(run(root, "--gate").status).toBe(1); // still gated — nothing was re-blessed
+
+  // the honest loop: update the VALUE too, then --write succeeds and the gate clears
+  const nj = JSON.parse(readFileSync(paper(root, "numbers.json"), "utf8"));
+  nj["mean-ari"].value = "0.874";
+  writeFileSync(paper(root, "numbers.json"), JSON.stringify(nj, null, 2));
+  expect(run(root, "--write").status).toBe(0);
+  expect(run(root, "--gate").status).toBe(0);
+});
+
+test("AUDIT: claimed-but-never-hashed provenance gates (unverified is not fine)", () => {
+  const root = scaffold();
+  run(root, "--write");
+  writeFileSync(join(root, "results", "extra.json"), "{}");
+  const nj = JSON.parse(readFileSync(paper(root, "numbers.json"), "utf8"));
+  nj["mean-ari"].source = ["results/baseline.json", "results/extra.json"]; // claimed, never hashed
+  writeFileSync(paper(root, "numbers.json"), JSON.stringify(nj, null, 2));
+  const r = run(root, "--gate");
+  expect(r.status).toBe(1);
+  expect(r.out).toContain("unverified");
+  // note: this fixture also trips the tex-vs-json diff (json changed) — both are honest
+});
+
+test("AUDIT: a hand-edited front/numbers.tex no longer fools the gate — content is diffed, not mtimes", () => {
+  const root = scaffold();
+  run(root, "--write");
+  const tex = paper(root, "front", "numbers.tex");
+  writeFileSync(tex, readFileSync(tex, "utf8").replace("0.872", "99.999")); // bad merge / hand edit
+  const r = run(root, "--gate");
+  expect(r.status).toBe(1);
+  expect(r.out).toContain("front/numbers.tex does not match numbers.json");
+});
+
+test("AUDIT: the \\editionum escape hatch is scanned — plain fences and front/macros.tex included", () => {
   const root = scaffold();
   run(root, "--write");
   writeFileSync(paper(root, "sections", "evaluation.md"), [
     "# Experiments",
     "",
-    "Typo: @num:mean-arii here.",
-    "",
     "```latex",
-    "raw fence: @num:mean-ari never renders",
+    "\\caption{mean \\editionum{ghost-handle}}",
     "```",
     "",
   ].join("\n"));
+  writeFileSync(paper(root, "front", "macros.tex"), "\\newcommand{\\rate}{\\editionum{outside-handle}}\n");
+  run(root, "--write"); // json untouched; rewrite tex to keep the content diff quiet
   const r = run(root, "--gate");
   expect(r.status).toBe(1);
-  expect(r.out).toContain("unknown handle @num:mean-arii at sections/evaluation.md:3");
-  expect(r.out).toMatch(/byte-raw fence at sections\/evaluation\.md:\d+/);
-  expect(r.out).toContain("latex+");
+  expect(r.out).toContain("unknown handle ghost-handle at sections/evaluation.md:4");
+  expect(r.out).toContain("unknown handle outside-handle at front/macros.tex:1");
+
+  // a KNOWN handle through the same escape hatch counts as a real use
+  writeFileSync(paper(root, "front", "macros.tex"), "\\newcommand{\\rate}{\\editionum{volcano-ari}}\n");
+  writeFileSync(paper(root, "sections", "evaluation.md"), "# E\n\n```latex\n\\editionum{mean-ari}\n```\n");
+  const r2 = run(root);
+  expect(r2.out).toMatch(/mean-ari.*used ×1/);
+  expect(r2.out).toMatch(/volcano-ari.*used ×1/);
 });
 
-test("bindings referenced but never written, or older than numbers.json, fail the gate", () => {
+test("AUDIT: build-breaking values are refused at the door, naming the handle", () => {
+  const root = scaffold();
+  setJSON(root, { rate: "3.2% of cases" });
+  const r = run(root);
+  expect(r.status).toBe(2);
+  expect(r.out).toContain('"rate"');
+  expect(r.out).toContain("unescaped %");
+  setJSON(root, { broken: "0.87{" });
+  const r2 = run(root);
+  expect(r2.status).toBe(2);
+  expect(r2.out).toContain("unbalanced braces");
+  setJSON(root, { ok: "8\\times10^{-4}", pct: "62\\%" }); // properly escaped LaTeX passes
+  expect(run(root, "--write").status).toBe(0);
+});
+
+test("AUDIT: @num in YAML frontmatter is dead text — not scanned, not gated; body line numbers stay exact", () => {
+  const root = scaffold();
+  run(root, "--write");
+  writeFileSync(paper(root, "sections", "evaluation.md"), [
+    "---",
+    "class: deo:Evaluation",
+    "note: mirrors @num:ghost-in-frontmatter from the old draft",
+    "---",
+    "# Experiments",
+    "",
+    "Typo here: @num:mean-arii.",
+    "",
+  ].join("\n"));
+  run(root, "--write");
+  const r = run(root, "--gate");
+  expect(r.status).toBe(1);
+  expect(r.out).not.toContain("ghost-in-frontmatter");
+  expect(r.out).toContain("unknown handle mean-arii at sections/evaluation.md:7"); // 1-based, frontmatter counted
+});
+
+test("AUDIT: malformed numbers.json fails cleanly (exit 2, handle named), never a stack trace", () => {
+  const root = scaffold();
+  setJSON(root, { "-bad-": "1" });
+  const r = run(root);
+  expect(r.status).toBe(2);
+  expect(r.out).toContain("editio-numbers:");
+  expect(r.out).toContain('"-bad-"');
+  setJSON(root, { orphan: null });
+  expect(run(root).status).toBe(2);
+  writeFileSync(paper(root, "numbers.json"), '{ "a": "1", "a": "2" }');
+  const dup = run(root);
+  expect(dup.status).toBe(2);
+  expect(dup.out).toContain("duplicate handle");
+  setJSON(root, { dir: { value: "1", source: "results" } }); // a directory as source
+  const d = run(root, "--write");
+  expect(d.status).toBe(2);
+  expect(d.out).toContain("not a file");
+});
+
+test("bindings referenced but never written fail the gate; editing numbers.json without --write fails the content diff", () => {
   const root = scaffold();
   const r = run(root, "--gate"); // no --write yet
   expect(r.status).toBe(1);
@@ -121,14 +224,12 @@ test("bindings referenced but never written, or older than numbers.json, fail th
 
   run(root, "--write");
   expect(run(root, "--gate").status).toBe(0);
-  const later = new Date(Date.now() + 60_000);
-  const nj = paper(root, "numbers.json");
-  writeFileSync(nj, readFileSync(nj, "utf8")); // touch: json newer than tex
-  const { utimesSync } = require("node:fs");
-  utimesSync(nj, later, later);
+  const nj = JSON.parse(readFileSync(paper(root, "numbers.json"), "utf8"));
+  nj["volcano-ari"] = "0.623"; // value edit, no --write
+  setJSON(root, nj);
   const r2 = run(root, "--gate");
   expect(r2.status).toBe(1);
-  expect(r2.out).toContain("numbers.json is newer than front/numbers.tex");
+  expect(r2.out).toContain("front/numbers.tex does not match numbers.json");
 });
 
 test("values that never left the pipeline: no numbers.json is honest, not fatal", () => {
