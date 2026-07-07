@@ -17,9 +17,12 @@
  *   editio-render.ts --file <path> --stdout           print the .tex (no write)
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename, dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { writeIdentity } from "./editio-identity.ts";
-import { findRoot, parseFrontmatter, paperDir, slugify, texEscape } from "./lib.ts";
+import { findRoot, parseFrontmatter, paperDir, readJSON, slugify, texEscape } from "./lib.ts";
+
+const VENUES = join(dirname(fileURLToPath(import.meta.url)), "..", "templates", "venues");
 
 // ── Token protection ─────────────────────────────────────────────────────────
 // Protected segments (math, code, raw LaTeX, resolved macros) are swapped for
@@ -281,6 +284,32 @@ export function sectionOrder(paper: string): string[] {
   return [...ordered, ...onDisk.filter((s) => !ordered.includes(s)).sort()];
 }
 
+/**
+ * IEEE-style drop cap (\IEEEPARstart{T}{his}) on the first prose paragraph — applied
+ * per venue (venue.json par_start), AFTER the contract render, so the markdown source
+ * and the golden contract stay venue-neutral. Skips (with a warning) when the paragraph
+ * opens with markup a drop cap can't wrap; the author's escape hatch is a latex+ fence.
+ */
+export function dropCap(tex: string, warn: (m: string) => void, slug: string): string {
+  const lines = tex.split("\n");
+  let seenSection = false;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^\\section\{/.test(lines[i])) { seenSection = true; continue; }
+    if (!seenSection) continue;
+    const line = lines[i];
+    if (!line.trim() || line.startsWith("\\") || line.startsWith("%")) continue;
+    const m = line.match(/^([A-Za-z])([A-Za-z]*)/);
+    if (!m) {
+      warn(`par_start: sections/${slug}.md's first paragraph opens with markup — \\IEEEPARstart not applied (hand-write it in a latex+ fence if wanted)`);
+      return tex;
+    }
+    lines[i] = `\\IEEEPARstart{${m[1]}}{${m[2]}}${line.slice(m[0].length)}`;
+    return lines.join("\n");
+  }
+  warn(`par_start: sections/${slug}.md has no drop-cappable paragraph — \\IEEEPARstart not applied`);
+  return tex;
+}
+
 const HELP = `editio-render — the reference md -> tex renderer (see editio-latex/references/authoring-subset.md)
 usage:
   editio-render.ts [--root <dir>] [--all]        render every sections/*.md next to its source
@@ -322,6 +351,19 @@ if (import.meta.main) {
   else for (const slug of sectionOrder(paper)) targets.push(join(sections, `${slug}.md`));
 
   const warn = (m: string) => console.error(`editio-render: warning — ${m}`);
+
+  // the venue's par_start nicety targets the first BODY section (the slug after the
+  // abstract in build order) — venue truth stays in venue.json, prose stays neutral
+  let dropSlug: string | null = null;
+  if (existsSync(join(paper, "paper.json"))) {
+    try {
+      const venuePath = join(VENUES, String(readJSON(join(paper, "paper.json")).venue ?? "arxiv"), "venue.json");
+      if (existsSync(venuePath) && readJSON(venuePath).par_start) {
+        dropSlug = sectionOrder(paper).find((s) => s !== "abstract") ?? null;
+      }
+    } catch { /* venue niceties never block a render */ }
+  }
+
   for (const t of targets) {
     if (!existsSync(t)) { console.error(`editio-render: missing ${t}`); process.exit(1); }
     const slug = basename(t).replace(/\.md$/, "");
@@ -332,6 +374,7 @@ if (import.meta.main) {
       console.error(`editio-render: ${(e as Error).message}`);
       process.exit(1);
     }
+    if (slug === dropSlug) tex = dropCap(tex, warn, slug);
     if (toStdout) process.stdout.write(tex);
     else {
       const dest = t.replace(/\.md$/, ".tex");

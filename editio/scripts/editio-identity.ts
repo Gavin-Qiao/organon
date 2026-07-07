@@ -21,7 +21,10 @@
  *   \CorrAuthorShort   "F.~Last" of the corresponding author
  *   \CorrEmail         the corresponding author's email
  *   \IdentityThanks    the assembled provenance sentence(s) for a \thanks{...}
+ *   \PaperKeywords     paper.json keywords, comma-joined (IEEE Index Terms et al.)
+ *   \AuthorRunning     "F.~Last et al." for running heads (\markboth)
  *   \AuthorOneName ..  each author's plain name, for bios (spelled ordinals)
+ *   \AuthorOneBio ..   each author's bio prose ("bio" field), falling back to \BioBody
  *   \BioBody           bio boilerplate built on \AffilShared
  *
  * The corresponding author is the first with "corresponding": true, else the first
@@ -117,19 +120,30 @@ export function identityTexOf(meta: any): string {
     `\\newcommand{\\CorrAuthorShort}{${shortName(String(corr?.name ?? ""))}}`,
     `\\newcommand{\\CorrEmail}{${texEscape(email)}}`,
     `\\newcommand{\\IdentityThanks}{${thanks}}`,
+    `\\newcommand{\\PaperKeywords}{${(Array.isArray(meta.keywords) ? meta.keywords : []).map((k: any) => texEscape(String(k))).join(", ")}}`,
+    `\\newcommand{\\AuthorRunning}{${shortName(String(authors[0]?.name ?? ""))}${authors.length > 1 ? " et al." : ""}}`,
     ...authors.map((a, i) => `\\newcommand{\\Author${ORDINALS[i]}Name}{${texEscape(String(a?.name ?? ""))}}`),
     `\\newcommand{\\BioBody}{is with \\AffilShared.}`,
+    ...authors.map((a, i) => `\\newcommand{\\Author${ORDINALS[i]}Bio}{${String(a?.bio ?? "").trim() ? texEscape(String(a.bio).trim()) : "\\BioBody"}}`),
     "",
   ].join("\n");
 }
 
-export function biosTexOf(meta: any, bioEnv: string): string {
+export function biosTexOf(meta: any, bioEnv: string, bioEnvPhoto?: string): string {
   const authors: any[] = Array.isArray(meta.authors) ? meta.authors : [];
   return [
     "% front/bios.tex — GENERATED from paper.json by editio-identity; edit paper.json, never this file.",
-    "% One bio stub per author, assembled from the identity macros; blind builds drop the block.",
+    "% One bio per author, assembled from the identity macros (\"bio\" and \"photo\" fields in",
+    "% paper.json; photo-less authors get the venue's no-photo environment); blind builds drop the block.",
     "\\ifeditioblind\\else",
-    ...authors.map((_, i) => `\\begin{${bioEnv}}{\\Author${ORDINALS[i]}Name}\\BioBody\\end{${bioEnv}}`),
+    ...authors.map((a, i) => {
+      const photo = String(a?.photo ?? "").trim();
+      const env = photo && bioEnvPhoto ? bioEnvPhoto : bioEnv;
+      const opt = photo && bioEnvPhoto
+        ? `[{\\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{${photo}}}]`
+        : "";
+      return `\\begin{${env}}${opt}{\\Author${ORDINALS[i]}Name}\\Author${ORDINALS[i]}Bio\\end{${env}}`;
+    }),
     "\\fi",
     "",
   ].join("\n");
@@ -148,8 +162,8 @@ export function writeIdentity(root: string): { changed: string[] } {
   };
   put("front/identity.tex", identityTexOf(meta));
   const venuePath = join(TEMPLATES, "venues", String(meta.venue ?? "arxiv"), "venue.json");
-  const bioEnv = existsSync(venuePath) ? readJSON(venuePath).bio_env : undefined;
-  if (bioEnv) put("front/bios.tex", biosTexOf(meta, String(bioEnv)));
+  const venue = existsSync(venuePath) ? readJSON(venuePath) : {};
+  if (venue.bio_env) put("front/bios.tex", biosTexOf(meta, String(venue.bio_env), venue.bio_env_photo ? String(venue.bio_env_photo) : undefined));
   return { changed };
 }
 

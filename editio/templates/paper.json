@@ -8,7 +8,9 @@
       "affiliation": "Affiliation One",
       "email": "",
       "orcid": "",
-      "corresponding": true
+      "corresponding": true,
+      "bio": "",
+      "photo": ""
     }
   ],
   "keywords": [],

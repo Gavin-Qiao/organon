@@ -116,7 +116,7 @@ test("a venue with a bio_env gets front/bios.tex — macro-driven stubs, blind-m
   expect(r.out).toContain("wrote front/bios.tex");
   const bios = read(paper(root, "front", "bios.tex"));
   expect(bios).toContain("\\ifeditioblind\\else");
-  expect(bios).toContain("\\begin{IEEEbiographynophoto}{\\AuthorOneName}\\BioBody\\end{IEEEbiographynophoto}");
+  expect(bios).toContain("\\begin{IEEEbiographynophoto}{\\AuthorOneName}\\AuthorOneBio\\end{IEEEbiographynophoto}");
   expect(bios).not.toContain("Author One"); // data macros only — no literal name
   expect(read(paper(root, "main.tex"))).toContain("\\InputIfFileExists{front/bios}"); // wired by the template
 });
@@ -126,4 +126,59 @@ test("outside any workspace the CLI exits 2 with an honest error", () => {
   const r = run(IDENTITY, bare);
   expect(r.status).toBe(2);
   expect(r.out).toContain("not an editio workspace");
+});
+
+// ──────────── 0.5.1 venue fidelity: keywords, running heads, bio prose, photos, drop cap ────────────
+
+test("keywords, the running head, and per-author bio prose are data macros too", () => {
+  const tex = identityTexOf({
+    title: "T Is A Title", keywords: ["gauge fields", "C&C"],
+    authors: [
+      { name: "Ada Lovelace King", affiliation: "X", bio: "received the Ph.D. degree & studies engines." },
+      { name: "Alan Turing", affiliation: "X" },
+    ],
+  });
+  expect(tex).toContain("\\newcommand{\\PaperKeywords}{gauge fields, C\\&C}");
+  expect(tex).toContain("\\newcommand{\\AuthorRunning}{A.~King et al.}");
+  expect(tex).toContain("\\newcommand{\\AuthorOneBio}{received the Ph.D. degree \\& studies engines.}");
+  expect(tex).toContain("\\newcommand{\\AuthorTwoBio}{\\BioBody}"); // no bio yet — boilerplate fallback
+  const solo = identityTexOf({ title: "T", authors: [{ name: "Grace Hopper" }] });
+  expect(solo).toContain("\\newcommand{\\AuthorRunning}{G.~Hopper}"); // no "et al." for one author
+});
+
+test("an author with a photo gets the photo bio environment; the others keep no-photo", () => {
+  const root = scratch();
+  run(SCAFFOLD, root, "--venue", "tpami");
+  const meta = paper(root, "paper.json");
+  const parsed = JSON.parse(read(meta));
+  parsed.venue = "tpami";
+  parsed.authors = [
+    { name: "Ada Lovelace King", affiliation: "X", photo: "figures/photos/ada.jpg", bio: "leads the engine group." },
+    { name: "Alan Turing", affiliation: "X" },
+  ];
+  writeFileSync(meta, JSON.stringify(parsed, null, 2));
+  expect(run(IDENTITY, root).status).toBe(0);
+  const bios = read(paper(root, "front", "bios.tex"));
+  expect(bios).toContain("\\begin{IEEEbiography}[{\\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{figures/photos/ada.jpg}}]{\\AuthorOneName}\\AuthorOneBio\\end{IEEEbiography}");
+  expect(bios).toContain("\\begin{IEEEbiographynophoto}{\\AuthorTwoName}\\AuthorTwoBio\\end{IEEEbiographynophoto}");
+});
+
+test("par_start venues get \\IEEEPARstart on the first body section; arxiv stays untouched", () => {
+  const root = scratch();
+  run(SCAFFOLD, root, "--venue", "tpami");
+  const meta = paper(root, "paper.json");
+  writeFileSync(meta, read(meta).replace('"venue": "arxiv"', '"venue": "tpami"'));
+  const intro = paper(root, "sections", "introduction.md");
+  writeFileSync(intro, read(intro) + "\nThis opening paragraph earns the drop cap.\n");
+  expect(run(RENDER, root, "--all").status).toBe(0);
+  expect(read(paper(root, "sections", "introduction.tex"))).toContain("\\IEEEPARstart{T}{his} opening paragraph");
+  // the abstract (first in build order) is never the drop-cap target
+  expect(read(paper(root, "sections", "abstract.tex"))).not.toContain("\\IEEEPARstart");
+
+  const arxivRoot = scratch();
+  run(SCAFFOLD, arxivRoot, "--venue", "arxiv");
+  const intro2 = paper(arxivRoot, "sections", "introduction.md");
+  writeFileSync(intro2, read(intro2) + "\nThis opening paragraph stays plain.\n");
+  run(RENDER, arxivRoot, "--all");
+  expect(read(paper(arxivRoot, "sections", "introduction.tex"))).not.toContain("\\IEEEPARstart");
 });
