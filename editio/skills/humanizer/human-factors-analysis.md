@@ -4,7 +4,7 @@ An analysis of what makes acclaimed pre-2022 papers read as unmistakably human, 
 
 ## Why this analysis exists
 
-The current `humanizer` skill (v2.5.1) is a catalogue of 29 things to *remove*: significance inflation, em-dash overuse, the rule of three, "delve," sycophancy, and so on. That is the right half of the job. But a text can pass all 29 checks and still read like nothing a person would write, because removing tics does not add judgment, stance, or a point of view.
+The current `humanizer` skill is a catalogue of 29 things to *remove*: significance inflation, em-dash overuse, the rule of three, "delve," sycophancy, and so on. That is the right half of the job. But a text can pass all 29 checks and still read like nothing a person would write, because removing tics does not add judgment, stance, or a point of view.
 
 The gap is positive models. So I assembled a small corpus of papers written well before large language models existed (1945 to 1974), all of them famous partly *for how they are written*, and read them for the opposite question: not "what tells on the machine" but "what does a human writer actually do that a model tends not to."
 

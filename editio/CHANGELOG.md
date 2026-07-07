@@ -6,6 +6,43 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Fixed
+
+- **Adversarial-audit hardening** (five auditors attacked the skills against the code; every
+  behavioral finding fixed with a test that replays the attack):
+  - `editio-numbers` could be made to lie four ways, worst first: `--write` silently
+    **re-blessed a stale value** when the source drifted but the value didn't (now refused,
+    atomically, naming the loop); claimed-but-never-hashed sources passed the gate (now
+    gate); a hand-edited `front/numbers.tex` was invisible (the gate now diffs content
+    against `numbers.json` — mtime heuristics dropped); the documented `\editionum{…}`
+    escape hatch and `front/macros.tex` were unscanned (now scanned as real uses). Values
+    are validated at the door (unbalanced braces / unescaped `%` fatally break LaTeX
+    downstream); `@num:` in YAML frontmatter no longer false-fails the gate; malformed
+    `numbers.json` errors cleanly (exit 2, handle named) including duplicate keys.
+  - **`override="reason"` now does what every doc said it did**: an `.unsourced` claim with
+    an override passes `editio-status --gate` on the record (reason printed); ungraded
+    stays a hard fail, and the remediation message states the boundary instead of
+    recommending a no-op.
+  - `editio-status` reports **drafted words per section** (against the section's `budget:`
+    frontmatter) — a fresh skeleton and a finished clean paper used to be indistinguishable.
+  - The renderer warns where it was silent: near-miss `@num:` handles (wrong charset),
+    unknown claim classes (`.validatd` no longer downgrades silently), a second top-level
+    heading, `####`+ pseudo-headings, indented (unsupported) list items, and prose captured
+    as math by currency dollars; a bare `%` in inline math is auto-escaped (it commented
+    out its own closing `$`); inline `grounds=` attributes are escaped like the frontmatter
+    path; the leftover-span lint runs pre-restore, so corrupted spans without the literal
+    `{.claim` spelling are caught and `{.claim}` quoted in inline code no longer
+    false-fires; symbol fence tags (`c++`) stay fenced; quote/dash-glued crossrefs resolve;
+    multi-key `.self` spans are refused; the abstract no longer carries a provenance stamp
+    inside its environment; "not a workspace" exits 2 like every sibling CLI.
+  - `editio-figcheck` warns on unrecognized flags (`--tol` silently applying the default
+    tolerance was a gate quietly checking the wrong thing).
+  - The golden contract fixture now exercises the previously untested constructs
+    (sub-headings, enumerate, `$$…$$`, `[@tab:]`, override attributes, symbol fence tags,
+    the full escape set) — plus a doc sweep: the override boundary, the reviewer's actual
+    output contract, doctor checks, `--claims` wording, orphan DoCO/DEO classes and the
+    custom-order path, the golden-ratio figure default, and stale version stamps.
+
 ### Added
 
 - **`editio-numbers` — one source of truth for every load-bearing number** (learned from

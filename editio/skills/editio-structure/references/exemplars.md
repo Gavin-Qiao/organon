@@ -23,7 +23,7 @@ exemplifies, and the transferable move.
   theorem uses it, and escalate difficulty monotonically — a reader who stops at any section
   boundary still leaves with a consistent, complete picture.
 - **Apply:** the notation table is not an appendix nicety; it is the contract. A symbol used
-  before it is defined is a bug (editio-lint will treat it as one).
+  before it is defined is a bug (editio-lint — Phase 5, not yet shipped — will treat it as one).
 - Figure 1 (the communication-system diagram) carries the whole paper's ontology — one
   schematic, referenced throughout. Aim for *one* such figure per paper.
 

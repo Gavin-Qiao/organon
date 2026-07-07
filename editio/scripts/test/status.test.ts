@@ -110,3 +110,41 @@ test("render --concat concatenates sections in build order; --help exists; cwd-p
   expect(inside.status).toBe(0);
   expect(inside.out).toContain("intro.tex");
 });
+
+// ──────────── audit hardening: override boundary + drafted-words signal ────────────
+
+test("AUDIT: an unsourced claim with an override passes ON THE RECORD; ungraded never does", () => {
+  const root = mkdtempSync(join(tmpdir(), "editio-status-override-"));
+  tmps.push(root);
+  mkdirSync(join(root, ".promptus", "docs"), { recursive: true });
+  mkdirSync(join(root, ".editio", "paper", "sections"), { recursive: true });
+  writeFileSync(join(root, ".editio", "paper", "sections", "intro.md"), [
+    "---", "class: deo:Introduction", "---", "# Intro", "",
+    '[folk knowledge in the field]{.claim .unsourced override="author accepts; standard result"}', "",
+  ].join("\n"));
+  const pass = run("editio-status.ts", ["--root", root, "--gate"]);
+  expect(pass.status).toBe(0);
+  expect(pass.out).toContain('on the record: "author accepts; standard result"');
+  expect(pass.out).toContain("1 override(s) on the record");
+
+  writeFileSync(join(root, ".editio", "paper", "sections", "intro.md"), [
+    "---", "class: deo:Introduction", "---", "# Intro", "",
+    '[never audited]{.claim override="cannot excuse this"}', "",
+  ].join("\n"));
+  const fail = run("editio-status.ts", ["--root", root, "--gate"]);
+  expect(fail.status).toBe(1);
+  expect(fail.out).toContain("override does not apply to ungraded");
+  expect(fail.out).toContain("never an ungraded one"); // the remediation states the boundary
+});
+
+test("AUDIT: the report shows drafted words per section (vs budget) — a skeleton reads 0", () => {
+  const root = fixture();
+  const r = run("editio-status.ts", ["--root", root]);
+  expect(r.out).toMatch(/intro\s.*words \d+/);
+  expect(r.out).toContain("words drafted");
+  // a fresh stub with budget frontmatter reads 0/800
+  writeFileSync(join(root, ".editio", "paper", "sections", "stub.md"),
+    "---\nclass: deo:Conclusion\nstatus: drafting\nbudget: 800\n---\n# Stub\n");
+  const r2 = run("editio-status.ts", ["--root", root]);
+  expect(r2.out).toMatch(/stub\s.*words 0\/800/);
+});

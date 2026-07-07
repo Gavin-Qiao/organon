@@ -8,7 +8,7 @@
 %
 % The render never blocks: an unsourced claim still typesets (vermilion in draft,
 % clean in publish). Enforcement — zero unsourced, no overclaims at publish — is
-% editio-lint's job, not this package's. Tints are Okabe-Ito (colourblind-safe).
+% editio-status --gate's job, not this package's. Tints are Okabe-Ito (colourblind-safe).
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{editio}[2026/07/03 v0.1.0 editio three-mode render layer]
 \RequirePackage{xcolor}
@@ -29,7 +29,7 @@
 \editiodrafttrue
 \fi\fi\fi
 
-% ── Okabe-Ito tints ──────────────────────────────────────────────────────────
+% ── Okabe-Ito tints, plus one neutral grey for de-emphasis ──────────────────
 \definecolor{editioAmber}{HTML}{E69F00}
 \definecolor{editioVermilion}{HTML}{D55E00}
 \definecolor{editioSky}{HTML}{56B4E9}

@@ -37,11 +37,20 @@ export function slotWidthMm(venue: any, slot: string): number | null {
   return typeof w === "number" ? w : null;
 }
 
+const KNOWN_FLAGS = new Set(["tolerance-mm", "slot", "width-mm", "venue", "root"]);
+
 function main(argv: string[]): number {
   const pdfs = argv.filter((a) => a.endsWith(".pdf"));
   if (!pdfs.length) {
-    console.error("editio-figcheck: no PDF given — usage: editio-figcheck.ts <figure.pdf> [--width-mm N | --slot single|double --venue <id>]");
+    console.error("editio-figcheck: no PDF given — usage: editio-figcheck.ts <figure.pdf> [--width-mm N | --slot single|double --venue <id>] [--tolerance-mm N]");
     return 2;
+  }
+  // a mistyped flag (--tol for --tolerance-mm) silently applying the default is a
+  // gate that quietly checks the wrong thing — warn on anything unrecognized
+  for (const a of argv) {
+    if (a.startsWith("--") && !KNOWN_FLAGS.has(a.slice(2))) {
+      console.error(`editio-figcheck: warning — unknown flag ${a} ignored (known: ${[...KNOWN_FLAGS].map((f) => `--${f}`).join(", ")})`);
+    }
   }
 
   const tolerance = parseFloat(arg(argv, "tolerance-mm") ?? "1");

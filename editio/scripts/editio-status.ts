@@ -98,17 +98,25 @@ function main(argv: string[]): number {
 
   const claims: Claim[] = [];
   const rows: string[] = [];
+  let totalWords = 0;
   for (const slug of sectionOrder(paper)) {
     const md = readFileSync(join(sectionsDir, `${slug}.md`), "utf8");
-    const { data } = parseFrontmatter(md);
+    const { data, body } = parseFrontmatter(md);
     const cs = scanClaims(md, slug);
     claims.push(...cs);
     const fmGrounds = Array.isArray(data.grounds) ? (data.grounds as string[]) : [];
     const tally = { validated: 0, conjectured: 0, unsourced: 0, ungraded: 0 };
     for (const c of cs) tally[c.grade]++;
     const tallyStr = `${tally.validated}V ${tally.conjectured}C ${tally.unsourced}U ${tally.ungraded}G`;
+    // drafted words (prose only — fences and headings excluded): a fresh stub is 0,
+    // so "skeleton just created" vs "drafted" vs "clean" is readable from the report
+    // (a fresh scaffold and a finished paper used to be indistinguishable here) —
+    // shown against the section's own `budget:` frontmatter when it carries one
+    const words = body.replace(/```[\s\S]*?```/g, " ").split("\n").filter((l) => !/^#{1,6}\s/.test(l)).join(" ").split(/\s+/).filter(Boolean).length;
+    totalWords += words;
+    const budget = Number.parseInt(String(data.budget ?? ""), 10);
     const flag = tally.ungraded || tally.unsourced ? `  <- ${[tally.ungraded ? `${tally.ungraded} ungraded` : "", tally.unsourced ? `${tally.unsourced} unsourced` : ""].filter(Boolean).join(", ")}` : "";
-    rows.push(`  ${slug.padEnd(18)} ${String(data.class ?? "?").padEnd(22)} ${String(data.status ?? "?").padEnd(10)} grounds ${fmGrounds.length}  claims ${tallyStr}${flag}`);
+    rows.push(`  ${slug.padEnd(18)} ${String(data.class ?? "?").padEnd(22)} ${String(data.status ?? "?").padEnd(10)} grounds ${fmGrounds.length}  claims ${tallyStr}  words ${words}${Number.isFinite(budget) ? `/${budget}` : ""}${flag}`);
   }
 
   // grounds resolution — section frontmatter handles + span handles, deduped
@@ -130,8 +138,9 @@ function main(argv: string[]): number {
   for (const r of rows) console.log(r);
   const total = { validated: 0, conjectured: 0, unsourced: 0, ungraded: 0 };
   for (const c of claims) total[c.grade]++;
-  console.log(`  claims: ${claims.length} total — ${total.validated} validated · ${total.conjectured} conjectured · ${total.unsourced} unsourced · ${total.ungraded} ungraded`);
-  console.log(`  grounds: ${handles.size} handle(s) — ${handles.size - weak.length - unknown.length} resolved · ${weak.length} weak · ${unknown.length} unknown${units.size ? "" : "  (no .promptus store found)"}`);
+  console.log(`  claims: ${claims.length} total — ${total.validated} validated · ${total.conjectured} conjectured · ${total.unsourced} unsourced · ${total.ungraded} ungraded · ${totalWords} words drafted`);
+  const storeNote = units.size ? "" : existsSync(join(root, ".promptus")) ? "  (.promptus has no units yet — kb-add fills it)" : "  (no .promptus store found)";
+  console.log(`  grounds: ${handles.size} handle(s) — ${handles.size - weak.length - unknown.length} resolved · ${weak.length} weak · ${unknown.length} unknown${storeNote}`);
   for (const w of weak) console.log(`    weak    ${w}`);
   for (const u of unknown) console.log(`    unknown ${u}`);
 
@@ -145,11 +154,18 @@ function main(argv: string[]): number {
 
   if (!gate) return 0;
 
-  // the publish gate: no ungraded, no unsourced, no overclaims
+  // the publish gate: no ungraded, no unsourced, no overclaims. An in-span
+  // override excuses an UNSOURCED claim (the author accepts it, on the record)
+  // and a VALIDATED claim's weak/unknown grounds — never an ungraded one:
+  // ungraded means the audit loop hasn't run, and the fix is running it.
   const violations: string[] = [];
+  const onRecord: string[] = [];
   for (const c of claims) {
-    if (c.grade === "ungraded") violations.push(`ungraded claim at sections/${c.section}.md:${c.line}`);
-    if (c.grade === "unsourced") violations.push(`unsourced claim at sections/${c.section}.md:${c.line}`);
+    if (c.grade === "ungraded") violations.push(`ungraded claim at sections/${c.section}.md:${c.line}${c.override ? ` (override does not apply to ungraded — run the audit loop and grade the span)` : ""}`);
+    if (c.grade === "unsourced") {
+      if (c.override) onRecord.push(`unsourced, overridden at sections/${c.section}.md:${c.line} — on the record: "${c.override}"`);
+      else violations.push(`unsourced claim at sections/${c.section}.md:${c.line}`);
+    }
     if (c.grade === "validated" && !c.override) {
       const resolved = c.grounds.filter((g) => units.has(g));
       if (!c.grounds.length) violations.push(`validated claim with no grounds at sections/${c.section}.md:${c.line}`);
@@ -160,13 +176,14 @@ function main(argv: string[]): number {
       }
     }
   }
+  for (const r of onRecord) console.log(`  ${r}`);
   if (violations.length) {
     console.error(`editio-status: GATE FAILED — ${violations.length} violation(s):`);
     for (const v of violations) console.error(`    ${v}`);
-    console.error("  fix the prose, ground the claim (recall -> grade), or record an in-span override=\"reason\".");
+    console.error("  fix the prose, or ground the claim (recall -> grade). override=\"reason\" excuses an unsourced claim or a validated claim's weak grounds — never an ungraded one.");
     return 1;
   }
-  console.log("  gate: publish-clean — no ungraded, no unsourced, no overclaims.");
+  console.log(`  gate: publish-clean — no ungraded, no unsourced, no overclaims${onRecord.length ? ` (${onRecord.length} override(s) on the record)` : ""}.`);
   return 0;
 }
 

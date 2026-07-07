@@ -50,12 +50,13 @@ function cites(s: string, ctx: string): string {
     if (!refs && !none) throw new Error(`${ctx}: mixed \\cite and \\cref keys in [@${inner}]`);
     return protect(refs ? `\\cref{${keys.join(",")}}` : `\\cite{${keys.join(",")}}`);
   });
-  // bare crossrefs: @sec:methods in running prose
-  s = s.replace(/(^|[\s(])@((?:fig|tab|sec|eq):[A-Za-z0-9:_-]+)/g, (_, pre, key) => `${pre}${protect(`\\cref{${key}}`)}`);
+  // bare crossrefs: @sec:methods in running prose — any non-word neighbour
+  // qualifies (quotes, dashes, parens); a word char blocks it (emails)
+  s = s.replace(/(^|[^\w@])@((?:fig|tab|sec|eq):[A-Za-z0-9:_-]+)/g, (_, pre, key) => `${pre}${protect(`\\cref{${key}}`)}`);
   // bound numbers: @num:handle → \editionum{handle}. The VALUE never enters any
   // .tex except front/numbers.tex (editio-numbers --write) — one source of truth,
   // zero typed copies (the second dogfood's reconcile-by-sed pain).
-  s = s.replace(/@num:([a-z0-9][a-z0-9-]*)/g, (_, h) => protect(`\\editionum{${h}}`));
+  s = s.replace(/@num:([a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/g, (_, h) => protect(`\\editionum{${h}}`));
   return s;
 }
 
@@ -113,7 +114,9 @@ export function parseAttrs(raw: string): { classes: string[]; attrs: Record<stri
   return { classes, attrs };
 }
 
-function spans(s: string, ctx: string): string {
+const CLAIM_CLASSES = new Set(["claim", "validated", "conjectured", "unsourced"]);
+
+function spans(s: string, ctx: string, warn?: (m: string) => void): string {
   const found = findSpans(s);
   if (!found.length) return s;
   let out = "";
@@ -122,14 +125,18 @@ function spans(s: string, ctx: string): string {
     out += s.slice(pos, f.start);
     const { classes, attrs } = parseAttrs(f.rawAttrs);
     if (classes.includes("self")) {
+      if (f.text.includes(";")) throw new Error(`${ctx}: a self-cite takes a single key ([@ours]{.self}) — split multiple self-cites into separate spans`);
       out += protect(`\\selfcite{${f.text.trim().replace(/^@/, "")}}`);
     } else if (classes.includes("claim")) {
+      // a typo'd grade (.validatd) silently downgrades to ungraded — say so
+      const strays = classes.filter((c) => !CLAIM_CLASSES.has(c));
+      if (strays.length) warn?.(`${ctx}: unknown claim class(es) .${strays.join(" .")} — the span renders UNGRADED (grades are .validated/.conjectured/.unsourced)`);
       const grade = classes.includes("validated") ? "\\claimV"
         : classes.includes("conjectured") ? "\\claimC"
         : classes.includes("unsourced") ? "\\claimU"
         : "\\claimG";
       const body = inline(f.text.replace(/\n/g, " "), ctx);
-      const grounds = attrs.grounds ? protect(`\\editiogrounds{${attrs.grounds.split(",").map((g) => g.trim()).join(", ")}}`) : "";
+      const grounds = attrs.grounds ? protect(`\\editiogrounds{${texEscape(attrs.grounds.split(",").map((g) => g.trim()).join(", "))}}`) : "";
       out += protect(`${grade}{${body}}${grounds}`);
     } else {
       out += s.slice(f.start, f.end); // not ours — leave for later passes
@@ -146,23 +153,44 @@ export function renderSection(md: string, fileSlug: string, warn?: (msg: string)
   const ctx = `${fileSlug}.md`;
   let s = body;
 
+  // near-miss @num handles (wrong charset) would silently fail to bind and ship
+  // as literal text — warn up front. Plain ```latex fences are exempt (byte-raw
+  // by contract; editio-numbers flags @num there instead).
+  for (const m of body.replace(/```latex\n[\s\S]*?```/g, "").matchAll(/@num:([A-Za-z0-9_-]+)/g)) {
+    if (!/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(m[1])) {
+      warn?.(`${ctx}: @num:${m[1]} won't bind — handles are kebab-case [a-z0-9-] with no leading/trailing hyphen`);
+    }
+  }
+
   // 1. protect raw LaTeX fences, other fences (verbatim), display + inline math, inline code
   //    ```latex+ opts INTO the citation/crossref transforms (captions want [@key] and
   //    @fig: too — the dogfood's split-brain papercut); plain ```latex stays fully raw.
   s = s.replace(/```latex\+\n([\s\S]*?)```/g, (_, tex) => `\n${protect(cites(tex.trimEnd(), ctx))}\n`);
   s = s.replace(/```latex\n([\s\S]*?)```/g, (_, tex) => `\n${protect(tex.trimEnd())}\n`);
-  s = s.replace(/```(\w*)\n([\s\S]*?)```/g, (_, _lang, code) => `\n${protect(`\\begin{verbatim}\n${code.trimEnd()}\n\\end{verbatim}`)}\n`);
+  //    fence tags may carry symbols (c++, c#) — the tag is discarded, never echoed
+  s = s.replace(/```([^\n]*)\n([\s\S]*?)```/g, (_, _lang, code) => `\n${protect(`\\begin{verbatim}\n${code.trimEnd()}\n\\end{verbatim}`)}\n`);
   //    math passes through raw, except @num:handle — a bound number is exactly the
   //    kind of token that lives inside $…$ (mean ARI $@num:x$), so bind before protecting
-  s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, math: string) => protect(`\\[${math.trim().replace(/@num:([a-z0-9][a-z0-9-]*)/g, "\\editionum{$1}")}\\]`));
-  s = s.replace(/\$([^$\n]+)\$/g, (_, math: string) => protect(`$${math.replace(/@num:([a-z0-9][a-z0-9-]*)/g, "\\editionum{$1}")}$`));
+  s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, math: string) => protect(`\\[${math.trim().replace(/@num:([a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/g, "\\editionum{$1}")}\\]`));
+  s = s.replace(/\$([^$\n]+)\$/g, (_, math: string) => {
+    // a bare % in single-line inline math comments out its own closing $ — always
+    // fatal downstream, never intended: escape it
+    let m = math.replace(/(^|[^\\])%/g, "$1\\%");
+    m = m.replace(/@num:([a-z0-9](?:[a-z0-9-]*[a-z0-9])?)/g, "\\editionum{$1}");
+    // two currency $'s on one line silently typeset the prose between them as
+    // math (the audit's "cost $5 ... $10" case) — warn on math with no math in it
+    if (/\s/.test(m) && !/[\\^_={}<>+*/|]/.test(m)) {
+      warn?.(`${ctx}: "$${math}$" looks like prose captured as math — for currency, escape as \\$`);
+    }
+    return protect(`$${m}$`);
+  });
   s = s.replace(/`([^`\n]+)`/g, (_, code: string) => protect(`\\texttt{${texEscape(code)}}`));
 
   // 2. blindhide fenced divs (may span paragraphs; \blindhide is \long)
-  s = s.replace(/^::: *blindhide *\n([\s\S]*?)\n^:::\s*$/gm, (_, inner: string) => `${protect(`\\blindhide{${inline(spans(inner.trim(), ctx), ctx)}}`)}\n`);
+  s = s.replace(/^::: *blindhide *\n([\s\S]*?)\n^:::\s*$/gm, (_, inner: string) => `${protect(`\\blindhide{${inline(spans(inner.trim(), ctx, warn), ctx)}}`)}\n`);
 
   // 3. claim spans + self-cites (span text runs the inline pipeline internally)
-  s = spans(s, ctx);
+  s = spans(s, ctx, warn);
 
   // 4. blocks: headings, lists, paragraphs — inline pipeline on each run of prose
   const isAbstract = String(data.class ?? "") === "doco:Abstract";
@@ -187,11 +215,14 @@ export function renderSection(md: string, fileSlug: string, warn?: (msg: string)
         sectionOpened = true;
         if (isAbstract) out.push("\\begin{abstract}");
         else out.push(`\\section{${inline(title, ctx)}}\\label{sec:${fileSlug}}`);
-        // provenance stamp right under the section head (draft-only at compile)
+        // provenance stamp right under the section head (draft-only at compile);
+        // never inside the abstract environment — it would typeset ahead of the
+        // abstract's own prose
         const grounds = Array.isArray(data.grounds) ? (data.grounds as string[]).join(", ") : "";
-        if (data.updated) out.push(`\\editiostamp{${texEscape(String(data.updated))}}{${texEscape(grounds)}}`);
+        if (data.updated && !isAbstract) out.push(`\\editiostamp{${texEscape(String(data.updated))}}{${texEscape(grounds)}}`);
         out.push("");
       } else {
+        if (hashes.length === 1) warn?.(`${ctx}: a second top-level "# " heading — one section file is one \\section; rendered as \\subsection`);
         const cmd = hashes.length <= 2 ? "\\subsection" : "\\subsubsection";
         out.push(`${cmd}{${inline(title, ctx)}}`);
         out.push("");
@@ -204,6 +235,8 @@ export function renderSection(md: string, fileSlug: string, warn?: (msg: string)
     } else if (line.trim() === "") {
       flushPara(); closeList();
     } else {
+      if (/^#{4,}\s/.test(line)) warn?.(`${ctx}: "${line.slice(0, 24)}…" — headings stop at ### in the subset; rendered as prose`);
+      if (/^\s+(?:[-*]|\d+\.)\s+/.test(line)) warn?.(`${ctx}: indented list item flattened into the line above — nested lists are not in the subset`);
       para.push(line.trim());
     }
   }
@@ -215,14 +248,20 @@ export function renderSection(md: string, fileSlug: string, warn?: (msg: string)
     `% class: ${data.class ?? "?"} · status: ${data.status ?? "?"}`,
     "",
   ];
-  // collapse runs of blank lines, restore protected segments
-  const tex = restore(head.concat(out).join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n");
+  // collapse runs of blank lines
+  const joined = head.concat(out).join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 
-  // leftover-span lint: an unbalanced or malformed span leaves `]{.claim}` (or kin)
-  // in the output — visible only by eye in the built PDF, so say it here instead.
-  const leftovers = tex.match(/\]\{\.(?:claim|self|validated|conjectured|unsourced)\b|\{\.claim\b/g);
-  if (leftovers?.length) warn?.(`${ctx}: ${leftovers.length} span(s) survived unrendered (check bracket balance): ${[...new Set(leftovers)].join(" · ")}`);
-  return tex;
+  // leftover-span lint, PRE-restore: protected content (inline code, raw fences)
+  // is still   markers here, so legitimate `{.claim}` quoted in code can't
+  // false-positive — and genuinely corrupted spans (missing dot, misspelled
+  // class, nested spans) surface as escaped `]\{…` residue no keyword list
+  // could enumerate.
+  const leftovers = joined.match(/\]\\\{\.?[\w-][^\n]{0,28}|\\\{\.claim\b[^\n]{0,28}/g);
+  if (leftovers?.length) {
+    const shown = [...new Set(leftovers.map((l) => (l.length > 26 ? `${l.slice(0, 23)}…` : l)))];
+    warn?.(`${ctx}: ${leftovers.length} span(s) survived unrendered (check bracket/attr syntax): ${shown.join(" · ")}`);
+  }
+  return restore(joined);
 }
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
@@ -243,7 +282,8 @@ export function sectionOrder(paper: string): string[] {
 
 const HELP = `editio-render — the reference md -> tex renderer (see editio-latex/references/authoring-subset.md)
 usage:
-  editio-render.ts [--root <dir>] --all          render every sections/*.md next to its source
+  editio-render.ts [--root <dir>] [--all]        render every sections/*.md next to its source
+                                                 (the default when --file is absent)
   editio-render.ts --file <path> [--stdout]      render one file (stdout = print, no write)
   editio-render.ts --concat [out.md]             concatenate sections (main.tex order) into one
                                                  markdown file (stdout when no path) — for reviews
@@ -263,7 +303,7 @@ if (import.meta.main) {
 
   if (!file && !existsSync(sections)) {
     console.error(`editio-render: no ${sections} — not an editio workspace (searched upward from the cwd). Run editio-scaffold at the project root, or pass --root <dir>.`);
-    process.exit(1);
+    process.exit(2); // same "not a workspace" code as every sibling CLI
   }
 
   if (argv.includes("--concat")) {

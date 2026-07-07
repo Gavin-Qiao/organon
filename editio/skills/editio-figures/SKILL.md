@@ -21,7 +21,9 @@ contracts.
 3. **Size to the slot at creation.** Single column or full width, in mm, from the venue
    (`venue.json`: `column_width_mm` / `full_width_mm`). The scaffolded
    `figures/editio.mplstyle` already carries the venue's single-column figsize and print-size
-   fonts. **Never post-scale** (`width=\columnwidth` around a wrong-sized PDF shrinks every
+   fonts; its default height is the golden ratio (width / 1.618) — override per figure when
+   the content wants taller. Note `editio-figcheck` gates **width only**; height stays the
+   author's call. **Never post-scale** (`width=\columnwidth` around a wrong-sized PDF shrinks every
    font out of spec) and **never save with `bbox_inches='tight'`** (it re-crops the page and
    changes the physical width under you).
 4. **Build through the menu** (`references/tools-by-job.md`) — vector PDF by default, colors

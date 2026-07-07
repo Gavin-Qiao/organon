@@ -76,13 +76,16 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 
 1. **Draft** — wrap checkable claims in `{.claim}` spans (ungraded is fine).
 2. **Retrieve** — promptus `recall` looks each claim up; every hit carries `substrate:status`.
-3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports a grade per span.
-4. **Apply or override** — grades are written back into the source; disagreement is an
-   in-span `override="reason"`, on the record.
+3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports findings per
+   flagged span; the session maps them to grades.
+4. **Apply or override** — grades are written back into the source. An in-span
+   `override="reason"` passes the gate **on the record** for an `.unsourced` claim (the
+   author accepts it) or a `.validated` claim over weak grounds — never for an ungraded
+   span (ungraded means the loop hasn't run; run it).
 5. **Render** — grades become `\claimV / \claimC / \claimU / \claimG` in draft.
 6. **Gate** — publish requires **no ungraded, no unsourced, no overclaims**.
 
-## What ships — Phases 1–3 (the spine compile-verified in all three modes)
+## What ships
 
 | piece | what it does |
 |---|---|
@@ -93,9 +96,9 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 | `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |
 | `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files (incl. the per-venue `figures/editio.mplstyle`) refresh only with `--force` |
 | `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass; cwd-proof, warns on unrendered spans, `--concat` exports one reviewable markdown file |
-| `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies, every ungraded span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims) |
+| `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies and drafted-word counts (vs each section's `budget:`), every ungraded/unsourced span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims over weak/unknown/absent grounds) |
 | `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
-| `editio-doctor.ts` | workspace health, report-only — the scaffold version stamp vs the installed plugin, venue drift, stale `editio.sty`, stale/unwired sections, hand-cite fences, identity leaking into prose (`--strict` exits 1 for CI) |
+| `editio-doctor.ts` | workspace health, report-only — the scaffold version stamp vs the installed plugin, declared-order drift (which withholds the `--force` advice), venue drift, stale `editio.sty`, a hand-finished `front/metadata.tex`, stale/unwired sections, hand-cite fences, identity leaking into prose (`--strict` exits 1 for CI) |
 | `editio-numbers` | **one source of truth per number**: `numbers.json` names each value once, `@num:handle` binds it in prose/math/captions ([`editio-numbers` skill](skills/editio-numbers/SKILL.md)), `--write` generates `front/numbers.tex` + a source-hash lock, `--gate` fails on stale/unknown bindings |
 | `editio.sty` | the three-mode render layer |
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
