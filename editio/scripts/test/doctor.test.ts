@@ -7,7 +7,7 @@
  */
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -202,4 +202,35 @@ test("a hand-finished front/metadata.tex (no GENERATED header) is flagged before
   const r = run(DOCTOR, root);
   expect(r.out).toContain("FLAG metadata");
   expect(r.out).toContain("hand-finished");
+});
+
+// ──────────── strays: hand-saved PDFs in the paper source root (the Gauging-Ψ incident) ────────────
+
+test("a stray PDF in the paper source root is flagged per file; PDFs under build/ are not", () => {
+  const root = healthy();
+  mkdirSync(paper(root, "build"), { recursive: true });
+  writeFileSync(paper(root, "build", "main_pub.pdf"), "%PDF-1.5 current publish build");
+  const clean = run(DOCTOR, root);
+  expect(clean.out).not.toContain("FLAG strays"); // build/ is where PDFs belong
+
+  // the incident shape: a bare default name plus an ad-hoc snapshot, both loose in the root
+  writeFileSync(paper(root, "main.pdf"), "%PDF-1.5 three-versions-stale draft");
+  writeFileSync(paper(root, "gauging-psi-v1.pdf"), "%PDF-1.5 hand-saved snapshot");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG strays");
+  expect(r.out).toContain("main.pdf sits in the paper source root");
+  expect(r.out).toContain("gauging-psi-v1.pdf sits in the paper source root");
+  expect(r.out).toContain("archive/");
+  expect(run(DOCTOR, root, "--strict").status).toBe(1);
+});
+
+test("a stray that byte-duplicates a build/ output is called out as safe to delete", () => {
+  const root = healthy();
+  mkdirSync(paper(root, "build"), { recursive: true });
+  writeFileSync(paper(root, "build", "main_pub.pdf"), "%PDF-1.5 identical bytes");
+  writeFileSync(paper(root, "main.pdf"), "%PDF-1.5 identical bytes");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG strays");
+  expect(r.out).toContain("byte-for-byte copy of build/main_pub.pdf");
+  expect(r.out).toContain("safe to delete");
 });
