@@ -18,6 +18,7 @@
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
+import { writeIdentity } from "./editio-identity.ts";
 import { findRoot, parseFrontmatter, paperDir, slugify, texEscape } from "./lib.ts";
 
 // ── Token protection ─────────────────────────────────────────────────────────
@@ -336,6 +337,16 @@ if (import.meta.main) {
       const dest = t.replace(/\.md$/, ".tex");
       writeFileSync(dest, tex);
       console.log(`editio-render: ${t} -> ${dest}`);
+    }
+  }
+
+  // --all also refreshes the identity data layer, so a paper.json edit propagates to
+  // every consumer (metadata / bios / titles) in the same command that renders prose.
+  if (!file && existsSync(join(paper, "paper.json"))) {
+    try {
+      for (const f of writeIdentity(root).changed) console.log(`editio-render: ${f} regenerated (identity data from paper.json)`);
+    } catch (e) {
+      warn(`identity data not regenerated — ${(e as Error).message}`);
     }
   }
 }

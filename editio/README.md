@@ -71,7 +71,11 @@ history: commit the paper dir (the `build*/` dirs stay ignored) and tag mileston
 
 No TeX yet? The `editio-latex` skill sets one up in ~5 minutes — detect-first, per-OS,
 never vendored. Your title and authors live in **`paper.json`** and nowhere else; it
-scaffolds as placeholders (`Author One`), and blind builds mask it automatically.
+scaffolds as placeholders (`Author One`), blind builds mask it automatically, and
+`editio-identity` delivers it to every document as generated data macros
+(`front/identity.tex`: `\PaperTitle`, `\AuthorList`, bios) — one paper.json edit
+updates the title, author block, and bios everywhere, and the doctor flags any name
+hard-coded outside the macros.
 
 ## Three renders, one source
 

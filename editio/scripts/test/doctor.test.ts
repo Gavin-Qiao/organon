@@ -235,6 +235,34 @@ test("a stray that byte-duplicates a build/ output is called out as safe to dele
   expect(r.out).toContain("safe to delete");
 });
 
+// ──────────── identity data: one source of truth, delivered via macros ────────────
+
+test("a stale front/identity.tex (paper.json edited, never regenerated) is flagged", () => {
+  const root = healthy();
+  const meta = paper(root, "paper.json");
+  writeFileSync(meta, read(meta).replace("Untitled", "A Freshly Retitled Paper"));
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG identity");
+  expect(r.out).toContain("does not match paper.json");
+  expect(run(DOCTOR, root, "--strict").status).toBe(1);
+});
+
+test("a hard-coded author name or title in a document .tex is flagged toward the macros", () => {
+  const root = healthy();
+  const meta = paper(root, "paper.json");
+  writeFileSync(meta, read(meta)
+    .replace("Author One", "Grace Hopper")
+    .replace("Untitled", "A Long Enough Hardcoded Title"));
+  run(RENDER, root, "--all"); // regenerates identity.tex, so only the hard-codes flag
+  writeFileSync(paper(root, "front", "notes.tex"),
+    "% hand-carried block\n\\author{Grace Hopper}\n\\title{A Long Enough Hardcoded Title}\n");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG identity");
+  expect(r.out).toContain('front/notes.tex hard-codes author "Grace Hopper"');
+  expect(r.out).toContain("front/notes.tex hard-codes the paper title");
+  expect(r.out).toContain("\\PaperTitle");
+});
+
 // ──────────── vcs: the paper's history is git's job (the zero-versions incident) ────────────
 
 const git = (root: string, ...a: string[]) => spawnSync("git", ["-C", root, ...a], { encoding: "utf8" });

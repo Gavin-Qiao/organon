@@ -18,6 +18,7 @@
     "\\renewcommand{\\floatpagefraction}{0.85}"
   ],
   "author_format": "ieee-journal",
+  "bio_env": "IEEEbiographynophoto",
   "engine": "pdflatex",
   "review": "single-anonymous by default; double-anonymous on justified request (editor's discretion)",
   "limits": {

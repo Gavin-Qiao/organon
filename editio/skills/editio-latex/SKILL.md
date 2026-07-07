@@ -30,7 +30,14 @@ bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" [--venue arxiv|tpami] [--
 Idempotent: authored files (`paper.json`, `sections/*.md`, `refs.bib`, the schema) are seeded
 once and never overwritten; generated files (`main.tex`, `front/metadata.tex`, `editio.sty`,
 `.latexmkrc`) refresh only with `--force`. Identity lives in `paper.json` **only** — edit it
-there; the generated metadata wraps it in `\ifeditioblind` so blind builds mask it.
+there, and it reaches every document as **data macros**: `editio-identity` generates
+`front/identity.tex` (`\PaperTitle`, `\AuthorList`, `\CorrAuthorShort`, `\Author…Name`, …) and,
+for venues with a `bio_env`, `front/bios.tex`; the generated metadata assembles the venue's
+author block *from those macros* and wraps it in `\ifeditioblind` so blind builds mask it.
+Class-specific formatting stays in the consumers; the macros are pure data. Changing the title,
+author order, or corresponding author is one paper.json edit + `editio-render --all` (which
+regenerates the identity layer) — the doctor flags a stale `identity.tex` or a name hard-coded
+in any document `.tex`.
 
 ## Build
 

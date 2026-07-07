@@ -14,6 +14,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { writeIdentity } from "./editio-identity.ts";
 import { findRoot, paperDir, readJSON, texEscape } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -45,24 +46,24 @@ function humanize(slug: string): string {
   return slug.split("-").map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 }
 
-/** front/metadata.tex from paper.json — blind-safe via \ifeditioblind. */
+/**
+ * front/metadata.tex — assembles the venue's author block FROM the identity data
+ * macros (front/identity.tex, generated from paper.json by editio-identity). Nothing
+ * here hand-writes a name or a title, so identity edits never touch this file:
+ * class-specific FORMAT lives here, the DATA lives in the macros. Blind-safe via
+ * \ifeditioblind.
+ */
 function metadataTex(meta: any, authorFormat: string): string {
-  const authorsFull = (meta.authors as any[]).map((a) => {
-    const notes = [a.affiliation, a.email].filter(Boolean).join(". ");
-    return authorFormat === "ieee-journal"
-      ? `${a.name}`
-      : `${texEscape(a.name)}${notes ? `\\thanks{${texEscape(notes)}}` : ""}`;
-  });
-  const author = authorFormat === "ieee-journal"
-    ? `${authorsFull.map(texEscape).join(", ")}${(meta.authors as any[]).some((a) => a.affiliation)
-        ? `\\thanks{${(meta.authors as any[]).filter((a) => a.affiliation).map((a) => texEscape(`${a.name} is with ${a.affiliation}.`)).join(" ")}}`
-        : ""}`
-    : authorsFull.join(" \\and ");
   const blindLabel = texEscape(meta.blind?.label ?? "Anonymous Authors");
+  const author = authorFormat === "ieee-journal"
+    ? "\\AuthorList\\thanks{\\IdentityThanks}"
+    : "\\AuthorListAnd\\thanks{\\IdentityThanks}";
   return [
     "% front/metadata.tex — GENERATED from paper.json by editio-scaffold (--force to regenerate).",
-    "% Identity lives in paper.json only; blind mode masks it here at compile time.",
-    `\\title{${texEscape(meta.title ?? "Untitled")}}`,
+    "% Identity DATA comes from front/identity.tex (editio-identity); this file only assembles",
+    "% the venue's author block from those macros. Blind mode masks it here at compile time.",
+    "\\input{front/identity}",
+    "\\title{\\PaperTitle}",
     "\\ifeditioblind",
     `  \\author{${blindLabel}}`,
     "\\else",
@@ -158,9 +159,14 @@ function main(argv: string[]): number {
   ].join("\n");
   if (generate(join(paper, ".latexmkrc"), rc, force)) log("wrote .latexmkrc (build with: latexmk main.tex)");
 
-  // 6. front/metadata.tex — generated from paper.json.
+  // 6. The identity data layer + its consumer.
+  //    front/identity.tex (+ bios.tex) is pure derived data — regenerated whenever it
+  //    is stale, no --force needed (nobody should hand-edit it; paper.json is the
+  //    source). front/metadata.tex assembles the venue's block FROM those macros and
+  //    keeps --force semantics (a hand-finished one is the author's, the doctor flags it).
+  for (const f of writeIdentity(root).changed) log(`wrote ${f} (identity data from paper.json)`);
   if (generate(join(paper, "front", "metadata.tex"), metadataTex(meta, venue.author_format ?? "plain"), force)) {
-    log("wrote front/metadata.tex (blind-masked via \\ifeditioblind)");
+    log("wrote front/metadata.tex (assembles identity macros; blind-masked via \\ifeditioblind)");
   }
 
   // 6b. figures/editio.mplstyle — generated from venue widths, so figures are born at

@@ -1,5 +1,5 @@
 {
-  "_note": "editio paper metadata — the one place identity lives. Scaffolded with placeholders (never anyone's real name); edit freely. editio-scaffold generates front/metadata.tex from this; re-run with --force after edits.",
+  "_note": "editio paper metadata — the one place identity lives. Scaffolded with placeholders (never anyone's real name); edit freely. editio-identity generates front/identity.tex (data macros every document consumes) from this — rerun it (or editio-render --all) after edits; 'corresponding': true marks the corresponding author (default: the first).",
   "title": "Untitled",
   "short_title": "",
   "authors": [
@@ -7,7 +7,8 @@
       "name": "Author One",
       "affiliation": "Affiliation One",
       "email": "",
-      "orcid": ""
+      "orcid": "",
+      "corresponding": true
     }
   ],
   "keywords": [],

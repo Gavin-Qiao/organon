@@ -25,8 +25,11 @@
  *   wiring     sections/*.md that main.tex never inputs (silently unbuilt prose)
  *   fences     plain ```latex fences carrying \cite/\ref/\cref (the latex+ fence
  *              renders those; plain fences stay byte-raw by contract)
- *   identity   paper.json author names appearing in section prose (identity lives
- *              in front/metadata.tex only, where blind mode can mask it)
+ *   identity   identity outside its home: paper.json author names in section prose;
+ *              names or the full title HARD-CODED in a document .tex (they must
+ *              arrive via the front/identity.tex macros, where blind mode and a
+ *              paper.json edit can reach them); a front/identity.tex gone stale
+ *              against paper.json (run editio-identity)
  *   strays     output PDFs sitting in the paper source root (builds are out-of-tree
  *              in build/, so a loose copy is hand-saved: stale-prone, not gitignored
  *              the way build/ is, and able to shadow the real output by name)
@@ -43,6 +46,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { identityTexOf } from "./editio-identity.ts";
 import { findRoot, paperDir, readJSON } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -220,6 +224,37 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     flag("strays", twin
       ? `${name} sits in the paper source root — a byte-for-byte copy of ${twin}: redundant now and stale the moment the paper rebuilds, safe to delete (read PDFs from the build dirs)`
       : `${name} sits in the paper source root — editio builds out-of-tree to build/, so this is a hand-saved copy: likely stale, not gitignored (build/ is), and its name can shadow the real build; move it to archive/ under a dated, self-describing name, or delete it`);
+  }
+
+  // identity data layer — front/identity.tex is derived from paper.json (editio-identity);
+  // drift means the paper builds with yesterday's authorship. And identity must arrive
+  // via the macros: a name or the full title hard-coded in a document .tex is the
+  // five-files-per-authorship-change incident waiting to recur.
+  const identityPath = join(paper, "front", "identity.tex");
+  if (!existsSync(identityPath)) {
+    notes.push("no front/identity.tex — pre-0.5.0 workspace; editio-identity generates it from paper.json");
+  } else {
+    try {
+      if (norm(readFileSync(identityPath, "utf8")) !== norm(identityTexOf(meta))) {
+        flag("identity", "front/identity.tex does not match paper.json — run editio-identity (or editio-render --all)");
+      }
+    } catch (e) {
+      flag("identity", `front/identity.tex cannot be derived from paper.json — ${(e as Error).message}`);
+    }
+  }
+  const title = String(meta.title ?? "");
+  const docTexes = [
+    "main.tex",
+    ...(existsSync(join(paper, "front")) ? readdirSync(join(paper, "front")).filter((f) => f.endsWith(".tex")).map((f) => `front/${f}`) : []),
+  ].filter((rel) => !["front/identity.tex", "front/bios.tex", "front/numbers.tex"].includes(rel) && existsSync(join(paper, rel)));
+  for (const rel of docTexes) {
+    const tex = norm(readFileSync(join(paper, rel), "utf8"));
+    for (const name of authors) {
+      if (tex.includes(name)) flag("identity", `${rel} hard-codes author "${name}" — identity arrives via the front/identity.tex macros (\\AuthorList, \\Author…Name); reference those instead`);
+    }
+    if (title && title !== "Untitled" && title.length >= 10 && tex.includes(title)) {
+      flag("identity", `${rel} hard-codes the paper title — use \\PaperTitle (front/identity.tex) so a paper.json edit reaches every consumer`);
+    }
   }
 
   // vcs — the markdown sources ARE the paper, so git is its version history
