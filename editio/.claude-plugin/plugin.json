@@ -1,6 +1,6 @@
 {
   "name": "editio",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "The academic-writing toolchain for Claude Code — turn a promptus store's validated knowledge into a defensible, submittable paper: DoCO/DEO-grounded structure, one markdown source with three renders (draft / publish / blind), publication-grade figures and tables, a bibliography from the lit store, venue packaging, and rebuttals. Ships the humanizer style toolkit. Requires the promptus plugin.",
   "author": {
     "name": "Mohan Qiao",
