@@ -27,6 +27,7 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | see where the paper stands (per-section claim tallies, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded span at file:line) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
 | run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
+| check the workspace against the installed plugin (stale scaffold, venue drift, unrendered/unwired sections, identity in prose) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
 | design, size, caption, or color a figure | the `editio-figures` skill (claim-first; venue widths from `venue.json`) |
 | verify a figure PDF is the slot size | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-figcheck.ts" <fig.pdf> --slot single` |
