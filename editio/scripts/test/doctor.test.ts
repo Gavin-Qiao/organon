@@ -291,6 +291,44 @@ test("gitignored paper sources (the incident shape) are flagged with the un-igno
   expect(r.out).toContain("build*/ dirs ignored");
 });
 
+// ──────────── paths: naked file paths in prose are generation dirt ────────────
+
+test("naked file paths in prose are flagged per kind; inline code and fences are exempt", () => {
+  const root = healthy();
+  const intro = paper(root, "sections", "introduction.md");
+  writeFileSync(intro, read(intro) + [
+    "",
+    "Our pipeline is defined in figures/gauge/plot.py and logs to C:\\Users\\someone\\runs.",
+    "The full sweep lives in results/sweep_3.json as documented.",
+    "Deliberate mentions like `numbers.json` or fenced ones are the author's call:",
+    "```latex",
+    "\\includegraphics{figures/gauge/fig.pdf}",
+    "```",
+    "See https://example.org/paper.pdf for the preprint.",
+    "",
+  ].join("\n"));
+  run(RENDER, root, "--all");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG paths");
+  expect(r.out).toContain('"figures/gauge/plot.py"');
+  expect(r.out).toContain("workspace-internal path");
+  expect(r.out).toContain("C:\\Users\\someone");
+  expect(r.out).toContain('"results/sweep_3.json"');
+  expect(r.out).not.toContain("numbers.json");            // inline code is deliberate
+  expect(r.out).not.toContain("figures/gauge/fig.pdf");   // fenced LaTeX is deliberate
+  expect(r.out).not.toContain("example.org");             // URLs are \url content, not dirt
+  expect(r.out).toMatch(/introduction\.md:\d+/);
+  expect(run(DOCTOR, root, "--strict").status).toBe(1);
+});
+
+test("a clean paper (no naked paths) raises no paths flag", () => {
+  const root = healthy();
+  const intro = paper(root, "sections", "introduction.md");
+  writeFileSync(intro, read(intro) + "\nWe evaluate on three suites and report @num:headline-mean throughout, and/or the I/O cost.\n");
+  run(RENDER, root, "--all");
+  expect(run(DOCTOR, root).out).not.toContain("FLAG paths");
+});
+
 // ──────────── budget: the venue's page bill, surfaced before submission ────────────
 
 test("a build exceeding the venue page limit is flagged; one within it is a note", () => {

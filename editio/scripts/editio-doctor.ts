@@ -40,6 +40,10 @@
  *   budget     a built PDF exceeding the venue's page limit (venue.json
  *              limits.pages_regular vs the build's own page count) — the overlength
  *              bill surfaces before submission, not on the invoice
+ *   paths      naked file paths in section prose (generation dirt: workspace
+ *              internals, absolute paths leaking a username, stray artifact files) —
+ *              a path in inline code or a fence is deliberate typesetting and exempt;
+ *              prose names artifacts via figures / tables / citations / @num handles
  *
  * Report-only by design: every fix is judgment or an existing command. `--strict`
  * exits 1 when anything is flagged (CI / pre-submission gating); a missing
@@ -81,6 +85,25 @@ export function pdfPages(bytes: string): number | null {
   if (counts.length) return Math.max(...counts);
   const pages = bytes.match(/\/Type\s*\/Page\b/g);
   return pages ? pages.length : null;
+}
+
+/** Path-shaped tokens that read as generation dirt in paper prose, most specific first. */
+const PATH_PATTERNS: [RegExp, string][] = [
+  [/(?:^|[^\w.])((?:\.promptus|\.editio|sections|figures|front|build)\/[\w./\\-]+)/g, "workspace-internal path"],
+  [/([A-Za-z]:\\[\w\\.-]+|\/(?:home|Users|tmp|var|usr|etc|mnt|opt)\/[\w./-]+)/g, "absolute OS path"],
+  [/(?:^|[\s("'[{])((?:[\w.-]+\/)+[\w.-]+\.[A-Za-z]\w{0,4})\b/g, "relative file path"],
+  [/(?:^|[\s("'[{])([\w-]+\.(?:py|ipynb|json|csv|tsv|yaml|yml|toml|md|tex|bib|sty|pdf|png|jpg|jpeg|svg|sh|bash|ts|js|log|pkl|ckpt|pt|npz|txt))\b/gi, "bare artifact filename"],
+];
+
+/** Naked paths on one prose line (inline code already stripped), longest-match wins. */
+export function pathHits(line: string): { hit: string; kind: string }[] {
+  const clean = line.replace(/https?:\/\/\S+/g, ""); // URLs are \url content, not dirt
+  const all: { hit: string; kind: string }[] = [];
+  for (const [re, kind] of PATH_PATTERNS) {
+    for (const m of clean.matchAll(re)) if (!all.some((o) => o.hit === m[1])) all.push({ hit: m[1], kind });
+  }
+  // "figures/x/plot.py" should flag once, not again as the bare "plot.py" inside it
+  return all.filter((h) => !all.some((o) => o.hit !== h.hit && o.hit.includes(h.hit)));
 }
 
 const semverLt = (a: string, b: string) => {
@@ -214,6 +237,22 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     md.split("\n").forEach((raw, i) => {
       for (const name of authors) {
         if (raw.includes(name)) flag("identity", `sections/${slug}.md:${i + 1} names author "${name}" in prose — identity belongs in front/metadata.tex, where blind mode masks it`);
+      }
+    });
+
+    // paths — naked file paths in prose are generation dirt (a drafting model cites
+    // its own build internals; an absolute path even leaks a username). The rule:
+    // inline code and fences are deliberate typesetting and exempt; naked prose isn't.
+    const mdLines = md.split("\n");
+    let inFence = false;
+    let inFrontmatter = mdLines[0]?.trim() === "---";
+    mdLines.forEach((raw, i) => {
+      if (i === 0 && inFrontmatter) return;
+      if (inFrontmatter) { if (raw.trim() === "---") inFrontmatter = false; return; }
+      if (/^\s*```/.test(raw)) { inFence = !inFence; return; }
+      if (inFence) return;
+      for (const { hit, kind } of pathHits(raw.replace(/`[^`]*`/g, ""))) {
+        flag("paths", `sections/${slug}.md:${i + 1} — naked file path "${hit}" in prose (${kind}) — name artifacts via figures, tables, citations, or @num handles; if the path IS the content, set it in inline code or a fence`);
       }
     });
   }
