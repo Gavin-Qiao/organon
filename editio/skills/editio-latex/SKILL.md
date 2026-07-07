@@ -58,6 +58,13 @@ flags these as `strays`). For a durable snapshot ("the version I sent co-authors
 into an `archive/` dir under a dated, self-describing name — e.g.
 `mypaper_2026-07-07_publish.pdf` — never a bare `main.pdf` beside the sources.
 
+**Versioning.** The markdown sources ARE the paper, so git is its version history —
+editio does not rebuild version control one layer up. Commit the paper dir (sections,
+`paper.json`, `numbers.json`, `refs.bib`; keep the `build*/` dirs ignored) and tag
+milestones (`paper-v1-submitted`, `paper-v2-camera`): diffs, history, and "the version
+I sent co-authors" all come from git. The doctor flags sources a repo ignores or never
+tracked — a gitignored paper dir means zero committed versions of a submittable paper.
+
 ## Preview one section (the big-paper latency fix)
 
 Write `_preview.tex` next to `main.tex`:

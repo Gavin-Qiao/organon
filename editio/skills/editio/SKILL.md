@@ -27,7 +27,7 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | see where the paper stands (per-section claim tallies, drafted words vs `budget:`, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded/unsourced span at file:line) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
 | run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
-| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
+| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root, gitignored/untracked sources) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
 | bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts" --write` |
 | verify the paper's numbers still match their sources | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |
 | fix the voice / de-AI a passage | the `humanizer` skill |

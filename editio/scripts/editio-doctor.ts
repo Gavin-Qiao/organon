@@ -30,11 +30,16 @@
  *   strays     output PDFs sitting in the paper source root (builds are out-of-tree
  *              in build/, so a loose copy is hand-saved: stale-prone, not gitignored
  *              the way build/ is, and able to shadow the real output by name)
+ *   vcs        paper sources inside a git repo but gitignored or never tracked (the
+ *              markdown IS the paper, so git is its version history — milestone tags,
+ *              diffs, "the version I sent co-authors"; editio does not rebuild
+ *              version control one layer up)
  *
  * Report-only by design: every fix is judgment or an existing command. `--strict`
  * exits 1 when anything is flagged (CI / pre-submission gating); a missing
  * workspace exits 2 either way.
  */
+import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -215,6 +220,24 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     flag("strays", twin
       ? `${name} sits in the paper source root — a byte-for-byte copy of ${twin}: redundant now and stale the moment the paper rebuilds, safe to delete (read PDFs from the build dirs)`
       : `${name} sits in the paper source root — editio builds out-of-tree to build/, so this is a hand-saved copy: likely stale, not gitignored (build/ is), and its name can shadow the real build; move it to archive/ under a dated, self-describing name, or delete it`);
+  }
+
+  // vcs — the markdown sources ARE the paper, so git is its version history
+  // (milestone tags, diffs, "the version I sent co-authors" — editio does not
+  // rebuild version control one layer up). A real repo kept .editio/ out of git:
+  // a submitted paper existed in zero committed versions. Flag only the measured
+  // hazard (a repo that ignores or never tracked the sources); no repo at all is
+  // the project's call and stays a note.
+  const git = (...args: string[]) => spawnSync("git", ["-C", paper, ...args], { encoding: "utf8" });
+  const inRepo = git("rev-parse", "--is-inside-work-tree");
+  if (inRepo.error || inRepo.status !== 0) {
+    notes.push("vcs: no git repository — paper history is untracked");
+  } else if (git("check-ignore", "-q", "paper.json").status === 0) {
+    flag("vcs", "the paper sources are gitignored — the markdown is the paper, so the repo holds zero versions of it; un-ignore the paper dir (keep the build*/ dirs ignored), commit, and tag milestones like paper-v1-submitted");
+  } else if (git("ls-files", "--error-unmatch", "paper.json").status !== 0) {
+    flag("vcs", "the paper sources sit in a git repo but are never tracked — git add the paper dir (keep the build*/ dirs ignored), commit, and tag milestones like paper-v1-submitted");
+  } else {
+    notes.push("vcs: sources tracked");
   }
 
   return { findings, notes };

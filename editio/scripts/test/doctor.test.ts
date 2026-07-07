@@ -234,3 +234,38 @@ test("a stray that byte-duplicates a build/ output is called out as safe to dele
   expect(r.out).toContain("byte-for-byte copy of build/main_pub.pdf");
   expect(r.out).toContain("safe to delete");
 });
+
+// ──────────── vcs: the paper's history is git's job (the zero-versions incident) ────────────
+
+const git = (root: string, ...a: string[]) => spawnSync("git", ["-C", root, ...a], { encoding: "utf8" });
+
+test("paper sources in a git repo but never tracked are flagged; tracked sources clear it", () => {
+  const root = healthy();
+  expect(git(root, "init", "-q").status).toBe(0);
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG vcs");
+  expect(r.out).toContain("never tracked");
+  expect(run(DOCTOR, root, "--strict").status).toBe(1);
+
+  git(root, "add", ".editio");
+  const r2 = run(DOCTOR, root);
+  expect(r2.out).not.toContain("FLAG vcs");
+  expect(r2.out).toContain("vcs: sources tracked");
+});
+
+test("gitignored paper sources (the incident shape) are flagged with the un-ignore advice", () => {
+  const root = healthy();
+  expect(git(root, "init", "-q").status).toBe(0);
+  writeFileSync(join(root, ".gitignore"), ".editio/\n");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG vcs");
+  expect(r.out).toContain("gitignored");
+  expect(r.out).toContain("build*/ dirs ignored");
+});
+
+test("outside any git repo the doctor notes untracked history without flagging", () => {
+  const root = healthy(); // scratch dirs live under the OS tmpdir, outside any repo
+  const r = run(DOCTOR, root);
+  expect(r.out).not.toContain("FLAG vcs");
+  expect(r.out).toContain("vcs: no git repository");
+});
