@@ -41,9 +41,13 @@ The bound in @eq:entropy holds for any finite alphabet.
 [The gate refuses off-vocab writes even under load ([@sec:methods]), as prior
 work anticipated [@shannon1948]]{.claim .validated grounds=the-gate}.
 
+The frozen benchmark mean is @num:bakeoff-mean-ari (the drift was
+$\Delta = @num:bakeoff-mean-ari - 0.866$), and [the fixed configuration
+leads at @num:bakeoff-mean-ari]{.claim .validated grounds=the-gate}.
+
 ```latex+
 \begin{table}[tb]
-  \caption{Grounding beats retrieval alone [@vaswani2017]; details in @sec:methods.}
+  \caption{Grounding beats retrieval alone [@vaswani2017]; mean @num:bakeoff-mean-ari; details in @sec:methods.}
   \label{tab:grounding}
 \end{table}
 ```

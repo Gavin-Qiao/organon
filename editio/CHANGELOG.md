@@ -8,6 +8,21 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ### Added
 
+- **`editio-numbers` — one source of truth for every load-bearing number** (learned from
+  the second dogfood: a headline mean typed into eight sentences across three files, drift
+  caught by luck, reconciled by a fifteen-pair sed script). `numbers.json` names each value
+  once (handle → value + `source` files + `computed_by`); `--write` binds them into
+  `front/numbers.tex` (`\editionum{handle}` via `\csname`) and locks a sha256 of every
+  source; the report names stale / unknown / unused handles; `--gate` exits 1 on drift —
+  a deliberate freeze is `"pinned": "reason"`, passing on the record. Authoring subset
+  v1.2: bare `@num:handle` binds in prose, inside `$…$`, and in ```` ```latex+ ```` fences
+  (plain ```` ```latex ```` stays byte-raw and the report flags `@num:` there); `[@num:x]`
+  is refused. An unbound handle typesets loudly (boxed `??handle??` + package warning) —
+  the render never blocks; the gate enforces. New skill `editio-numbers` distills the
+  discipline (bind values, re-grade the claim around a changed number, ledger the
+  correction) with verified references (Claerbout & Karrenbach; Sweave's `\Sexpr`; knitr;
+  Sandve et al. Rules 4 + 10).
+
 - **`editio-doctor.ts` — workspace health, report-only** (the second dogfood: a live paper
   sat on a pre-0.3.0 `main.tex` with none of the venue float discipline, and nothing could
   tell). Named checks: the scaffold **version stamp** (`main.tex` now carries

@@ -30,7 +30,9 @@ Work through this checklist, then stop at the single next action.
      (run inside `.editio/paper/`);
    - building fine → figures through the `editio-figures` skill (claim-first, sized to the
      venue slot, gated by `editio-figcheck.ts`), or `humanizer` for voice.
-6. **Before any submission talk**: the publish gate —
-   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` must pass (no ungraded, no
-   unsourced, no overclaims); then build `publish` (and `blind` if the venue is
-   double-blind) per `editio-latex`.
+6. **Before any submission talk**: the publish gates —
+   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (no ungraded, no
+   unsourced, no overclaims) and
+   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts" --gate` (every bound number
+   fresh against its sources, or pinned on the record) must both pass; then build
+   `publish` (and `blind` if the venue is double-blind) per `editio-latex`.

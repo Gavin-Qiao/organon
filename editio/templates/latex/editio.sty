@@ -56,6 +56,14 @@
   \newcommand{\editiotodo}[1]{}
 \fi
 
+% ── Bound numbers (single source of truth) ──────────────────────────────────
+% \editionum{handle} typesets the value bound to <handle> in front/numbers.tex
+% (written by editio-numbers --write from numbers.json). The value exists in ONE
+% generated file; prose, math, and captions carry only the handle. An unbound
+% handle typesets loudly (like an undefined \ref) and warns — the render never
+% blocks; editio-numbers --gate is the enforcement, before submission.
+\newcommand{\editionum}[1]{\ifcsname editionum@#1\endcsname\csname editionum@#1\endcsname\else\PackageWarning{editio}{unbound number handle "#1" - run editio-numbers}\fbox{\texttt{??#1??}}\fi}
+
 % ── Blind masking ────────────────────────────────────────────────────────────
 % \selfcite{key} cites normally except in blind, where it prints an anonymous
 % marker. \blindhide{...} content is dropped in blind (acknowledgements, grant

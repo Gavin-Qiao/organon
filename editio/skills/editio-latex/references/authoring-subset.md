@@ -1,4 +1,4 @@
-# The editio authoring subset (v1.1)
+# The editio authoring subset (v1.2)
 
 The markdown a section may use. Deliberately small: it compiles to `editio.sty` macros and
 plain LaTeX, never inline LaTeX idioms in prose — so the corpus survives a renderer swap
@@ -40,6 +40,7 @@ budget: 800                 # advisory word budget (lint, Phase 5)
 | `[@key]`, `[@a; @b]` | `\cite{key}` / `\cite{a,b}` |
 | `[@fig:x]` · bare `@fig:x @tab:y @sec:z @eq:w` | `\cref{…}` (prefix-dispatched; mixing cite and cref keys in one group is an error) |
 | `[@key]{.self}` | `\selfcite{key}` (masked in blind) |
+| bare `@num:handle` | `\editionum{handle}` — the value bound in `front/numbers.tex` (v1.2; one source of truth per number, see the `editio-numbers` skill). Works in prose, inside `$…$`, and in ```` ```latex+ ```` fences; never bracketed (`[@num:x]` is an error); plain ```` ```latex ```` stays byte-raw |
 | everything else | escaped automatically (`% & # _ { } ~ ^ \` are safe in prose) |
 
 ## Claim spans (the audit loop's carrier)
@@ -63,7 +64,7 @@ parses by balanced brackets (v1.1; the first dogfood's bug). A span that still f
 parse leaves `]{.claim}` residue in the output, and the renderer now **warns on stderr**
 when any survives — it never blocks (that stays the gate's job).
 
-## Not in v1.1 (use the ```latex / ```latex+ escape hatch)
+## Not in v1.2 (use the ```latex / ```latex+ escape hatch)
 
 Markdown tables and figures (they arrive with editio-tables / editio-figures as units),
 nested lists, footnotes, nested claim spans.

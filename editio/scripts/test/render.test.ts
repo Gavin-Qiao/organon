@@ -93,3 +93,31 @@ test("lib: front-matter lists and scalars parse; slugify is label-safe", () => {
   expect(data.grounds).toEqual(["a-b", "c"]);
   expect(slugify("Related Work!")).toBe("related-work");
 });
+
+test("@num:handle binds in prose, math, claim spans, and latex+ captions — never in byte-raw fences", () => {
+  const tex = renderSection([
+    "# T",
+    "",
+    "Mean @num:bakeoff-mean-ari in prose and $\\Delta = @num:bakeoff-mean-ari$ in math.",
+    "",
+    "[leads at @num:bakeoff-mean-ari]{.claim .validated grounds=g}",
+    "",
+    "```latex+",
+    "\\caption{mean @num:bakeoff-mean-ari}",
+    "```",
+    "",
+    "```latex",
+    "raw @num:bakeoff-mean-ari stays",
+    "```",
+    "",
+  ].join("\n"), "t");
+  const bound = tex.match(/\\editionum\{bakeoff-mean-ari\}/g) ?? [];
+  expect(bound.length).toBe(4); // prose + math + claim + latex+ caption
+  expect(tex).toContain("$\\Delta = \\editionum{bakeoff-mean-ari}$");
+  expect(tex).toContain("\\claimV{leads at \\editionum{bakeoff-mean-ari}}");
+  expect(tex).toContain("raw @num:bakeoff-mean-ari stays"); // the byte-raw contract holds
+});
+
+test("a bracketed [@num:x] is refused — handles go bare", () => {
+  expect(() => renderSection("# T\n\n[@num:x]\n", "t")).toThrow(/bare/);
+});

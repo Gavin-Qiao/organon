@@ -44,6 +44,7 @@ const CROSSREF = /^(fig|tab|sec|eq):/;
 function cites(s: string, ctx: string): string {
   s = s.replace(/\[@([^\]]+)\]/g, (_, inner: string) => {
     const keys = inner.split(";").map((k) => k.trim().replace(/^@/, ""));
+    if (keys.some((k) => k.startsWith("num:"))) throw new Error(`${ctx}: @num: handles go bare in prose (@num:x), never inside [@…]`);
     const refs = keys.every((k) => CROSSREF.test(k));
     const none = keys.every((k) => !CROSSREF.test(k));
     if (!refs && !none) throw new Error(`${ctx}: mixed \\cite and \\cref keys in [@${inner}]`);
@@ -51,6 +52,10 @@ function cites(s: string, ctx: string): string {
   });
   // bare crossrefs: @sec:methods in running prose
   s = s.replace(/(^|[\s(])@((?:fig|tab|sec|eq):[A-Za-z0-9:_-]+)/g, (_, pre, key) => `${pre}${protect(`\\cref{${key}}`)}`);
+  // bound numbers: @num:handle → \editionum{handle}. The VALUE never enters any
+  // .tex except front/numbers.tex (editio-numbers --write) — one source of truth,
+  // zero typed copies (the second dogfood's reconcile-by-sed pain).
+  s = s.replace(/@num:([a-z0-9][a-z0-9-]*)/g, (_, h) => protect(`\\editionum{${h}}`));
   return s;
 }
 
@@ -147,8 +152,10 @@ export function renderSection(md: string, fileSlug: string, warn?: (msg: string)
   s = s.replace(/```latex\+\n([\s\S]*?)```/g, (_, tex) => `\n${protect(cites(tex.trimEnd(), ctx))}\n`);
   s = s.replace(/```latex\n([\s\S]*?)```/g, (_, tex) => `\n${protect(tex.trimEnd())}\n`);
   s = s.replace(/```(\w*)\n([\s\S]*?)```/g, (_, _lang, code) => `\n${protect(`\\begin{verbatim}\n${code.trimEnd()}\n\\end{verbatim}`)}\n`);
-  s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, math) => protect(`\\[${math.trim()}\\]`));
-  s = s.replace(/\$([^$\n]+)\$/g, (_, math) => protect(`$${math}$`));
+  //    math passes through raw, except @num:handle — a bound number is exactly the
+  //    kind of token that lives inside $…$ (mean ARI $@num:x$), so bind before protecting
+  s = s.replace(/\$\$([\s\S]+?)\$\$/g, (_, math: string) => protect(`\\[${math.trim().replace(/@num:([a-z0-9][a-z0-9-]*)/g, "\\editionum{$1}")}\\]`));
+  s = s.replace(/\$([^$\n]+)\$/g, (_, math: string) => protect(`$${math.replace(/@num:([a-z0-9][a-z0-9-]*)/g, "\\editionum{$1}")}$`));
   s = s.replace(/`([^`\n]+)`/g, (_, code: string) => protect(`\\texttt{${texEscape(code)}}`));
 
   // 2. blindhide fenced divs (may span paragraphs; \blindhide is \long)

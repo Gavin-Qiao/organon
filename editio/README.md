@@ -96,6 +96,7 @@ scaffolds as placeholders (`Author One`), and blind builds mask it automatically
 | `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies, every ungraded span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims) |
 | `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
 | `editio-doctor.ts` | workspace health, report-only — the scaffold version stamp vs the installed plugin, venue drift, stale `editio.sty`, stale/unwired sections, hand-cite fences, identity leaking into prose (`--strict` exits 1 for CI) |
+| `editio-numbers` | **one source of truth per number**: `numbers.json` names each value once, `@num:handle` binds it in prose/math/captions ([`editio-numbers` skill](skills/editio-numbers/SKILL.md)), `--write` generates `front/numbers.tex` + a source-hash lock, `--gate` fails on stale/unknown bindings |
 | `editio.sty` | the three-mode render layer |
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
 | venues | `arxiv`, `tpami` — venues are **data folders** (widths, fonts, class, bib style); add one without touching a script |
@@ -170,6 +171,20 @@ rule ([CONTRIBUTING — "References are load-bearing"](../CONTRIBUTING.md#refere
   <https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary>
 - Garrett JD. SciencePlots. <https://github.com/garrettj403/SciencePlots>
   <https://doi.org/10.5281/zenodo.4106649>
+
+**Numbers — one source of truth**
+([`editio-numbers/references/`](skills/editio-numbers/references/))
+
+- Claerbout JF, Karrenbach M (1992). Electronic documents give reproducible research a
+  new meaning. *SEG Technical Program Expanded Abstracts*: 601–604.
+  <https://doi.org/10.1190/1.1822162>
+- Leisch F (2002). Sweave: Dynamic Generation of Statistical Reports Using Literate Data
+  Analysis. *Compstat 2002*: 575–580. <https://doi.org/10.1007/978-3-642-57489-4_89>
+- Xie Y (2015). *Dynamic Documents with R and knitr* (2nd ed.). Chapman & Hall/CRC.
+  <https://doi.org/10.1201/9781315382487>
+- Sandve GK, Nekrutenko A, Taylor J, Hovig E (2013). Ten Simple Rules for Reproducible
+  Computational Research. *PLOS Computational Biology* 9(10): e1003285.
+  <https://doi.org/10.1371/journal.pcbi.1003285>
 
 **Upstream code**
 
