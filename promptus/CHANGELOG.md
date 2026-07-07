@@ -17,6 +17,23 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Fixed
+
+- **kb-add degrades gracefully when the vocab marker is gone** (a fresh clone whose
+  schema was git-ignored, a repo split): instead of the hard root-detection failure
+  that pushed a real project into hand-appending at the sentinel, the gate re-seeds
+  the template vocab with a loud warning and writes — remediation named, friction gone.
+- **promptus-doctor check flags catalog lag**: ledger units the derived catalog doesn't
+  carry (hand-appends at the sentinel skip kb-add's incremental index; a real project
+  sat ~10 entries stale before anyone noticed) — the fix is always just `kb-index`.
+- **promptus-doctor check flags root-level twins** of namespaced stores
+  (`schema/kb-vocab.json`, `ledger/RESEARCH-LEDGER.md`, `TELOS.md` beside a current
+  `.promptus/`): pre-migration leftovers can only diverge, since the gate writes
+  `.promptus/` alone — named before they need a 264-reference dedup again.
+- **kb-find has `--help`**: the `--substrate`/`--status`/`--hops`/`--limit`/`--snippet`
+  flags existed since day one but nothing advertised them — a real retrieval agent
+  eyeballed 30-line result lists for want of a slice. Discoverability, not new machinery.
+
 ## [0.6.1] - 2026-07-03
 
 ### Added
