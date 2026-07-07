@@ -19,6 +19,13 @@ Releases are git tags `editio-vX.Y.Z`.
   ` ```latex+ ` nudge), and author names from `paper.json` leaking into section prose.
   Every fix stays the author's move (usually `editio-scaffold --force`, which never touches
   authored files); `--strict` exits 1 for CI and pre-submission gating.
+- **The doctor knows when its own advice is unsafe** (a sandbox `--force` dry-run on the
+  dogfood paper would have rewired four core sections out of the build, seeded three stub
+  sections, and clobbered a hand-finished author block): an **order** check compares
+  `main.tex`'s wired sections against the *declared* order (`paper.json` × the project's
+  own `doco-deo.json`) — a paper legitimately outgrows its declared order, and until it's
+  reconciled the `--force` advice is withheld; a **metadata** check spots a hand-finished
+  `front/metadata.tex` (no GENERATED header) that regeneration would clobber.
 
 ## [0.3.0] - 2026-07-04
 
