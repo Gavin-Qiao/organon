@@ -19,6 +19,15 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ### Fixed
 
+- **The checkpoint now owns research digestion** (a real project's findings substrate went
+  dark for a week while ledger events and lit units kept accumulating — deep-research
+  reports were landing as events + citations, never as digested knowledge): `/checkpoint`
+  step 1 names in-conversation research reports as perishable and routes each into a
+  `finding` unit; the `research-ledger` skill states the rule as a table — a research
+  effort has **three homes** (event → ledger, sources → lit, digested reasoning →
+  finding), and the closing "not part of the minimal flush" carve-out no longer exempts
+  perishable reports.
+
 - **kb-add degrades gracefully when the vocab marker is gone** (a fresh clone whose
   schema was git-ignored, a repo split): instead of the hard root-detection failure
   that pushed a real project into hand-appending at the sentinel, the gate re-seeds

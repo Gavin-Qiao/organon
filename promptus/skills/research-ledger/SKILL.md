@@ -55,6 +55,24 @@ it to `.promptus/schema/kb-vocab.json` if it's here to stay. (finding / lit / me
 `challenges`, `supports`, `extends`, `fixes`. They export to CiTO / PROV-O via
 `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-export.ts"`. Example headers: `RESULT/VALIDATED`, `DEADEND/REFUTED`, `RESULT/CONFOUNDED`.
 
+## A research effort has three homes — the digest is the one that gets skipped
+
+A deep-research (your own, or an agent team's report) is not stored when its *event* is:
+
+| what | home | via |
+|---|---|---|
+| that it happened, what was decided | ledger | `kb-add --substrate ledger` (as you go) |
+| the sources it read | lit | `kb-add --substrate lit --source …` (one per source) |
+| **what we now know — the digested reasoning** | **finding** | `kb-add --substrate finding` |
+
+The first two happen naturally; the third is the one a real project went dark on for a
+week (ledger events and 44 lit units accumulating, zero new findings). An in-conversation
+research report is **perishable** — compaction keeps the conclusion but destroys the
+reasoning, the alternatives weighed, and the methodology. If a report earned tokens,
+digest it into a finding unit *in the same session*: terse, linky (`[[lit-slugs]]`),
+stating what was adopted, what was rejected and why, and where any shipped artifact of it
+lives. The ledger entry then records only the event, as it should.
+
 ## Disciplines that make it worth keeping
 
 1. **Artifact-coupling.** Every `RESULT` names a reproducible artifact (path or run-id) *and*
