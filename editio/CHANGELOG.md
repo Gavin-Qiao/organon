@@ -6,6 +6,21 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-07
+
+### Added
+
+- **`editio-doctor` gains a `vcs` check** (the same incident, one layer down: the
+  workspace whose stray PDFs 0.4.1 learned to flag also kept `.editio/` out of git —
+  a submittable paper existed in **zero committed versions**, and nothing could say so).
+  The markdown sources ARE the paper, so git is its version history — editio does not
+  rebuild version control one layer up. The doctor now flags paper sources that sit in
+  a git repo but are gitignored or never tracked (report-only, `--strict` honored); a
+  workspace outside any repo gets a note, not a flag — that is the project's call. The
+  skills/README state the convention the flag points at: commit the paper dir, keep the
+  `build*/` dirs ignored, and tag milestones (`paper-v1-submitted`) — diffs, history,
+  and "the version I sent co-authors" all come from git.
+
 ## [0.4.1] - 2026-07-07
 
 ### Added
@@ -186,7 +201,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...HEAD
+[0.4.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...editio-v0.4.2
 [0.4.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.0...editio-v0.4.1
 [0.4.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.3.0...editio-v0.4.0
 [0.3.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.2.0...editio-v0.3.0
