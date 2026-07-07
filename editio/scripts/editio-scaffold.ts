@@ -116,11 +116,33 @@ function main(argv: string[]): number {
   if (generate(join(paper, "editio.sty"), readFileSync(join(TEMPLATES, "latex", "editio.sty"), "utf8"), force)) log("wrote editio.sty");
 
   // 5. main.tex — generated from the template + venue data.
+  //    IEEE journal mode moves the abstract INTO the title block: compsoc's sans-serif
+  //    abstract + Index Terms live in \IEEEtitleabstractindextext above the columns
+  //    (the third dogfood eyeballed real accepted TPAMI PDFs against ours), so the
+  //    abstract leaves the body flow for those venues. Running heads (\markboth) come
+  //    from the identity macros, blind-guarded.
+  const ieee = venue.author_format === "ieee-journal";
   const inputs = order
     .filter((c) => c !== "doco:BibliographicReferenceList") // the bibliography is main.tex's own tail
+    .filter((c) => !(ieee && c === "doco:Abstract")) // IEEE: the abstract renders inside the title block
     .map((c) => gate.section_slugs?.[c] ?? c.split(":").pop()!.toLowerCase())
     .map((slug) => `\\InputIfFileExists{sections/${slug}}{}{}`)
     .join("\n");
+  const runningHead = venue.running_head
+    ? [`\\ifeditioblind\\markboth{${venue.running_head}}{\\PaperShortTitle}\\else\\markboth{${venue.running_head}}{\\AuthorRunning: \\PaperShortTitle}\\fi`]
+    : [];
+  const titleBlock = [
+    ...runningHead,
+    ...(ieee
+      ? [
+          "\\IEEEtitleabstractindextext{%",
+          "\\InputIfFileExists{sections/abstract}{}{}%",
+          "\\begin{IEEEkeywords}\\PaperKeywords\\end{IEEEkeywords}}",
+          "\\maketitle",
+          "\\IEEEdisplaynontitleabstractindextext",
+        ]
+      : ["\\maketitle"]),
+  ].join("\n");
   const packages = (venue.packages ?? [])
     .map((p: string) => (p.startsWith("[") ? `\\usepackage${p}` : `\\usepackage{${p}}`))
     .join("\n");
@@ -132,6 +154,7 @@ function main(argv: string[]): number {
     .replace("EDITIO_CLASS", venue.class)
     .replace("EDITIO_EXTRA_PACKAGES\n", packages ? `${packages}\n` : "")
     .replace("EDITIO_VENUE_PREAMBLE\n", preamble ? `${preamble}\n` : "")
+    .replace("EDITIO_TITLEBLOCK", titleBlock)
     .replace("EDITIO_SECTIONS", inputs)
     .replace("EDITIO_BIBSTYLE", venue.bib_style)
     .replace("EDITIO_BIB", String(meta.bibliography ?? "refs.bib").replace(/\.bib$/, ""));

@@ -46,6 +46,16 @@ bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all   # md → tex
 latexmk main.tex                                              # → build/main.pdf (the .latexmkrc drives it)
 ```
 
+**Venue fidelity (IEEE journals).** For `ieee-journal` venues the generated `main.tex`
+matches what accepted papers actually look like: the abstract renders inside
+`\IEEEtitleabstractindextext` (compsoc's full-width sans-serif abstract + **Index Terms**
+above the columns — `\PaperKeywords` comes from paper.json's `keywords`), running heads
+come from `\markboth` fed by the identity macros (blind-guarded), and the renderer
+applies the `\IEEEPARstart` drop cap to the first body paragraph when the venue sets
+`par_start` — don't hand-write any of it; the markdown stays venue-neutral. Author
+bios take `"bio"` prose and a `"photo"` path per author in paper.json (photo →
+`IEEEbiography`, none → `IEEEbiographynophoto`).
+
 **Modes.** `main.tex` defaults `\editiomode` to `draft` via `\providecommand`, so override
 without editing anything:
 

@@ -6,6 +6,31 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-07-07
+
+### Added
+
+- **`\PaperKeywords`, per-author `"bio"` prose and `"photo"` paths, `\AuthorRunning`** —
+  the identity story closes: keywords (an IEEE *first-submission* requirement) come from
+  paper.json's existing field; bio prose and photos get a safe home there too (the
+  generated `bios.tex` picks `IEEEbiography` with the photo or the no-photo environment
+  per author — hand-tuning a generated file no longer tempts).
+- **Doctor `budget` check**: a built PDF's page count (read from the pages tree) against
+  the venue's `limits.pages_regular` — "14 pages, tpami bills past 12" surfaces before
+  submission, not on the invoice.
+
+### Fixed
+
+- **A TPAMI paper built by editio now looks like a TPAMI paper** (the third dogfood
+  eyeballed accepted-preprint PDFs against ours): for `ieee-journal` venues the abstract
+  renders inside `\IEEEtitleabstractindextext` — compsoc's full-width, sans-serif
+  abstract + Index Terms block above the columns — instead of sitting in the two-column
+  flow in serif; running heads (`\markboth`) are generated from the identity macros
+  (blind-guarded, so the header never leaks a name); and the renderer applies the
+  `\IEEEPARstart` drop cap to the first body paragraph on venues that set `par_start`
+  (warning and skipping when the paragraph opens with markup). The markdown source and
+  the golden render contract stay venue-neutral — all of it is venue data + generation.
+
 ## [0.5.0] - 2026-07-07
 
 ### Added
@@ -226,7 +251,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...HEAD
+[0.5.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...editio-v0.5.1
 [0.5.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...editio-v0.5.0
 [0.4.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...editio-v0.4.2
 [0.4.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.0...editio-v0.4.1

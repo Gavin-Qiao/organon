@@ -19,6 +19,9 @@
   ],
   "author_format": "ieee-journal",
   "bio_env": "IEEEbiographynophoto",
+  "bio_env_photo": "IEEEbiography",
+  "running_head": "IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE",
+  "par_start": true,
   "engine": "pdflatex",
   "review": "single-anonymous by default; double-anonymous on justified request (editor's discretion)",
   "limits": {

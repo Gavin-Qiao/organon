@@ -291,6 +291,27 @@ test("gitignored paper sources (the incident shape) are flagged with the un-igno
   expect(r.out).toContain("build*/ dirs ignored");
 });
 
+// ──────────── budget: the venue's page bill, surfaced before submission ────────────
+
+test("a build exceeding the venue page limit is flagged; one within it is a note", () => {
+  const root = healthy("tpami"); // tpami: limits.pages_regular = 12
+  const meta = paper(root, "paper.json");
+  writeFileSync(meta, read(meta).replace('"venue": "arxiv"', '"venue": "tpami"'));
+  mkdirSync(paper(root, "build"), { recursive: true });
+  writeFileSync(paper(root, "build", "main.pdf"),
+    "%PDF-1.5\n1 0 obj\n<< /Type /Pages /Count 14 /Kids [] >>\nendobj\n");
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG budget");
+  expect(r.out).toContain("runs 14 pages");
+  expect(r.out).toContain("bills past 12");
+
+  writeFileSync(paper(root, "build", "main.pdf"),
+    "%PDF-1.5\n1 0 obj\n<< /Type /Pages /Count 11 /Kids [] >>\nendobj\n");
+  const r2 = run(DOCTOR, root);
+  expect(r2.out).not.toContain("FLAG budget");
+  expect(r2.out).toContain("pages: build/main.pdf 11/12");
+});
+
 test("outside any git repo the doctor notes untracked history without flagging", () => {
   const root = healthy(); // scratch dirs live under the OS tmpdir, outside any repo
   const r = run(DOCTOR, root);

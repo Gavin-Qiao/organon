@@ -114,6 +114,30 @@ test("a venue swap with --force resizes the mplstyle", () => {
   expect(mpl).toContain("font.size: 9"); // IEEE: figure type ~9-10pt at final size
 });
 
+test("ieee-journal venues get the compsoc title block, running heads, and no abstract in the body flow", () => {
+  const root = scratch();
+  expect(run(root, "--venue", "tpami").status).toBe(0);
+  const main = read(paper(root, "main.tex"));
+  expect(main).toContain("\\IEEEtitleabstractindextext{%");
+  expect(main).toContain("\\InputIfFileExists{sections/abstract}{}{}%"); // the abstract lives in the title block…
+  expect(main).toContain("\\begin{IEEEkeywords}\\PaperKeywords\\end{IEEEkeywords}");
+  expect(main).toContain("\\IEEEdisplaynontitleabstractindextext");
+  expect(main).toContain("\\markboth{IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE}");
+  expect(main).toContain("\\AuthorRunning: \\PaperShortTitle"); // …and the running head is macro-fed, blind-guarded
+  expect(main).toContain("\\ifeditioblind\\markboth");
+  expect(main.match(/sections\/abstract/g)?.length).toBe(1); // exactly once — not again in the body
+
+  const arxivMain = read(paper(scratchArxiv(), "main.tex"));
+  expect(arxivMain).toContain("\\maketitle");
+  expect(arxivMain).not.toContain("\\IEEEtitleabstractindextext");
+  expect(arxivMain).not.toContain("\\markboth");
+});
+function scratchArxiv(): string {
+  const root = scratch();
+  run(root, "--venue", "arxiv");
+  return root;
+}
+
 test("generated metadata is blind-safe and assembles identity from the macros only", () => {
   const root = scratch();
   run(root, "--venue", "arxiv");
