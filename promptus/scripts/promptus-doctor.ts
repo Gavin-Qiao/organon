@@ -94,6 +94,9 @@ interface Diagnosis {
   /** root-level twins of namespaced stores (pre-migration leftovers that diverge
    *  silently — the gate only ever writes .promptus/). */
   rootTwins: string[];
+  /** lit units postdating the newest digested finding — research landing as
+   *  citations without digests (the three-homes rule, research-ledger skill). */
+  digestLag: { lit: number; lastFinding: string | null } | null;
   migrationNeeded: boolean;
   plan: Step[];
   notes: string[];
@@ -281,6 +284,32 @@ function diagnose(start: string): Diagnosis {
     }
   }
 
+  // Research has three homes (research-ledger skill): event → ledger, sources → lit,
+  // digested reasoning → finding. The digest is the one that gets skipped — a real
+  // project ran a week of deep-research as ledger events + 44 lit units while the
+  // findings substrate stayed dark. The judgment (what to digest) can't be scripted;
+  // the LAG can be measured: lit units postdating the newest digested finding.
+  let digestLag: Diagnosis["digestLag"] = null;
+  if (layout === "current") {
+    const createdStamps = (dir: string): string[] => {
+      if (!existsSync(dir)) return [];
+      const out: string[] = [];
+      for (const f of readdirSync(dir)) {
+        if (!f.endsWith(".md") || f === "INDEX.md") continue;
+        try {
+          const m = readFileSync(join(dir, f), "utf8").match(/^created:\s*"?([0-9: -]+)"?\s*$/m);
+          if (m) out.push(m[1].trim());
+        } catch { /* a subdir (docs/lit) — skip */ }
+      }
+      return out.sort();
+    };
+    const findings = createdStamps(join(root, CANON.docs));
+    const lits = createdStamps(join(root, CANON.lit));
+    const lastFinding = findings.at(-1) ?? null;
+    const newerLit = lastFinding ? lits.filter((c) => c > lastFinding).length : lits.length;
+    if (newerLit >= 5) digestLag = { lit: newerLit, lastFinding };
+  }
+
   // ── Build the plan (computed statically; paths reflect the order of execution). ──
   // If a future step ever rewrites path STRINGS inside unit prose, mind the recorded
   // lesson: a blind rewrite corrupts prose that NAMES a path as an object ("delete
@@ -349,7 +378,7 @@ function diagnose(start: string): Diagnosis {
   return {
     root, vocabPath: loc.vocabPath, vocabLocation: loc.location, vocabVersion: old?.version ?? null, targetVersion,
     layout, gateReachable, gitignoreHazard, stores, telos: telosOrig, telosHygiene: telosHygiene(telosOrig),
-    catalogLag, rootTwins,
+    catalogLag, rootTwins, digestLag,
     migrationNeeded, plan, notes,
   };
 }
@@ -402,6 +431,9 @@ function reportCheck(d: Diagnosis): void {
   }
   if (d.rootTwins.length) {
     console.log(`  FLAG twins: root-level ${d.rootTwins.join(", ")} shadow the namespaced store(s) — the gate only writes .promptus/, so twins diverge; reconcile, then remove the root copy`);
+  }
+  if (d.digestLag) {
+    console.log(`  FLAG digest: ${d.digestLag.lit} lit unit(s) postdate the newest finding unit${d.digestLag.lastFinding ? ` (last digested ${d.digestLag.lastFinding})` : " (no finding units exist)"} — research is landing as citations without digests; the reasoning is perishable (three homes: research-ledger skill)`);
   }
   if (d.telosHygiene.length) {
     console.log(`  telos hygiene: ${d.telosHygiene.length} event-shaped line(s) — the Telos is direction, rewritten in place;`);

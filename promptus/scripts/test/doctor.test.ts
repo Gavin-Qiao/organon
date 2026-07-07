@@ -335,3 +335,24 @@ test("root-level twins of namespaced stores are flagged by name on a current lay
   expect(r.stdout).toContain("TELOS.md");
   expect(r.stdout).toContain("the gate only writes .promptus/");
 });
+
+test("digest lag: lit units piling past the newest finding are flagged; a fresh digest clears it", () => {
+  const root = scaffoldLegacy("root");
+  doctor(root, ["migrate", "--apply"]);
+  const lit = join(root, ".promptus", "docs", "lit");
+  mkdirSync(lit, { recursive: true });
+  writeFileSync(join(root, ".promptus", "docs", "old-digest.md"),
+    '---\nid: f1\nsubstrate: finding\nstatus: VALIDATED\ncreated: "2026-07-01 10:00:00"\n---\n# Old digest\n');
+  for (let i = 0; i < 5; i++) {
+    writeFileSync(join(lit, `paper-${i}.md`),
+      `---\nid: l${i}\nsubstrate: lit\nstatus: CITE\ncreated: "2026-07-0${3 + (i % 5)} 12:00:0${i}"\n---\n# Paper ${i}\n`);
+  }
+  const r = doctor(root, ["check"]);
+  expect(r.stdout).toContain("FLAG digest: 5 lit unit(s) postdate the newest finding unit");
+  expect(r.stdout).toContain("last digested 2026-07-01 10:00:00");
+  expect(r.stdout).toContain("three homes");
+  // digesting the research clears the flag
+  writeFileSync(join(root, ".promptus", "docs", "fresh-digest.md"),
+    '---\nid: f2\nsubstrate: finding\nstatus: VALIDATED\ncreated: "2026-07-09 09:00:00"\n---\n# Fresh digest\n');
+  expect(doctor(root, ["check"]).stdout).not.toContain("FLAG digest");
+});

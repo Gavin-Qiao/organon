@@ -10,7 +10,12 @@ whole methodology — the `research-ledger` skill owns the format (kinds, status
 NOW-header); load it if you need the spec. Work from facts; never invent entries.
 
 1. **Check.** Sweep the session for anything that exists only in the conversation, not yet in
-   a store — decisions, runs, observations, dead-ends, fixes, findings, prior art read.
+   a store — decisions, runs, observations, dead-ends, fixes, findings, prior art read —
+   **including any research report delivered in-conversation** (a deep-research, an agent
+   team's findings): its reasoning is perishable — compaction keeps the conclusion and
+   destroys the why. Digest each such report into a `finding` unit (what we now know, what
+   was rejected and why, `[[links]]` to its lit units), not just a ledger event; the
+   `research-ledger` skill's "three homes" table is the rule.
 2. **Add** each through the gate (the script owns the timestamp / id / placement):
    ```
    echo "<body>" | bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-add.ts" --substrate <s> --kind <K> --status <S> --title "…"
@@ -47,5 +52,7 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    from step 5** (a flag for the human if the work has wandered, otherwise "on course"), then: N
    added (by kind), anything flagged, and the resume line. Then it's safe to `/compact`.
 
-Distilling findings into `docs/`, chasing contradictions, archiving the log — that's deliberate
-tidying, **not** part of the minimal flush. Do it when you have the room, not as a reflex.
+Re-distilling OLD, already-stored material, chasing contradictions, archiving the log —
+that's deliberate tidying, **not** part of the minimal flush. But don't confuse tidying
+with step 1's digest duty: a research report that exists only in this conversation is
+perishable, and flushing it into a finding unit is exactly what the checkpoint is for.
