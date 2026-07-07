@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-07
+
 ### Added
 
 - **`editio-doctor` gains a `strays` check** (the third dogfood: asked "which PDF is the
@@ -184,7 +186,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...HEAD
+[0.4.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.0...editio-v0.4.1
 [0.4.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.3.0...editio-v0.4.0
 [0.3.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.2.0...editio-v0.3.0
 [0.2.0]: https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.2.0
