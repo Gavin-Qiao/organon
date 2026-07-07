@@ -6,6 +6,31 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-07
+
+### Added
+
+- **`editio-identity` — paper.json is the single source of truth for identity, delivered
+  as generated data macros** (the third dogfood measured the gap: one authorship decision
+  — swap the first and corresponding authors — took FIVE hand-edited files, with the
+  title triplicated across them). The generator reads `paper.json` and writes
+  `front/identity.tex`, pure class-agnostic `\newcommand` data: `\PaperTitle` (verbatim —
+  titles are LaTeX, math survives, fixing the old escape-the-title bug), `\PaperTitlePlain`
+  (`\texorpdfstring` collapsed), `\AuthorList` / `\AuthorListAnd`, `\AffilShared`,
+  `\CorrAuthorShort` / `\CorrEmail` (from the new `"corresponding": true` author field,
+  defaulting to the first author), `\IdentityThanks`, per-author `\Author…Name`, and
+  `\BioBody`. Venues with a `bio_env` (tpami: `IEEEbiographynophoto`) also get
+  `front/bios.tex` — per-author stubs assembled from the macros, blind-masked. The
+  scaffolded `front/metadata.tex` now *assembles* the venue's author block from the
+  macros instead of hand-writing names; `main.tex` inputs `front/bios` when present.
+  `editio-render --all` regenerates the identity layer, so one paper.json edit + one
+  command updates the title, author block, and bios everywhere. Class-specific
+  formatting stays in the consumers; the macros are data — blind mode is untouched.
+- **The doctor guards the discipline**: `front/identity.tex` drifting from `paper.json`
+  is flagged (content-diffed, like numbers), and an author name or the full title
+  **hard-coded in any document `.tex`** is flagged toward the macros — the five-file
+  incident can't quietly rebuild itself.
+
 ## [0.4.2] - 2026-07-07
 
 ### Added
@@ -201,7 +226,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...HEAD
+[0.5.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...editio-v0.5.0
 [0.4.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...editio-v0.4.2
 [0.4.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.0...editio-v0.4.1
 [0.4.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.3.0...editio-v0.4.0

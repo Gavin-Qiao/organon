@@ -28,6 +28,7 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
 | run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
 | check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root, gitignored/untracked sources) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
+| change the title / authors / corresponding author everywhere at once | edit `paper.json`, then `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-identity.ts"` (or `editio-render --all`) — regenerates `front/identity.tex`, the data macros every document assembles from |
 | bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts" --write` |
 | verify the paper's numbers still match their sources | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
@@ -41,7 +42,9 @@ Markdown is the only source of truth — the `.tex` siblings are derived and dis
 (regenerate any time; the header comment says so). Evidence truth stays in the store. The
 renderer **never blocks**: ungraded and unsourced claims render (tinted in draft); enforcement
 — zero `.unsourced`, no overclaims — is a lint gate at publish time, not a render failure.
-Identity lives in `paper.json` only, scaffolded as placeholders.
+Identity lives in `paper.json` only, scaffolded as placeholders — and it reaches the
+documents as generated data macros (`front/identity.tex`, via `editio-identity`), never
+hand-written: one paper.json edit updates the title, author block, and bios everywhere.
 
 ## The audit loop (the hinge)
 

@@ -55,7 +55,9 @@ test("authored files survive re-runs; generated files refresh only with --force"
   expect(run(root, "--venue", "arxiv", "--force").status).toBe(0); // force refreshes generated only
   expect(read(meta)).toContain("My Real Title");
   expect(read(intro)).toContain("Real prose.");
-  expect(read(paper(root, "front", "metadata.tex"))).toContain("My Real Title");
+  // the title reaches the paper as DATA: identity.tex carries it, metadata references the macro
+  expect(read(paper(root, "front", "identity.tex"))).toContain("My Real Title");
+  expect(read(paper(root, "front", "metadata.tex"))).toContain("\\title{\\PaperTitle}");
 });
 
 test("tpami venue swaps the class and bib style; unknown venues list what exists", () => {
@@ -112,11 +114,16 @@ test("a venue swap with --force resizes the mplstyle", () => {
   expect(mpl).toContain("font.size: 9"); // IEEE: figure type ~9-10pt at final size
 });
 
-test("generated metadata is blind-safe and placeholder-only", () => {
+test("generated metadata is blind-safe and assembles identity from the macros only", () => {
   const root = scratch();
   run(root, "--venue", "arxiv");
   const md = read(paper(root, "front", "metadata.tex"));
   expect(md).toContain("\\ifeditioblind");
   expect(md).toContain("Anonymous Authors");
-  expect(md).toContain("Author One");
+  expect(md).toContain("\\input{front/identity}");
+  expect(md).toContain("\\AuthorListAnd");
+  expect(md).not.toContain("Author One"); // names arrive via the data macros, never literally
+  const id = read(paper(root, "front", "identity.tex"));
+  expect(id).toContain("GENERATED from paper.json");
+  expect(id).toContain("\\newcommand{\\AuthorOneName}{Author One}");
 });
