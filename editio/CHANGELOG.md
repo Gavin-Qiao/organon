@@ -6,6 +6,19 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- **`editio-doctor` gains a `strays` check** (the third dogfood: asked "which PDF is the
+  current paper?", a real workspace offered four look-alikes — a 3-day-stale `main.pdf`
+  byte-identical to a v0 snapshot, plus two *different* PDFs sharing one v1 name — while
+  the actual current build sat under `build/` the whole time). editio builds out-of-tree,
+  so any PDF in the paper source root is a hand-saved copy: likely stale, not gitignored
+  the way the build dirs are, and able to shadow the real output by name. The doctor now
+  flags each one (report-only, like every check); a stray that byte-duplicates a `build*/`
+  output is called out as safe to delete. The skills/README state the convention the flag
+  points at: canonical PDFs live in the build dirs, the source root stays PDF-free, and a
+  durable snapshot goes in `archive/` under a dated, self-describing name.
+
 ## [0.4.0] - 2026-07-07
 
 ### Added

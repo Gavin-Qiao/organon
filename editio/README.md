@@ -60,6 +60,13 @@ latexmk main.tex                                             # → build/main.pd
 latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
 ```
 
+The canonical, always-current PDFs live in the build dirs (`build/main.pdf` draft,
+`build-publish/main.pdf` publish) — read and hand off from there; the paper source root
+stays PDF-free (the doctor flags strays). For a durable snapshot ("the version I sent
+co-authors"), copy into an `archive/` dir under a dated, self-describing name
+(`mypaper_2026-07-07_publish.pdf`) — never a bare copy in the root, where it goes stale
+and shadows the real build.
+
 No TeX yet? The `editio-latex` skill sets one up in ~5 minutes — detect-first, per-OS,
 never vendored. Your title and authors live in **`paper.json`** and nowhere else; it
 scaffolds as placeholders (`Author One`), and blind builds mask it automatically.

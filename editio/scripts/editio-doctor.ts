@@ -27,6 +27,9 @@
  *              renders those; plain fences stay byte-raw by contract)
  *   identity   paper.json author names appearing in section prose (identity lives
  *              in front/metadata.tex only, where blind mode can mask it)
+ *   strays     output PDFs sitting in the paper source root (builds are out-of-tree
+ *              in build/, so a loose copy is hand-saved: stale-prone, not gitignored
+ *              the way build/ is, and able to shadow the real output by name)
  *
  * Report-only by design: every fix is judgment or an existing command. `--strict`
  * exits 1 when anything is flagged (CI / pre-submission gating); a missing
@@ -195,6 +198,24 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
   }
   if (stale) flag("render", `${stale} section(s) have .md newer than .tex — run editio-render --all`);
   notes.push(`sections: ${slugs.length}`);
+
+  // strays — editio builds out-of-tree to build*/ dirs, so a PDF in the paper source
+  // root is a hand-saved copy (a real paper grew a 3-day-stale main.pdf and two
+  // colliding v1 snapshots shadowing the current publish build). Top-level scan only:
+  // the build dirs are subdirectories, so their outputs are naturally excluded.
+  const rootEntries = readdirSync(paper, { withFileTypes: true });
+  const buildPdfs = rootEntries
+    .filter((e) => e.isDirectory() && e.name.startsWith("build"))
+    .flatMap((d) => readdirSync(join(paper, d.name), { withFileTypes: true })
+      .filter((e) => e.isFile() && e.name.endsWith(".pdf")).map((e) => `${d.name}/${e.name}`));
+  const strays = rootEntries.filter((e) => e.isFile() && e.name.endsWith(".pdf")).map((e) => e.name).sort();
+  for (const name of strays) {
+    const bytes = readFileSync(join(paper, name));
+    const twin = buildPdfs.find((b) => bytes.equals(readFileSync(join(paper, b))));
+    flag("strays", twin
+      ? `${name} sits in the paper source root — a byte-for-byte copy of ${twin}: redundant now and stale the moment the paper rebuilds, safe to delete (read PDFs from the build dirs)`
+      : `${name} sits in the paper source root — editio builds out-of-tree to build/, so this is a hand-saved copy: likely stale, not gitignored (build/ is), and its name can shadow the real build; move it to archive/ under a dated, self-describing name, or delete it`);
+  }
 
   return { findings, notes };
 }

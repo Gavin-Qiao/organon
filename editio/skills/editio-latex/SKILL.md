@@ -50,6 +50,14 @@ latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
 `_publish.tex` containing `\def\editiomode{publish}\input{main.tex}` and build that, or use
 PowerShell/cmd.)
 
+**Outputs & snapshots.** The canonical, always-current PDFs live in the build dirs —
+`build/main.pdf` (draft), `build-publish/main.pdf` (publish) — read and hand off from
+there. The paper source root stays PDF-free: a loose copy goes stale silently, isn't
+gitignored the way the build dirs are, and can shadow the real output by name (the doctor
+flags these as `strays`). For a durable snapshot ("the version I sent co-authors"), copy
+into an `archive/` dir under a dated, self-describing name — e.g.
+`mypaper_2026-07-07_publish.pdf` — never a bare `main.pdf` beside the sources.
+
 ## Preview one section (the big-paper latency fix)
 
 Write `_preview.tex` next to `main.tex`:

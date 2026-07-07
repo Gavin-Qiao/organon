@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-06 (editio 0.3.0 released + installed)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-07-06 (0.6.2 + 0.4.0 installed and reloaded)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,51 +25,45 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (editio 0.3.0 released AND installed - the dogfood loop closed same-day; Phase 4 next)
-**The first dogfood loop is fully closed** (2026-07-04): Psi wrote a real TPAMI paper on 0.2.0,
-reported with reproductions, and the response shipped as **editio-v0.3.0** (PR #20 + cut PR #21,
-workflow-published, now Latest; operator's install moved 0.2.0 -> 0.3.0 - third cache-key proof).
-What 0.3.0 carries: **the grounding layer, tooled** - editio-status.ts (per-section claim tallies,
-ungraded spans at file:line via --claims, grounds resolved against the store, and the publish gate
-as a command: --gate fails on ungraded/unsourced/overclaims; in-span override passes on the
-record); balanced-bracket claim spans (the ]{.claim} PDF leak fixed, golden-contract case); latex+
-opt-in fences (cites/crossrefs in captions); leftover-span warnings; --concat/--help; cwd-proof
-CLIs (findRoot walks up); front/macros.tex seeded + wired (survives --force); venue preamble as
-data (tpami ships dblfloatfix + float fractions). **TPAMI verified 2026-07**: template current
-([10pt,journal,compsoc]{IEEEtran} + IEEEtran.bst); page limit corrected 14 -> 12 formatted pages
-(18 max, USD 220/page past 12); single-anonymous default - blind render OPT-IN for this venue.
-Authoring subset v1.1. Suite 166 green; end-to-end smoke on MiKTeX. **Gap ledger: G8 only.**
-Also this session: promptus-v0.6.1 (telos hygiene: doctor check + operator-triggered-edit rule +
-checkpoint memory freshness) released and installed; organon's own doctor check reads healthy.
+## NOW (promptus 0.6.2 + editio 0.4.0 released, INSTALLED, and reloaded - the loop is fully closed)
+**Both plugins live everywhere as of 2026-07-07**: released (six-PR stacked line #22-#27 via #28, cuts
+#29/#30, both workflows green), installed (claude plugin update 0.6.1->0.6.2 + 0.3.0->0.4.0 - cache-key
+proof #4), and reloaded into the running session (this checkpoint runs on 0.6.2). **editio 0.4.0**:
+editio-doctor (stamp/order/venue/metadata drift; unsafe --force advice withheld) + editio-numbers (one
+SoT per number; per-handle value+hash lock; laundering refused; content-diffed gate) + 5-agent
+adversarial-audit hardening (override= honored on .unsourced ON THE RECORD; renderer warns everywhere
+it was silent; golden contract extended; subset v1.2) + budget-words in status. **promptus 0.6.2**:
+kb-add vocab reseed, doctor flags (catalog lag / root twins / DIGEST LAG), kb-find --help, the
+research-digestion duty (three homes; five July digests backfilled). Suite 208 green. Fresh-cache
+smoke: organon healthy; Psi's doctor correctly flags order+stamp+sty drift. Memory: the stacked-PR
+merge protocol (retarget children BEFORE deleting branches).
 
 ## Open frontier
-- [ ] **Phase 4 - editio-tables / editio-bib / editio-repro** (G8 own-paper marker; refs.bib from
-  the lit store), article-driven; first requirement recorded from the dogfood: CSV/JSON -> booktabs
-  with significance marking (auto-bold best, stars).
-- [ ] **Psi's paper continues on 0.3.0** - the gate + status now real; the 12-page limit and
-  opt-in blind are new constraints its session should read.
-- [ ] **Psi/Probatio Telos cleanup** - the 0.6.1 doctor hands the worklist (Psi 2 lines, Probatio
-  3); their sessions' judgment or ours on the operator's word.
-- [ ] **Phases 5-6**: venue/rebuttal/structure-lint -> wire + sample + exemplar corpus (the claim
-  gate shipped early as editio-status --gate).
-- [ ] **Banked:** progressive-disclosure indexes; telos graph node; okf export; write-time
-  calibration ([[write-time-calibration-design]]).
-- [ ] **(deferred)** Norma seam.
+- [ ] **Psi adopts 0.4.0** - its doctor hands the worklist: reconcile the declared order (custom order
+  in their doco-deo.json copy + paper.json, THEN --force refreshes stamp+venue preamble+sty), seed
+  numbers.json from frozen results (the 8-copy headline collapses), wire background.md or archive it,
+  run both gates pre-submission.
+- [ ] **v0.4.0 scope remainder -> 0.5.0+** (article-driven): editio-tables (id-addressed generated
+  blocks + freshness binding + overflow) first, then supplement scaffold (gate must read it),
+  page-budget surfacing, editio-bib (G8); candidates: editio-build, gate umbrella, blind-leak check,
+  dual-venue, metadata generator fixes (title escape, corresponding flag).
+- [ ] **Psi/Probatio Telos cleanup** on operator word.
+- [ ] Phases 5-6 (venue/rebuttal/structure-lint); banked: progressive-disclosure indexes, telos graph
+  node, okf export, write-time calibration.
 
 ## Next actions
-1. Phase 4 (tables/bib) builds article-driven - the dogfood's booktabs request is the spec seed.
-2. Land this checkpoint's uncommitted ledger writes (the 0.3.0 RESULT + this header) with the
-   next PR.
-3. On operator word: clean the Psi/Probatio Teloi from the doctor's flagged lines.
+1. Psi's session applies the reconcile + numbers recipes (all documented in 0.4.0's skills).
+2. Next organon build: editio-tables design; merge stacked PRs by the memory protocol.
+3. Land this checkpoint's uncommitted ledger/memory writes with the next PR.
 
 ## <<< RESUME HERE AFTER COMPACTION >>>
-**EDITIO 0.3.0 RELEASED AND INSTALLED (grounding layer tooled: editio-status + --gate); PROMPTUS
-0.6.1 LIVE (telos hygiene); SUITE 166; ONLY G8 OPEN.** The dogfood loop closed same-day: Psi's
-report -> fixes -> subset v1.1 -> release. Read the Log since 2026-07-04: the dogfood FINDING,
-the response DECISION (status owns report+gate; latex+ opt-in; balanced brackets; cwd-proof),
-the TPAMI lit unit (12-page limit; single-anonymous default), and the two release RESULTs.
-Phase 4 next, article-driven (booktabs first from the dogfood's request). Uncommitted ledger
-writes ride the next PR. Read .promptus/TELOS.md, then this header, then the Log since 2026-07-04.
+**PROMPTUS 0.6.2 + EDITIO 0.4.0 RELEASED AND INSTALLED (2026-07-07, suite 208, everything green).**
+The session's full arc: second dogfood -> worklists -> editio-doctor -> editio-numbers -> 5-agent
+adversarial audit -> hardening -> research-digestion duty + digest-lag tripwire -> stacked merge ->
+two cuts -> plugin update. Five finding-unit digests exist (audit playbook, numbers SoT, venue
+measurement, figure canon, dogfood-and-mine) - retrieval has the reasoning again. Read
+.promptus/TELOS.md, this header, then the Log since 2026-07-06. Uncommitted store writes ride the
+next PR. Phase forward: editio-tables, article-driven.
 
 <!-- now:end -->
 
@@ -532,5 +526,17 @@ Operator observed the gap; the store confirms it exactly: newest finding unit wa
 
 ### [2026-07-06 23:03:07] FIX/VALIDATED — Digest-lag tripwire in the doctor: the prose duty gets its mechanical check
 Operator pushback ('Is that a promptus issue?') sharpened the diagnosis into three layers: (1) agent — the tool existed, judgment under-exercised; (2) promptus docs — research-ledger promised 'the wiki is distilled from the log at /checkpoint' while /checkpoint carved distillation out: two documents pointing at each other, the duty in the gap; (3) design — the first fix was PROSE-ONLY guidance, the project's own named disease (promise declared, not tooled). The mechanical half now shipped: promptus-doctor check flags DIGEST LAG (>=5 lit units postdating the newest finding unit, last-digested date named) — judgment can't be scripted, the lag can be measured. Verified live: organon reads healthy only because the backfill landed; pre-backfill state would have flagged. Suite 131.
+
+### [2026-07-06 23:27:38] RESULT/VALIDATED — Released promptus-v0.6.2 and editio-v0.4.0: six-PR stack merged, one cascade-close footgun recorded, both workflows green
+The full stack merged and both plugins released same-night. Merges: #22 (editio-doctor) hit a GitHub footgun — --delete-branch cascade-CLOSED stacked #23 instead of retargeting (a closed PR cannot be re-based); recovered by reopening the same branch as #28; remaining merges used the safe protocol (merge WITHOUT delete -> retarget child -> update-branch for the up-to-date rule -> merge; delete branches at the end). Then #24, #25, #26, #27, all green through the required checks. Cuts: promptus-v0.6.2 (PR #29; gate resilience, doctor catalog-lag/root-twins/digest-lag flags, kb-find --help, checkpoint digest duty) and editio-v0.4.0 (PR #30; editio-doctor + hardening, editio-numbers + lock v2, audit hardening, subset v1.2, budget-words; Added-before-Fixed category order fixed at the cut). Both release workflows: success. Note honestly recorded: 0.4.0 ships the FIRST TRANCHE of the nine-item v0.4.0 scope — tables/supplement/page-budget/bib land in later minors. 208 tests green on main. Next cache-key proof: operator runs claude plugin update (0.6.1->0.6.2, 0.3.0->0.4.0).
+
+### [2026-07-06 23:32:42] RESULT/VALIDATED — Plugins updated in place: 0.6.2 + 0.4.0 live, cache-key proof four, fresh-cache smoke green
+claude plugin update ran from the session on the operator's ask: promptus 0.6.1->0.6.2, editio 0.3.0->0.4.0 — cache-key proof #4 (the version string moved, the updater followed; four for four since the RELEASING.md rule). Fresh-cache smoke: 0.6.2 promptus-doctor reads organon healthy; 0.4.0 editio-doctor on Psi now adds the CORRECT sty flag (0.4.0's editio.sty gained editionum, so the workspace copy is stale) beside the order/stamp flags with --force advice withheld. Restart required for the running session to pick up the new plugin commands; scripts run fine from the new cache paths meanwhile. Frontier item 1 closed; Psi adoption is next.
+
+### [2026-07-07 00:26:45] FIX/VALIDATED — editio-doctor strays check: hand-saved PDFs in the paper source root are now flagged
+The third dogfood incident (Gauging-Psi, 2026-07-07): asked 'which PDF is the current paper?', the workspace offered four look-alikes - a 3-day-stale main.pdf byte-identical to a v0 snapshot, two DIFFERENT PDFs sharing the gauging-psi-v1.pdf name - while the real current build sat in build/ untouched. Root cause: editio builds out-of-tree (good) but had no affordance for saved snapshots and the doctor was blind to output PDFs in the source root. Fix (operator brief, implemented verbatim): editio-doctor gains a strays check - top-level scan of the paper root for *.pdf (build*/ subdirs naturally excluded), one FLAG per file, report-only, --strict honored, NOT in the forceUnsafe set; a stray that byte-duplicates a build*/ output is called out as safe to delete. Convention documented in editio-latex SKILL (Outputs & snapshots), README build step, and the orchestrator's check list: canonical PDFs live in the build dirs, source root stays PDF-free, durable snapshots go to archive/ under dated self-describing names. Tests: 2 attack-replaying cases in doctor.test.ts (stray flagged per file + build/ PDFs exempt + strict exit 1; byte-twin called out). Suite 208 -> 210 green. CHANGELOG under [Unreleased] (next cut).
+
+### [2026-07-07 00:26:58] RESULT/VALIDATED — Plugin installs verified git-backed: organon marketplace sources GitHub, not the local checkout
+Operator asked to verify the plugins install from git, not local files (a local-path marketplace would leak working-tree changes into the installed cache). Verified: claude plugin marketplace list shows organon -> Source: GitHub (Gavin-Qiao/organon); claude plugin list shows editio@organon 0.4.0 and promptus@organon 0.6.2 resolving through it. Nothing to change - the install path was already git-backed (the 07-07 cache-key updates pulled from GitHub).
 
 <!-- kb:append-point -->

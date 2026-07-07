@@ -8,4 +8,6 @@
 
 - [Organon naming](organon-naming.md) — marketplace Organon (repo Gavin-Qiao/organon); two plugins — promptus (the store) + editio (the writing toolchain); humanizer ships with editio
 
+- [GitHub stacked-PR merges: retarget children before deleting branches](github-stacked-pr-merges-retarget-children-before-deleting-branc.md) — delete-branch cascade-closes stacked PRs; safe merge protocol for release chains
+
 <!-- kb:append-point -->
