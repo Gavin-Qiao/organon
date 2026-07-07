@@ -6,6 +6,21 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-07-07
+
+### Added
+
+- **Doctor `paths` check — anti-path inspection for generated prose** (the recurring
+  dirt: a drafting model cites its own build internals — "see figures/x/plot.py",
+  ".promptus/docs/…" — and an absolute path even leaks a username into the PDF). The
+  rule the check encodes: **a path in inline code or a fence is deliberate typesetting;
+  a naked path in prose is dirt.** Four kinds, flagged at `file:line`:
+  workspace-internal paths, absolute OS paths, relative file paths, and bare artifact
+  filenames — URLs exempt (they're `\url` content), frontmatter and fence bodies
+  skipped. Report-only like every check; the remediation is the paper's own
+  vocabulary — figures, tables, citations, `@num` handles — or deliberate inline code
+  when the path *is* the content.
+
 ## [0.5.1] - 2026-07-07
 
 ### Added
@@ -251,7 +266,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...HEAD
+[0.5.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...editio-v0.5.2
 [0.5.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...editio-v0.5.1
 [0.5.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...editio-v0.5.0
 [0.4.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.1...editio-v0.4.2
