@@ -590,4 +590,11 @@ The Codex adapter is now explicitly OS-general. Each lifecycle hook declares a P
 The public surface now includes the OS contract in the READMEs, contributor rules for cross-OS hooks and project-local agent co-authorship, both plugin changelogs, an unreleased cross-plugin adaptation note, and a PR template. Scoped Conventional PR titles are mechanically gated on open, edit, synchronize, reopen, and ready-for-review. Evidence: bun run check passes with 252 tests, strict live-store health has zero duplicate ids, unresolved typed relations, or unclassified units, and the intended PR title passes the new gate. No release tag was created.
 ↳ supersedes event-20260710T015008Z-cross-platform-codex-adapter-and-publishable-pr
 
+### [2026-07-09 22:03:47] RESULT/VALIDATED — Draft PR 37 cross-OS CI green
+<!-- kb:id event-20260710T020347Z-draft-pr-37-cross-os-ci-green -->
+Draft PR #37 opened from feat/codex-cross-platform with the enforced title feat(codex): add cross-platform native adapters. The PR carries the unreleased note, explicit Mohan Qiao + OpenAI Codex co-authorship, and no version bump or release tag.
+
+Remote evidence is green: conventional PR title 6s; Ubuntu test + adapter validation 24s; pre-commit hygiene 20s; macOS full suite 19s; Windows full suite 57s. This closes the portability claim with actual hosted macOS and Windows execution, not only local Windows evidence.
+↳ extends event-20260710T015435Z-cross-platform-codex-adapter-and-pr-policy-verified
+
 <!-- kb:append-point -->
