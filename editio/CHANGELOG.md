@@ -17,6 +17,10 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ### Fixed
 
+- **Isolate the doctor's Git discovery from hook-scoped environment variables.** Repository-local
+  `GIT_DIR`, worktree, index, object, and prefix variables are cleared before inspecting a paper,
+  so pre-push hooks and nested worktrees cannot make unrelated temporary papers look tracked.
+
 - **Make claim grounding fail closed.** Only `finding:VALIDATED`, `lit:CITE`,
   `memory:validated`, and validated/resolved ledger evidence can ground a `.validated`
   claim; provisional, conjectured, refuted, and retired evidence can no longer pass by
