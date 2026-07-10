@@ -597,4 +597,9 @@ Draft PR #37 opened from feat/codex-cross-platform with the enforced title feat(
 Remote evidence is green: conventional PR title 6s; Ubuntu test + adapter validation 24s; pre-commit hygiene 20s; macOS full suite 19s; Windows full suite 57s. This closes the portability claim with actual hosted macOS and Windows execution, not only local Windows evidence.
 ↳ extends event-20260710T015435Z-cross-platform-codex-adapter-and-pr-policy-verified
 
+### [2026-07-09 22:31:38] DECISION/VALIDATED — Release plan for native Codex adapters
+<!-- kb:id event-20260710T023138Z-release-plan-for-native-codex-adapters -->
+The operator authorized the native Codex adaptation as two backward-compatible minor releases: Promptus 0.7.0 and Editio 0.6.0. The release PR freezes each plugin's Unreleased notes, keeps the Claude and Codex manifests in exact version parity, retires the temporary cross-plugin draft, and requires the full repository check plus both changelog gates. Tags are created only from the merged main commit as promptus-v0.7.0 and editio-v0.6.0; there is no Organon-level release.
+↳ extends event-20260710T014245Z-native-codex-support-verified-end-to-end
+
 <!-- kb:append-point -->

@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-07-09
+
 ### Added
 
 - **Add native Codex packaging and host-neutral skill paths.** The `.codex-plugin` manifest
@@ -280,7 +282,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...HEAD
+[0.6.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...editio-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...editio-v0.5.2
 [0.5.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...editio-v0.5.1
 [0.5.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.4.2...editio-v0.5.0
