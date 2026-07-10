@@ -5,6 +5,10 @@ description: Frame a paper's argument and write its sections — pick a section 
 
 # editio-structure — the argument before the prose
 
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
+
 The highest-leverage editio skill: a paper is an argument with sections as its stages. The
 structure gate (`.editio/schema/doco-deo.json`) keeps every section a real DEO/DoCO class;
 this skill keeps the classes telling one story.
@@ -13,7 +17,7 @@ this skill keeps the classes telling one story.
 
 1. **Pick the order** that matches the argument, not habit: `imrad` (empirical), `cs-systems`
    (artifact + evaluation), `theory` (problem → model → results). Scaffold seeds the stubs:
-   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" --order cs-systems`.
+   `bun "<plugin-root>/scripts/editio-scaffold.ts" --order cs-systems`.
    The schema carries more classes than the three presets use (`deo:Materials`,
    `deo:FutureWork`, `deo:Contribution`, `doco:Appendix`) — reach them by adding a custom
    order to the project's own `.editio/schema/doco-deo.json` copy (it's project-tunable;

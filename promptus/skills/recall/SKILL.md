@@ -5,6 +5,10 @@ description: Retrieve what a project already knows, with provenance and status, 
 
 # recall — retrieval reasoning
 
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
+
 Turn a question into grounded, cited knowledge. This is the reasoning layer over
 `scripts/kb-find.ts` — and where grounding lives (style stays with editio's humanizer). It is
 **auto-invoked by judgement**: if a claim under discussion could be checked against the
@@ -17,12 +21,12 @@ store, check it rather than asserting from memory.
 2. **Retrieve header-first, then fetch only what you need.** Two tiers — find the headers, then
    pull just the bodies the headers earned. For each sub-question:
    ```
-   bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-find.ts" "<sub-question>" [--substrate ledger|finding|lit|memory] [--status <S>] [--hops <n>] [--snippet]
+   bun "<plugin-root>/scripts/kb-find.ts" "<sub-question>" [--substrate ledger|finding|lit|memory] [--status <S>] [--hops <n>] [--snippet]
    ```
    The card-catalog is the index: read the returned headers (add `--snippet` to see the matched
    line), decide which units are worth the body, then fetch just those — never the whole ledger:
    ```
-   bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-get.ts" "<path>" [--title "<title>"]   # <path> = kb-find's 3rd ` · ` column
+   bun "<plugin-root>/scripts/kb-get.ts" "<path>" [--title "<title>"]   # <path> = kb-find's 3rd ` · ` column
    ```
    `kb-get` returns one unit's text — a page's whole file, or a single ledger entry's slice (not
    the ~200 it shares a file with); `--title` disambiguates a same-second anchor. Widen `--hops`

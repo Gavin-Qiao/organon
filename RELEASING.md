@@ -7,8 +7,8 @@ GitHub release whose notes come straight from `<plugin>/CHANGELOG.md`. Nothing i
 until the checks pass. The plugins version independently — cutting one never forces the other.
 
 > The marketplace never consumes releases: installs and updates pull from the repo source, and
-> the version of record is each `<plugin>/.claude-plugin/plugin.json`. Tags + releases are the
-> human-facing record and the discipline gate.
+> each plugin's `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` carry the same
+> version; validation rejects drift between them. Tags + releases are the human-facing record.
 
 ## Versioning ([SemVer](https://semver.org), per plugin)
 
@@ -26,10 +26,14 @@ calls it out.
    `## [X.Y.Z] - YYYY-MM-DD`, open a fresh empty `## [Unreleased]` above it, and update the
    link references at the bottom (the `[Unreleased]` compare URL and a new `[X.Y.Z]` tag URL,
    tags shaped `P-vX.Y.Z`).
-3. **Bump the manifest.** Set `version` in `P/.claude-plugin/plugin.json` to `X.Y.Z`.
+   If the work has a cross-plugin draft under `.github/release-notes/`, reconcile it into
+   each affected plugin's changelog first; the changelog remains the release-note source of
+   record. Do not publish the draft as an Organon-level release.
+3. **Bump both adapter manifests.** Set `version` in `P/.claude-plugin/plugin.json` and
+   `P/.codex-plugin/plugin.json` to `X.Y.Z`; the validator requires exact parity.
 4. **Sanity-check locally:**
    ```bash
-   bun run check                                            # marketplace + plugins validated, tests
+   bun run check                                            # adapters validated, live store healthy, tests
    bun promptus/scripts/changelog.ts check X.Y.Z P/CHANGELOG.md   # release-note gate
    ```
 5. **Commit** with `chore(release): cut P vX.Y.Z` (scope required; flat `- ` bullet body).
@@ -49,7 +53,7 @@ calls it out.
 ## What the release workflow guards
 
 - Marketplace + plugin structure (`bun promptus/scripts/validate-plugin.ts`) and tests (`bun test`).
-- The tag `P-vX.Y.Z` matches `P/.claude-plugin/plugin.json`'s `version`.
+- The tag `P-vX.Y.Z` matches both adapter manifests' identical `version`.
 - `P/CHANGELOG.md` has a non-empty `## [X.Y.Z]` section — and that section *is* the release note.
 
 ## Notes

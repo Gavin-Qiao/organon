@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 permissions:
@@ -14,6 +15,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pr-title:
+    name: conventional PR title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: "Require type(scope): subject"
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: bun promptus/scripts/check-pr-title.ts "$PR_TITLE"
+
   test:
     name: test + validate
     runs-on: ubuntu-latest
@@ -24,6 +39,8 @@ jobs:
           bun-version: latest
       - name: Validate marketplace + plugins (manifests + components)
         run: bun promptus/scripts/validate-plugin.ts
+      - name: Check Promptus store health
+        run: bun promptus/scripts/promptus-check.ts --strict
       - name: Run tests
         run: bun test
 
@@ -39,6 +56,8 @@ jobs:
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+      - name: Validate both agent adapters
+        run: bun promptus/scripts/validate-plugin.ts
       - name: Run tests
         run: bun test
 

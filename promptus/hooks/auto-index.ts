@@ -19,8 +19,10 @@ const indexScript = join(dirname(fileURLToPath(import.meta.url)), "..", "scripts
 const proc = Bun.spawnSync(["bun", indexScript], { cwd: root, stdout: "pipe", stderr: "pipe" });
 
 if (proc.success) {
-  process.stdout.write("Promptus: catalog re-indexed after kb-add.\n");
+  if (!input.turn_id) process.stdout.write("Promptus: catalog re-indexed after kb-add.\n");
 } else {
-  process.stderr.write("Promptus: kb-index after kb-add failed —\n" + proc.stderr.toString());
+  const message = "Promptus: kb-index after kb-add failed —\n" + proc.stderr.toString();
+  if (input.turn_id) process.stdout.write(JSON.stringify({ systemMessage: message }));
+  else process.stderr.write(message);
 }
 process.exit(0);

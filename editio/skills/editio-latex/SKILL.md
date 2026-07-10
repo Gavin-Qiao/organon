@@ -5,6 +5,10 @@ description: Build the paper — set up a TeX distribution in minutes, scaffold 
 
 # editio-latex — the typeset layer
 
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
+
 Markdown is the source of truth; this skill owns everything from the rendered `.tex` down to
 the PDF. Nothing here is vendored: TeX belongs to the user, `latexmk` is a reference driver,
 and a venue is a data folder you can add without touching a script.
@@ -24,7 +28,7 @@ and a venue is a data folder you can add without touching a script.
 ## Scaffold a workspace
 
 ```
-bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" [--venue arxiv|tpami] [--order imrad|cs-systems|theory] [--force]
+bun "<plugin-root>/scripts/editio-scaffold.ts" [--venue arxiv|tpami] [--order imrad|cs-systems|theory] [--force]
 ```
 
 Idempotent: authored files (`paper.json`, `sections/*.md`, `refs.bib`, the schema) are seeded
@@ -42,7 +46,7 @@ in any document `.tex`.
 ## Build
 
 ```
-bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all   # md → tex
+bun "<plugin-root>/scripts/editio-render.ts" --all   # md → tex
 latexmk main.tex                                              # → build/main.pdf (the .latexmkrc drives it)
 ```
 

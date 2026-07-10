@@ -1,6 +1,6 @@
 {
   "name": "organon",
-  "description": "Organon — the research toolbox for Claude Code: promptus stores / keeps / retrieves a project's knowledge as gated markdown; editio turns what the store has validated into defensible, submittable papers.",
+  "description": "Organon — the research toolbox for Claude Code and Codex: promptus stores / keeps / retrieves a project's knowledge as gated markdown; editio turns what the store has validated into defensible, submittable papers.",
   "owner": {
     "name": "Gavin-Qiao",
     "url": "https://github.com/Gavin-Qiao"

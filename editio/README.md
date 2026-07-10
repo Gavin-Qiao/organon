@@ -41,9 +41,19 @@ you run before submitting, not a build failure while thinking.
 
 ## Quick start
 
+Claude Code:
+
 ```text
 /plugin install promptus@organon      # the store (prerequisite)
 /plugin install editio@organon
+```
+
+Codex:
+
+```bash
+codex plugin marketplace add Gavin-Qiao/organon
+codex plugin add promptus@organon
+codex plugin add editio@organon
 ```
 
 Then, in a repo that has a `.promptus/` store:
@@ -52,10 +62,16 @@ Then, in a repo that has a `.promptus/` store:
 /editio arxiv                         # checks the store + TeX, scaffolds .editio/paper/
 ```
 
+In Codex, ask it to use the `editio` skill to start an arXiv paper. The skill and Claude
+command adapter execute the same workflow.
+
+The installed skills are host- and OS-neutral: they resolve `<plugin-root>` from their own
+`SKILL.md` location. Organon's CI runs the complete suite on Ubuntu, Windows, and macOS.
+
 Write `sections/*.md`, then render and build (from `.editio/paper/`):
 
 ```bash
-bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all   # md → tex
+bun editio/scripts/editio-render.ts --all                    # from an Organon checkout; installed agents use the editio skill
 latexmk main.tex                                             # → build/main.pdf, draft mode
 latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
 ```
@@ -89,7 +105,7 @@ hard-coded outside the macros.
 
 1. **Draft** — wrap checkable claims in `{.claim}` spans (ungraded is fine).
 2. **Retrieve** — promptus `recall` looks each claim up; every hit carries `substrate:status`.
-3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports findings per
+3. **Grade** — the `grounded-writing-reviewer` skill (read-only; also a Claude subagent adapter) reports findings per
    flagged span; the session maps them to grades.
 4. **Apply or override** — grades are written back into the source. An in-span
    `override="reason"` passes the gate **on the record** for an `.unsourced` claim (the
@@ -102,8 +118,8 @@ hard-coded outside the macros.
 
 | piece | what it does |
 |---|---|
-| `/editio` | start or resume a paper; always ends at one next action |
-| `editio` skill | the orchestrator — decision table, invariant, the audit loop |
+| `/editio` | Claude Code command adapter: start or resume a paper; always ends at one next action |
+| `editio` skill | portable orchestrator for Claude Code and Codex — start/resume, decision table, invariant, audit loop |
 | `editio-structure` | the argument before the prose: orders (imrad / cs-systems / theory), contribution-first framing, the abstract formula — plus craft distilled from exemplary papers ([`references/exemplars.md`](skills/editio-structure/references/exemplars.md)) |
 | `editio-latex` | TeX setup, venue scaffolding, mode builds, single-section previews, notation conventions; the authoring subset is a written contract ([`references/authoring-subset.md`](skills/editio-latex/references/authoring-subset.md)) |
 | `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |

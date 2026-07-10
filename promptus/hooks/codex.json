@@ -1,0 +1,60 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"${PLUGIN_ROOT}/hooks/session-start.ts\"",
+            "commandWindows": "bun \"%PLUGIN_ROOT%/hooks/session-start.ts\"",
+            "statusMessage": "Loading Promptus Telos and live state",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|^apply_patch$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"${PLUGIN_ROOT}/hooks/protect-gate.ts\"",
+            "commandWindows": "bun \"%PLUGIN_ROOT%/hooks/protect-gate.ts\"",
+            "statusMessage": "Protecting the Promptus write gate",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"${PLUGIN_ROOT}/hooks/auto-index.ts\"",
+            "commandWindows": "bun \"%PLUGIN_ROOT%/hooks/auto-index.ts\"",
+            "statusMessage": "Refreshing the Promptus index",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "manual|auto",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun \"${PLUGIN_ROOT}/hooks/checkpoint-nudge.ts\"",
+            "commandWindows": "bun \"%PLUGIN_ROOT%/hooks/checkpoint-nudge.ts\"",
+            "statusMessage": "Checking Promptus checkpoint state",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -2,18 +2,21 @@
   "name": "organon",
   "private": true,
   "type": "module",
-  "description": "Dev tooling for the Organon Claude Code marketplace (promptus + editio). Each plugin's manifest is <plugin>/.claude-plugin/plugin.json (the single source of its version).",
+  "description": "Dev tooling for the Organon research-toolbox marketplace (promptus + editio).",
   "scripts": {
     "test": "bun test",
     "validate": "bun promptus/scripts/validate-plugin.ts",
     "index": "bun promptus/scripts/kb-index.ts",
+    "amend": "bun promptus/scripts/kb-amend.ts",
+    "health": "bun promptus/scripts/promptus-check.ts --strict",
     "get": "bun promptus/scripts/kb-get.ts",
     "graph": "bun promptus/scripts/kb-graph.ts",
     "doctor": "bun promptus/scripts/promptus-doctor.ts",
     "ingest": "bun promptus/scripts/kb-ingest.ts",
     "export": "bun promptus/scripts/kb-export.ts",
     "changelog:check": "bun promptus/scripts/changelog.ts check",
-    "check": "bun run validate && bun test"
+    "pr-title:check": "bun promptus/scripts/check-pr-title.ts",
+    "check": "bun run validate && bun run health && bun test"
   },
   "engines": {
     "bun": ">=1.3.0"

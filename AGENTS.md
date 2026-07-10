@@ -2,11 +2,12 @@
 
 This repo dogfoods its own methodology. When you work here, you are both building
 the toolbox and using it. This file is the portable read surface (the `AGENTS.md`
-convention); the fuller map is `/promptus:help` and the `promptus` skill.
+convention); the fuller map is the `promptus` skill (`/promptus:help` in Claude Code).
 
 > **Current state: a marketplace monorepo, both plugins released** (per-plugin tags; versions
 > live in each `plugin.json`, never in prose). Two plugins under the `organon` marketplace
-> (`.claude-plugin/marketplace.json` at the root): **`promptus/`** — the store: STORE `kb-add`
+> (Claude Code: `.claude-plugin/marketplace.json`; Codex: `.agents/plugins/marketplace.json`):
+> **`promptus/`** — the store: STORE `kb-add`
 > (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`; skills `promptus`, `recall`, `grannie`, `telos`,
 > `research-ledger`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
@@ -27,17 +28,22 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
    The script owns the timestamp, the id, the placement, and the catalog update.
    This is the drift fix — freehand appends are how the old ledger lost a day.
 3. **Re-index after a batch of writes.** `bun promptus/scripts/kb-index.ts` rebuilds the derived
-   `.promptus/cache/CATALOG.md` + `graph.json`; `bun promptus/scripts/kb-graph.ts lint` checks graph
-   health (dangling `[[handles]]`, orphans).
+   `.promptus/cache/CATALOG.md` + `graph.json`; `bun promptus/scripts/promptus-check.ts --strict`
+   is the authoritative integrity gate, while `kb-graph lint` reports link debt.
 4. **Retrieve header-first.** `bun promptus/scripts/kb-find.ts "<query>"` (then `kb-get` for a unit's
    body) before you claim anything the repo already knows; every hit carries its `substrate:status`.
-5. **Checkpoint before you compact.** `/promptus:checkpoint` flushes anything un-recorded into the
+5. **Checkpoint before you compact.** The `promptus-checkpoint` skill (`/promptus:checkpoint` in
+   Claude Code) flushes anything un-recorded into the
    stores (so a compaction can't lose it), refreshes the NOW-header, reconciles memory.
 
 ## Conventions
 
-- Commits: Conventional Commits `type(scope):` + flat `-` bullet body (one line per bullet).
-  **Omit** `Co-Authored-By`. No emoji in commits, PR bodies, or release notes.
+- Commits and PR titles: Conventional `type(scope): subject`; scope is mandatory. Commit bodies
+  use flat `-` bullets. CI enforces PR titles with `check-pr-title.ts`.
+- Agent co-authorship is welcome in this project for material contributions: add
+  `- Co-authored-by: Name <email>` to the enforced flat bullet body and name the agent in the PR.
+  Never fabricate a human co-author.
+  No emoji in commits, PR bodies, or release notes.
 - Never `--no-verify`. Forward-slash paths everywhere.
 - Scripts are **TypeScript on bun** (`#!/usr/bin/env bun`); tests via `bun test`.
   `bun:sqlite` / embeddings only past a measured threshold (see the invariant).
@@ -51,11 +57,15 @@ convention); the fuller map is `/promptus:help` and the `promptus` skill.
 
 ## Layout
 
-- `.claude-plugin/marketplace.json` — the `organon` marketplace; each plugin is a subdirectory.
+- `.claude-plugin/marketplace.json` + `.agents/plugins/marketplace.json` — the Claude Code and
+  native Codex adapters for the same `organon` marketplace.
 - `promptus/` — the store plugin: `scripts/` (the mechanics: `kb-add` / `kb-now` STORE,
-  `kb-index` / `kb-graph` KEEP, `kb-find` / `kb-get` RETRIEVE, plus `kb-export`, `kb-ingest`,
-  `promptus-doctor`, and `lib/`), `skills/` (`promptus` the orchestrator, `recall`, `grannie`,
-  `research-ledger`, `telos`), `commands/`, `agents/` (`grounded-writing-reviewer`), `hooks/`,
+  `kb-amend` for existing-unit transitions, `kb-index` / `promptus-check` / `kb-graph` KEEP,
+  `kb-find` / `kb-get` RETRIEVE, plus `kb-export`, `kb-ingest`, `promptus-doctor`,
+  `check-pr-title`, and `lib/`),
+  `skills/` (`promptus` the orchestrator, `recall`, `grannie`, `research-ledger`, `telos`,
+  portable command-workflow adapters, `grounded-writing-reviewer`), Claude `commands/` +
+  `agents/`, dual-host `hooks/`,
   `templates/` (per-project four-store scaffolds incl. `schema/kb-vocab.json`).
 - `editio/` — the writing plugin: `commands/` (`/editio`), `skills/` (`editio` the orchestrator,
   `editio-structure` + its exemplar craft references, `editio-latex` + the authoring-subset

@@ -1,3 +1,11 @@
+---
+id: finding-20260710T012734Z-promptus-design-report
+substrate: finding
+kind: CONCEPT
+status: VALIDATED
+created: "2026-07-09 21:27:34"
+updated: "2026-07-09 21:27:34"
+---
 # Promptus — design report
 
 Promptus's own knowledge, dogfooded. This is the human-readable synthesis; the durable record

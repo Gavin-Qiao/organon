@@ -38,6 +38,7 @@ function run(script: string, args: string[], stdin = "") {
   return { status: r.status ?? -1, stdout: r.stdout ?? "", stderr: r.stderr ?? "" };
 }
 const add = (root: string, args: string[], body = "body") => run("kb-add.ts", ["--root", root, ...args], body);
+const amend = (root: string, args: string[]) => run("kb-amend.ts", ["--root", root, ...args]);
 const index = (root: string, args: string[] = []) => run("kb-index.ts", ["--root", root, ...args]);
 const find = (root: string, args: string[]) => run("kb-find.ts", ["--root", root, ...args]);
 const read = (root: string, ...p: string[]) => readFileSync(join(root, ...p), "utf8");
@@ -50,6 +51,9 @@ test("kb-add round-trips a ledger unit, and kb-index lists it with substrate:sta
   const r = add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "Chose bun over node"], "We picked bun for bun:sqlite.");
   expect(r.status).toBe(0);
   expect(ledger(root)).toMatch(/### \[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] RESULT\/VALIDATED — Chose bun over node/);
+  const id = /\(id (event-[^)]+)\)/.exec(r.stdout)?.[1];
+  expect(id).toBeTruthy();
+  expect(ledger(root)).toContain("<!-- kb:id " + id + " -->");
   expect(index(root).status).toBe(0);
   expect(catalog(root)).toContain("ledger:VALIDATED · Chose bun over node");
 });
@@ -62,6 +66,33 @@ test("kb-add writes finding → .promptus/docs/<slug>.md and lit → .promptus/d
   const lit = join(root, ".promptus", "docs", "lit", "kag-2024.md");
   expect(existsSync(lit)).toBe(true);
   expect(readFileSync(lit, "utf8")).toContain("arXiv:2409.13731#abstract");
+});
+
+test("kb-amend classifies an existing page through the gate and mints its missing id", () => {
+  const root = scaffold();
+  writeFileSync(join(root, ".promptus", "docs", "legacy.md"), "# Legacy note\n\nPreserve this body exactly.\n");
+  const r = amend(root, ["--path", ".promptus/docs/legacy.md", "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED"]);
+  expect(r.status).toBe(0);
+  const text = read(root, ".promptus", "docs", "legacy.md");
+  expect(text).toContain("id: finding-");
+  expect(text).toContain("substrate: finding");
+  expect(text).toContain("kind: CONCEPT");
+  expect(text).toContain("status: VALIDATED");
+  expect(text).toContain("Preserve this body exactly.");
+  expect(catalog(root)).toContain("finding:VALIDATED · Legacy note");
+});
+
+test("kb-amend is dry-run-safe and refuses off-vocab status", () => {
+  const root = scaffold();
+  const path = join(root, ".promptus", "docs", "legacy.md");
+  writeFileSync(path, "# Legacy note\n");
+  const before = readFileSync(path, "utf8");
+  const dry = amend(root, ["--path", ".promptus/docs/legacy.md", "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED", "--dry-run"]);
+  expect(dry.status).toBe(0);
+  expect(readFileSync(path, "utf8")).toBe(before);
+  const bad = amend(root, ["--path", ".promptus/docs/legacy.md", "--substrate", "finding", "--kind", "CONCEPT", "--status", "OPEN"]);
+  expect(bad.status).toBe(1);
+  expect(readFileSync(path, "utf8")).toBe(before);
 });
 
 test("kb-add rejects an unknown --status on a STRICT substrate, printing the allowed set", () => {
@@ -110,6 +141,35 @@ test("kb-add --supersedes + kb-index marks the prior finding SUPERSEDED", () => 
   add(root, ["--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED", "--title", "New claim", "--supersedes", id], "v2");
   index(root);
   expect(catalog(root)).toContain("finding:SUPERSEDED · Old claim");
+});
+
+test("kb-add persists ledger ids so ledger-to-ledger supersession is authoritative", () => {
+  const root = scaffold();
+  const old = add(root, ["--substrate", "ledger", "--kind", "DECISION", "--status", "OPEN", "--title", "Choose the storage layout"], "Operator decision pending.");
+  const oldId = /\(id (event-[^)]+)\)/.exec(old.stdout)?.[1];
+  expect(oldId).toBeTruthy();
+  const next = add(root, ["--substrate", "ledger", "--kind", "DECISION", "--status", "RESOLVED", "--title", "Use one repository", "--supersedes", oldId!], "Operator chose the monorepo.");
+  expect(next.status).toBe(0);
+  expect(index(root).status).toBe(0);
+  expect(catalog(root)).toContain("ledger:SUPERSEDED · Choose the storage layout");
+  expect(catalog(root)).toContain("ledger:RESOLVED · Use one repository");
+  const graph = JSON.parse(read(root, ".promptus", "cache", "graph.json"));
+  expect(graph.relations.some((e: { type: string; to: string }) => e.type === "supersedes" && e.to === oldId)).toBe(true);
+});
+
+test("kb-index resolves legacy ledger relation ids by their minted title slug", () => {
+  const root = scaffold();
+  writeFileSync(join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md"), [
+    "# Ledger", "",
+    "### [2026-07-02 17:37:08] DECISION/OPEN — Open: split the plugin?",
+    "Pending.", "",
+    "### [2026-07-02 17:54:20] DECISION/RESOLVED — Split the plugins",
+    "Resolved.",
+    "↳ supersedes event-20260702T213708Z-open-split-the-plugin", "",
+    "<!-- kb:append-point -->", "",
+  ].join("\n"));
+  expect(index(root).status).toBe(0);
+  expect(catalog(root)).toContain("ledger:SUPERSEDED · Open: split the plugin?");
 });
 
 test("kb-index rebuilds CATALOG.md + graph.json idempotently", () => {

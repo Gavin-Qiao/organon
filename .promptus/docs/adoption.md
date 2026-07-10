@@ -1,3 +1,11 @@
+---
+id: finding-20260710T012734Z-adoption-migrating-a-project-to-promptus
+substrate: finding
+kind: METHOD
+status: VALIDATED
+created: "2026-07-09 21:27:34"
+updated: "2026-07-09 21:27:34"
+---
 # Adoption — migrating a project to Promptus
 
 The operator adopts projects one by one, by hand. This is the checklist; nothing here is run

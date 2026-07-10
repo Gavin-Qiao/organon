@@ -15,18 +15,30 @@
  *
  * Grounds resolution: a handle resolves against file units (.promptus/docs/*,
  * docs/lit/*, memory/* — slug = filename) or a ledger entry's slugified title.
- * WEAK statuses (REFUTED / SUPERSEDED / DEADEND / CONFOUNDED / CONTESTED / retired)
- * under a .validated claim are the overclaim the audit loop exists to catch.
+ * Grounds have a deterministic strength: firm units may support .validated prose,
+ * conjectured/provisional/open units require .conjectured prose, and invalidated
+ * units (REFUTED / SUPERSEDED / DEADEND / CONFOUNDED / CONTESTED / retired)
+ * contradict either grade.
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { findRoot, paperDir, parseFrontmatter, slugify } from "./lib.ts";
 import { findSpans, parseAttrs, sectionOrder } from "./editio-render.ts";
 
-const WEAK = new Set(["REFUTED", "SUPERSEDED", "DEADEND", "CONFOUNDED", "CONTESTED", "retired"]);
-
 interface Unit { substrate: string; status: string }
 interface Claim { section: string; line: number; grade: "validated" | "conjectured" | "unsourced" | "ungraded"; text: string; grounds: string[]; override?: string }
+type GroundStrength = "firm" | "weak" | "invalid";
+
+const INVALID = new Set(["REFUTED", "SUPERSEDED", "DEADEND", "CONFOUNDED", "CONTESTED", "retired", "WONTFIX"]);
+
+function groundStrength(u: Unit): GroundStrength {
+  if (INVALID.has(u.status)) return "invalid";
+  if (u.substrate === "finding" && u.status === "VALIDATED") return "firm";
+  if (u.substrate === "lit" && u.status === "CITE") return "firm";
+  if (u.substrate === "memory" && u.status === "validated") return "firm";
+  if (u.substrate === "ledger" && (u.status === "VALIDATED" || u.status === "RESOLVED")) return "firm";
+  return "weak";
+}
 
 function arg(argv: string[], k: string): string | undefined {
   const i = argv.indexOf(`--${k}`);
@@ -131,7 +143,7 @@ function main(argv: string[]): number {
   for (const [h, where] of handles) {
     const u = units.get(h);
     if (!u) unknown.push(`${h} (${where[0]}${where.length > 1 ? ` +${where.length - 1}` : ""})`);
-    else if (WEAK.has(u.status)) weak.push(`${h} = ${u.substrate}:${u.status} (${where.join(", ")})`);
+    else if (groundStrength(u) !== "firm") weak.push(`${h} = ${u.substrate}:${u.status} (${where.join(", ")})`);
   }
 
   console.log(`editio-status: ${rows.length} section(s) — ${paper}`);
@@ -172,7 +184,13 @@ function main(argv: string[]): number {
       else if (!resolved.length) violations.push(`validated claim with only unknown grounds (${c.grounds.join(", ")}) at sections/${c.section}.md:${c.line}`);
       else for (const g of resolved) {
         const u = units.get(g)!;
-        if (WEAK.has(u.status)) violations.push(`overclaim: .validated over ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}`);
+        if (groundStrength(u) !== "firm") violations.push(`overclaim: .validated over ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}`);
+      }
+    }
+    if (c.grade === "conjectured" && !c.override) {
+      for (const g of c.grounds.filter((x) => units.has(x))) {
+        const u = units.get(g)!;
+        if (groundStrength(u) === "invalid") violations.push(`contradicted: .conjectured over ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}`);
       }
     }
   }

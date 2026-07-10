@@ -31,6 +31,20 @@ function scaffold(plugins: Array<{ name: string; source: string }>): string {
     join(root, ".claude-plugin", "marketplace.json"),
     JSON.stringify({ name: "test-mkt", owner: { name: "t" }, plugins }, null, 2),
   );
+  mkdirSync(join(root, ".agents", "plugins"), { recursive: true });
+  writeFileSync(
+    join(root, ".agents", "plugins", "marketplace.json"),
+    JSON.stringify({
+      name: "test-mkt",
+      interface: { displayName: "Test" },
+      plugins: plugins.map((p) => ({
+        name: p.name,
+        source: { source: "local", path: p.source },
+        policy: { installation: "AVAILABLE", authentication: "ON_INSTALL" },
+        category: "Productivity",
+      })),
+    }, null, 2),
+  );
   return root;
 }
 
@@ -38,6 +52,8 @@ function plugin(root: string, dir: string, manifest: Record<string, unknown>): s
   const p = join(root, dir);
   mkdirSync(join(p, ".claude-plugin"), { recursive: true });
   writeFileSync(join(p, ".claude-plugin", "plugin.json"), JSON.stringify(manifest, null, 2));
+  mkdirSync(join(p, ".codex-plugin"), { recursive: true });
+  writeFileSync(join(p, ".codex-plugin", "plugin.json"), JSON.stringify(manifest, null, 2));
   return p;
 }
 
@@ -57,7 +73,7 @@ test("a valid two-plugin marketplace passes", () => {
   writeFileSync(join(a, "commands", "hello.md"), "---\ndescription: hello command\n---\n# hello\n");
   const r = run(root);
   expect(r.status).toBe(0);
-  expect(r.out).toContain("All marketplace + plugin checks passed.");
+  expect(r.out).toContain("All marketplace + plugin adapter checks passed.");
   expect(r.out).toContain("alpha/skills/greet/SKILL.md");
 });
 
@@ -93,10 +109,27 @@ test("a marketplace manifest without a name fails", () => {
     join(root, ".claude-plugin", "marketplace.json"),
     JSON.stringify({ owner: { name: "t" }, plugins: [] }, null, 2),
   );
+  mkdirSync(join(root, ".agents", "plugins"), { recursive: true });
+  writeFileSync(
+    join(root, ".agents", "plugins", "marketplace.json"),
+    JSON.stringify({ interface: { displayName: "Test" }, plugins: [] }, null, 2),
+  );
   const r = run(root);
   expect(r.status).toBe(1);
   expect(r.out).toContain('marketplace.json missing "name"');
   expect(r.out).toContain("marketplace.json has no plugins[]");
+});
+
+test("adapter manifest version drift fails", () => {
+  const root = scaffold([{ name: "alpha", source: "./alpha" }]);
+  const a = plugin(root, "alpha", MANIFEST);
+  writeFileSync(
+    join(a, ".codex-plugin", "plugin.json"),
+    JSON.stringify({ ...MANIFEST, version: "1.0.1" }, null, 2),
+  );
+  const r = run(root);
+  expect(r.status).toBe(1);
+  expect(r.out).toContain("adapter manifests disagree on version");
 });
 
 test("hooks.json referencing a missing script fails", () => {
@@ -118,4 +151,6 @@ test("the real Organon repo validates (no --root: the script's own tree)", () =>
   expect(r.out).toContain("marketplace.json (organon: 2 plugin(s))");
   expect(r.out).toContain("promptus/.claude-plugin/plugin.json (promptus v");
   expect(r.out).toContain("editio/.claude-plugin/plugin.json (editio v");
+  expect(r.out).toContain("promptus/.codex-plugin/plugin.json (promptus v");
+  expect(r.out).toContain("Codex marketplace.json (organon: 2 plugin(s))");
 });

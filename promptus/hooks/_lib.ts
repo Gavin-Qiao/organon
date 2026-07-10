@@ -1,5 +1,5 @@
 /**
- * _lib.ts — shared helpers for the Promptus Claude Code hooks.
+ * _lib.ts — shared helpers for the Promptus Claude Code and Codex hooks.
  *
  * Every hook reads the event JSON from stdin and is a strict no-op outside a
  * Promptus repo (no `.promptus/` project), so enabling the plugin never

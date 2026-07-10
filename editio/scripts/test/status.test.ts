@@ -97,6 +97,41 @@ test("a clean paper passes the gate", () => {
   expect(r.out).toContain("publish-clean");
 });
 
+test("the status lattice blocks validated prose over conjectured or provisional grounds", () => {
+  const root = mkdtempSync(join(tmpdir(), "editio-status-lattice-"));
+  tmps.push(root);
+  mkdirSync(join(root, ".promptus", "docs"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "memory"), { recursive: true });
+  mkdirSync(join(root, ".editio", "paper", "sections"), { recursive: true });
+  writeFileSync(join(root, ".promptus", "docs", "maybe.md"), "---\nsubstrate: finding\nstatus: CONJECTURED\n---\n# Maybe\n");
+  writeFileSync(join(root, ".promptus", "memory", "tentative.md"), "---\nsubstrate: memory\nstatus: provisional\n---\n# Tentative\n");
+  writeFileSync(join(root, ".editio", "paper", "sections", "intro.md"), [
+    "---", "class: deo:Introduction", "status: final", "---", "# Intro", "",
+    "[too loud]{.claim .validated grounds=maybe} and [also too loud]{.claim .validated grounds=tentative}.", "",
+  ].join("\n"));
+  const r = run("editio-status.ts", ["--root", root, "--gate"]);
+  expect(r.status).toBe(1);
+  expect(r.out).toContain("overclaim: .validated over maybe = finding:CONJECTURED");
+  expect(r.out).toContain("overclaim: .validated over tentative = memory:provisional");
+});
+
+test("a conjectured claim may use conjectured grounds but not refuted grounds", () => {
+  const root = mkdtempSync(join(tmpdir(), "editio-status-refuted-"));
+  tmps.push(root);
+  mkdirSync(join(root, ".promptus", "docs"), { recursive: true });
+  mkdirSync(join(root, ".editio", "paper", "sections"), { recursive: true });
+  writeFileSync(join(root, ".promptus", "docs", "maybe.md"), "---\nsubstrate: finding\nstatus: CONJECTURED\n---\n# Maybe\n");
+  writeFileSync(join(root, ".promptus", "docs", "wrong.md"), "---\nsubstrate: finding\nstatus: REFUTED\n---\n# Wrong\n");
+  writeFileSync(join(root, ".editio", "paper", "sections", "intro.md"), [
+    "---", "class: deo:Introduction", "status: final", "---", "# Intro", "",
+    "[properly hedged]{.claim .conjectured grounds=maybe} and [still contradicted]{.claim .conjectured grounds=wrong}.", "",
+  ].join("\n"));
+  const r = run("editio-status.ts", ["--root", root, "--gate"]);
+  expect(r.status).toBe(1);
+  expect(r.out).toContain("contradicted: .conjectured over wrong = finding:REFUTED");
+  expect(r.out).not.toContain("over maybe");
+});
+
 test("render --concat concatenates sections in build order; --help exists; cwd-proof root", () => {
   const root = fixture();
   const cat = run("editio-render.ts", ["--root", root, "--concat"]);

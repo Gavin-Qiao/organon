@@ -24,7 +24,7 @@ import { join } from "node:path";
 import { derivedDir, findProjectRoot } from "./lib/paths.ts";
 import { unitText } from "./lib/units.ts";
 
-interface Card { substrate: string; status: string; title: string; path: string; links: string[] }
+interface Card { substrate: string; status: string; title: string; path: string; id?: string; links: string[] }
 
 function parseCatalog(text: string): Card[] {
   // Split on the ` · ` delimiter rather than a token regex, so a free-form status
@@ -38,13 +38,16 @@ function parseCatalog(text: string): Card[] {
     const substrate = parts[0].slice(0, ci);
     const status = parts[0].slice(ci + 1).trim();
     if (!substrate || !status) continue;
-    const links = parts[3] ? Array.from(parts[3].matchAll(/\[\[([^\]]+)\]\]/g)).map((x) => x[1]) : [];
-    cards.push({ substrate, status, title: parts[1], path: parts[2], links });
+    const metadata = parts.slice(3).join(" · ");
+    const id = /(?:^|\s)id:(\S+)/.exec(metadata)?.[1];
+    const links = Array.from(metadata.matchAll(/\[\[([^\]]+)\]\]/g)).map((x) => x[1]);
+    cards.push({ substrate, status, title: parts[1], path: parts[2], id, links });
   }
   return cards;
 }
 
 const slugOf = (p: string) => p.split("#")[0].split("/").pop()!.replace(/\.md$/, "");
+const graphKeyOf = (c: Card) => c.id ?? (c.path.includes("#") ? c.path : slugOf(c.path));
 
 // Unit-scoped body text (the de-noise) lives in lib/units.ts, shared with kb-get: a ledger term
 // must match only THAT entry's slice, not every entry in the shared file. unitText(root, path, title).
@@ -121,15 +124,16 @@ function main(argv: string[]): number {
   // graph-walk for associative neighbours
   const hops = Number(flag("hops") ?? 0);
   if (hops > 0 && existsSync(join(dir, "graph.json"))) {
-    const g = JSON.parse(readFileSync(join(dir, "graph.json"), "utf8")) as { out: Record<string, string[]> };
-    const seen = new Set([...picked.values()].map((x) => slugOf(x.c.path)));
+    const g = JSON.parse(readFileSync(join(dir, "graph.json"), "utf8")) as { out: Record<string, string[]>; unitOut?: Record<string, string[]> };
+    const graphOut = g.unitOut ?? g.out;
+    const seen = new Set([...picked.values()].map((x) => graphKeyOf(x.c)));
     let frontier = [...seen];
     for (let h = 0; h < hops; h++) {
       const next: string[] = [];
-      for (const n of frontier) for (const t of g.out[n] ?? []) if (!seen.has(t)) (seen.add(t), next.push(t));
+      for (const n of frontier) for (const t of graphOut[n] ?? []) if (!seen.has(t)) (seen.add(t), next.push(t));
       frontier = next;
     }
-    for (const c of cards) if (seen.has(slugOf(c.path)) && !picked.has(key(c))) picked.set(key(c), { c, s: 0 });
+    for (const c of cards) if (seen.has(graphKeyOf(c)) && !picked.has(key(c))) picked.set(key(c), { c, s: 0 });
   }
 
   const hits = [...picked.values()].sort((a, b) => b.s - a.s);
