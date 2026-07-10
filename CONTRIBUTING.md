@@ -6,8 +6,11 @@ grounded, and tested."
 ## Setup
 
 - Install [bun](https://bun.sh) (≥ 1.3).
-- `bun test` runs the suite; `bun run check` validates the marketplace + both plugins **and** runs the tests.
-- With the Claude CLI, `claude plugin validate <plugin-dir>` runs the full per-plugin check.
+- `bun test` runs the suite; `bun run check` validates both agent adapters, checks the live
+  Promptus store with `--strict`, and runs the tests.
+- With the Claude CLI, `claude plugin validate <plugin-dir>` runs its full per-plugin check.
+  For Codex, use a disposable `CODEX_HOME` and `codex plugin marketplace add .` followed by
+  `codex plugin add <plugin>@organon` for an install smoke test.
 
 ## Local checks (pre-commit / pre-push)
 
@@ -24,14 +27,24 @@ pre-commit install --hook-type pre-commit --hook-type pre-push
 
 CI runs the same hooks, so a clean local run should mean a clean PR.
 
+The cross-OS matrix runs on Ubuntu, Windows, and macOS. Codex hook tests execute the selected
+launcher (`command` on macOS/Linux, `commandWindows` on Windows) with a real payload; adding a
+hook requires both fields and an executable regression, not only schema validation.
+
 ## Conventions
 
 - **Commits:** Conventional Commits with a **mandatory scope** and a flat `- ` bullet body —
-  e.g. `feat(kb-find): add a status filter`. Omit `Co-Authored-By`. The `commit-msg` hook
-  enforces this; never `--no-verify`.
+  e.g. `feat(kb-find): add a status filter`. The `commit-msg` hook enforces this; never
+  `--no-verify`.
+- **PR titles:** the same scoped Conventional shape is mandatory: `type(scope): subject`.
+  `promptus/scripts/check-pr-title.ts` gates opened, edited, synchronized, reopened, and
+  ready-for-review PRs in CI. Unscoped titles do not pass.
+- **Agent co-authorship (this project only):** when Codex, Claude, or another named agent makes a
+  material contribution, it may proudly add `- Co-authored-by: Name <email>` to the enforced flat
+  bullet body and identify itself in the PR. Never fabricate a human co-author.
 - **Forward-slash paths** in any committed command/settings strings.
-- **Store discipline:** knowledge enters through `kb-add` (the gate), never freehand. Don't
-  hand-edit the ledger log lines or `.promptus/` (it's derived and gitignored).
+- **Store discipline:** new knowledge enters through `kb-add`; existing curated-unit metadata
+  changes through `kb-amend`. Never hand-edit ledger log lines. Only `.promptus/cache/` is derived.
 - **Scripts** are TypeScript on bun, stdlib-first.
 
 ## Docs stay truthful
@@ -48,7 +61,8 @@ front pages. Two standing rules, then the event map:
 |---|---|
 | a release is cut | nothing — the badges update themselves (see `RELEASING.md`) |
 | a skill / command / script ships | the plugin's README (what-ships / commands tables) + its `CHANGELOG.md` `[Unreleased]` + `AGENTS.md`'s layout if the shape changed |
-| a plugin joins the marketplace | the root `README.md` (hero cross-link + a table row with a `<plugin>-v*`-filtered release badge) · `marketplace.json` · `AGENTS.md`'s layout · the new plugin's own README in the house shape (hero → epigraph → why → install → quick start → what ships → license) + its `CHANGELOG.md` |
+| a plugin joins the marketplace | the root `README.md` (hero cross-link + release badge) · both marketplace manifests · both adapter manifests · `AGENTS.md`'s layout · the plugin README + `CHANGELOG.md` |
+| one capability changes both plugins | both `[Unreleased]` changelogs + a draft under `.github/release-notes/` until the per-plugin releases are cut |
 | a skill distills craft from a source | the source's full citation in the skill's `references/*.md` + an entry in the plugin README's **References** + a lit unit (`kb-add --substrate lit`) — see below |
 | behavior moves or reframes (a skill migrates, a verb changes meaning) | a **re-truth sweep**: grep the old claim across the READMEs / `AGENTS.md` / the Telos / skill descriptions, fix every hit in the same PR, and record the change in the ledger |
 
@@ -73,4 +87,7 @@ skill is a claim without grounds; treat it exactly like one.
 
 Keep them focused. When you change something user-facing, add a line under `## [Unreleased]`
 in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`) and keep the docs truthful
-(the section above). See `RELEASING.md` for how per-plugin releases are cut.
+(the section above). Title every PR with a scoped Conventional title such as
+`feat(codex): add native plugin adapters`; CI enforces the shape, including after title edits.
+Complete the PR template's release-note section. See `RELEASING.md` for how per-plugin releases
+are cut.

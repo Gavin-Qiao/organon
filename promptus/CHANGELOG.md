@@ -17,6 +17,37 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Added
+
+- **Add native Codex packaging.** Promptus now ships a `.codex-plugin` manifest, portable
+  skills for every command workflow and the grounded reviewer, plus a Codex hook adapter
+  for `apply_patch`, `PreCompact`, cross-platform commands, and event-specific JSON output.
+- **Add executable OS coverage for Codex hooks.** Every lifecycle hook declares a POSIX
+  command for macOS/Linux and a Windows override; the Ubuntu, Windows, and macOS test matrix
+  runs the selected launcher against a real hook payload.
+- **Add a scoped Conventional PR-title gate.** CI now rejects titles outside
+  `type(scope): subject`, including when a title is edited after opening the PR.
+- **Add `promptus-check` as the authoritative whole-store health gate.** It rebuilds the
+  derived index, records source/index freshness, and rejects duplicate IDs, unresolved
+  typed-relation targets, and unclassified units; `--strict-graph` can additionally make
+  dangling links and orphans blocking.
+- **Add `kb-amend` for gated metadata transitions on existing finding, literature, and
+  memory units.** It preserves bodies and existing metadata, mints missing stable IDs,
+  validates kind/status through the store vocabulary, and re-indexes after the write.
+
+### Changed
+
+- **Give every newly stored unit a stable machine-readable ID** and carry that identity
+  through catalog cards and the retrieval graph while retaining legacy slug compatibility.
+
+### Fixed
+
+- **Fix ledger supersession and multi-hop retrieval.** Relations now resolve stable and
+  legacy event IDs, and one ledger hit no longer expands to every entry sharing its file
+  or timestamp.
+- **Fix derived-index documentation** to consistently name `.promptus/cache/` as the only
+  disposable store surface.
+
 ## [0.6.2] - 2026-07-07
 
 ### Fixed

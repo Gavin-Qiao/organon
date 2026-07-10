@@ -29,11 +29,15 @@ jobs:
       - name: Run tests
         run: bun test
 
+      - name: Check Promptus store health
+        run: bun promptus/scripts/promptus-check.ts --strict
+
       - name: Tag must match the plugin manifest version
         run: |
-          manifest="$(bun -e "console.log(JSON.parse(await Bun.file('${{ steps.ver.outputs.plugin }}/.claude-plugin/plugin.json').text()).version)")"
-          if [ "$manifest" != "${{ steps.ver.outputs.version }}" ]; then
-            echo "::error::tag ${GITHUB_REF_NAME} does not match ${{ steps.ver.outputs.plugin }}/plugin.json version ${manifest}"
+          claude_manifest="$(bun -e "console.log(JSON.parse(await Bun.file('${{ steps.ver.outputs.plugin }}/.claude-plugin/plugin.json').text()).version)")"
+          codex_manifest="$(bun -e "console.log(JSON.parse(await Bun.file('${{ steps.ver.outputs.plugin }}/.codex-plugin/plugin.json').text()).version)")"
+          if [ "$claude_manifest" != "${{ steps.ver.outputs.version }}" ] || [ "$codex_manifest" != "${{ steps.ver.outputs.version }}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} does not match both adapter manifests (${claude_manifest}, ${codex_manifest})"
             exit 1
           fi
 

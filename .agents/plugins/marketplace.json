@@ -1,0 +1,32 @@
+{
+  "name": "organon",
+  "interface": {
+    "displayName": "Organon"
+  },
+  "plugins": [
+    {
+      "name": "promptus",
+      "source": {
+        "source": "local",
+        "path": "./promptus"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "editio",
+      "source": {
+        "source": "local",
+        "path": "./editio"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

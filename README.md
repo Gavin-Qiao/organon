@@ -2,7 +2,7 @@
 
 # Organon
 
-**The research toolbox for Claude Code.**
+**The research toolbox for Claude Code and Codex.**
 Remember everything your project learns. Write only what you can defend.
 
 [![CI](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml/badge.svg)](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml)
@@ -33,15 +33,36 @@ retrieved that way, and rendered that way on the page.
 
 ## Install
 
+Claude Code:
+
 ```text
 /plugin marketplace add Gavin-Qiao/organon
 /plugin install promptus@organon
 /plugin install editio@organon
 ```
 
+Codex:
+
+```bash
+codex plugin marketplace add Gavin-Qiao/organon
+codex plugin add promptus@organon
+codex plugin add editio@organon
+```
+
+Start a new Codex task after installation. Promptus bundles lifecycle hooks; inspect and trust
+their exact definitions with `/hooks` before expecting them to run. Skills work without hook trust.
+
 Requires [bun](https://bun.sh) ≥ 1.3 (the bundled scripts are TypeScript on bun; nothing else
 to host or vendor). editio additionally wants a TeX distribution at build time — its
 `editio-latex` skill sets one up in about five minutes.
+
+### Hosts and operating systems
+
+The portable core is OS-independent TypeScript and markdown. The adapter contract is tested on
+**Ubuntu, Windows, and macOS**: Codex hooks use the POSIX `command` on macOS/Linux and the explicit
+`commandWindows` override on Windows, while skills resolve their installed plugin root without a
+host-only shell variable. A native Codex marketplace install is also smoke-tested in an isolated
+`CODEX_HOME` before publication.
 
 <details>
 <summary><strong>Migrating from the promptus-only marketplace?</strong></summary>
@@ -63,11 +84,14 @@ editio is installed.
 
 ## Quick start
 
-Sixty seconds, end to end, in any repo:
+Sixty seconds, end to end, in any repo. In Claude Code:
 
 ```text
 /promptus:promptus-init        # stand up the four stores (.promptus/), Telos first
 ```
+
+In Codex, ask it to **use the `promptus-init` skill**. Both routes execute the same workflow and
+the same Bun scripts.
 
 …then just work. The `research-ledger` skill records decisions, results, and dead-ends
 through the gate as you go; `recall` retrieves them — header-first, every hit carrying its
@@ -75,12 +99,14 @@ through the gate as you go; `recall` retrieves them — header-first, every hit 
 is worth publishing:
 
 ```text
-/editio arxiv                  # scaffold .editio/paper/ — sections, gate, render layer
+/editio arxiv                  # Claude Code: scaffold .editio/paper/
 ```
+
+In Codex, ask it to **use the `editio` skill to start an arXiv paper**.
 
 Write sections as markdown with claims in spans, grade them against the store, and build:
 draft shows every claim's confidence on the page; publish strips the scaffolding; blind
-masks your identity. `/promptus:help` is the map.
+masks your identity. The `promptus` skill is the portable map (`/promptus:help` in Claude Code).
 
 ## Philosophy
 
@@ -109,17 +135,19 @@ The full five principles, the architecture, and the prior-art bibliography live 
 
 ```text
 organon/
-├─ .claude-plugin/marketplace.json    the organon marketplace (two plugins)
+├─ .claude-plugin/marketplace.json    Claude Code marketplace
+├─ .agents/plugins/marketplace.json   native Codex marketplace
 ├─ promptus/                          the store: kb-* scripts · skills · hooks · templates
-├─ editio/                            the writing toolchain: /editio · skills · renderer · venues
+├─ editio/                            the writing toolchain: editio skill · renderer · venues
 └─ .promptus/                         Organon's own knowledge, kept by promptus itself
 ```
 
 ## Development
 
 ```bash
-bun run check     # marketplace + both plugins validated, then the full test suite
+bun run check     # both adapters + live-store health + full test suite
 bun test          # tests only
+bun run pr-title:check -- "feat(scope): concise subject"
 ```
 
 Releases are per-plugin tags — `promptus-vX.Y.Z` / `editio-vX.Y.Z` — cut per

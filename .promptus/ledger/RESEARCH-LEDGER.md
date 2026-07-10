@@ -563,4 +563,31 @@ editio v0.5.1 cut and live: PR #35 merged clean, tag editio-v0.5.1 pushed, relea
 ### [2026-07-07 14:50:31] FIX/VALIDATED — editio-doctor paths check: naked file paths in prose flagged; inline code and fences stay deliberate
 The path-dirt problem (operator report: unwanted file paths keep appearing in paper prose - a drafting model cites its own build internals, and an absolute path leaks a username into the PDF). Design call, operator invited pushback: a DOCTOR CHECK, not a hook (hooks only fire inside Claude Code sessions, miss hand edits, add per-tool-call noise) and not a separate script (one more CLI to remember; the doctor already runs at /editio resume + --strict in CI). The encoded rule: a path in inline code or a fence is deliberate typesetting and exempt; a NAKED path in prose is dirt. Four pattern kinds at file:line: workspace-internal (.promptus/.editio/sections/figures/front/build), absolute OS paths (drive letters, /home /Users /tmp...), relative paths with extensions, bare artifact filenames; URLs stripped first (\url content), frontmatter and fence bodies skipped, longest-match dedupe (figures/x/plot.py flags once, not again as plot.py). Remediation message points at the paper's own vocabulary: figures/tables/citations/@num, or inline code when the path IS the content. Tests: dirty prose flags all four kinds + strict exit 1; inline-code/fence/URL/and-or/I-O cases stay clean. Suite 229 -> 231 green. Cut as 0.5.2.
 
+### [2026-07-09 21:16:55] PLAN/OPEN — Organon integrity hardening and native Codex support
+Implementation starts from reproduced failures, not speculative features: persist ledger ids and make supersession effective; repair anchored ledger graph-walk; enforce the status-to-claim-strength lattice; correct unsafe cache wording; add a single store-health gate; then package and test native Codex manifests, skills, and hook adapters. Dogfood requirement: record each milestone through kb-add, re-index the live Organon store, and use its own ledger/retrieval/health paths as acceptance evidence.
+
+### [2026-07-09 21:21:50] RESULT/VALIDATED — P0 integrity hardening works on the live Organon store
+<!-- kb:id event-20260710T012150Z-p0-integrity-hardening-works-on-the-live-organon-store -->
+P0 integrity slice is implemented and dogfooded. New ledger writes persist machine-readable ids; kb-index resolves both new ids and legacy event ids, so the live catalog now marks the resolved plugin-split, repo-layout, notation, renderer, and parked-spine decisions SUPERSEDED. Catalog metadata carries stable ids, keeping same-second ledger entries distinct during graph walks; the reproduced 154-card --hops flood fell to the actual query hits plus linked neighbours. Editio now applies a deterministic firm/weak/invalid lattice: VALIDATED/CITE/validated/RESOLVED may support .validated prose, CONJECTURED/provisional require hedging, and refuted/superseded/dead-end grounds contradict claims. Unsafe docs now name only .promptus/cache/ as disposable. Evidence: 58 targeted tests green.
+↳ supersedes event-20260710T011655Z-organon-integrity-hardening-and-native-codex-support
+
+### [2026-07-09 21:42:45] RESULT/VALIDATED — Native Codex support verified end to end
+<!-- kb:id event-20260710T014245Z-native-codex-support-verified-end-to-end -->
+Native Codex support is implemented and verified end to end. The repo now ships .codex-plugin manifests for promptus and editio, a native .agents/plugins marketplace, host-neutral installed-skill path resolution, portable skill adapters for the Claude command workflows, and a Codex hook map for apply_patch, PreCompact, Windows commands, and event-specific JSON.
+
+The offline validator gates both marketplaces, both manifests, their version/description parity, skill surfaces, and hook targets. Hook regressions pass, Windows hook commands were exercised directly, and an isolated CODEX_HOME discovered the native marketplace and installed both plugins at their manifest versions. Documentation, changelogs, CI, release checks, and pre-push checks ride the change.
+↳ extends event-20260710T012150Z-p0-integrity-hardening-works-on-the-live-organon-store
+
+### [2026-07-09 21:50:08] PLAN/OPEN — Cross-platform Codex adapter and publishable PR
+<!-- kb:id event-20260710T015008Z-cross-platform-codex-adapter-and-publishable-pr -->
+Follow-on hardening requested by the operator: make the native Codex adapter explicitly OS-general, with executable Windows and macOS/Linux hook contracts; record the work through Promptus; update README, CONTRIBUTING, both plugin changelogs, and a draft release note; enforce scoped Conventional PR titles in CI; allow project-local agent co-authorship; then commit, push, and open a draft PR without cutting a release.
+↳ extends event-20260710T014245Z-native-codex-support-verified-end-to-end
+
+### [2026-07-09 21:54:35] RESULT/VALIDATED — Cross-platform Codex adapter and PR policy verified
+<!-- kb:id event-20260710T015435Z-cross-platform-codex-adapter-and-pr-policy-verified -->
+The Codex adapter is now explicitly OS-general. Each lifecycle hook declares a POSIX command for macOS/Linux and a commandWindows override for Windows; the regression selects the current platform launcher, executes it with PLUGIN_ROOT, sends a real apply_patch payload, and verifies that the gate denies a freehand ledger write. CI validates both adapters and runs the complete suite on Ubuntu, Windows, and macOS.
+
+The public surface now includes the OS contract in the READMEs, contributor rules for cross-OS hooks and project-local agent co-authorship, both plugin changelogs, an unreleased cross-plugin adaptation note, and a PR template. Scoped Conventional PR titles are mechanically gated on open, edit, synchronize, reopen, and ready-for-review. Evidence: bun run check passes with 252 tests, strict live-store health has zero duplicate ids, unresolved typed relations, or unclassified units, and the intended PR title passes the new gate. No release tag was created.
+↳ supersedes event-20260710T015008Z-cross-platform-codex-adapter-and-publishable-pr
+
 <!-- kb:append-point -->

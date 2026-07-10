@@ -1,13 +1,12 @@
 #!/usr/bin/env bun
 /**
- * validate-plugin.ts — offline structural validation of the Organon marketplace.
+ * validate-plugin.ts — offline structural validation of both Organon agent adapters.
  *
- * Validates the root marketplace manifest, then every plugin it references —
- * manifest fields, command/skill/agent frontmatter, hook wiring, and (where a
+ * Validates the Claude Code and Codex marketplace manifests, then every plugin they reference —
+ * adapter-manifest parity, command/skill/agent frontmatter, hook wiring, and (where a
  * plugin ships one) the controlled vocab — so CI and the pre-push hook can gate a
- * change without needing the Claude CLI, an account, or the network. Mirrors the
- * structural half of `claude plugin validate` (run that locally for the full
- * check). Exits non-zero on any problem, printing each one.
+ * change without needing either host CLI, an account, or the network. Exits
+ * non-zero on any problem, printing each one.
  *
  * Usage: validate-plugin.ts [--root <repo>]   (default: this script's own repo)
  */
@@ -49,9 +48,48 @@ function checkComponent(rel: string, required: string[]) {
   else pass(rel);
 }
 
-// 1. Marketplace manifest — every plugin source must resolve on disk.
+function pluginPath(value: string): string {
+  return value.replace(/^\.\//, "").replace(/\/$/, "");
+}
+
+function checkHooks(rel: string, codex = false) {
+  const hk = readJSON(rel);
+  if (!hk) return;
+  if (!hk.hooks || typeof hk.hooks !== "object") {
+    fail(`${rel} has no hooks object`);
+    return;
+  }
+  const supported = new Set([
+    "SessionStart", "PreToolUse", "PermissionRequest", "PostToolUse", "PreCompact",
+    "PostCompact", "UserPromptSubmit", "SubagentStart", "SubagentStop", "Stop",
+  ]);
+  let count = 0;
+  for (const event of Object.keys(hk.hooks)) {
+    if (codex && !supported.has(event)) fail(`${rel} uses unsupported Codex event ${event}`);
+    for (const group of hk.hooks[event] || []) {
+      for (const h of group.hooks || []) {
+        count++;
+        if (h.type !== "command") continue;
+        if (codex && !h.command) fail(`${rel} ${event} hook has no POSIX command`);
+        if (codex && !h.commandWindows) fail(`${rel} ${event} hook has no commandWindows override`);
+        for (const command of [h.command, h.commandWindows].filter((x) => typeof x === "string")) {
+          const m = command.match(/\$\{(?:CLAUDE_)?PLUGIN_ROOT\}\/([^"\s]+)/) ??
+            command.match(/%PLUGIN_ROOT%\/([^"\s]+)/);
+          if (m) {
+            const dir = rel.split("/")[0];
+            if (!existsSync(join(repo, dir, m[1]))) fail(`${rel} references missing ${m[1]}`);
+          }
+        }
+      }
+    }
+  }
+  pass(`${rel} (${Object.keys(hk.hooks).length} event(s), ${count} hook(s))`);
+}
+
+// 1. Claude Code marketplace — every plugin source must resolve on disk.
 const mkt = readJSON(".claude-plugin/marketplace.json");
 const pluginDirs: string[] = [];
+const claudeSources = new Map<string, string>();
 if (mkt) {
   for (const f of ["name", "owner"]) if (!mkt[f]) fail(`marketplace.json missing "${f}"`);
   if (!Array.isArray(mkt.plugins) || mkt.plugins.length === 0) {
@@ -66,31 +104,77 @@ if (mkt) {
         fail(`marketplace plugin "${pl.name}" has no source`);
         continue;
       }
-      const rel = pl.source.replace(/^\.\//, "").replace(/\/$/, "");
+      const rel = pluginPath(pl.source);
       if (!rel || !existsSync(join(repo, rel))) {
         fail(`marketplace plugin "${pl.name}" source "${pl.source}" does not resolve`);
       } else {
         pluginDirs.push(rel);
+        claudeSources.set(pl.name, rel);
       }
     }
     pass(`marketplace.json (${mkt.name}: ${mkt.plugins.length} plugin(s))`);
   }
 }
 
-// 2. Each plugin the marketplace references.
+// 2. Native Codex marketplace — it must expose the same plugin set and roots.
+const codexMkt = readJSON(".agents/plugins/marketplace.json");
+const codexSources = new Map<string, string>();
+if (codexMkt) {
+  if (!codexMkt.name) fail('Codex marketplace.json missing "name"');
+  if (!codexMkt.interface?.displayName) fail("Codex marketplace.json missing interface.displayName");
+  if (!Array.isArray(codexMkt.plugins) || codexMkt.plugins.length === 0) {
+    fail("Codex marketplace.json has no plugins[]");
+  } else {
+    for (const pl of codexMkt.plugins) {
+      const raw = typeof pl.source === "string" ? pl.source : pl.source?.path;
+      if (!pl.name || !raw) {
+        fail("a Codex marketplace plugin entry is missing name or source.path");
+        continue;
+      }
+      const rel = pluginPath(raw);
+      codexSources.set(pl.name, rel);
+      if (!existsSync(join(repo, rel))) fail(`Codex marketplace plugin "${pl.name}" source "${raw}" does not resolve`);
+      if (!pl.policy?.installation || !pl.policy?.authentication || !pl.category)
+        fail(`Codex marketplace plugin "${pl.name}" is missing policy/category metadata`);
+    }
+    pass(`Codex marketplace.json (${codexMkt.name}: ${codexMkt.plugins.length} plugin(s))`);
+  }
+  if (mkt?.name && codexMkt.name !== mkt.name) fail("Claude and Codex marketplace names differ");
+  for (const [name, rel] of claudeSources) {
+    if (!codexSources.has(name)) fail(`Codex marketplace is missing plugin "${name}"`);
+    else if (codexSources.get(name) !== rel) fail(`marketplace adapters disagree on "${name}" source`);
+  }
+  for (const name of codexSources.keys()) if (!claudeSources.has(name)) fail(`Claude marketplace is missing plugin "${name}"`);
+}
+
+// 3. Each plugin the marketplaces reference.
 for (const dir of pluginDirs) {
   console.log(`\n${dir}/`);
 
-  // 2a. Plugin manifest.
+  // 3a. Adapter manifests must agree on identity and version.
   const plugin = readJSON(`${dir}/.claude-plugin/plugin.json`);
-  if (plugin) {
-    for (const f of ["name", "version", "description"]) if (!plugin[f]) fail(`${dir}/plugin.json missing "${f}"`);
-    if (plugin.version && !/^\d+\.\d+\.\d+([-+].+)?$/.test(plugin.version))
-      fail(`${dir}/plugin.json version "${plugin.version}" is not semver`);
-    if (plugin.name) pass(`${dir}/.claude-plugin/plugin.json (${plugin.name} v${plugin.version})`);
+  const codexPlugin = readJSON(`${dir}/.codex-plugin/plugin.json`);
+  for (const [kind, manifest] of [["Claude", plugin], ["Codex", codexPlugin]] as const) {
+    if (!manifest) continue;
+    for (const f of ["name", "version", "description"]) if (!manifest[f]) fail(`${dir}/${kind} plugin.json missing "${f}"`);
+    if (manifest.version && !/^\d+\.\d+\.\d+([-+].+)?$/.test(manifest.version))
+      fail(`${dir}/${kind} plugin.json version "${manifest.version}" is not semver`);
+  }
+  if (plugin?.name) pass(`${dir}/.claude-plugin/plugin.json (${plugin.name} v${plugin.version})`);
+  if (codexPlugin?.name) pass(`${dir}/.codex-plugin/plugin.json (${codexPlugin.name} v${codexPlugin.version})`);
+  if (plugin && codexPlugin) {
+    for (const field of ["name", "version", "description"])
+      if (plugin[field] !== codexPlugin[field]) fail(`${dir} adapter manifests disagree on ${field}`);
+    for (const field of ["skills", "hooks"]) {
+      const value = codexPlugin[field];
+      if (typeof value === "string") {
+        const rel = pluginPath(value);
+        if (!existsSync(join(repo, dir, rel))) fail(`${dir}/.codex-plugin/plugin.json references missing ${rel}`);
+      }
+    }
   }
 
-  // 2b. Components — commands take their name from the filename; skills and agents
+  // 3b. Components — commands take their name from the filename; skills and agents
   //     must declare name + description in frontmatter.
   const entries = (d: string) => (existsSync(join(repo, dir, d)) ? readdirSync(join(repo, dir, d)) : []);
   for (const f of entries("commands")) if (f.endsWith(".md")) checkComponent(`${dir}/commands/${f}`, ["description"]);
@@ -101,30 +185,16 @@ for (const dir of pluginDirs) {
     else if (statSync(join(repo, dir, "skills", s)).isDirectory()) fail(`${dir}/skills/${s}/ has no SKILL.md`);
   }
 
-  // 2c. Controlled vocabulary (plugins that ship one) must parse.
+  // 3c. Controlled vocabulary (plugins that ship one) must parse.
   if (existsSync(join(repo, dir, "templates/schema/kb-vocab.json"))) {
     if (readJSON(`${dir}/templates/schema/kb-vocab.json`)) pass(`${dir}/templates/schema/kb-vocab.json`);
   }
 
-  // 2d. Hooks (optional) — the manifest parses and every referenced script exists.
+  // 3d. Hook adapters (optional) — every referenced script exists; Codex uses supported events.
   if (existsSync(join(repo, dir, "hooks", "hooks.json"))) {
-    const hk = readJSON(`${dir}/hooks/hooks.json`);
-    if (hk && hk.hooks && typeof hk.hooks === "object") {
-      let count = 0;
-      for (const event of Object.keys(hk.hooks)) {
-        for (const group of hk.hooks[event] || []) {
-          for (const h of group.hooks || []) {
-            count++;
-            const m = typeof h.command === "string" && h.command.match(/\$\{CLAUDE_PLUGIN_ROOT\}\/([^"\s]+)/);
-            if (m && !existsSync(join(repo, dir, m[1]))) fail(`${dir}/hooks/hooks.json references missing ${m[1]}`);
-          }
-        }
-      }
-      pass(`${dir}/hooks/hooks.json (${Object.keys(hk.hooks).length} event(s), ${count} hook(s))`);
-    } else if (hk) {
-      fail(`${dir}/hooks/hooks.json has no hooks object`);
-    }
+    checkHooks(`${dir}/hooks/hooks.json`);
   }
+  if (typeof codexPlugin?.hooks === "string") checkHooks(`${dir}/${pluginPath(codexPlugin.hooks)}`, true);
 }
 
 console.log("");
@@ -132,4 +202,4 @@ if (problems.length) {
   console.error(`${problems.length} problem(s) found.`);
   process.exit(1);
 }
-console.log("All marketplace + plugin checks passed.");
+console.log("All marketplace + plugin adapter checks passed.");

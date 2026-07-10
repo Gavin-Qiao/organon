@@ -1,16 +1,20 @@
 ---
 name: research-ledger
-description: Proactively record a research project into Promptus as work happens — append a unit after every decision, run, observation, dead-end, or finding via kb-add (never freehand). Teaches the recording habit so the ledger fills itself instead of being reconstructed later. The script owns the timestamp, id, and placement (the drift fix). Pairs with /checkpoint.
+description: Proactively record a research project into Promptus as work happens — append a unit after every decision, run, observation, dead-end, or finding via kb-add (never freehand). Teaches the recording habit so the ledger fills itself instead of being reconstructed later. The script owns timestamp, id, and placement. Pairs with the promptus-checkpoint workflow.
 ---
 
 # research-ledger — record as you go
+
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
 
 A research ledger is the lab notebook for a long investigation: what you tried, what
 happened, what broke, what you fixed, what you abandoned and why. It makes the work
 **compounding and compaction-safe** — a fresh (or post-compaction) session resumes from
 the file alone with nothing important lost. It is in the spirit of Karpathy's llm-wiki (raw sources + an LLM-maintained wiki +
 an `AGENTS.md` "schema", plus an append-only log), adapted as a lab notebook where the
-**append-only log is the spine** and the wiki is distilled *from* it at `/checkpoint` — a
+**append-only log is the spine** and the wiki is distilled *from* it at checkpoint — a
 deliberate inversion of the gist's coequal layers, ours and not Karpathy's own ordering.
 
 ## Two parts of the ledger
@@ -24,14 +28,14 @@ the compaction-safe core a resuming agent reads instead of the whole file) and a
 During real work, watch for the moments worth keeping and write each the moment it happens:
 
 ```
-echo "<prose body>" | bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-add.ts" \
+echo "<prose body>" | bun "<plugin-root>/scripts/kb-add.ts" \
   --substrate ledger --kind <KIND> --status <STATUS> --title "<short imperative title>" [--links "a,b"] [--supersedes <id>]
 ```
 
 The script stamps the local `### [YYYY-MM-DD HH:MM:SS] KIND/STATUS — title` header from the
 system clock, mints the id, inserts above the sentinel, and refreshes the catalog. **Never
 hand-type a `### [ts]` line** — hand-typed timestamps drift (that is how a past ledger lost a
-day). Reserve hand-editing for the NOW-header, at `/checkpoint`.
+day). The checkpoint refreshes the NOW-header through `kb-now`, never by freehand ledger editing.
 
 ## Three facets: KIND, STATUS, RELATION
 
@@ -53,7 +57,7 @@ it to `.promptus/schema/kb-vocab.json` if it's here to stay. (finding / lit / me
 **RELATION (`--rel <type>:<id>`, or `--supersedes <id>`)** — typed edges between units:
 `supersedes` (marks the target `SUPERSEDED` — this is the correction mechanism), `refutes`,
 `challenges`, `supports`, `extends`, `fixes`. They export to CiTO / PROV-O via
-`bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-export.ts"`. Example headers: `RESULT/VALIDATED`, `DEADEND/REFUTED`, `RESULT/CONFOUNDED`.
+`bun "<plugin-root>/scripts/kb-export.ts"`. Example headers: `RESULT/VALIDATED`, `DEADEND/REFUTED`, `RESULT/CONFOUNDED`.
 
 ## A research effort has three homes — the digest is the one that gets skipped
 
@@ -86,7 +90,7 @@ lives. The ledger entry then records only the event, as it should.
 
 ## Keeping it readable (the bloat rule)
 
-The NOW-header stays small and current — it is what gets read. At `/checkpoint`, distill recent
+The NOW-header stays small and current — it is what gets read. At checkpoint, distill recent
 entries into `docs/` finding pages (one concept per file, `[[linked]]`, via `kb-add --substrate
 finding`). When the Log passes a few thousand lines, archive older sections to
 `ledger/archive/<YYYY-MM>.md` and leave a one-line pointer — history preserved, never rewritten.
@@ -95,5 +99,5 @@ finding`). When the Log passes a few thousand lines, archive older sections to
 
 > Maintain the research ledger: append a unit after every completed unit of work — including
 > mistakes, fixes, dead-ends, and brainstorms, not only successes — with
-> `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-add.ts" --substrate ledger …` (never hand-type `### [ts]`). Refresh the
-> NOW-header and run `/checkpoint` before compaction.
+> `bun "<plugin-root>/scripts/kb-add.ts" --substrate ledger …` (never hand-type `### [ts]`). Refresh the
+> NOW-header and run the `promptus-checkpoint` workflow before compaction.

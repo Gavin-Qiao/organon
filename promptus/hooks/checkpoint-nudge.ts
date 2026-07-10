@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 /**
- * SessionEnd hook — a gentle nudge to flush before the session is gone. No auto-run
- * (PreCompact stays manual by preference); just a reminder. No-op outside a Promptus repo.
+ * Claude SessionEnd / Codex PreCompact hook — a gentle nudge to flush perishable state.
+ * It never performs the checkpoint itself and is a no-op outside a Promptus repo.
  */
 import { readHookInput, projectRoot, ledgerPath } from "./_lib.ts";
 
@@ -9,9 +9,13 @@ const input = await readHookInput();
 const root = projectRoot(input);
 if (!ledgerPath(root)) process.exit(0);
 
-if (input.reason === "clear") process.exit(0); // a deliberate /clear isn't a handoff
+if (input.reason === "clear") process.exit(0); // a deliberate Claude /clear isn't a handoff
 
-process.stdout.write(
+const message =
   "Promptus: session ending. If anything you decided, ran, or learned lives only in this " +
-    "conversation, run /promptus:checkpoint so the ledger keeps it.\n",
-);
+  "conversation, run the Promptus checkpoint workflow so the ledger keeps it.";
+if (input.hook_event_name === "PreCompact") {
+  process.stdout.write(JSON.stringify({ systemMessage: message }));
+} else {
+  process.stdout.write(message + "\n");
+}

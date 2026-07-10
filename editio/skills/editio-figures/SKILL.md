@@ -5,6 +5,10 @@ description: Figures that argue — design, size, and audit paper figures the wa
 
 # editio-figures — figures that argue
 
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
+
 A figure is a claim with evidence attached, not an illustration. The strongest papers are
 readable from figures + captions alone; this skill makes each figure earn that. The craft
 lives in `references/` (cited sources, distilled); this file is the workflow and the
@@ -33,7 +37,7 @@ contracts.
    panel-by-panel ("(a) …; (b) …"), then the methods line: what error bars represent
    (SD / SEM / CI), n, and the test. Uncertainty is drawn on the page (bands, points, not
    just means); axes start at zero or show a break; no smoothing without saying so.
-6. **Gate it.** `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-figcheck.ts" figures/<name>/<name>.pdf --slot single`
+6. **Gate it.** `bun "<plugin-root>/scripts/editio-figcheck.ts" figures/<name>/<name>.pdf --slot single`
    — the PDF's physical width must equal the slot (±1mm), because step 3 said so.
 
 ## Figure-as-unit (the provenance contract)

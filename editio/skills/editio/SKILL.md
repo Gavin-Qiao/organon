@@ -1,9 +1,13 @@
 ---
 name: editio
-description: Academic-writing orchestrator — turn a promptus store's validated knowledge into a defensible, submittable paper. Use when starting, resuming, structuring, rendering, or auditing a paper (/editio), or deciding which editio piece does a job. Knows the paper workspace (.editio/paper/), the markdown-is-truth rule, the three renders (draft/publish/blind), the DoCO/DEO structure gate, and the audit loop that grades every claim against the store.
+description: Academic-writing orchestrator — turn a promptus store's validated knowledge into a defensible, submittable paper. Use when starting, resuming, structuring, rendering, or auditing a paper, or deciding which editio piece does a job. Knows the paper workspace, markdown-is-truth, three renders, the DoCO/DEO structure gate, and the evidence-calibrated audit loop.
 ---
 
 # editio — the paper read-port
+
+**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
+two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
+host-specific environment variable exists in the project shell.
 
 editio turns what the store has **validated** into a paper that can defend itself: content is
 authored as per-section markdown under `.editio/paper/`, rendered to LaTeX, and built in three
@@ -18,22 +22,22 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 
 | You want to… | Use |
 |---|---|
-| start or resume a paper | `/editio` (checks the store, scaffolds or reports state) |
-| lay down / rebuild the workspace for a venue | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" --venue arxiv` |
+| start or resume a paper | read and execute `<plugin-root>/commands/editio.md` (the `/editio` adapter in Claude Code) |
+| lay down / rebuild the workspace for a venue | `bun "<plugin-root>/scripts/editio-scaffold.ts" --venue arxiv` |
 | frame the argument, seed and write sections | the `editio-structure` skill |
-| render markdown sections to LaTeX | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-render.ts" --all` |
+| render markdown sections to LaTeX | `bun "<plugin-root>/scripts/editio-render.ts" --all` |
 | build the PDF, preview one section, set up TeX, notation | the `editio-latex` skill |
 | ground a claim before it hits the page | promptus's `recall` (kb-find → kb-get) |
-| see where the paper stands (per-section claim tallies, drafted words vs `budget:`, grounds health) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` (`--claims` lists each ungraded/unsourced span at file:line) |
-| audit a draft's claims + AI tells | the `grounded-writing-reviewer` agent, then apply its grades (below) |
-| run the publish gate (no ungraded / unsourced / overclaims) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts" --gate` (exit 1 on violations) |
-| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root, gitignored/untracked sources, builds over the venue page limit, naked file paths in prose) | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
-| change the title / authors / corresponding author everywhere at once | edit `paper.json`, then `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-identity.ts"` (or `editio-render --all`) — regenerates `front/identity.tex`, the data macros every document assembles from |
-| bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts" --write` |
-| verify the paper's numbers still match their sources | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |
+| see where the paper stands (per-section claim tallies, drafted words vs `budget:`, grounds health) | `bun "<plugin-root>/scripts/editio-status.ts"` (`--claims` lists each ungraded/unsourced span at file:line) |
+| audit a draft's claims + AI tells | the `grounded-writing-reviewer` skill, then apply its grades (below) |
+| run the publish gate (no ungraded / unsourced / overclaims) | `bun "<plugin-root>/scripts/editio-status.ts" --gate` (exit 1 on violations) |
+| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root, gitignored/untracked sources, builds over the venue page limit, naked file paths in prose) | `bun "<plugin-root>/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
+| change the title / authors / corresponding author everywhere at once | edit `paper.json`, then `bun "<plugin-root>/scripts/editio-identity.ts"` (or `editio-render --all`) — regenerates `front/identity.tex`, the data macros every document assembles from |
+| bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "<plugin-root>/scripts/editio-numbers.ts" --write` |
+| verify the paper's numbers still match their sources | `bun "<plugin-root>/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |
 | fix the voice / de-AI a passage | the `humanizer` skill |
 | design, size, caption, or color a figure | the `editio-figures` skill (claim-first; venue widths from `venue.json`) |
-| verify a figure PDF is the slot size | `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-figcheck.ts" <fig.pdf> --slot single` |
+| verify a figure PDF is the slot size | `bun "<plugin-root>/scripts/editio-figcheck.ts" <fig.pdf> --slot single` |
 | tables, bibliography, venue packaging, rebuttal | `editio-tables` / `editio-bib` / `editio-venue` / `editio-rebuttal` (later phases; not yet shipped) |
 
 ## The invariant (inherited from promptus, applied to manuscripts)
@@ -51,7 +55,7 @@ hand-written: one paper.json edit updates the title, author block, and bios ever
 1. **Draft** — write prose in `sections/<slug>.md`; wrap checkable claims in spans:
    `[the gate refuses off-vocab writes]{.claim}` (ungraded is fine — grading comes next).
 2. **Retrieve** — `recall` looks each claim up (`kb-find` → `kb-get`), returns `substrate:status`.
-3. **Grade** — the `grounded-writing-reviewer` agent (read-only) reports findings per
+3. **Grade** — the `grounded-writing-reviewer` skill (read-only) reports findings per
    *flagged* span (unsupported / over-confident / style tells); *you* map them to grades:
    `finding:VALIDATED`/`lit:CITE` → `.validated` · `CONJECTURED`/provisional → `.conjectured`
    · nothing found → `.unsourced` · `DEADEND`/`REFUTED` backing the claim → an **overclaim** flag.

@@ -1,3 +1,11 @@
+---
+id: finding-20260710T012734Z-editio-design-memo-claude-code-handoff
+substrate: finding
+kind: CONCEPT
+status: SUPERSEDED
+created: "2026-07-09 21:27:34"
+updated: "2026-07-09 21:27:34"
+---
 # editio — Design Memo (Claude Code handoff)
 
 **Author:** Mohan Qiao · **Date:** 2026-07-02 (rev. 2) · **License:** GPL-3.0 (© 2026 Mohan Qiao)

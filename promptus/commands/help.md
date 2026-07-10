@@ -17,8 +17,10 @@ otherwise give the map below and end at the single next step.
   - **Knowledge** (`.promptus/docs/` findings + `.promptus/docs/lit/` literature) — distilled, each with a source.
   - **Memory** (`.promptus/memory/`) — durable facts, one per file.
 - **Three verbs** — scripts do the mechanics, skills do the reasoning:
-  - **STORE** → `kb-add` (the gated writer-jig; off-vocab input is refused with the allowed set).
-  - **BOOK-KEEP** → `kb-index` (rebuild the derived catalog + graph) + `kb-graph lint` (graph health) and `/checkpoint`.
+  - **STORE** → `kb-add` (the gated writer-jig) for new units; `kb-amend` for controlled
+    metadata transitions on existing curated units.
+  - **BOOK-KEEP** → `kb-index` (rebuild the derived catalog + graph), `promptus-check --strict`
+    (whole-store integrity), `kb-graph lint` (graph health), and `/checkpoint`.
   - **RETRIEVE** → `kb-find` (header-first) → `kb-get` (fetch one unit's body) and the `recall` skill;
     `kb-graph rank`/`suggest` to navigate the `[[link]]` graph.
 - A human reads in through **`grannie`** (`/grannie explain <concept>`) — plain-language, grounded
@@ -31,6 +33,8 @@ otherwise give the map below and end at the single next step.
 |---|---|
 | stand up the stores in a repo | `/promptus:promptus-init` |
 | record a decision / run / finding | the `research-ledger` skill → `kb-add` |
+| classify or update an existing curated unit | `kb-amend` |
+| run the authoritative store-integrity gate | `/promptus:promptus-check` |
 | flush state before compaction | `/promptus:checkpoint` |
 | find what we already know | the `recall` skill → `kb-find` |
 | write something grounded and human | `recall` (grounds it) → editio's `humanizer` (styles it, when installed) |

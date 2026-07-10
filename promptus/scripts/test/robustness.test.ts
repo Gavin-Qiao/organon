@@ -100,6 +100,19 @@ test("fidelity: a query that matches nothing says so, it does not invent a hit",
   expect(r.stdout).not.toContain("alpha");
 });
 
+test("graph walk: a ledger seed keeps its anchored identity instead of admitting every ledger card", () => {
+  const root = scaffold();
+  add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "needle result"], "distinctive quokka needle");
+  add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "unrelated alpha"], "nothing nearby");
+  add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "unrelated beta"], "nothing nearby either");
+  index(root);
+  const r = find(root, ["quokka", "--substrate", "ledger", "--hops", "1"]);
+  expect(r.status).toBe(0);
+  expect(r.stdout).toContain("needle result");
+  expect(r.stdout).not.toContain("unrelated alpha");
+  expect(r.stdout).not.toContain("unrelated beta");
+});
+
 // ---- Recursion: notes in subdirectories are indexed, with no double-index ----
 
 test("recursion: a finding in a docs/ subdirectory is indexed (the subdir blind spot)", () => {

@@ -13,7 +13,7 @@ Part of [**Organon**](../README.md), beside [**editio**](../editio/README.md) �
 
 </div>
 
-A file-based research knowledge system for Claude Code — a knowledge **substrate for the LLM agent**
+A file-based research knowledge system for Claude Code and Codex — a knowledge **substrate for the LLM agent**
 doing the research. Promptus **stores / keeps / retrieves** everything a project knows — events (the
 ledger, right and wrong), external literature, distilled findings, durable memory — as gated,
 well-formed markdown, so the agent's reasoning and writing stay grounded and honest. A human reads in
@@ -29,7 +29,7 @@ One bet underwrites the whole system: **the same virtues that make prose *human*
 principles follow.
 
 1. **Markdown is the only source of truth.** Everything a project knows is plain, readable
-   markdown you could open with no tools at all. The derived index (`.promptus/`) is *disposable*
+   markdown you could open with no tools at all. The derived index (`.promptus/cache/`) is *disposable*
    — rebuilt on demand, never authored. Lose it and nothing is lost.
 
 2. **Every write goes through a gate.** Knowledge enters through one script, never freehand. The
@@ -59,9 +59,9 @@ pattern — persistent, LLM-maintained markdown over raw sources, instead of re-
 query. Promptus makes the append-only **ledger** the spine and adds a gate, epistemic status, and
 renderers.*
 
-## Quick start
+## Install & quick start
 
-Promptus is a Claude Code plugin. Install it:
+Claude Code:
 
 ```
 /plugin marketplace add Gavin-Qiao/organon
@@ -69,17 +69,28 @@ Promptus is a Claude Code plugin. Install it:
 ```
 
 …or from the CLI: `claude plugin marketplace add Gavin-Qiao/organon` then
-`claude plugin install promptus@organon`. Installing brings the bundled `scripts/`; the skills,
-commands, and templates resolve them via `${CLAUDE_PLUGIN_ROOT}` — nothing to copy in.
+`claude plugin install promptus@organon`.
+
+Codex:
+
+```bash
+codex plugin marketplace add Gavin-Qiao/organon
+codex plugin add promptus@organon
+```
+
+Start a new Codex task, then inspect and trust the optional lifecycle hooks with `/hooks`.
+Installing either adapter brings the same `scripts/`, skills, commands/workflows, and templates;
+skills resolve the installed plugin root from their own `SKILL.md` location — nothing to copy in.
 **Requires** [bun](https://bun.sh) ≥ 1.3 (the scripts are TypeScript on bun).
 
-Stand up the four stores in a repo:
+Stand up the four stores in a repo with `/promptus:promptus-init` in Claude Code, or ask Codex
+to use the `promptus-init` skill:
 
 ```
 /promptus:promptus-init
 ```
 
-Then just work — tell Claude what happened, and the `research-ledger` skill records it through the
+Then just work — tell the agent what happened, and the `research-ledger` skill records it through the
 gate. The three verbs, under the hood:
 
 ```bash
@@ -94,10 +105,10 @@ bun promptus/scripts/kb-index.ts
 bun promptus/scripts/kb-find.ts "bun"
 ```
 
-(Those paths are from the organon repo root; inside another project the skills
-resolve them via `${CLAUDE_PLUGIN_ROOT}` — nothing to copy in.) Before you compact a session,
-`/promptus:checkpoint` flushes anything unrecorded into the stores. New to the system?
-`/promptus:help`.
+(Those paths are from the Organon repo root; an installed skill resolves the plugin from its own
+location.) Before compaction, use the `promptus-checkpoint` skill (`/promptus:checkpoint` in Claude
+Code) to flush anything unrecorded. The `promptus` skill is the portable map
+(`/promptus:help` in Claude Code).
 
 ## Architecture — four stores · three verbs · one human read-port
 
@@ -130,11 +141,13 @@ flowchart LR
   (stdin); the script owns the envelope, the local timestamp, the id, the placement, the index,
   typed relations, and the **hybrid gate** — *strict* for the curated library (finding/lit/memory:
   off-vocab input is refused with the allowed set), *permissive* for the lab-notebook ledger (an
-  off-vocab kind/status is warned about but still written). `kb-export` emits the relation graph as
-  CiTO/PROV-O JSON-LD.
+  off-vocab kind/status is warned about but still written). `scripts/kb-amend.ts` is the matching
+  gate for metadata transitions on an existing curated unit: it preserves the body, validates the
+  requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
 - **KEEP** → `scripts/kb-index.ts` (rebuild the derived `.promptus/cache/CATALOG.md` card-catalog +
   `graph.json`, resolve supersedes, lint orphans / unresolved links), `scripts/kb-graph.ts lint`
-  (graph health: dangling `[[handles]]` with a "did you mean?", orphans), + `/promptus:checkpoint`.
+  (graph health: dangling `[[handles]]` with a "did you mean?", orphans),
+  `scripts/promptus-check.ts --strict` (authoritative integrity + freshness gate), + `/promptus:checkpoint`.
 - **RETRIEVE** → two tiers. `scripts/kb-find.ts` (header-first — read the card-catalog, grep bodies,
   walk the `[[link]]` graph, filter by status) says *which* units; `scripts/kb-get.ts` then returns a
   single unit's body — one ledger entry's slice, not the whole 140 KB file. The `recall` skill drives
@@ -182,29 +195,38 @@ The invariant still governs. The full roadmap and the prior-art audit are in
 
 ## Commands & skills
 
+Claude Code exposes these command adapters; Codex uses the corresponding skills below.
+
 | command | what it does |
 |---|---|
 | `/promptus:help` | the map — stores, verbs, and where to start |
 | `/promptus:promptus-init` | scaffold the four stores + the `AGENTS.md` cadence in a repo (idempotent) |
 | `/promptus:checkpoint` | minimal pre-compaction flush — store what's unrecorded, refresh the NOW-header |
 | `/promptus:promptus-doctor` | diagnose & migrate a repo's Promptus layout to the current namespace + vocab; flags event-shaped Telos lines (dates, event ids, NOW-shaped headings) with their routing |
+| `/promptus:promptus-check` | rebuild and verify the whole store — freshness, stable IDs, classification, typed relations; add `--strict-graph` to make graph debt blocking |
 | `/promptus:promptus-ingest` | curate deep-research notes into `lit:` units (backfill sources, promote findings) |
 | `/promptus:promptus-graph` | inspect the knowledge graph — `rank` (PageRank), `lint` (health), `suggest` (latent links) |
 
 | skill | role |
 |---|---|
 | `promptus` | orchestrator — picks the right verb / script / skill |
+| `promptus-init` | scaffold the four stores and portable `AGENTS.md` cadence |
+| `promptus-checkpoint` | minimal pre-compaction flush and Telos drift check |
+| `promptus-check` | authoritative whole-store integrity gate |
+| `promptus-doctor` | layout diagnosis and dry-run-first migration |
+| `promptus-ingest` | provenance-preserving research curation |
+| `promptus-graph` | graph rank / lint / suggest workflows |
 | `research-ledger` | the store-as-you-go recording habit (append via `kb-add`, never freehand) |
 | `recall` | retrieval reasoning — decompose → `kb-find` → verify each claim → synthesize |
 | `grannie` | plain-language ELI90 renderer for a stored concept |
 | `telos` | scaffold a project's four stores, Telos first — then keep the Telos direction-only as it evolves (events → ledger, frontier → NOW-header) |
+| `grounded-writing-reviewer` | read-only style + evidence audit used by both hosts |
 
-Plus the **`grounded-writing-reviewer`** agent — audits a draft for AI-writing tells *and* for
-unsourced or over-confident claims, checking each against the store.
+Claude Code also exposes `grounded-writing-reviewer` as a subagent adapter over the same workflow.
 
 ## Hooks (optional)
 
-When the plugin is enabled, four hooks activate — each a strict no-op outside a
+When the plugin is enabled and its hooks are trusted, four responsibilities activate — each a strict no-op outside a
 Promptus-initialized repo (no `.promptus/` project), so other projects are untouched:
 
 - **SessionStart** injects the ledger's NOW-header, so a resuming agent wakes up oriented.
@@ -212,19 +234,32 @@ Promptus-initialized repo (no `.promptus/` project), so other projects are untou
   pointing at `kb-add` — the gate, enforced. Editing the NOW-header (at `/promptus:checkpoint`)
   stays allowed.
 - **PostToolUse** re-runs `kb-index` after a `kb-add`, so the derived catalog never drifts.
-- **SessionEnd** nudges you to `/promptus:checkpoint`.
+- **Handoff** nudges a checkpoint: Claude Code uses `SessionEnd`; Codex uses `PreCompact` because
+  Codex has no `SessionEnd` event.
 
-To disable any of them, remove its entry from [`hooks/hooks.json`](hooks/hooks.json), or turn off
-the plugin's hooks in your Claude Code settings.
+Claude Code loads [`hooks/hooks.json`](hooks/hooks.json); Codex loads
+[`hooks/codex.json`](hooks/codex.json), whose guard understands Codex `apply_patch` payloads and
+whose outputs follow Codex's event-specific JSON contract. Codex requires review/trust through
+`/hooks`; installing a plugin does not silently trust executable lifecycle code.
+
+The Codex hook file is deliberately cross-platform:
+
+| host OS | launcher field | expansion |
+|---|---|---|
+| macOS / Linux | `command` | `"${PLUGIN_ROOT}/…"` through the POSIX shell |
+| Windows | `commandWindows` | `"%PLUGIN_ROOT%/…"` through the Windows command shell |
+
+CI does more than parse those strings: the hook regression selects the current platform's field,
+launches it, sends a real `apply_patch` payload, and verifies that a freehand ledger write is denied.
 
 ## Layout
 
 ```
-scripts/    kb-add · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-export · ledger-append · validate-plugin · changelog · lib/ · test/
-skills/     promptus (orchestrator) · recall · grannie · research-ledger · telos
-commands/   help · checkpoint · promptus-init · promptus-doctor · promptus-ingest · promptus-graph
+scripts/    kb-add · kb-amend · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-export · promptus-check · check-pr-title · ledger-append · validate-plugin · changelog · lib/ · test/
+skills/     promptus · recall · grannie · research-ledger · telos · promptus-{init,checkpoint,check,doctor,ingest,graph} · grounded-writing-reviewer
+commands/   help · checkpoint · promptus-init · promptus-doctor · promptus-ingest · promptus-graph · promptus-check
 agents/     grounded-writing-reviewer
-hooks/      session-start · protect-gate · auto-index · checkpoint-nudge (+ hooks.json)
+hooks/      session-start · protect-gate · auto-index · checkpoint-nudge (+ Claude hooks.json · Codex codex.json)
 templates/  the per-project scaffolds (incl. the default schema/kb-vocab.json)
 ../.promptus/  the Organon repo using Promptus on itself — TELOS · ledger · docs (findings + lit) · memory · schema (cache/ is derived)
 ```
@@ -233,8 +268,9 @@ templates/  the per-project scaffolds (incl. the default schema/kb-vocab.json)
 
 ```bash
 bun test                       # the store-spine tests (run from the repo root)
-bun run check                  # marketplace + plugin validation, then the tests
+bun run check                  # plugin validation + strict live-store health + full tests
 claude plugin validate         # the full plugin check (needs the Claude CLI)
+codex plugin marketplace add . # native Codex discovery smoke test (use a disposable CODEX_HOME)
 ```
 
 Promptus **dogfoods** its own methodology: the Organon repo maintains its `.promptus/` stores

@@ -21,13 +21,13 @@ initialized (a `.promptus/TELOS.md` exists), report what's there and don't clobb
    should find the project root via `.promptus/` and report an empty (or freshly-seeded) catalog rather than erroring.
 4. **Seed + smoke-test.** Store the operator's mandate as the first unit
    (`kb-add --substrate ledger --kind DECISION --status VALIDATED --title "Mandate: …"`), then
-   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` — confirm `.promptus/CATALOG.md` lists it as `ledger:VALIDATED`.
+   `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` — confirm `.promptus/cache/CATALOG.md` lists it as `ledger:VALIDATED`.
 5. **Print next steps**: how to `kb-add` the next unit, when to `kb-index`, and to run
    `/checkpoint` before compaction.
 
 ## How the scripts are found
 
-Promptus is a Claude Code plugin: installing it bundles `scripts/` (kb-add / kb-index / kb-find
-+ `lib/`), and the skills, commands, and templates call them via `${CLAUDE_PLUGIN_ROOT}/scripts/…`
-— so they resolve from any project with nothing copied in. (For raw development *inside* the
-Organon repo itself, the scripts are `bun promptus/scripts/…` from the repo root.)
+Promptus bundles the same scripts for both hosts. The Claude Code command adapter resolves them via
+`${CLAUDE_PLUGIN_ROOT}`; the native Codex `promptus-init` skill resolves the plugin root from its
+own installed `SKILL.md` path. Nothing is copied into the project. For development inside Organon,
+run `bun promptus/scripts/…` from the repo root.

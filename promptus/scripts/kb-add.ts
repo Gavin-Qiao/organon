@@ -86,8 +86,9 @@ function statusDisplay(vocab: Vocab, status: string): string {
   return vocab.status_glyphs?.[status] ?? status;
 }
 
-function catalogLine(sub: string, status: string, title: string, relPath: string, links: string[]): string {
-  const tail = links.length ? ` · ${links.map((l) => `[[${l}]]`).join(" ")}` : "";
+function catalogLine(sub: string, status: string, title: string, relPath: string, id: string, links: string[]): string {
+  const metadata = [`id:${id}`, ...links.map((l) => `[[${l}]]`)];
+  const tail = metadata.length ? ` · ${metadata.join(" ")}` : "";
   return `${sub}:${status} · ${title} · ${relPath}${tail}`;
 }
 
@@ -148,7 +149,7 @@ function main(argv: string[]): number {
 
   if (sub.envelope === "log") {
     const relFooter = relations.length ? `\n${relations.map((r) => `↳ ${r.type} ${r.target}`).join("\n")}` : "";
-    assembled = `### [${nowLocalStamp()}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n${body}${relFooter}\n`;
+    assembled = `### [${nowLocalStamp()}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n<!-- kb:id ${id} -->\n${body}${relFooter}\n`;
     unitFile = storePath(root, vocab, unit.substrate);
     if (!existsSync(unitFile)) fail(`ledger not found: ${rel(root, unitFile)} — run /promptus-init first`);
     writes.push([unitFile, insertBeforeSentinel(readFileSync(unitFile, "utf8"), assembled, vocab.sentinel)]);
@@ -165,7 +166,7 @@ function main(argv: string[]): number {
     writes.push([unitFile, assembled]);
   } else {
     // memory: one file per fact + a pointer in the MEMORY.md index
-    const fm: Frontmatter = { name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
+    const fm: Frontmatter = { id, name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
     if (links.length) fm.links = links;
     assembled = `${serializeFrontmatter(fm)}\n${body}\n`;
     unitFile = storePath(root, vocab, unit.substrate, slug);
@@ -179,7 +180,7 @@ function main(argv: string[]): number {
     }
   }
 
-  const catLine = catalogLine(unit.substrate, unit.status, unit.title, rel(root, unitFile), links);
+  const catLine = catalogLine(unit.substrate, unit.status, unit.title, rel(root, unitFile), id, links);
 
   if (dry) {
     console.log(`[dry-run] would write ${rel(root, unitFile)}:`);

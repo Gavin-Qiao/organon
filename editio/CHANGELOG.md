@@ -6,6 +6,20 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- **Add native Codex packaging and host-neutral skill paths.** The `.codex-plugin` manifest
+  exposes the same writing skills, while those skills resolve scripts from their own
+  installed location instead of depending on a Claude-only shell variable. The shared
+  adapter suite is exercised on Ubuntu, Windows, and macOS.
+
+### Fixed
+
+- **Make claim grounding fail closed.** Only `finding:VALIDATED`, `lit:CITE`,
+  `memory:validated`, and validated/resolved ledger evidence can ground a `.validated`
+  claim; provisional, conjectured, refuted, and retired evidence can no longer pass by
+  omission from a denylist.
+
 ## [0.5.2] - 2026-07-07
 
 ### Added

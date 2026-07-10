@@ -37,3 +37,10 @@ repos:
         pass_filenames: false
         always_run: true
         stages: [pre-push]
+      - id: promptus-health
+        name: promptus store health
+        entry: bun promptus/scripts/promptus-check.ts --strict
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push]
