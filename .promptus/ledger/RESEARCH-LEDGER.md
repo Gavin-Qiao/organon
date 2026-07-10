@@ -602,4 +602,9 @@ Remote evidence is green: conventional PR title 6s; Ubuntu test + adapter valida
 The operator authorized the native Codex adaptation as two backward-compatible minor releases: Promptus 0.7.0 and Editio 0.6.0. The release PR freezes each plugin's Unreleased notes, keeps the Claude and Codex manifests in exact version parity, retires the temporary cross-plugin draft, and requires the full repository check plus both changelog gates. Tags are created only from the merged main commit as promptus-v0.7.0 and editio-v0.6.0; there is no Organon-level release.
 ↳ extends event-20260710T014245Z-native-codex-support-verified-end-to-end
 
+### [2026-07-09 22:37:22] RESULT/VALIDATED — Editio doctor isolates Git discovery from hook environment
+<!-- kb:id event-20260710T023722Z-editio-doctor-isolates-git-discovery-from-hook-environment -->
+The release pre-push gate exposed that editio-doctor inherited repository-local Git environment variables from the hook process. Temporary paper workspaces were therefore inspected against Organon's index and falsely reported as untracked. The doctor now clears repository-scoped Git directory, worktree, index, object, prefix, graft, shallow, and alternate-object variables before running cwd-based discovery; the test helper does the same for scratch repositories. The focused doctor suite passes 26 of 26 both normally and with GIT_DIR plus GIT_WORK_TREE deliberately polluted.
+↳ extends event-20260710T023138Z-release-plan-for-native-codex-adapters
+
 <!-- kb:append-point -->

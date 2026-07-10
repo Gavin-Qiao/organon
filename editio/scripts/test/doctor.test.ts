@@ -265,7 +265,23 @@ test("a hard-coded author name or title in a document .tex is flagged toward the
 
 // ──────────── vcs: the paper's history is git's job (the zero-versions incident) ────────────
 
-const git = (root: string, ...a: string[]) => spawnSync("git", ["-C", root, ...a], { encoding: "utf8" });
+const cleanGitEnv = () => {
+  const env = { ...process.env };
+  for (const key of [
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_GRAFT_FILE",
+    "GIT_IMPLICIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_PREFIX",
+    "GIT_SHALLOW_FILE",
+    "GIT_WORK_TREE",
+  ]) delete env[key];
+  return env;
+};
+const git = (root: string, ...a: string[]) => spawnSync("git", ["-C", root, ...a], { encoding: "utf8", env: cleanGitEnv() });
 
 test("paper sources in a git repo but never tracked are flagged; tracked sources clear it", () => {
   const root = healthy();
@@ -355,4 +371,18 @@ test("outside any git repo the doctor notes untracked history without flagging",
   const r = run(DOCTOR, root);
   expect(r.out).not.toContain("FLAG vcs");
   expect(r.out).toContain("vcs: no git repository");
+});
+
+test("vcs discovery ignores repository variables inherited from a Git hook", () => {
+  const root = healthy();
+  const repo = git(process.cwd(), "rev-parse", "--absolute-git-dir");
+  expect(repo.status).toBe(0);
+  const r = spawnSync(process.execPath, [DOCTOR, "--root", root], {
+    encoding: "utf8",
+    env: { ...process.env, GIT_DIR: `${repo.stdout}`.trim(), GIT_WORK_TREE: process.cwd() },
+  });
+  const out = `${r.stdout ?? ""}${r.stderr ?? ""}`;
+  expect(r.status).toBe(0);
+  expect(out).not.toContain("FLAG vcs");
+  expect(out).toContain("vcs: no git repository");
 });

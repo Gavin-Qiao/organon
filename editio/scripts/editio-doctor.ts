@@ -314,7 +314,20 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
   // a submitted paper existed in zero committed versions. Flag only the measured
   // hazard (a repo that ignores or never tracked the sources); no repo at all is
   // the project's call and stays a note.
-  const git = (...args: string[]) => spawnSync("git", ["-C", paper, ...args], { encoding: "utf8" });
+  const gitEnv = { ...process.env };
+  for (const key of [
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+    "GIT_COMMON_DIR",
+    "GIT_DIR",
+    "GIT_GRAFT_FILE",
+    "GIT_IMPLICIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OBJECT_DIRECTORY",
+    "GIT_PREFIX",
+    "GIT_SHALLOW_FILE",
+    "GIT_WORK_TREE",
+  ]) delete gitEnv[key];
+  const git = (...args: string[]) => spawnSync("git", ["-C", paper, ...args], { encoding: "utf8", env: gitEnv });
   const inRepo = git("rev-parse", "--is-inside-work-tree");
   if (inRepo.error || inRepo.status !== 0) {
     notes.push("vcs: no git repository — paper history is untracked");
