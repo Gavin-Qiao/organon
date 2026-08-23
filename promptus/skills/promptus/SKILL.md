@@ -51,10 +51,12 @@ is tagged `substrate:status` — `ledger:DEADEND`, `finding:VALIDATED`, `lit:CIT
 
 ## The knowledge graph
 
-The `[[wikilinks]]` between units *are* the graph (no DB, no embeddings — see the invariant);
-`kb-index` derives `.promptus/cache/graph.json` from them, and `kb-graph` queries it:
+The resolved `[[wikilinks]]` and typed relations between units form the connectivity graph (no DB,
+no embeddings — see the invariant); `kb-index` derives `.promptus/cache/graph.json`, while
+PageRank deliberately remains over the page-wikilink subgraph:
 - `kb-graph rank` — PageRank over active page units; add `--history` to include inactive units.
-- `kb-graph lint` — health: dangling `[[handles]]` (with a "did you mean?") and orphans. `--strict` to gate.
+- `kb-graph lint` — health: dangling `[[handles]]` (with a "did you mean?") and units with neither
+  a resolved wikilink nor a resolved typed relation. `--strict` to gate.
 - `kb-graph suggest` — latent links: unit pairs that are unlinked but probably related (shared
   vocabulary + shared source), so you can draw the missing `[[link]]`. Suggest-only; you judge.
 

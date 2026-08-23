@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-23 (Promptus 0.8.0 PR #39 open; CI hygiene fix prepared for validation.)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-23 (v0.8.1 release authorized)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,27 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260823T100957Z-make-thinker-fixture-pass-repository-hygiene-without-weakening-i -->
-Promptus 0.8.0 release PR #39 is open; a CI hygiene defect is fixed locally and awaiting the updated push.
+<!-- kb:now-through event-20260823T132715Z-prepare-the-promptus-v081-release-commit -->
+Promptus v0.8.1 is finalized as a correctness-only release candidate and the operator has authorized the conventional release workflow.
 
-- The Promptus-only release boundary remains intact: no editio/ or Nature Machine Intelligence source or literature is included.
-- The exact release tree passed its full gate; PR CI then caught a TypeScript fixture hard break encoded as trailing spaces.
-- The fixture now emits the same bytes without source trailing whitespace, its artifact-bearing finding was recreated through kb-add with byte-identical prose, and the focused tests pass.
+- Both manifests and the dated changelog section are aligned at 0.8.1.
+- The five Psi-derived correctness repairs and their regression fixtures are sealed by current artifact receipts.
+- Real Psi remains conservatively diagnosed: 45 superseded failures are archival warnings and 72 non-superseded failures remain red.
 
 ## Open frontier
 
-- Commit and push the hygiene fix to PR #39, wait for all required checks, merge, retarget and publish promptus-v0.8.0, then update and smoke-test the local Codex organon/promptus plugin.
-- Historical graph debt remains visible at 15 dangling links and 2 orphans; it is non-blocking and no baseline has been recorded.
+- Run the complete release gate, land the Promptus release commit on main, tag the merged commit, and verify the GitHub release.
+- Reinstall the released local Codex plugin and smoke-test it without editing the cache directly.
+- Then finalize and release the separate project-agnostic Editio minor line with NMI and NeurIPS venue support.
 
 ## Next actions
 
-1. Re-index and run the complete release gates on the corrected tree.
-2. Selectively commit the Promptus-only fix and update PR #39.
-3. Merge green, publish the tag, verify the release, and update local Codex.
+1. Run the Promptus release gates and commit the bounded release line.
+2. Merge through the repository workflow, tag promptus-v0.8.1, and verify publication.
+3. Reinstall and smoke-test Promptus, then repeat the conventional workflow for Editio.
 
 ## <<< RESUME HERE >>>
 
-Resume at validating and pushing the PR #39 hygiene correction; do not absorb Editio/NMI changes.
+Resume at the Promptus v0.8.1 release gate; release authorization is explicit.
 
 <!-- now:end -->
 
@@ -645,5 +646,82 @@ Mohan explicitly approves the exact Promptus-only release boundary for 0.8.0 and
 <!-- kb:artifact finding|.promptus/docs/stateless-thinker-rounds-require-independent-adjudication.md|15dbad1d487dbf3b2c468f2129f642afd9067d824228476cdf912b6412eef584 -->
 PR #39 hygiene CI correctly flagged a literal two-space Markdown hard break embedded in the TypeScript fixture; the Markdown-only hook exception does not apply to a .ts file. The source now encodes the same runtime hard break with explicit hexadecimal space escapes, so the emitted validation plan is unchanged while the source has no trailing whitespace. All 10 thinker-round tests pass and the focused diff check is clean. Because the validated finding records the test bytes as an artifact, its still-unreleased page was recreated through kb-add from its byte-identical prose body with the current hash; no knowledge unit was freehand-edited. Editio and Nature Machine Intelligence work remain untouched.
 ↳ extends event-20260823T092919Z-prepare-promptus-080-release-candidate
+
+### [2026-08-23 09:12:46] DECISION/RESOLVED — Keep Psi lifecycle capabilities behind the correctness patch
+<!-- kb:id event-20260823T131246Z-keep-psi-lifecycle-capabilities-behind-the-correctness-patch -->
+Mohan sets the immediate release boundary to the five Psi-derived correctness defects only.
+Preserve three health lights, durable run cards, impact tracing, frontier-aware retrieval, and a
+distillation queue as problem-led follow-on work. Do not add embeddings, SQLite as source of truth,
+a server, or a dashboard without a measured threshold. SQLite remains eligible only as a disposable
+derived index if real latency, memory, or join-heavy analysis later earns it.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+
+### [2026-08-23 09:17:57] RESULT/VALIDATED — Validate the Promptus correctness candidate against Psi
+<!-- kb:id event-20260823T131757Z-validate-the-promptus-correctness-candidate-against-psi -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|dbc9c1aa8889b8c26cdae17b9745b0c237bcd8e4ae7e3068d834998ad9de9d57 -->
+<!-- kb:artifact lock|promptus/scripts/lib/store-lock.ts|8a9f266a07a96c98590802490d45d1914dd181156ce7d8f0436903e2d0663744 -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|10976e93ae8393e1f339db670b5b5e986c395492022b42a5e4d40a175e36f473 -->
+<!-- kb:artifact health|promptus/scripts/promptus-check.ts|5848f5facdfb0888113c86d876bc87ee37d7c149e437ea20194f15a4b185c7df -->
+<!-- kb:artifact preflight|promptus/scripts/promptus-session-doctor.ts|7ce1855831d12df20b4bfdaec6a17b0d21a1483e274332c6f79347a102923284 -->
+<!-- kb:artifact concurrency-regression|promptus/scripts/test/concurrency.test.ts|180d4f09a812d7a6ce35cb97f0ecf6c54661c28f162179faf0607fc38f4af408 -->
+<!-- kb:artifact lifecycle-regression|promptus/scripts/test/check.test.ts|f082f3c9b6fe7e2853b31d59776d8ea403936a6c98d3c6ca52815ee76dc58af0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|93b4e389e642f484642f552dd2f0862fb18d1812101382475a7096bb2587a504 -->
+The Psi-derived correctness candidate implements all five bounded repairs. Explicit ledger links
+round-trip through the authoritative index; doctor and indexer share the fence-aware parser;
+resolved typed relations count for orphan health while PageRank stays wikilink-only; `kb-add` and
+`kb-now` serialize and atomically replace source with unique same-second IDs and anchors; and
+artifact checks keep current failures hard while superseded-unit drift becomes archival warning.
+
+Evidence: the complete Promptus suite passes 206 tests with 913 expectations; marketplace and both
+adapter manifests validate; both changed skills pass their structural validator; a 24-process
+same-title writer race retained all 24 bodies, IDs, anchors, and catalog cards. Against a copied Psi
+store, candidate doctor and index agree on 3,208 ledger events and 5,485 catalog units, and
+relation-aware orphan count falls from 217 to 208. A separate read-only check against Psi artifact
+bytes accounts for all 895 dependencies: 45 of the 117 observed failures belong to superseded units
+and become archival warnings; the remaining 72 retain non-superseded statuses and correctly stay
+red. No Psi source, Psi cache, installed plugin cache, manifest version, tag, publication, or local
+installation was changed.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+↳ supersedes event-20260823T092919Z-prepare-promptus-080-release-candidate
+↳ supersedes event-20260823T093224Z-correct-promptus-doctor-catalog-scale-during-release-audit
+
+### [2026-08-23 09:20:56] RESULT/VALIDATED — Finalize the Promptus correctness release candidate
+<!-- kb:id event-20260823T132056Z-finalize-the-promptus-correctness-release-candidate -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|dbc9c1aa8889b8c26cdae17b9745b0c237bcd8e4ae7e3068d834998ad9de9d57 -->
+<!-- kb:artifact lock|promptus/scripts/lib/store-lock.ts|8a9f266a07a96c98590802490d45d1914dd181156ce7d8f0436903e2d0663744 -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|10976e93ae8393e1f339db670b5b5e986c395492022b42a5e4d40a175e36f473 -->
+<!-- kb:artifact health|promptus/scripts/promptus-check.ts|5848f5facdfb0888113c86d876bc87ee37d7c149e437ea20194f15a4b185c7df -->
+<!-- kb:artifact preflight|promptus/scripts/promptus-session-doctor.ts|589721ce08b5a3af23f90de7d391f2ff005631a47582de061d0abdb8360eaf51 -->
+<!-- kb:artifact concurrency-regression|promptus/scripts/test/concurrency.test.ts|180d4f09a812d7a6ce35cb97f0ecf6c54661c28f162179faf0607fc38f4af408 -->
+<!-- kb:artifact lifecycle-regression|promptus/scripts/test/check.test.ts|f082f3c9b6fe7e2853b31d59776d8ea403936a6c98d3c6ca52815ee76dc58af0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|93b4e389e642f484642f552dd2f0862fb18d1812101382475a7096bb2587a504 -->
+The final Promptus correctness candidate keeps the five Psi-derived repairs bounded: explicit ledger links survive authoritative reindexing; doctor and indexer share the fence-aware parser; resolved typed relations count for connectivity while PageRank remains wikilink-only; concurrent writers serialize, retain every event, and mint unique IDs plus anchors; and artifact drift is adjudicated by unit lifecycle, with current failures hard and superseded evidence archival.
+
+Evidence after the final session-doctor warning de-duplication: the complete Promptus suite passes 206 tests with 913 expectations. The 24-process same-title race preserves all 24 bodies, IDs, anchors, and catalog cards. Marketplace and adapter validation, strict project health, read-only resume preflight, and changed-skill validation are the remaining release gates. The read-only Psi adjudication remains conservative: 45 of 117 observed artifact failures are attached to superseded units and become archival warnings, while 72 non-superseded failures remain red. No Psi source, installed cache, manifest version, tag, publication, or installation was changed.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+↳ supersedes event-20260823T131757Z-validate-the-promptus-correctness-candidate-against-psi
+
+### [2026-08-23 09:27:15] RESULT/VALIDATED — Prepare the Promptus v0.8.1 release commit
+<!-- kb:id event-20260823T132715Z-prepare-the-promptus-v081-release-commit -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|15c48fd4a441f91613729f4ff16ff18d6d032e88348b84c5a06f5bb2155ca204 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|f4b0a7fe6f845369af4dd73945bab09950f9ccb000a4f1f830953d1b758148e5 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|b3cc5023318e0f43604e4dc8abe19b3234a84b743bb689a0d7c77e22b026d4ab -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|dbc9c1aa8889b8c26cdae17b9745b0c237bcd8e4ae7e3068d834998ad9de9d57 -->
+<!-- kb:artifact lock|promptus/scripts/lib/store-lock.ts|8a9f266a07a96c98590802490d45d1914dd181156ce7d8f0436903e2d0663744 -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|10976e93ae8393e1f339db670b5b5e986c395492022b42a5e4d40a175e36f473 -->
+<!-- kb:artifact health|promptus/scripts/promptus-check.ts|5848f5facdfb0888113c86d876bc87ee37d7c149e437ea20194f15a4b185c7df -->
+<!-- kb:artifact doctor|promptus/scripts/promptus-doctor.ts|336aab45ade290365572448b35b3ea43c726a6226066d3c63f7d8be0924f725d -->
+<!-- kb:artifact preflight|promptus/scripts/promptus-session-doctor.ts|589721ce08b5a3af23f90de7d391f2ff005631a47582de061d0abdb8360eaf51 -->
+<!-- kb:artifact concurrency-regression|promptus/scripts/test/concurrency.test.ts|180d4f09a812d7a6ce35cb97f0ecf6c54661c28f162179faf0607fc38f4af408 -->
+<!-- kb:artifact writer-regression|promptus/scripts/test/kb.test.ts|0f38ac0d9da185c046f22807298415554c67ac6c4cdfdc847aab0e75221e9591 -->
+<!-- kb:artifact graph-regression|promptus/scripts/test/graph.test.ts|c993157a2f70cb27ae8c1f9329ca67bb830108adf56a560f0e6b1b120c90fcaf -->
+<!-- kb:artifact lifecycle-regression|promptus/scripts/test/check.test.ts|f082f3c9b6fe7e2853b31d59776d8ea403936a6c98d3c6ca52815ee76dc58af0 -->
+<!-- kb:artifact doctor-regression|promptus/scripts/test/doctor.test.ts|14c6241418e76fc0d0f43b96e9b35f3514265bb7eabcf8f1274ddba82bc86da1 -->
+<!-- kb:artifact preflight-regression|promptus/scripts/test/session-doctor.test.ts|5ef46b257a9c1699e33fe0617a9cef287a9533abdfe13de2ba1505e5b398e382 -->
+Promptus v0.8.1 is finalized as a correctness-only patch. The release boundary contains the five Psi-derived repairs and their regression fixtures: ledger link round-trip, one fence-aware ledger parser, typed-relation connectivity for orphan health, serialized atomic writers with unique same-second identities, and lifecycle-aware artifact health. The larger three-light, run-card, impact, frontier-retrieval, and distillation capabilities remain unreleased backlog.
+
+Both adapter manifests now agree on 0.8.1, the changelog has a non-empty dated release section and corrected compare links, plugin validation passes, and the code-complete repository suite previously passed 309 tests with 1,483 expectations. Real-Psi adjudication remains conservative: 45 superseded dependency failures become archival warnings and 72 non-superseded failures stay red. No installed cache or Psi source was edited.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+↳ supersedes event-20260823T132056Z-finalize-the-promptus-correctness-release-candidate
 
 <!-- kb:append-point -->

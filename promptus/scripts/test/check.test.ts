@@ -121,3 +121,38 @@ test("graph debt is visible without blocking the normal strict profile", () => {
   expect(graphStrict.status).toBe(1);
   expect(graphStrict.out).toContain("dangling links: 1");
 });
+
+test("superseded artifact drift warns while current artifact drift remains a hard failure", () => {
+  const root = scaffold();
+  const badHash = "0".repeat(64);
+  writeFileSync(join(root, "historical-evidence.txt"), "historical bytes\n");
+  writeFileSync(join(root, ".promptus", "docs", "historical.md"), [
+    "---", "id: finding-historical", "substrate: finding", "kind: RESULT", "status: VALIDATED",
+    `artifacts: [evidence|historical-evidence.txt|${badHash}]`, "---", "# Historical evidence", "",
+  ].join("\n"));
+  writeFileSync(join(root, ".promptus", "docs", "replacement.md"), [
+    "---", "id: finding-replacement", "substrate: finding", "kind: RESULT", "status: VALIDATED",
+    "relations: [supersedes:finding-historical]", "---", "# Replacement evidence", "",
+  ].join("\n"));
+
+  const archival = run(root);
+  expect(archival.status).toBe(0);
+  expect(archival.out).toContain("WARN archival artifact drift: 1");
+  let health = JSON.parse(readFileSync(join(root, ".promptus", "cache", "health.json"), "utf8"));
+  expect(health.artifactFailures).toHaveLength(0);
+  expect(health.archivalArtifactWarnings).toHaveLength(1);
+  expect(health.healthy).toBe(true);
+
+  writeFileSync(join(root, "current-evidence.txt"), "current bytes\n");
+  writeFileSync(join(root, ".promptus", "docs", "current.md"), [
+    "---", "id: finding-current", "substrate: finding", "kind: RESULT", "status: VALIDATED",
+    `artifacts: [evidence|current-evidence.txt|${badHash}]`, "---", "# Current evidence", "",
+  ].join("\n"));
+  const current = run(root);
+  expect(current.status).toBe(1);
+  expect(current.out).toContain("FAIL current artifact dependencies");
+  health = JSON.parse(readFileSync(join(root, ".promptus", "cache", "health.json"), "utf8"));
+  expect(health.artifactFailures).toHaveLength(1);
+  expect(health.archivalArtifactWarnings).toHaveLength(1);
+  expect(health.healthy).toBe(false);
+});

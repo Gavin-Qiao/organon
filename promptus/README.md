@@ -148,19 +148,27 @@ flowchart LR
   (stdin); the script owns the envelope, the local timestamp, the id, the placement, the index,
   typed relations, and the **hybrid gate** — *strict* for the curated library (finding/lit/memory:
   off-vocab input is refused with the allowed set), *permissive* for the lab-notebook ledger (an
-  off-vocab kind/status is warned about but still written). `scripts/kb-amend.ts` is the matching
+  off-vocab kind/status is warned about but still written). Concurrent `kb-add` and `kb-now`
+  processes serialize through a short project-local lease and atomically replace source files;
+  same-second ledger ID and anchor collisions receive deterministic suffixes rather than
+  overwriting or making an event ambiguous.
+  Explicit ledger `--links` are stored in Markdown and survive an authoritative reindex.
+  `scripts/kb-amend.ts` is the matching
   gate for metadata transitions on an existing curated unit: it preserves the body, validates the
   requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
 - **KEEP** → `scripts/kb-index.ts` (rebuild the derived `.promptus/cache/CATALOG.md`,
   `search.json`, and `graph.json`; resolve stable IDs/slugs/aliases and supersession; keep archived
   ledger units as opt-in cold history), `scripts/kb-graph.ts lint`
-  (graph health: dangling `[[handles]]` with a "did you mean?", orphans),
+  (graph health: dangling `[[handles]]` with a "did you mean?", plus units with neither a resolved
+  wikilink nor a resolved typed relation),
   `scripts/promptus-check.ts --strict` (authoritative integrity, NOW, artifact, thinker-custody, and freshness gate;
+  active artifact failures are red while superseded-unit drift is an archival warning;
   `--ratchet` enforces no new inherited debt), + `/promptus:checkpoint`.
 - **PREFLIGHT** → `scripts/promptus-session-doctor.ts` is the strictly read-only gate a session
   agent runs before trusting a long-running project's NOW or cache. It compares every live source
   unit with catalog/search and every archived unit with cold search, detects ambiguous identities and search keys, distinguishes stale
-  receipts from current evidence, and diagnoses graph, alias, ratchet, artifact, and layout debt.
+  receipts from current evidence, separates current artifact failures from superseded archival
+  warnings, and diagnoses graph, alias, ratchet, artifact, and layout debt.
   It never reindexes, repairs, refreshes, or baselines.
 - **RETRIEVE** → two tiers. `scripts/kb-find.ts` ranks the lexical index, caps output at 20,
   optionally walks the `[[link]]` graph, and opens cold history only with `--history`; it says

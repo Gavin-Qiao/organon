@@ -5,15 +5,16 @@ argument-hint: "[rank|lint|suggest] [--history] [--top <n>] [--knn <k>] [--stric
 
 # /promptus-graph — inspect the knowledge graph
 
-Query the `[[link]]` graph that `kb-index` derives into `.promptus/cache/graph.json`. Read-only,
-no embeddings — the links *are* the graph, centrality is plain graph math, a dangling handle is a
-string match. If the index is stale, run `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` first.
+Query the Markdown graph that `kb-index` derives into `.promptus/cache/graph.json`. Read-only,
+no embeddings: PageRank uses the resolved `[[link]]` page graph, typed relations also count for
+connectivity health, and a dangling handle is a string match. If the index is stale, run
+`bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` first.
 
 ## Steps
 
 1. **Health — `lint`.** Find what's broken or floating: dangling `[[handles]]` (the link's target
-   isn't a unit — with a "did you mean?" suggestion by slug similarity) and orphans (nothing links
-   in or out). `--strict` exits non-zero on any flaw, so it can gate a checkpoint.
+   isn't a unit — with a "did you mean?" suggestion by slug similarity) and orphans (no resolved
+   wikilink or typed relation in either direction). `--strict` exits non-zero on any flaw, so it can gate a checkpoint.
    ```
    bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-graph.ts" lint --root .
    ```

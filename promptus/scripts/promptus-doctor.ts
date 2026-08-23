@@ -58,6 +58,7 @@ import { spawnSync } from "node:child_process";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectThinkerExchange, type ThinkerExchangeReport } from "./lib/thinker.ts";
+import { ledgerHeads } from "./lib/units.ts";
 
 const SELF_DIR = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_VOCAB = join(SELF_DIR, "..", "templates", "schema", "kb-vocab.json");
@@ -112,6 +113,7 @@ interface DebtReport {
   dangling: number;
   orphans: number;
   artifactFailures: number;
+  archivalArtifactWarnings: number;
   nowFresh: boolean | null;
   baseline: boolean;
   newUnclassified: number | null;
@@ -331,7 +333,7 @@ function readDebt(root: string): DebtReport {
   const hasB = baselineDoc?.schema === "promptus.health-baseline.v1";
   const empty: DebtReport = {
     source: "none", checkedAt: null, units: null, sourceFiles: null,
-    unclassified: 0, dangling: 0, orphans: 0, artifactFailures: 0, nowFresh: null,
+    unclassified: 0, dangling: 0, orphans: 0, artifactFailures: 0, archivalArtifactWarnings: 0, nowFresh: null,
     baseline: hasB, newUnclassified: null, newDangling: null, newOrphans: null, unratcheted: false,
   };
   if (!existsSync(healthPath)) return empty;
@@ -354,6 +356,7 @@ function readDebt(root: string): DebtReport {
     dangling: dangling.length,
     orphans: orphans.length,
     artifactFailures: Array.isArray(h.artifactFailures) ? h.artifactFailures.length : 0,
+    archivalArtifactWarnings: Array.isArray(h.archivalArtifactWarnings) ? h.archivalArtifactWarnings.length : 0,
     nowFresh: h.now && typeof h.now.fresh === "boolean" ? h.now.fresh : null,
     baseline: hasB,
     newUnclassified: hasB ? extra(unPaths, baselineDoc?.unclassified).length : null,
@@ -459,7 +462,7 @@ function diagnose(start: string, opts: { recordBaseline?: boolean } = {}): Diagn
   if (layout === "current") {
     const nsLedger = join(root, CANON.ledger);
     if (existsSync(nsLedger)) {
-      ledgerUnits = (readFileSync(nsLedger, "utf8").match(/^### \[/gm) ?? []).length;
+      ledgerUnits = ledgerHeads(readFileSync(nsLedger, "utf8").replace(/\r\n/g, "\n")).length;
       const catalogPath = join(root, CANON.cache, "CATALOG.md");
       const catalogText = existsSync(catalogPath) ? readFileSync(catalogPath, "utf8") : "";
       const catLines = catalogText ? catalogText.split(/\r?\n/).filter((line) => {
@@ -623,6 +626,7 @@ function diagnose(start: string, opts: { recordBaseline?: boolean } = {}): Diagn
     && extraTrees.length === 0
     && (!thinkerExchange.present || thinkerExchange.governed)
     && rootTwins.length === 0
+    && debt.artifactFailures === 0
     && !debt.unratcheted;
 
   return {
@@ -723,7 +727,7 @@ function reportCheck(d: Diagnosis): void {
   }
   if (d.debt.source === "health.json") {
     const now = d.debt.nowFresh == null ? "" : `; NOW ${d.debt.nowFresh ? "fresh" : "STALE"}`;
-    console.log(`  debt:     ${d.debt.dangling} dangling · ${d.debt.orphans} orphans · ${d.debt.unclassified} unclassified · ${d.debt.artifactFailures} artifact failures${now}${d.debt.checkedAt ? ` (health.json ${d.debt.checkedAt})` : ""}`);
+    console.log(`  debt:     ${d.debt.dangling} dangling · ${d.debt.orphans} orphans · ${d.debt.unclassified} unclassified · ${d.debt.artifactFailures} current artifact failures · ${d.debt.archivalArtifactWarnings} archival artifact warnings${now}${d.debt.checkedAt ? ` (health.json ${d.debt.checkedAt})` : ""}`);
     if (d.debt.baseline) {
       const nd = d.debt.newDangling ?? 0, no = d.debt.newOrphans ?? 0, nu = d.debt.newUnclassified ?? 0;
       console.log(`  ${nd + no + nu ? "FLAG" : "ok  "} ratchet: baseline present; ${nd} new dangling · ${no} new orphans · ${nu} new unclassified vs baseline`);

@@ -314,6 +314,59 @@ test("a current health receipt is compared with the recorded no-new-debt baselin
   expect(report.issues.map((issue: { code: string }) => issue.code)).toContain("RATCHET_NEW_DEBT");
 });
 
+test("superseded artifact drift is an archival warning and does not block resume", () => {
+  const root = scaffold();
+  const badHash = "0".repeat(64);
+  writeFileSync(join(root, "old-evidence.txt"), "changed historical bytes\n");
+  const old = run("kb-add.ts", root, [
+    "--substrate", "finding", "--kind", "RESULT", "--status", "VALIDATED",
+    "--title", "Old evidence", "--artifact", `evidence|old-evidence.txt|${badHash}`,
+  ], "historical result");
+  expect(old.status).toBe(0);
+  const oldId = /\(id ([^)]+)\)/.exec(old.stdout)?.[1];
+  expect(oldId).toBeTruthy();
+  expect(run("kb-add.ts", root, [
+    "--substrate", "finding", "--kind", "RESULT", "--status", "VALIDATED",
+    "--title", "Replacement evidence", "--supersedes", oldId!,
+  ], "current replacement").status).toBe(0);
+  expect(add(root, "Resume evidence").status).toBe(0);
+  expect(now(root).status).toBe(0);
+  expect(check(root).status).toBe(0);
+
+  const result = doctor(root, ["--json", "--artifacts"]);
+  expect(result.status).toBe(0);
+  const report = JSON.parse(result.stdout);
+  expect(report.sessionReady).toBe(true);
+  expect(report.healthReceipt.artifactFailures).toBe(0);
+  expect(report.healthReceipt.archivalArtifactWarnings).toBe(1);
+  expect(report.artifacts.failures).toBe(0);
+  expect(report.artifacts.archivalWarnings).toBe(1);
+  expect(report.issues.map((issue: { code: string }) => issue.code)).toContain("ARCHIVAL_ARTIFACT_DRIFT");
+});
+
+test("a live artifact recheck blocks resume when current evidence drifts after its receipt", () => {
+  const root = scaffold();
+  const artifact = join(root, "current-evidence.txt");
+  writeFileSync(artifact, "sealed current bytes\n");
+  const hash = createHash("sha256").update(readFileSync(artifact)).digest("hex");
+  expect(run("kb-add.ts", root, [
+    "--substrate", "finding", "--kind", "RESULT", "--status", "VALIDATED",
+    "--title", "Current evidence", "--artifact", `evidence|current-evidence.txt|${hash}`,
+  ], "current result").status).toBe(0);
+  expect(add(root, "Resume current evidence").status).toBe(0);
+  expect(now(root).status).toBe(0);
+  expect(check(root).status).toBe(0);
+
+  writeFileSync(artifact, "drifted after the health receipt\n");
+  const result = doctor(root, ["--json", "--artifacts"]);
+  expect(result.status).toBe(1);
+  const report = JSON.parse(result.stdout);
+  expect(report.sessionReady).toBe(false);
+  expect(report.artifacts.failures).toBe(1);
+  expect(report.artifacts.archivalWarnings).toBe(0);
+  expect(report.issues.map((issue: { code: string }) => issue.code)).toContain("ARTIFACTS_FAIL_NOW");
+});
+
 test("an empty resume field blocks a superficially fresh status", () => {
   const root = scaffold();
   expect(add(root, "Evidence").status).toBe(0);

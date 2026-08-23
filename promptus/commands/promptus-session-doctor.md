@@ -29,4 +29,5 @@ it never reindexes, repairs, refreshes NOW, records a baseline, or edits a unit.
 The report distinguishes current evidence from stale cached history, checks every live Markdown
 unit against both catalog and lexical index and every archived unit against cold search, detects stable-ID and search-key collisions, validates
 the append sentinel and NOW marker, verifies any governed thinker exchange without misclassifying it
-as an extra store, reports graph/alias/ratchet/artifact debt, and always states its read-only guarantee.
+as an extra store, reports graph/alias/ratchet/artifact debt, keeps active artifact failures red
+while classifying superseded-unit drift as archival warnings, and always states its read-only guarantee.
