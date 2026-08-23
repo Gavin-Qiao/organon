@@ -18,6 +18,8 @@
  *   stamp      main.tex's scaffold version vs the installed plugin's (the --force
  *              advice is withheld while the order is drifted)
  *   venue      packages/preamble the venue data ships that main.tex lacks
+ *   venue-assets required external files: presence, immutable hashes, and authored
+ *              completion tokens (the exact official style + mandatory forms)
  *   sty        workspace editio.sty vs the plugin's (older scaffold or local edits)
  *   metadata   a hand-finished front/metadata.tex (no GENERATED header) that
  *              --force would clobber
@@ -37,9 +39,9 @@
  *              markdown IS the paper, so git is its version history — milestone tags,
  *              diffs, "the version I sent co-authors"; editio does not rebuild
  *              version control one layer up)
- *   budget     a built PDF exceeding the venue's page limit (venue.json
- *              limits.pages_regular vs the build's own page count) — the overlength
- *              bill surfaces before submission, not on the invoice
+ *   budget     the venue's enforceable budget surface: whole-PDF or content pages,
+ *              PDF size, source-word and display-item limits. Advisory reference
+ *              guidance is reported but does not fail --strict.
  *   paths      naked file paths in section prose (generation dirt: workspace
  *              internals, absolute paths leaking a username, stray artifact files) —
  *              a path in inline code or a fence is deliberate typesetting and exempt;
@@ -50,11 +52,12 @@
  * workspace exits 2 either way.
  */
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { identityTexOf } from "./editio-identity.ts";
-import { findRoot, paperDir, readJSON } from "./lib.ts";
+import { findRoot, markdownProseWordCount, paperDir, parseFrontmatter, readJSON } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TEMPLATES = join(PLUGIN, "templates");
@@ -85,6 +88,91 @@ export function pdfPages(bytes: string): number | null {
   if (counts.length) return Math.max(...counts);
   const pages = bytes.match(/\/Type\s*\/Page\b/g);
   return pages ? pages.length : null;
+}
+
+/** Page carrying a LaTeX label, read from the normal \newlabel record in an aux file. */
+export function auxLabelPage(aux: string, label: string): number | null {
+  const safe = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const hit = aux.match(new RegExp(`^\\\\newlabel\\{${safe}\\}\\{\\{.*?\\}\\{(\\d+)\\}`, "m"));
+  return hit ? Number(hit[1]) : null;
+}
+
+/** Editio's reference build directories encode the mode in their stable name. */
+export function buildMode(rel: string): "draft" | "blind" | "publish" | null {
+  const dir = rel.split("/")[0];
+  if (dir === "build") return "draft";
+  if (dir === "build-blind") return "blind";
+  if (dir === "build-publish") return "publish";
+  return null;
+}
+
+function safeAssetPath(paper: string, rel: string): string | null {
+  if (!rel || rel.startsWith("/") || /^[A-Za-z]:/.test(rel) || rel.includes("\\")) return null;
+  const parts = rel.split("/");
+  if (parts.some((part) => !part || part === "." || part === "..")) return null;
+  return join(paper, ...parts);
+}
+
+/** Required venue files are external inputs: prove presence, immutable bytes when
+ * declared, and authored completion rather than silently copying them. */
+export function requiredAssetHealth(paper: string, venue: any): { findings: Finding[]; notes: string[] } {
+  const findings: Finding[] = [];
+  const notes: string[] = [];
+  for (const asset of venue?.required_assets ?? []) {
+    const rel = String(asset?.path ?? "");
+    const path = safeAssetPath(paper, rel);
+    if (!path) {
+      findings.push({ check: "venue-assets", detail: `venue "${venue?.id ?? "?"}" declares unsafe required asset path "${rel}"` });
+      continue;
+    }
+    if (!existsSync(path)) {
+      findings.push({ check: "venue-assets", detail: `${rel} is missing (${asset?.role ?? "required venue asset"}) — obtain it from ${asset?.source ?? "the official venue kit"}` });
+      continue;
+    }
+    const bytes = readFileSync(path);
+    if (asset.sha256) {
+      const actual = createHash("sha256").update(bytes).digest("hex");
+      if (actual !== String(asset.sha256)) {
+        findings.push({ check: "venue-assets", detail: `${rel} SHA-256 is ${actual}, expected ${asset.sha256} — use the exact verified official file; do not patch the venue style` });
+        continue;
+      }
+    }
+    const text = bytes.toString("utf8");
+    for (const token of asset.forbidden_tokens ?? []) {
+      const needle = String(token);
+      const count = needle ? text.split(needle).length - 1 : 0;
+      if (count) findings.push({ check: "venue-assets", detail: `${rel} still contains ${count} ${JSON.stringify(needle)} placeholder${count === 1 ? "" : "s"} — finish the authored venue form before submission` });
+    }
+    if (!findings.some((f) => f.detail.startsWith(`${rel} `))) notes.push(`venue asset: ${rel} verified`);
+  }
+  return { findings, notes };
+}
+
+/** Manuscript-bearing source: prose plus raw/transforming LaTeX fences, with
+ * code/verbatim fences removed. Used for venue display-item and citation counts. */
+export function manuscriptSurface(md: string): string {
+  const latex: string[] = [];
+  let prose = md.replace(/```latex\+?\n([\s\S]*?)```/g, (_, body: string) => { latex.push(body); return " "; });
+  prose = prose.replace(/```[^\n]*\n[\s\S]*?```/g, " ");
+  return `${prose}\n${latex.join("\n")}`;
+}
+
+export function displayItemCount(md: string): number {
+  return (manuscriptSurface(md).match(/\\begin\{(?:figure|table)\*?\}/g) ?? []).length;
+}
+
+export function citationKeys(md: string): Set<string> {
+  const out = new Set<string>();
+  const src = manuscriptSurface(md);
+  const add = (raw: string) => {
+    for (const part of raw.split(/[;,]/)) {
+      const key = part.trim().replace(/^@/, "");
+      if (key && !/^(?:fig|tab|sec|eq|num):/.test(key)) out.add(key);
+    }
+  };
+  for (const m of src.matchAll(/\[@([^\]]+)\]/g)) add(m[1]);
+  for (const m of src.matchAll(/\\(?:cite\w*|selfcite)\{([^}]+)\}/g)) add(m[1]);
+  return out;
 }
 
 /** Path-shaped tokens that read as generation dirt in paper prose, most specific first. */
@@ -192,6 +280,20 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
       const key = l.match(/^\\(?:renewcommand\{\\[\w@]+\}|setcounter\{[\w@]+\})/)?.[0] ?? l;
       if (!preambleText.includes(key)) flag("venue", `venue preamble line missing from main.tex/macros.tex: ${l}`);
     }
+    if (venue.venue_package?.name) {
+      const packageName = String(venue.venue_package.name);
+      for (const options of Object.values(venue.venue_package.mode_options ?? {}) as unknown[]) {
+        const opts = Array.isArray(options) ? options.map(String).filter(Boolean) : [];
+        const expected = `\\usepackage${opts.length ? `[${opts.join(",")}]` : ""}{${packageName}}`;
+        if (!mainTex.includes(expected)) flag("venue", `venue package branch missing from main.tex: ${expected}`);
+      }
+    }
+  }
+
+  if (venue) {
+    const assets = requiredAssetHealth(paper, venue);
+    findings.push(...assets.findings);
+    notes.push(...assets.notes);
   }
 
   // sty — the render layer is generated verbatim; any difference is drift.
@@ -216,6 +318,8 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     ? readdirSync(sectionsDir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")).sort()
     : [];
   const authors: string[] = Array.isArray(meta.authors) ? meta.authors.map((a: any) => String(a?.name ?? "")).filter(Boolean) : [];
+  const sectionStats: { slug: string; cls: string; words: number; displayItems: number; hasSubheadings: boolean }[] = [];
+  const cited = new Set<string>();
   let stale = 0;
   for (const slug of slugs) {
     const mdPath = join(sectionsDir, `${slug}.md`);
@@ -228,6 +332,15 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     }
 
     const md = norm(readFileSync(mdPath, "utf8"));
+    const parsed = parseFrontmatter(md);
+    sectionStats.push({
+      slug,
+      cls: String(parsed.data.class ?? "?"),
+      words: markdownProseWordCount(parsed.body),
+      displayItems: displayItemCount(md),
+      hasSubheadings: /^#{2,3}\s+/m.test(parsed.body),
+    });
+    for (const key of citationKeys(md)) cited.add(key);
     for (const m of md.matchAll(/```latex\n([\s\S]*?)```/g)) {
       if (/\\(cite|ref|cref|Cref)\b/.test(m[1])) {
         const line = md.slice(0, m.index!).split("\n").length;
@@ -258,6 +371,18 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
   }
   if (stale) flag("render", `${stale} section(s) have .md newer than .tex — run editio-render --all`);
   notes.push(`sections: ${slugs.length}`);
+
+  // venue structure — data, not hard-coded journal names. NMI uses this for an
+  // unheaded Introduction (handled by the renderer) and a Discussion with no
+  // subheadings (checked here before submission).
+  if (venue) {
+    const forbidden = new Set<string>((venue.structure?.forbid_subheadings ?? []).map(String));
+    for (const s of sectionStats) {
+      if (forbidden.has(s.slug) && s.hasSubheadings) {
+        flag("venue", `venue "${venueId}" forbids subheadings in sections/${s.slug}.md`);
+      }
+    }
+  }
 
   // strays — editio builds out-of-tree to build*/ dirs, so a PDF in the paper source
   // root is a hand-saved copy (a real paper grew a 3-day-stale main.pdf and two
@@ -350,6 +475,71 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
       if (n > pagesLimit) flag("budget", `${rel} runs ${n} pages — venue "${venueId}" bills past ${pagesLimit} (${venue.limits?.note ?? "overlength policy"})`);
       else notes.push(`pages: ${rel} ${n}/${pagesLimit}`);
     }
+  }
+
+  // Some venues exempt back matter rather than bounding the whole PDF. The
+  // scaffold emits a label at the exact content/back-matter boundary; the aux
+  // file turns that semantic boundary into a deterministic page number.
+  const contentLimits = venue?.limits?.content_pages;
+  if (contentLimits && typeof contentLimits === "object") {
+    for (const rel of buildPdfs) {
+      const mode = buildMode(rel);
+      const limit = mode ? Number(contentLimits[mode]) : NaN;
+      if (!mode || !Number.isFinite(limit)) continue;
+      const auxRel = rel.replace(/\.pdf$/i, ".aux");
+      const auxPath = join(paper, auxRel);
+      if (!existsSync(auxPath)) {
+        flag("budget", `${rel} has no ${auxRel} — cannot verify venue "${venueId}" ${mode} content-page limit ${limit}; rebuild with latexmk and keep the aux beside the PDF`);
+        continue;
+      }
+      const page = auxLabelPage(readFileSync(auxPath, "utf8"), "editio:content-end");
+      if (page == null) {
+        flag("budget", `${auxRel} has no readable editio:content-end label — rescaffold with --force, rebuild twice, then re-run the doctor`);
+      } else if (page > limit) {
+        flag("budget", `${rel} has ${page} ${mode} content pages — venue "${venueId}" allows ${limit}; exempt back matter begins after editio:content-end (${venue.limits?.note ?? "venue content-page policy"})`);
+      } else {
+        notes.push(`content pages: ${rel} ${page}/${limit} (${mode})`);
+      }
+    }
+  }
+
+  const pdfMb = Number(venue?.limits?.pdf_mb);
+  if (Number.isFinite(pdfMb) && pdfMb > 0) {
+    const maxBytes = pdfMb * 1_000_000;
+    for (const rel of buildPdfs) {
+      const bytes = statSync(join(paper, rel)).size;
+      if (bytes > maxBytes) flag("budget", `${rel} is ${(bytes / 1_000_000).toFixed(1)} MB — venue "${venueId}" allows ${pdfMb} MB`);
+      else notes.push(`PDF size: ${rel} ${(bytes / 1_000_000).toFixed(1)}/${pdfMb} MB`);
+    }
+  }
+
+  // Venue budgets beyond pages. Nature-family venues are constrained by prose
+  // and display items, so a page-only doctor would be falsely reassuring.
+  const limits = venue?.limits ?? {};
+  const excluded = new Set<string>((limits.main_text_exclude_classes ?? []).map(String));
+  if (typeof limits.main_text_words === "number") {
+    const n = sectionStats.filter((s) => !excluded.has(s.cls)).reduce((sum, s) => sum + s.words, 0);
+    if (n > limits.main_text_words) flag("budget", `main-text source estimate is ${n} words — venue "${venueId}" allows ${limits.main_text_words} (${limits.note ?? "venue word policy"})`);
+    else notes.push(`main text: ${n}/${limits.main_text_words} words`);
+  }
+  if (typeof limits.abstract_words === "number") {
+    const n = sectionStats.filter((s) => s.cls === "doco:Abstract").reduce((sum, s) => sum + s.words, 0);
+    if (n > limits.abstract_words) flag("budget", `abstract source estimate is ${n} words — venue "${venueId}" allows ${limits.abstract_words}`);
+    else notes.push(`abstract: ${n}/${limits.abstract_words} words`);
+  }
+  const extendedClasses = new Set<string>((limits.extended_data_classes ?? []).map(String));
+  const mainDisplayItems = sectionStats.filter((s) => !extendedClasses.has(s.cls)).reduce((sum, s) => sum + s.displayItems, 0);
+  const extendedItems = sectionStats.filter((s) => extendedClasses.has(s.cls)).reduce((sum, s) => sum + s.displayItems, 0);
+  if (typeof limits.display_items === "number") {
+    if (mainDisplayItems > limits.display_items) flag("budget", `${mainDisplayItems} main display items — venue "${venueId}" allows ${limits.display_items}`);
+    else notes.push(`display items: ${mainDisplayItems}/${limits.display_items}`);
+  }
+  if (typeof limits.extended_data_items === "number") {
+    if (extendedItems > limits.extended_data_items) flag("budget", `${extendedItems} Extended Data items — venue "${venueId}" allows ${limits.extended_data_items}`);
+    else notes.push(`Extended Data: ${extendedItems}/${limits.extended_data_items}`);
+  }
+  if (typeof limits.references_guideline === "number") {
+    notes.push(`references: ${cited.size}${cited.size > limits.references_guideline ? ` (above venue guideline ${limits.references_guideline}; advisory, not a hard gate)` : `/${limits.references_guideline} guideline`}`);
   }
 
   return { findings, notes };

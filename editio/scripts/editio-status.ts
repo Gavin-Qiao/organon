@@ -22,7 +22,7 @@
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { findRoot, paperDir, parseFrontmatter, slugify } from "./lib.ts";
+import { findRoot, markdownProseWordCount, paperDir, parseFrontmatter, slugify } from "./lib.ts";
 import { findSpans, parseAttrs, sectionOrder } from "./editio-render.ts";
 
 interface Unit { substrate: string; status: string }
@@ -124,7 +124,7 @@ function main(argv: string[]): number {
     // so "skeleton just created" vs "drafted" vs "clean" is readable from the report
     // (a fresh scaffold and a finished paper used to be indistinguishable here) —
     // shown against the section's own `budget:` frontmatter when it carries one
-    const words = body.replace(/```[\s\S]*?```/g, " ").split("\n").filter((l) => !/^#{1,6}\s/.test(l)).join(" ").split(/\s+/).filter(Boolean).length;
+    const words = markdownProseWordCount(body);
     totalWords += words;
     const budget = Number.parseInt(String(data.budget ?? ""), 10);
     const flag = tally.ungraded || tally.unsourced ? `  <- ${[tally.ungraded ? `${tally.ungraded} ungraded` : "", tally.unsourced ? `${tally.unsourced} unsourced` : ""].filter(Boolean).join(", ")}` : "";

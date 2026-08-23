@@ -14,7 +14,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { writeIdentity } from "./editio-identity.ts";
+import { authorMacroSuffix, writeIdentity } from "./editio-identity.ts";
 import { findRoot, paperDir, readJSON, texEscape } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -55,6 +55,27 @@ function humanize(slug: string): string {
  */
 function metadataTex(meta: any, authorFormat: string): string {
   const blindLabel = texEscape(meta.blind?.label ?? "Anonymous Authors");
+  if (authorFormat === "neurips") {
+    const authors: any[] = Array.isArray(meta.authors) ? meta.authors : [];
+    const blocks = authors.map((_: any, i: number) => {
+      const suffix = authorMacroSuffix(i);
+      return [
+        `  \\Author${suffix}Name \\\\`,
+        `  \\Author${suffix}Affiliation \\\\`,
+        `  \\texttt{\\Author${suffix}Email}`,
+      ].join("\n");
+    }).join("\n  \\And\n");
+    return [
+      "% front/metadata.tex — GENERATED from paper.json by editio-scaffold (--force to regenerate).",
+      "% Identity DATA comes from front/identity.tex; the official venue package owns anonymity.",
+      "\\input{front/identity}",
+      "\\title{\\PaperTitle}",
+      "\\author{%",
+      blocks,
+      "}",
+      "",
+    ].join("\n");
+  }
   const author = authorFormat === "ieee-journal"
     ? "\\AuthorList\\thanks{\\IdentityThanks}"
     : "\\AuthorListAnd\\thanks{\\IdentityThanks}";
@@ -71,6 +92,45 @@ function metadataTex(meta: any, authorFormat: string): string {
     "\\fi",
     "",
   ].join("\n");
+}
+
+function packageLine(name: string, options: unknown): string {
+  if (!/^[A-Za-z0-9_.-]+$/.test(name)) throw new Error(`unsafe venue package name "${name}"`);
+  const opts = Array.isArray(options) ? options.map(String).filter(Boolean) : [];
+  return `\\usepackage${opts.length ? `[${opts.join(",")}]` : ""}{${name}}`;
+}
+
+/** A venue may map Editio's three stable modes onto its official package options. */
+function venuePackageTex(venue: any): string {
+  const spec = venue.venue_package;
+  if (!spec?.name) return "";
+  const mode = spec.mode_options ?? {};
+  return [
+    "\\ifeditioblind",
+    `  ${packageLine(String(spec.name), mode.blind)}`,
+    "\\else\\ifeditiopublish",
+    `  ${packageLine(String(spec.name), mode.publish)}`,
+    "\\else",
+    `  ${packageLine(String(spec.name), mode.draft)}`,
+    "\\fi\\fi",
+  ].join("\n");
+}
+
+function venueRelativePath(value: unknown, kind: string): string {
+  const path = String(value ?? "");
+  const parts = path.split("/");
+  if (!path || path.startsWith("/") || /^[A-Za-z]:/.test(path) || path.includes("\\") ||
+      parts.some((part) => !part || part === "." || part === "..")) {
+    throw new Error(`unsafe venue ${kind} "${path}"`);
+  }
+  return path;
+}
+
+function tailInputTex(input: any): string {
+  const spec = typeof input === "string" ? { path: input, required: false } : input;
+  const path = venueRelativePath(spec?.path, "tail input");
+  if (!spec.required) return `\\InputIfFileExists{${path}}{}{}`;
+  return `\\InputIfFileExists{${path}}{}{\\PackageError{editio}{Required venue file ${texEscape(path)} is missing}{See this venue's required_assets in venue.json.}}`;
 }
 
 function main(argv: string[]): number {
@@ -90,15 +150,16 @@ function main(argv: string[]): number {
   if (!existsSync(gatePath)) { copyFileSync(join(TEMPLATES, "schema", "doco-deo.json"), gatePath); log("seeded .editio/schema/doco-deo.json"); }
   const gate = readJSON(gatePath);
 
-  // 2. paper.json — authored; placeholders only, never overwritten.
-  if (seed(join(paper, "paper.json"), readFileSync(join(TEMPLATES, "paper.json"), "utf8"))) {
-    log("seeded paper.json (placeholder identity — edit it; it is the only place your name goes)");
-  }
-  const meta = readJSON(join(paper, "paper.json"));
-
-  // 3. Resolve venue + order (flags override paper.json; paper.json stays untouched).
-  const venueId = arg(argv, "venue") ?? meta.venue ?? "arxiv";
-  const orderId = arg(argv, "order") ?? meta.order ?? "cs-systems";
+  // 2–3. Resolve venue + order before seeding paper.json. On a NEW workspace the
+  // CLI selections become authored metadata, so `/editio nmi` cannot create a
+  // main.tex for NMI while paper.json still says arxiv (the old immediate-drift
+  // footgun). On an EXISTING workspace flags remain non-mutating overrides: a
+  // venue experiment never silently rewrites authored metadata.
+  const metaPath = join(paper, "paper.json");
+  const fresh = !existsSync(metaPath);
+  const templateMeta = readJSON(join(TEMPLATES, "paper.json"));
+  const existingMeta = fresh ? templateMeta : readJSON(metaPath);
+  const venueId = arg(argv, "venue") ?? existingMeta.venue ?? "arxiv";
   const venuePath = join(TEMPLATES, "venues", venueId, "venue.json");
   if (!existsSync(venuePath)) {
     const known = readdirSync(join(TEMPLATES, "venues"));
@@ -106,11 +167,17 @@ function main(argv: string[]): number {
     return 1;
   }
   const venue = readJSON(venuePath);
+  const orderId = arg(argv, "order") ?? (fresh ? venue.default_order : existingMeta.order) ?? "cs-systems";
   const order: string[] = gate.orders?.[orderId];
   if (!order) {
     console.error(`editio-scaffold: unknown order "${orderId}" — available: ${Object.keys(gate.orders ?? {}).join(", ")}`);
     return 1;
   }
+  if (fresh) {
+    writeFileSync(metaPath, `${JSON.stringify({ ...templateMeta, venue: venueId, order: orderId }, null, 2)}\n`);
+    log(`seeded paper.json (venue ${venueId}, order ${orderId}; placeholder identity — edit it; it is the only place your name goes)`);
+  }
+  const meta = readJSON(metaPath);
 
   // 4. The render layer — derived from the plugin; refresh with --force.
   if (generate(join(paper, "editio.sty"), readFileSync(join(TEMPLATES, "latex", "editio.sty"), "utf8"), force)) log("wrote editio.sty");
@@ -122,12 +189,23 @@ function main(argv: string[]): number {
   //    abstract leaves the body flow for those venues. Running heads (\markboth) come
   //    from the identity macros, blind-guarded.
   const ieee = venue.author_format === "ieee-journal";
-  const inputs = order
+  const flowClasses = order
     .filter((c) => c !== "doco:BibliographicReferenceList") // the bibliography is main.tex's own tail
-    .filter((c) => !(ieee && c === "doco:Abstract")) // IEEE: the abstract renders inside the title block
+    .filter((c) => !(ieee && c === "doco:Abstract")); // IEEE: the abstract renders inside the title block
+  const preBib = new Set<string>((venue.assembly?.pre_bibliography_classes ?? []).map(String));
+  const postBib = new Set<string>((venue.assembly?.post_bibliography_classes ?? []).map(String));
+  const inputLines = (classes: string[]) => classes
     .map((c) => gate.section_slugs?.[c] ?? c.split(":").pop()!.toLowerCase())
     .map((slug) => `\\InputIfFileExists{sections/${slug}}{}{}`)
     .join("\n");
+  const inputs = inputLines(flowClasses.filter((c) => !preBib.has(c) && !postBib.has(c)));
+  const preBibInputs = inputLines(flowClasses.filter((c) => preBib.has(c)));
+  const postBibInputs = inputLines(flowClasses.filter((c) => postBib.has(c)));
+  const contentBoundary = venue.limits?.content_pages
+    ? "\\phantomsection\\label{editio:content-end}% venue content-page boundary; back matter follows"
+    : "";
+  const tailInputs = (venue.assembly?.tail_inputs ?? []).map(tailInputTex).join("\n");
+  const venuePackage = venuePackageTex(venue);
   const runningHead = venue.running_head
     ? [`\\ifeditioblind\\markboth{${venue.running_head}}{\\PaperShortTitle}\\else\\markboth{${venue.running_head}}{\\AuthorRunning: \\PaperShortTitle}\\fi`]
     : [];
@@ -152,12 +230,17 @@ function main(argv: string[]): number {
     .replace("EDITIO_VENUE", venue.id)
     .replace("EDITIO_CLASS_OPTIONS", (venue.class_options ?? []).join(","))
     .replace("EDITIO_CLASS", venue.class)
+    .replace("EDITIO_VENUE_PACKAGE\n", venuePackage ? `${venuePackage}\n` : "")
     .replace("EDITIO_EXTRA_PACKAGES\n", packages ? `${packages}\n` : "")
     .replace("EDITIO_VENUE_PREAMBLE\n", preamble ? `${preamble}\n` : "")
     .replace("EDITIO_TITLEBLOCK", titleBlock)
     .replace("EDITIO_SECTIONS", inputs)
+    .replace("EDITIO_CONTENT_BOUNDARY", contentBoundary)
+    .replace("EDITIO_PRE_BIBLIOGRAPHY", preBibInputs)
     .replace("EDITIO_BIBSTYLE", venue.bib_style)
-    .replace("EDITIO_BIB", String(meta.bibliography ?? "refs.bib").replace(/\.bib$/, ""));
+    .replace("EDITIO_BIB", String(meta.bibliography ?? "refs.bib").replace(/\.bib$/, ""))
+    .replace("EDITIO_POST_BIBLIOGRAPHY", postBibInputs)
+    .replace("EDITIO_TAIL_INPUTS", tailInputs);
   if (generate(join(paper, "main.tex"), mainTex, force)) log(`wrote main.tex (venue ${venue.id}, order ${orderId})`);
 
   // 5a. front/macros.tex — the AUTHORED extension point (the first dogfood reached
@@ -202,7 +285,9 @@ function main(argv: string[]): number {
       .replace("EDITIO_FIG_W_IN", wIn.toFixed(2))
       .replace("EDITIO_FIG_H_IN", (wIn / 1.618).toFixed(2))
       .replace("EDITIO_FULL_W_IN", fullIn.toFixed(2))
-      .replace("EDITIO_FONT_PT", String(venue.figure_font_pt ?? 8));
+      .replace("EDITIO_FONT_PT", String(venue.figure_font_pt ?? 8))
+      .replace("EDITIO_FONT_FAMILY", String(venue.figure_font_family ?? "serif"))
+      .replace("EDITIO_MATH_FONTSET", String(venue.figure_math_fontset ?? "cm"));
     if (generate(join(paper, "figures", "editio.mplstyle"), mpl, force)) {
       log(`wrote figures/editio.mplstyle (${venue.column_width_mm}mm column, ${venue.figure_font_pt ?? 8}pt)`);
     }
@@ -213,8 +298,9 @@ function main(argv: string[]): number {
   // 7. Section stubs — authored files, seeded once per order entry.
   const today = new Date().toISOString().slice(0, 10);
   let stubs = 0;
+  const optionalClasses = new Set<string>((venue.structure?.optional_classes ?? []).map(String));
   for (const cls of order) {
-    if (cls === "doco:BibliographicReferenceList") continue;
+    if (cls === "doco:BibliographicReferenceList" || optionalClasses.has(cls)) continue;
     const slug = gate.section_slugs?.[cls] ?? cls.split(":").pop()!.toLowerCase();
     const stub = [
       "---",
@@ -232,6 +318,16 @@ function main(argv: string[]): number {
 
   // 8. refs.bib — authored; editio-bib (Phase 4) will generate from the lit store.
   seed(join(paper, String(meta.bibliography ?? "refs.bib")), "% refs.bib — editio-bib builds this from the promptus lit store (Phase 4); hand-add entries meanwhile.\n");
+
+  // 8b. Venue-owned files are operator-supplied when redistribution is not licensed.
+  //     Scaffold never replaces them; the doctor verifies presence, exact immutable
+  //     bytes, and any completion tokens declared by the venue profile.
+  for (const asset of venue.required_assets ?? []) {
+    const rel = venueRelativePath(asset.path, "required asset");
+    if (!existsSync(join(paper, ...rel.split("/")))) {
+      log(`venue asset missing: ${rel} — obtain from ${asset.source ?? "the official venue kit"}`);
+    }
+  }
 
   // 9. Keep the derived build dir out of git (the paper source itself is committed).
   const gi = join(root, ".gitignore");

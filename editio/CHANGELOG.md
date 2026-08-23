@@ -6,6 +6,42 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-23
+
+### Added
+
+- **NeurIPS Main Track venue profile through the official author kit.** `--venue neurips`
+  selects a reusable ML-conference order and maps Editio's modes to the official package's
+  `preprint`, anonymous `main`, and accepted `main,final` options. It assembles optional
+  acknowledgements before references, an optional technical appendix after them, and the
+  mandatory checklist at the tail. The year-specific style and checklist remain
+  operator-supplied; Editio verifies the style's SHA-256 and refuses an unfinished checklist.
+- **General venue package, assembly, asset, and content-budget contracts.** Venue JSON can
+  now declare mode-specific package options, section-owned environments, optional section
+  classes, pre-/post-bibliography sections, required tail inputs, externally supplied assets,
+  mode-specific content-page limits, and a PDF-size limit. The scaffold and renderer consume
+  those declarations; the doctor validates the resulting workspace and reads the generated
+  LaTeX boundary label rather than mistaking exempt back matter for content pages.
+- **Nature Machine Intelligence Article venue profile.** `--venue nmi` now selects the
+  official Article order (unheaded Introduction → Results → Discussion → Methods), optional
+  double-anonymized review semantics, 88/180mm original-research artwork slots, 7pt
+  sans-serif figure type, numerical references, and live-source policy notes. The profile
+  is explicit that its standard-article PDF is an initial-review proxy, not Nature house
+  style or an Acceptance-in-Principle source package.
+- **Venue budgets beyond pages.** The doctor now checks venue-data limits for main-text and
+  abstract words, main and Extended Data display items, and reports reference guidelines
+  without turning advisory guidance into a hard failure. The shared word estimator removes
+  Editio claim machinery, citations, headings, and fenced legends instead of charging them
+  to the author.
+
+### Fixed
+
+- **Fresh scaffolds persist the requested venue and its default order.** Starting with
+  `--venue tpami` or `--venue nmi` no longer generates one venue while leaving the authored
+  `paper.json` at `arxiv`. Existing workspaces remain non-mutating when flags are used, so
+  intentional venue experiments still surface as doctor drift rather than silently changing
+  paper metadata.
+
 ## [0.6.0] - 2026-07-09
 
 ### Added
@@ -286,7 +322,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.7.0...HEAD
+[0.7.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...editio-v0.7.0
 [0.6.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...editio-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...editio-v0.5.2
 [0.5.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...editio-v0.5.1

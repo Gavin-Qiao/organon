@@ -1,0 +1,60 @@
+{
+  "_note": "Nature Machine Intelligence — Article profile for initial review, with production artwork sizes retained for figure authoring. Nature accepts a compiled PDF from standard LaTeX at initial submission and imposes house style after acceptance; this is a review-friendly proxy, not a reproduction of Nature's proprietary layout.",
+  "id": "nmi",
+  "name": "Nature Machine Intelligence (Article)",
+  "article_type": "Article",
+  "class": "article",
+  "class_options": ["11pt", "a4paper", "twocolumn"],
+  "columns": 2,
+  "column_width_mm": 88,
+  "full_width_mm": 180,
+  "figure_font_pt": 7,
+  "figure_font_family": "sans-serif",
+  "figure_math_fontset": "dejavusans",
+  "bib_style": "unsrtnat",
+  "packages": [
+    "[numbers,sort&compress]{natbib}",
+    "[left=15mm,right=15mm,top=20mm,bottom=20mm,columnsep=4mm]{geometry}"
+  ],
+  "author_format": "plain",
+  "default_order": "nature-article",
+  "engine": "pdflatex",
+  "review": "single-anonymized by default; double-anonymized is optional and author-selected",
+  "structure": {
+    "suppress_section_headings": ["introduction"],
+    "forbid_subheadings": ["discussion"]
+  },
+  "limits": {
+    "main_text_words": 3500,
+    "main_text_exclude_classes": [
+      "doco:Abstract",
+      "deo:Methods",
+      "deo:Acknowledgements",
+      "deo:SupplementaryInformationDescription",
+      "doco:BibliographicReferenceList"
+    ],
+    "abstract_words": 150,
+    "display_items": 6,
+    "extended_data_items": 10,
+    "extended_data_classes": ["deo:SupplementaryInformationDescription"],
+    "references_guideline": 50,
+    "note": "Article profile verified from the live NMI content-type and submission pages on 2026-08-11; main-text words exclude abstract, Methods, references, and figure legends"
+  },
+  "sources": {
+    "content_type": "https://www.nature.com/natmachintell/content",
+    "initial_formatting": "https://www.nature.com/natmachintell/submission-guidelines/initial-formatting",
+    "preparing_submission": "https://www.nature.com/natmachintell/submission-guidelines/preparing-your-submission",
+    "double_anonymized_review": "https://www.nature.com/natmachintell/submission-guidelines/dapr",
+    "acceptance_formatting": "https://www.nature.com/natmachintell/submission-guidelines/aip-and-formatting",
+    "final_artwork": "https://www.nature.com/documents/NRJs-guide-to-preparing-final-artwork.pdf"
+  },
+  "notes": [
+    "Article: up to 3,500 main-text words, excluding abstract, Methods, references and figure legends; abstract up to 150 unreferenced words; up to six main display items; typically up to 50 references",
+    "official Article order: unheaded Introduction, Results, Discussion, Methods; Results and Methods use topical subheadings, while Discussion has none",
+    "initial submission is format-flexible and accepts a compiled PDF from TeX/LaTeX; the generated standard-article proxy is for authoring and review, not Nature house style",
+    "production artwork: original research uses 88mm and 180mm figure widths, RGB colour, editable vector art where possible, and 5–7pt sans-serif labels; the scaffold uses the upper 7pt bound",
+    "up to ten Extended Data display items; put Editio-managed Extended Data in a section classed deo:SupplementaryInformationDescription so the doctor can count it separately",
+    "double-anonymized review is optional; authors are responsible for anonymization, and author details move to the cover letter",
+    "after acceptance in principle, Nature requires editable Word or standard LaTeX source, numerical references embedded in the manuscript, and no personal macros; final packaging is a later editio-venue concern"
+  ]
+}

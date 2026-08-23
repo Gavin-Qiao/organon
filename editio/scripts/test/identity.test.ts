@@ -10,7 +10,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { identityTexOf, shortName, stripTexorpdfstring } from "../editio-identity.ts";
+import { authorMacroSuffix, identityTexOf, shortName, stripTexorpdfstring } from "../editio-identity.ts";
 
 const IDENTITY = join(import.meta.dir, "..", "editio-identity.ts");
 const SCAFFOLD = join(import.meta.dir, "..", "editio-scaffold.ts");
@@ -64,9 +64,18 @@ test("identityTexOf: title verbatim (math survives), authors as data macros, cor
   expect(tex).toContain("\\newcommand{\\CorrAuthorShort}{A.~Turing}"); // the marked author, not the first
   expect(tex).toContain("\\newcommand{\\CorrEmail}{a\\_turing@example.org}"); // escaped for LaTeX
   expect(tex).toContain("\\newcommand{\\AuthorOneName}{Ada Lovelace King}");
+  expect(tex).toContain("\\newcommand{\\AuthorOneAffiliation}{Analytical Engines Ltd}");
+  expect(tex).toContain("\\newcommand{\\AuthorOneEmail}{}");
   expect(tex).toContain("\\newcommand{\\AuthorTwoName}{Alan Turing}");
+  expect(tex).toContain("\\newcommand{\\AuthorTwoEmail}{a\\_turing@example.org}");
   expect(tex).toContain("The authors are with Analytical Engines Ltd.");
   expect(tex).toContain("Corresponding author: A.~Turing (a\\_turing@example.org).");
+});
+
+test("author macro suffixes are stable and reject unsupported indices", () => {
+  expect(authorMacroSuffix(0)).toBe("One");
+  expect(authorMacroSuffix(19)).toBe("Twenty");
+  expect(() => authorMacroSuffix(20)).toThrow("outside the supported");
 });
 
 test("no corresponding flag defaults to the first author; no email drops the sentence", () => {
@@ -109,11 +118,9 @@ test("editio-render --all refreshes the identity layer, so one command propagate
 
 test("a venue with a bio_env gets front/bios.tex — macro-driven stubs, blind-masked", () => {
   const root = scratch();
-  run(SCAFFOLD, root, "--venue", "tpami");
-  const meta = paper(root, "paper.json");
-  writeFileSync(meta, read(meta).replace('"venue": "arxiv"', '"venue": "tpami"'));
-  const r = run(IDENTITY, root);
-  expect(r.out).toContain("wrote front/bios.tex");
+  const scaffold = run(SCAFFOLD, root, "--venue", "tpami");
+  expect(scaffold.out).toContain("wrote front/bios.tex");
+  expect(run(IDENTITY, root).out).toContain("front/identity.tex is current");
   const bios = read(paper(root, "front", "bios.tex"));
   expect(bios).toContain("\\ifeditioblind\\else");
   expect(bios).toContain("\\begin{IEEEbiographynophoto}{\\AuthorOneName}\\AuthorOneBio\\end{IEEEbiographynophoto}");

@@ -1,7 +1,16 @@
 ---
 name: humanizer
-description: Remove signs of AI-generated writing from text and add the positive qualities of genuinely human writing. Use when editing or reviewing text to make it sound more natural and human-written. Detects and fixes patterns from Wikipedia's "Signs of AI writing" guide (inflated symbolism, promotional language, superficial -ing analyses, vague attributions, em dash overuse, rule of three, AI vocabulary, passive voice, negative parallelisms, filler phrases) AND installs positive "human factor" patterns drawn from acclaimed pre-2022 scientific and popular-science writing (calibrated confidence, first-person stance, engaging the strongest counterargument, earned understatement, concrete examples, plain words, real rhythm, dry personality, specific attribution, coining and defining terms, earned aphorism, and writing the way you talk). Calibration corpus spans 1945-2015 across many fields: biology, computer science, mathematics, economics, statistics, psychology, philosophy of mind.
-compatibility: claude-code opencode
+description: >-
+  Remove signs of AI-generated writing from text and add the positive qualities
+  of genuinely human writing. Use when editing or reviewing text to make it
+  sound more natural and human-written. Detects and fixes patterns from
+  Wikipedia's "Signs of AI writing" guide and installs positive "human factor"
+  patterns drawn from acclaimed pre-2022 scientific and popular-science
+  writing. The calibration corpus spans 1945–2015 across biology, computer
+  science, mathematics, economics, statistics, psychology, and philosophy of
+  mind.
+metadata:
+  compatibility: claude-code opencode
 allowed-tools: Read, Write, Edit, Grep, Glob, AskUserQuestion
 ---
 

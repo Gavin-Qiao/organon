@@ -60,6 +60,8 @@ Then, in a repo that has a `.promptus/` store:
 
 ```text
 /editio arxiv                         # checks the store + TeX, scaffolds .editio/paper/
+/editio nmi                           # NMI Article order, budgets, artwork slots, optional blind mode
+/editio neurips                       # official-kit modes, checklist assembly, content-page gate
 ```
 
 In Codex, ask it to use the `editio` skill to start an arXiv paper. The skill and Claude
@@ -120,18 +122,18 @@ hard-coded outside the macros.
 |---|---|
 | `/editio` | Claude Code command adapter: start or resume a paper; always ends at one next action |
 | `editio` skill | portable orchestrator for Claude Code and Codex — start/resume, decision table, invariant, audit loop |
-| `editio-structure` | the argument before the prose: orders (imrad / cs-systems / theory), contribution-first framing, the abstract formula — plus craft distilled from exemplary papers ([`references/exemplars.md`](skills/editio-structure/references/exemplars.md)) |
+| `editio-structure` | the argument before the prose: orders (imrad / cs-systems / theory / nature-article / ml-conference), contribution-first framing, the abstract formula — plus craft distilled from exemplary papers ([`references/exemplars.md`](skills/editio-structure/references/exemplars.md)) |
 | `editio-latex` | TeX setup, venue scaffolding, mode builds, single-section previews, notation conventions; the authoring subset is a written contract ([`references/authoring-subset.md`](skills/editio-latex/references/authoring-subset.md)) |
 | `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |
 | `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files (incl. the per-venue `figures/editio.mplstyle`) refresh only with `--force` |
 | `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass; cwd-proof, warns on unrendered spans, `--concat` exports one reviewable markdown file |
 | `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies and drafted-word counts (vs each section's `budget:`), every ungraded/unsourced span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims over weak/unknown/absent grounds) |
 | `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
-| `editio-doctor.ts` | workspace health, report-only — the scaffold version stamp vs the installed plugin, declared-order drift (which withholds the `--force` advice), venue drift, stale `editio.sty`, a hand-finished `front/metadata.tex`, stale/unwired sections, hand-cite fences, identity leaking into prose (`--strict` exits 1 for CI) |
+| `editio-doctor.ts` | workspace health, report-only — scaffold/order/venue drift, required official assets, stale or unwired sources, identity leaks, and the target venue's real budget surface (whole-PDF pages for TPAMI; source/display budgets for NMI; content pages and PDF size for NeurIPS) (`--strict` exits 1 on hard findings) |
 | `editio-numbers` | **one source of truth per number**: `numbers.json` names each value once, `@num:handle` binds it in prose/math/captions ([`editio-numbers` skill](skills/editio-numbers/SKILL.md)), `--write` generates `front/numbers.tex` + a source-hash lock, `--gate` fails on stale/unknown bindings |
 | `editio.sty` | the three-mode render layer |
 | `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
-| venues | `arxiv`, `tpami` — venues are **data folders** (widths, fonts, class, bib style); add one without touching a script |
+| venues | `arxiv`, `tpami`, `nmi`, `neurips` — venues are **data folders** (class or official package, figure slots/type, mode mapping, assembly, required assets, budgets, live policy sources); add one without hard-coding a journal or conference in the scripts |
 
 **Roadmap** (built in phases, driven by real papers — the claim gate arrived early because
 the first dogfood demanded it): **next → `editio-tables`** (a data→booktabs unit; the first
@@ -147,6 +149,13 @@ generated `.latexmkrc` is three lines), the renderer (pandoc + a Lua filter is t
 documented swap — the golden contract keeps any replacement honest), the plotting library.
 Venue rules are JSON data. Nothing is vendored, and a `no-identity` test enforces that
 nobody's name ships in the templates.
+
+For venues whose official kit must remain year-specific, Editio delegates rather than
+imitates. The NeurIPS profile requires the official `neurips_2026.sty` and checklist in the
+paper workspace, verifies the style's immutable hash, maps `draft` / `blind` / `publish` to
+the kit's `preprint` / `main` / `main,final` options, and checks that the authored checklist
+has no template TODOs. The venue folder carries those rules as data; Editio does not vendor
+or rewrite the organizer's files.
 
 ## References
 
@@ -203,6 +212,15 @@ rule ([CONTRIBUTING — "References are load-bearing"](../CONTRIBUTING.md#refere
   <https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary>
 - Garrett JD. SciencePlots. <https://github.com/garrettj403/SciencePlots>
   <https://doi.org/10.5281/zenodo.4106649>
+
+**Venue contracts**
+
+- NeurIPS. 2026 Main Track Handbook.
+  <https://neurips.cc/Conferences/2026/MainTrackHandbook>
+- NeurIPS. Paper Checklist guidelines.
+  <https://neurips.cc/public/guides/PaperChecklist>
+- NeurIPS. 2026 official formatting kit.
+  <https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip>
 
 **Numbers — one source of truth**
 ([`editio-numbers/references/`](skills/editio-numbers/references/))

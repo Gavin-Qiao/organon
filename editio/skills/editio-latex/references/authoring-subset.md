@@ -22,7 +22,7 @@ budget: 800                 # advisory word budget (lint, Phase 5)
 
 | construct | renders to |
 |---|---|
-| `# Title` (first) | `\section{Title}\label{sec:<file-slug>}` — or `\begin{abstract}` when `class: doco:Abstract` (the abstract keeps the environment only: no `\section`, no label, no provenance stamp). One `#` per file — a second warns and demotes to `\subsection`; `####`+ is not a heading (warns, renders as prose) |
+| `# Title` (first) | `\section{Title}\label{sec:<file-slug>}` — or `\begin{abstract}` when `class: doco:Abstract` (the abstract keeps the environment only: no `\section`, no label, no provenance stamp). A venue may suppress the printed heading while retaining a cross-reference anchor (`nmi`: Introduction), or delegate heading and visibility to a venue-owned environment (`neurips`: acknowledgements in `ack`). One `#` per file — a second warns and demotes to `\subsection`; `####`+ is not a heading (warns, renders as prose) |
 | `## / ###` | `\subsection` / `\subsubsection` |
 | `- item` / `1. item` | `itemize` / `enumerate` (one level, column 0 — an indented bullet warns and flattens into the line above) |
 | blank line | paragraph break |

@@ -45,6 +45,8 @@ test("the structure gate is strict, ordered, and slug-complete", () => {
 test("every venue file carries the fields scaffold and figures need", () => {
   const venues = readdirSync(join(TEMPLATES, "venues"));
   expect(venues).toContain("arxiv");
+  expect(venues).toContain("nmi");
+  expect(venues).toContain("neurips");
   expect(venues).toContain("tpami");
   for (const v of venues) {
     const j = JSON.parse(readFileSync(join(TEMPLATES, "venues", v, "venue.json"), "utf8"));
@@ -56,9 +58,44 @@ test("every venue file carries the fields scaffold and figures need", () => {
   }
 });
 
+test("the NeurIPS profile delegates to the verified official kit and encodes submission assembly", () => {
+  const venue = JSON.parse(readFileSync(join(TEMPLATES, "venues", "neurips", "venue.json"), "utf8"));
+  expect(venue.default_order).toBe("ml-conference");
+  expect(venue.venue_package.mode_options.draft).toEqual(["preprint"]);
+  expect(venue.venue_package.mode_options.blind).toEqual(["main"]);
+  expect(venue.venue_package.mode_options.publish).toEqual(["main", "final"]);
+  expect(venue.structure.section_environments.acknowledgements).toBe("ack");
+  expect(venue.assembly.pre_bibliography_classes).toContain("deo:Acknowledgements");
+  expect(venue.assembly.post_bibliography_classes).toContain("doco:Appendix");
+  expect(venue.assembly.tail_inputs[0]).toEqual({ path: "front/checklist.tex", required: true });
+  expect(venue.limits.content_pages).toEqual({ draft: 9, blind: 9, publish: 10 });
+  expect(venue.limits.pdf_mb).toBe(50);
+  const style = venue.required_assets.find((a: any) => a.path === "neurips_2026.sty");
+  expect(style.sha256).toMatch(/^[a-f0-9]{64}$/);
+  const checklist = venue.required_assets.find((a: any) => a.path === "front/checklist.tex");
+  expect(checklist.forbidden_tokens).toContain("\\answerTODO{}");
+  expect(venue.sources.author_kit).toMatch(/^https:\/\/media\.neurips\.cc\//);
+});
+
+test("the NMI Article profile carries live-source budgets, structure, and artwork constraints", () => {
+  const nmi = JSON.parse(readFileSync(join(TEMPLATES, "venues", "nmi", "venue.json"), "utf8"));
+  expect(nmi.default_order).toBe("nature-article");
+  expect(nmi.limits.main_text_words).toBe(3500);
+  expect(nmi.limits.abstract_words).toBe(150);
+  expect(nmi.limits.display_items).toBe(6);
+  expect(nmi.limits.extended_data_items).toBe(10);
+  expect(nmi.structure.suppress_section_headings).toContain("introduction");
+  expect(nmi.structure.forbid_subheadings).toContain("discussion");
+  expect(nmi.column_width_mm).toBe(88);
+  expect(nmi.full_width_mm).toBe(180);
+  expect(nmi.figure_font_pt).toBe(7);
+  expect(nmi.figure_font_family).toBe("sans-serif");
+  expect(nmi.sources.content_type).toMatch(/^https:\/\/www\.nature\.com\//);
+});
+
 test("the mplstyle template carries the venue tokens and the Okabe-Ito cycle", () => {
   const mpl = readFileSync(join(TEMPLATES, "figures", "editio.mplstyle"), "utf8");
-  for (const token of ["EDITIO_VENUE", "EDITIO_FIG_W_IN", "EDITIO_FIG_H_IN", "EDITIO_FULL_W_IN", "EDITIO_FONT_PT"]) {
+  for (const token of ["EDITIO_VENUE", "EDITIO_FIG_W_IN", "EDITIO_FIG_H_IN", "EDITIO_FULL_W_IN", "EDITIO_FONT_PT", "EDITIO_FONT_FAMILY", "EDITIO_MATH_FONTSET"]) {
     expect(mpl, `missing token ${token}`).toContain(token);
   }
   for (const hex of ["0072B2", "D55E00", "009E73", "E69F00", "56B4E9", "CC79A7", "F0E442"]) {

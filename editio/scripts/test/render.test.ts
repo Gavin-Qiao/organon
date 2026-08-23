@@ -8,8 +8,8 @@
 import { test, expect } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { renderSection } from "../editio-render.ts";
-import { parseFrontmatter, texEscape, slugify } from "../lib.ts";
+import { renderSection, suppressSectionHeading, wrapSectionEnvironment } from "../editio-render.ts";
+import { markdownProseWordCount, parseFrontmatter, texEscape, slugify } from "../lib.ts";
 
 const CONTRACT = join(import.meta.dir, "..", "..", "templates", "contract");
 const norm = (s: string) => s.replace(/\r\n/g, "\n");
@@ -49,6 +49,38 @@ test("an abstract section renders as the abstract environment, not a numbered se
   expect(tex).toContain("\\begin{abstract}");
   expect(tex).toContain("\\end{abstract}");
   expect(tex).not.toContain("\\section");
+});
+
+test("a venue can suppress a generated section heading without losing its anchor", () => {
+  const tex = renderSection("# Introduction\n\nThe opening.\n", "introduction");
+  const suppressed = suppressSectionHeading(tex, "introduction");
+  expect(suppressed).toContain("\\phantomsection\\label{sec:introduction}");
+  expect(suppressed).not.toContain("\\section{Introduction}");
+  expect(suppressed).toContain("The opening.");
+});
+
+test("a venue can delegate a section heading and visibility to its own environment", () => {
+  const base = renderSection("# Acknowledgements\n\nThanks to the reviewers.\n", "acknowledgements");
+  const tex = wrapSectionEnvironment(base, "acknowledgements", "ack");
+  expect(tex).toContain("\\begin{ack}\n\\phantomsection\\label{sec:acknowledgements}");
+  expect(tex).toContain("Thanks to the reviewers.");
+  expect(tex).toContain("\\end{ack}");
+  expect(tex).not.toContain("\\section{Acknowledgements}");
+  expect(() => wrapSectionEnvironment(base, "acknowledgements", "ack}\\input{bad"))
+    .toThrow("unsafe section environment");
+});
+
+test("source-word estimates ignore claim machinery, citations, headings, and fences", () => {
+  const words = markdownProseWordCount([
+    "# Heading",
+    "",
+    "[Two words]{.claim .validated grounds=g} [@source] @num:value $x+y$.",
+    "",
+    "```latex",
+    "\\caption{excluded legend words}",
+    "```",
+  ].join("\n"));
+  expect(words).toBe(4); // Two words + one bound number + one equation token
 });
 
 test("latex fences pass through raw; other fences become verbatim; math survives", () => {
