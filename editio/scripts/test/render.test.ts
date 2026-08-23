@@ -8,7 +8,7 @@
 import { test, expect } from "bun:test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { renderSection, suppressSectionHeading } from "../editio-render.ts";
+import { renderSection, suppressSectionHeading, wrapSectionEnvironment } from "../editio-render.ts";
 import { markdownProseWordCount, parseFrontmatter, texEscape, slugify } from "../lib.ts";
 
 const CONTRACT = join(import.meta.dir, "..", "..", "templates", "contract");
@@ -57,6 +57,17 @@ test("a venue can suppress a generated section heading without losing its anchor
   expect(suppressed).toContain("\\phantomsection\\label{sec:introduction}");
   expect(suppressed).not.toContain("\\section{Introduction}");
   expect(suppressed).toContain("The opening.");
+});
+
+test("a venue can delegate a section heading and visibility to its own environment", () => {
+  const base = renderSection("# Acknowledgements\n\nThanks to the reviewers.\n", "acknowledgements");
+  const tex = wrapSectionEnvironment(base, "acknowledgements", "ack");
+  expect(tex).toContain("\\begin{ack}\n\\phantomsection\\label{sec:acknowledgements}");
+  expect(tex).toContain("Thanks to the reviewers.");
+  expect(tex).toContain("\\end{ack}");
+  expect(tex).not.toContain("\\section{Acknowledgements}");
+  expect(() => wrapSectionEnvironment(base, "acknowledgements", "ack}\\input{bad"))
+    .toThrow("unsafe section environment");
 });
 
 test("source-word estimates ignore claim machinery, citations, headings, and fences", () => {

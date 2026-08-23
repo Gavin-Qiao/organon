@@ -74,6 +74,18 @@
       "deo:Methods",
       "deo:Acknowledgements",
       "doco:BibliographicReferenceList"
+    ],
+    "ml-conference": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:RelatedWork",
+      "deo:Methods",
+      "deo:Results",
+      "deo:Discussion",
+      "deo:Conclusion",
+      "deo:Acknowledgements",
+      "doco:BibliographicReferenceList",
+      "doco:Appendix"
     ]
   },
   "section_slugs": {

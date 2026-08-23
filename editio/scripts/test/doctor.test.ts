@@ -7,9 +7,11 @@
  */
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, truncateSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { createHash } from "node:crypto";
+import { auxLabelPage, buildMode, requiredAssetHealth } from "../editio-doctor.ts";
 
 const DOCTOR = join(import.meta.dir, "..", "editio-doctor.ts");
 const SCAFFOLD = join(import.meta.dir, "..", "editio-scaffold.ts");
@@ -411,6 +413,60 @@ test("NMI Discussion subheadings are a venue-structure finding", () => {
   const r = run(DOCTOR, root);
   expect(r.out).toContain("FLAG venue");
   expect(r.out).toContain("forbids subheadings in sections/discussion.md");
+});
+
+test("venue assets distinguish missing, byte-drifted, and unfinished authored inputs", () => {
+  const root = scratch();
+  const p = paper(root);
+  mkdirSync(join(p, "front"), { recursive: true });
+  const exact = Buffer.from("official-style-fixture\n");
+  const venue = {
+    id: "fixture",
+    required_assets: [
+      { path: "style.sty", sha256: createHash("sha256").update(exact).digest("hex"), source: "official kit" },
+      { path: "front/form.tex", forbidden_tokens: ["TODO"] },
+    ],
+  };
+  let health = requiredAssetHealth(p, venue);
+  expect(health.findings.map((f) => f.detail).join("\n")).toContain("style.sty is missing");
+  writeFileSync(join(p, "style.sty"), "drifted\n");
+  writeFileSync(join(p, "front", "form.tex"), "Answer: TODO\n");
+  health = requiredAssetHealth(p, venue);
+  expect(health.findings.map((f) => f.detail).join("\n")).toContain("SHA-256");
+  expect(health.findings.map((f) => f.detail).join("\n")).toContain("still contains 1 \"TODO\"");
+  writeFileSync(join(p, "style.sty"), exact);
+  writeFileSync(join(p, "front", "form.tex"), "Answer: yes\n");
+  health = requiredAssetHealth(p, venue);
+  expect(health.findings).toEqual([]);
+  expect(health.notes).toContain("venue asset: style.sty verified");
+});
+
+test("NeurIPS content pages come from the aux boundary by build mode, and PDF size is gated", () => {
+  expect(buildMode("build/main.pdf")).toBe("draft");
+  expect(buildMode("build-blind/main.pdf")).toBe("blind");
+  expect(buildMode("build-publish/main.pdf")).toBe("publish");
+  expect(buildMode("build-preview/main.pdf")).toBeNull();
+  expect(auxLabelPage("\\newlabel{editio:content-end}{{}{9}{}{Doc-Start}{}}\n", "editio:content-end")).toBe(9);
+
+  const root = healthy("neurips");
+  const dir = paper(root, "build-blind");
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(join(dir, "main.pdf"), "%PDF-1.5\n");
+  writeFileSync(join(dir, "main.aux"), "\\newlabel{editio:content-end}{{}{10}{}{Doc-Start}{}}\n");
+  let report = run(DOCTOR, root).out;
+  expect(report).toContain("FLAG budget");
+  expect(report).toContain("10 blind content pages");
+  expect(report).toContain("allows 9");
+
+  writeFileSync(join(dir, "main.aux"), "\\newlabel{editio:content-end}{{}{9}{}{Doc-Start}{}}\n");
+  report = run(DOCTOR, root).out;
+  expect(report).toContain("content pages: build-blind/main.pdf 9/9 (blind)");
+  expect(report).not.toContain("10 blind content pages");
+
+  truncateSync(join(dir, "main.pdf"), 50_000_001);
+  report = run(DOCTOR, root).out;
+  expect(report).toContain("is 50.0 MB");
+  expect(report).toContain("allows 50 MB");
 });
 
 test("outside any git repo the doctor notes untracked history without flagging", () => {

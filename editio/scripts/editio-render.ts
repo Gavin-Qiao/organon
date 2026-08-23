@@ -318,6 +318,18 @@ export function suppressSectionHeading(tex: string, slug: string): string {
   return tex.replace(new RegExp(`\\\\section\\{[^\\n]*\\}\\\\label\\{sec:${safe}\\}`), `\\phantomsection\\label{sec:${slug}}`);
 }
 
+/** Put a generated section body inside a venue-owned environment while retaining
+ * its cross-reference anchor. The environment supplies its own heading (for
+ * example NeurIPS's `ack`, which also hides acknowledgements in blind review). */
+export function wrapSectionEnvironment(tex: string, slug: string, environment: string): string {
+  if (!/^[A-Za-z@]+$/.test(environment)) throw new Error(`unsafe section environment "${environment}"`);
+  const safe = slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const head = new RegExp(`\\\\section\\{[^\\n]*\\}\\\\label\\{sec:${safe}\\}`);
+  if (!head.test(tex)) return tex;
+  const wrapped = tex.replace(head, `\\begin{${environment}}\n\\phantomsection\\label{sec:${slug}}`);
+  return `${wrapped.trimEnd()}\n\\end{${environment}}\n`;
+}
+
 const HELP = `editio-render — the reference md -> tex renderer (see editio-latex/references/authoring-subset.md)
 usage:
   editio-render.ts [--root <dir>] [--all]        render every sections/*.md next to its source
@@ -364,6 +376,7 @@ if (import.meta.main) {
   // abstract in build order) — venue truth stays in venue.json, prose stays neutral
   let dropSlug: string | null = null;
   const suppressedHeadings = new Set<string>();
+  const sectionEnvironments = new Map<string, string>();
   if (existsSync(join(paper, "paper.json"))) {
     try {
       const venuePath = join(VENUES, String(readJSON(join(paper, "paper.json")).venue ?? "arxiv"), "venue.json");
@@ -371,6 +384,9 @@ if (import.meta.main) {
         const venue = readJSON(venuePath);
         if (venue.par_start) dropSlug = sectionOrder(paper).find((s) => s !== "abstract") ?? null;
         for (const slug of venue.structure?.suppress_section_headings ?? []) suppressedHeadings.add(String(slug));
+        for (const [slug, environment] of Object.entries(venue.structure?.section_environments ?? {})) {
+          sectionEnvironments.set(String(slug), String(environment));
+        }
       }
     } catch { /* venue niceties never block a render */ }
   }
@@ -387,6 +403,7 @@ if (import.meta.main) {
     }
     if (slug === dropSlug) tex = dropCap(tex, warn, slug);
     if (suppressedHeadings.has(slug)) tex = suppressSectionHeading(tex, slug);
+    if (sectionEnvironments.has(slug)) tex = wrapSectionEnvironment(tex, slug, sectionEnvironments.get(slug)!);
     if (toStdout) process.stdout.write(tex);
     else {
       const dest = t.replace(/\.md$/, ".tex");

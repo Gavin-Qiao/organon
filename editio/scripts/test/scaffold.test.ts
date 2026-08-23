@@ -104,6 +104,36 @@ test("a fresh NMI scaffold records its venue/order and applies the Article struc
   expect(intro).not.toContain("\\section{Introduction}");
 });
 
+test("a fresh NeurIPS scaffold uses the official package modes, back-matter order, and external assets", () => {
+  const root = scratch();
+  const scaffold = run(root, "--venue", "neurips");
+  expect(scaffold.status).toBe(0);
+  expect(scaffold.out).toContain("venue asset missing: neurips_2026.sty");
+  expect(scaffold.out).toContain("venue asset missing: front/checklist.tex");
+  const meta = JSON.parse(read(paper(root, "paper.json")));
+  expect(meta).toMatchObject({ venue: "neurips", order: "ml-conference" });
+
+  const main = read(paper(root, "main.tex"));
+  expect(main).toContain("\\documentclass[]{article}");
+  expect(main).toContain("\\usepackage[preprint]{neurips_2026}");
+  expect(main).toContain("\\usepackage[main]{neurips_2026}");
+  expect(main).toContain("\\usepackage[main,final]{neurips_2026}");
+  expect(main).toContain("\\label{editio:content-end}");
+  expect(main.indexOf("sections/acknowledgements")).toBeLessThan(main.indexOf("\\bibliography{"));
+  expect(main.indexOf("sections/appendix")).toBeGreaterThan(main.indexOf("\\bibliography{"));
+  expect(main.indexOf("front/checklist.tex")).toBeGreaterThan(main.indexOf("sections/appendix"));
+  expect(existsSync(paper(root, "sections", "acknowledgements.md"))).toBe(false);
+  expect(existsSync(paper(root, "sections", "appendix.md"))).toBe(false);
+
+  const metadata = read(paper(root, "front", "metadata.tex"));
+  expect(metadata).toContain("\\AuthorOneAffiliation");
+  expect(metadata).toContain("\\AuthorOneEmail");
+  expect(metadata).not.toContain("Author One");
+  const style = read(paper(root, "figures", "editio.mplstyle"));
+  expect(style).toContain("figure.figsize: 5.50, 3.40");
+  expect(style).toContain("font.size: 8");
+});
+
 test("the gitignore line is added exactly once across runs", () => {
   const root = scratch();
   run(root, "--venue", "arxiv");

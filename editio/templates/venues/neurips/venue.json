@@ -1,0 +1,100 @@
+{
+  "_note": "NeurIPS 2026 Main Track. The official year-specific style and checklist are required workspace assets, not redistributed by Editio. The profile maps Editio's stable modes onto the official package options and keeps venue policy in data.",
+  "id": "neurips",
+  "name": "NeurIPS 2026 Main Track",
+  "article_type": "Conference paper",
+  "class": "article",
+  "class_options": [],
+  "columns": 1,
+  "column_width_mm": 139.7,
+  "full_width_mm": 139.7,
+  "figure_font_pt": 8,
+  "figure_font_family": "serif",
+  "figure_math_fontset": "cm",
+  "bib_style": "plainnat",
+  "packages": [
+    "[utf8]{inputenc}",
+    "[T1]{fontenc}",
+    "url",
+    "amsfonts",
+    "nicefrac",
+    "microtype"
+  ],
+  "venue_package": {
+    "name": "neurips_2026",
+    "mode_options": {
+      "draft": ["preprint"],
+      "blind": ["main"],
+      "publish": ["main", "final"]
+    }
+  },
+  "author_format": "neurips",
+  "default_order": "ml-conference",
+  "engine": "pdflatex",
+  "review": "double-blind; acknowledgements are hidden by the official ack environment in submission mode",
+  "structure": {
+    "optional_classes": [
+      "deo:Acknowledgements",
+      "doco:Appendix"
+    ],
+    "section_environments": {
+      "acknowledgements": "ack"
+    }
+  },
+  "assembly": {
+    "pre_bibliography_classes": [
+      "deo:Acknowledgements"
+    ],
+    "post_bibliography_classes": [
+      "doco:Appendix"
+    ],
+    "tail_inputs": [
+      {
+        "path": "front/checklist.tex",
+        "required": true
+      }
+    ]
+  },
+  "required_assets": [
+    {
+      "path": "neurips_2026.sty",
+      "role": "official year-specific style",
+      "source": "https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip",
+      "sha256": "c3fc2894e83d2517ca18b66741d6c595986d97957dc08ec08bb2125a7ec4555a"
+    },
+    {
+      "path": "front/checklist.tex",
+      "role": "mandatory authored paper checklist",
+      "source": "https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip",
+      "forbidden_tokens": [
+        "\\answerTODO{}",
+        "\\justificationTODO{}",
+        "%%% BEGIN INSTRUCTIONS %%%"
+      ]
+    }
+  ],
+  "limits": {
+    "content_pages": {
+      "draft": 9,
+      "blind": 9,
+      "publish": 10
+    },
+    "pdf_mb": 50,
+    "note": "Main Track: 9 content pages for submission and 10 for camera-ready; references, optional technical appendices, acknowledgements, and the mandatory checklist are excluded from the content-page count; PDF maximum 50 MB"
+  },
+  "sources": {
+    "main_track_handbook": "https://neurips.cc/Conferences/2026/MainTrackHandbook",
+    "call_for_papers": "https://neurips.cc/Conferences/2026/CallForPapers",
+    "paper_checklist": "https://neurips.cc/public/guides/PaperChecklist",
+    "author_kit": "https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip"
+  },
+  "verified": "2026-08-23",
+  "notes": [
+    "use the exact official neurips_2026.sty in the paper root; Editio verifies its bytes but does not redistribute a file whose kit carries no redistribution notice",
+    "draft uses the official preprint option, blind uses main-track anonymous submission with line numbers, and publish uses main,final for an accepted camera-ready paper",
+    "the content-page label is emitted before acknowledgements, references, optional appendix, and checklist so the doctor can enforce the mode-specific limit from the LaTeX aux file",
+    "the checklist is mandatory, follows the optional appendix at the tail of the single PDF, and must have all TODO answers, justifications, and template instruction markers resolved",
+    "the official style owns US Letter geometry, 10pt Times text, anonymity, line numbering, natbib, and the acknowledgement environment; do not recreate those settings in front/macros.tex",
+    "the plot style uses the official 5.5in text width and the style's 8pt footnote floor as a conservative authoring size; NeurIPS does not prescribe a separate figure-label font in the cited instructions"
+  ]
+}

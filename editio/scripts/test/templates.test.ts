@@ -46,6 +46,7 @@ test("every venue file carries the fields scaffold and figures need", () => {
   const venues = readdirSync(join(TEMPLATES, "venues"));
   expect(venues).toContain("arxiv");
   expect(venues).toContain("nmi");
+  expect(venues).toContain("neurips");
   expect(venues).toContain("tpami");
   for (const v of venues) {
     const j = JSON.parse(readFileSync(join(TEMPLATES, "venues", v, "venue.json"), "utf8"));
@@ -55,6 +56,25 @@ test("every venue file carries the fields scaffold and figures need", () => {
     expect(j.id).toBe(v);
     expect(j.full_width_mm, `${v}: full width narrower than a column`).toBeGreaterThanOrEqual(j.column_width_mm);
   }
+});
+
+test("the NeurIPS profile delegates to the verified official kit and encodes submission assembly", () => {
+  const venue = JSON.parse(readFileSync(join(TEMPLATES, "venues", "neurips", "venue.json"), "utf8"));
+  expect(venue.default_order).toBe("ml-conference");
+  expect(venue.venue_package.mode_options.draft).toEqual(["preprint"]);
+  expect(venue.venue_package.mode_options.blind).toEqual(["main"]);
+  expect(venue.venue_package.mode_options.publish).toEqual(["main", "final"]);
+  expect(venue.structure.section_environments.acknowledgements).toBe("ack");
+  expect(venue.assembly.pre_bibliography_classes).toContain("deo:Acknowledgements");
+  expect(venue.assembly.post_bibliography_classes).toContain("doco:Appendix");
+  expect(venue.assembly.tail_inputs[0]).toEqual({ path: "front/checklist.tex", required: true });
+  expect(venue.limits.content_pages).toEqual({ draft: 9, blind: 9, publish: 10 });
+  expect(venue.limits.pdf_mb).toBe(50);
+  const style = venue.required_assets.find((a: any) => a.path === "neurips_2026.sty");
+  expect(style.sha256).toMatch(/^[a-f0-9]{64}$/);
+  const checklist = venue.required_assets.find((a: any) => a.path === "front/checklist.tex");
+  expect(checklist.forbidden_tokens).toContain("\\answerTODO{}");
+  expect(venue.sources.author_kit).toMatch(/^https:\/\/media\.neurips\.cc\//);
 });
 
 test("the NMI Article profile carries live-source budgets, structure, and artwork constraints", () => {

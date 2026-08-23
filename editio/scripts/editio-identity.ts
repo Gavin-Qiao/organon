@@ -48,6 +48,14 @@ const TEMPLATES = join(PLUGIN, "templates");
 const ORDINALS = ["One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
   "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"];
 
+/** Stable spelled suffix used by generated per-author TeX macros. */
+export function authorMacroSuffix(index: number): string {
+  if (!Number.isInteger(index) || index < 0 || index >= ORDINALS.length) {
+    throw new Error(`author index ${index} is outside the supported 0..${ORDINALS.length - 1} range`);
+  }
+  return ORDINALS[index];
+}
+
 function arg(argv: string[], k: string): string | undefined {
   const i = argv.indexOf(`--${k}`);
   return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
@@ -122,9 +130,16 @@ export function identityTexOf(meta: any): string {
     `\\newcommand{\\IdentityThanks}{${thanks}}`,
     `\\newcommand{\\PaperKeywords}{${(Array.isArray(meta.keywords) ? meta.keywords : []).map((k: any) => texEscape(String(k))).join(", ")}}`,
     `\\newcommand{\\AuthorRunning}{${shortName(String(authors[0]?.name ?? ""))}${authors.length > 1 ? " et al." : ""}}`,
-    ...authors.map((a, i) => `\\newcommand{\\Author${ORDINALS[i]}Name}{${texEscape(String(a?.name ?? ""))}}`),
+    ...authors.flatMap((a, i) => {
+      const suffix = authorMacroSuffix(i);
+      return [
+        `\\newcommand{\\Author${suffix}Name}{${texEscape(String(a?.name ?? ""))}}`,
+        `\\newcommand{\\Author${suffix}Affiliation}{${texEscape(String(a?.affiliation ?? ""))}}`,
+        `\\newcommand{\\Author${suffix}Email}{${texEscape(String(a?.email ?? ""))}}`,
+      ];
+    }),
     `\\newcommand{\\BioBody}{is with \\AffilShared.}`,
-    ...authors.map((a, i) => `\\newcommand{\\Author${ORDINALS[i]}Bio}{${String(a?.bio ?? "").trim() ? texEscape(String(a.bio).trim()) : "\\BioBody"}}`),
+    ...authors.map((a, i) => `\\newcommand{\\Author${authorMacroSuffix(i)}Bio}{${String(a?.bio ?? "").trim() ? texEscape(String(a.bio).trim()) : "\\BioBody"}}`),
     "",
   ].join("\n");
 }
@@ -142,7 +157,8 @@ export function biosTexOf(meta: any, bioEnv: string, bioEnvPhoto?: string): stri
       const opt = photo && bioEnvPhoto
         ? `[{\\includegraphics[width=1in,height=1.25in,clip,keepaspectratio]{${photo}}}]`
         : "";
-      return `\\begin{${env}}${opt}{\\Author${ORDINALS[i]}Name}\\Author${ORDINALS[i]}Bio\\end{${env}}`;
+      const suffix = authorMacroSuffix(i);
+      return `\\begin{${env}}${opt}{\\Author${suffix}Name}\\Author${suffix}Bio\\end{${env}}`;
     }),
     "\\fi",
     "",

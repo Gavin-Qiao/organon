@@ -18,6 +18,8 @@
  *   stamp      main.tex's scaffold version vs the installed plugin's (the --force
  *              advice is withheld while the order is drifted)
  *   venue      packages/preamble the venue data ships that main.tex lacks
+ *   venue-assets required external files: presence, immutable hashes, and authored
+ *              completion tokens (the exact official style + mandatory forms)
  *   sty        workspace editio.sty vs the plugin's (older scaffold or local edits)
  *   metadata   a hand-finished front/metadata.tex (no GENERATED header) that
  *              --force would clobber
@@ -37,8 +39,8 @@
  *              markdown IS the paper, so git is its version history — milestone tags,
  *              diffs, "the version I sent co-authors"; editio does not rebuild
  *              version control one layer up)
- *   budget     the venue's enforceable budget surface: built-PDF pages where relevant,
- *              plus source-word and display-item limits (NMI). Advisory reference
+ *   budget     the venue's enforceable budget surface: whole-PDF or content pages,
+ *              PDF size, source-word and display-item limits. Advisory reference
  *              guidance is reported but does not fail --strict.
  *   paths      naked file paths in section prose (generation dirt: workspace
  *              internals, absolute paths leaking a username, stray artifact files) —
@@ -50,6 +52,7 @@
  * workspace exits 2 either way.
  */
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -85,6 +88,64 @@ export function pdfPages(bytes: string): number | null {
   if (counts.length) return Math.max(...counts);
   const pages = bytes.match(/\/Type\s*\/Page\b/g);
   return pages ? pages.length : null;
+}
+
+/** Page carrying a LaTeX label, read from the normal \newlabel record in an aux file. */
+export function auxLabelPage(aux: string, label: string): number | null {
+  const safe = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const hit = aux.match(new RegExp(`^\\\\newlabel\\{${safe}\\}\\{\\{.*?\\}\\{(\\d+)\\}`, "m"));
+  return hit ? Number(hit[1]) : null;
+}
+
+/** Editio's reference build directories encode the mode in their stable name. */
+export function buildMode(rel: string): "draft" | "blind" | "publish" | null {
+  const dir = rel.split("/")[0];
+  if (dir === "build") return "draft";
+  if (dir === "build-blind") return "blind";
+  if (dir === "build-publish") return "publish";
+  return null;
+}
+
+function safeAssetPath(paper: string, rel: string): string | null {
+  if (!rel || rel.startsWith("/") || /^[A-Za-z]:/.test(rel) || rel.includes("\\")) return null;
+  const parts = rel.split("/");
+  if (parts.some((part) => !part || part === "." || part === "..")) return null;
+  return join(paper, ...parts);
+}
+
+/** Required venue files are external inputs: prove presence, immutable bytes when
+ * declared, and authored completion rather than silently copying them. */
+export function requiredAssetHealth(paper: string, venue: any): { findings: Finding[]; notes: string[] } {
+  const findings: Finding[] = [];
+  const notes: string[] = [];
+  for (const asset of venue?.required_assets ?? []) {
+    const rel = String(asset?.path ?? "");
+    const path = safeAssetPath(paper, rel);
+    if (!path) {
+      findings.push({ check: "venue-assets", detail: `venue "${venue?.id ?? "?"}" declares unsafe required asset path "${rel}"` });
+      continue;
+    }
+    if (!existsSync(path)) {
+      findings.push({ check: "venue-assets", detail: `${rel} is missing (${asset?.role ?? "required venue asset"}) — obtain it from ${asset?.source ?? "the official venue kit"}` });
+      continue;
+    }
+    const bytes = readFileSync(path);
+    if (asset.sha256) {
+      const actual = createHash("sha256").update(bytes).digest("hex");
+      if (actual !== String(asset.sha256)) {
+        findings.push({ check: "venue-assets", detail: `${rel} SHA-256 is ${actual}, expected ${asset.sha256} — use the exact verified official file; do not patch the venue style` });
+        continue;
+      }
+    }
+    const text = bytes.toString("utf8");
+    for (const token of asset.forbidden_tokens ?? []) {
+      const needle = String(token);
+      const count = needle ? text.split(needle).length - 1 : 0;
+      if (count) findings.push({ check: "venue-assets", detail: `${rel} still contains ${count} ${JSON.stringify(needle)} placeholder${count === 1 ? "" : "s"} — finish the authored venue form before submission` });
+    }
+    if (!findings.some((f) => f.detail.startsWith(`${rel} `))) notes.push(`venue asset: ${rel} verified`);
+  }
+  return { findings, notes };
 }
 
 /** Manuscript-bearing source: prose plus raw/transforming LaTeX fences, with
@@ -219,6 +280,20 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
       const key = l.match(/^\\(?:renewcommand\{\\[\w@]+\}|setcounter\{[\w@]+\})/)?.[0] ?? l;
       if (!preambleText.includes(key)) flag("venue", `venue preamble line missing from main.tex/macros.tex: ${l}`);
     }
+    if (venue.venue_package?.name) {
+      const packageName = String(venue.venue_package.name);
+      for (const options of Object.values(venue.venue_package.mode_options ?? {}) as unknown[]) {
+        const opts = Array.isArray(options) ? options.map(String).filter(Boolean) : [];
+        const expected = `\\usepackage${opts.length ? `[${opts.join(",")}]` : ""}{${packageName}}`;
+        if (!mainTex.includes(expected)) flag("venue", `venue package branch missing from main.tex: ${expected}`);
+      }
+    }
+  }
+
+  if (venue) {
+    const assets = requiredAssetHealth(paper, venue);
+    findings.push(...assets.findings);
+    notes.push(...assets.notes);
   }
 
   // sty — the render layer is generated verbatim; any difference is drift.
@@ -399,6 +474,42 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
       if (n == null) continue;
       if (n > pagesLimit) flag("budget", `${rel} runs ${n} pages — venue "${venueId}" bills past ${pagesLimit} (${venue.limits?.note ?? "overlength policy"})`);
       else notes.push(`pages: ${rel} ${n}/${pagesLimit}`);
+    }
+  }
+
+  // Some venues exempt back matter rather than bounding the whole PDF. The
+  // scaffold emits a label at the exact content/back-matter boundary; the aux
+  // file turns that semantic boundary into a deterministic page number.
+  const contentLimits = venue?.limits?.content_pages;
+  if (contentLimits && typeof contentLimits === "object") {
+    for (const rel of buildPdfs) {
+      const mode = buildMode(rel);
+      const limit = mode ? Number(contentLimits[mode]) : NaN;
+      if (!mode || !Number.isFinite(limit)) continue;
+      const auxRel = rel.replace(/\.pdf$/i, ".aux");
+      const auxPath = join(paper, auxRel);
+      if (!existsSync(auxPath)) {
+        flag("budget", `${rel} has no ${auxRel} — cannot verify venue "${venueId}" ${mode} content-page limit ${limit}; rebuild with latexmk and keep the aux beside the PDF`);
+        continue;
+      }
+      const page = auxLabelPage(readFileSync(auxPath, "utf8"), "editio:content-end");
+      if (page == null) {
+        flag("budget", `${auxRel} has no readable editio:content-end label — rescaffold with --force, rebuild twice, then re-run the doctor`);
+      } else if (page > limit) {
+        flag("budget", `${rel} has ${page} ${mode} content pages — venue "${venueId}" allows ${limit}; exempt back matter begins after editio:content-end (${venue.limits?.note ?? "venue content-page policy"})`);
+      } else {
+        notes.push(`content pages: ${rel} ${page}/${limit} (${mode})`);
+      }
+    }
+  }
+
+  const pdfMb = Number(venue?.limits?.pdf_mb);
+  if (Number.isFinite(pdfMb) && pdfMb > 0) {
+    const maxBytes = pdfMb * 1_000_000;
+    for (const rel of buildPdfs) {
+      const bytes = statSync(join(paper, rel)).size;
+      if (bytes > maxBytes) flag("budget", `${rel} is ${(bytes / 1_000_000).toFixed(1)} MB — venue "${venueId}" allows ${pdfMb} MB`);
+      else notes.push(`PDF size: ${rel} ${(bytes / 1_000_000).toFixed(1)}/${pdfMb} MB`);
     }
   }
 
