@@ -109,11 +109,9 @@ test("editio-render --all refreshes the identity layer, so one command propagate
 
 test("a venue with a bio_env gets front/bios.tex — macro-driven stubs, blind-masked", () => {
   const root = scratch();
-  run(SCAFFOLD, root, "--venue", "tpami");
-  const meta = paper(root, "paper.json");
-  writeFileSync(meta, read(meta).replace('"venue": "arxiv"', '"venue": "tpami"'));
-  const r = run(IDENTITY, root);
-  expect(r.out).toContain("wrote front/bios.tex");
+  const scaffold = run(SCAFFOLD, root, "--venue", "tpami");
+  expect(scaffold.out).toContain("wrote front/bios.tex");
+  expect(run(IDENTITY, root).out).toContain("front/identity.tex is current");
   const bios = read(paper(root, "front", "bios.tex"));
   expect(bios).toContain("\\ifeditioblind\\else");
   expect(bios).toContain("\\begin{IEEEbiographynophoto}{\\AuthorOneName}\\AuthorOneBio\\end{IEEEbiographynophoto}");

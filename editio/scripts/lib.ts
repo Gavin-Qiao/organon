@@ -29,6 +29,28 @@ export function parseFrontmatter(text: string): { data: Record<string, unknown>;
   return { data, body: src.slice(m[0].length) };
 }
 
+/** A deterministic source-word estimate for authored Markdown prose. Generated
+ * claim attributes, citations, headings, comments, and fenced material do not
+ * count; a bound number, inline code run, or math run counts as one token. This
+ * is deliberately a venue tripwire, not a claim to reproduce a publisher's
+ * private Word/portal counter exactly. */
+export function markdownProseWordCount(body: string): number {
+  let s = body.replace(/\r\n/g, "\n");
+  s = s.replace(/```[\s\S]*?```/g, " ");
+  s = s.replace(/<!--[\s\S]*?-->/g, " ");
+  s = s.split("\n").filter((line) => !/^#{1,6}\s/.test(line)).join("\n");
+  s = s.replace(/\]\{[^}\n]*\}/g, "]"); // editio span attributes
+  s = s.replace(/\[@[^\]]+\]/g, " "); // citations and bracketed cross-references
+  s = s.replace(/@(?:fig|tab|sec|eq):[A-Za-z0-9:_-]+/g, " ");
+  s = s.replace(/@num:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g, " 0 ");
+  s = s.replace(/\$\$[\s\S]*?\$\$/g, " equation ");
+  s = s.replace(/\$[^$\n]+\$/g, " equation ");
+  s = s.replace(/`[^`\n]+`/g, " term ");
+  s = s.replace(/\[([^\]\n]+)\]\([^)]+\)/g, "$1");
+  s = s.replace(/[*_~>#]/g, " ");
+  return (s.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu) ?? []).length;
+}
+
 /** Read + parse a JSON file, with a path-carrying error. */
 export function readJSON(path: string): any {
   if (!existsSync(path)) throw new Error(`missing JSON file: ${path}`);

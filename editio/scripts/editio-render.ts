@@ -310,6 +310,14 @@ export function dropCap(tex: string, warn: (m: string) => void, slug: string): s
   return tex;
 }
 
+/** Some venues require a body section without a printed heading (NMI Articles:
+ * Introduction). Keep an anchor for cross-references while removing only the
+ * generated top-level heading; provenance stamps and prose remain untouched. */
+export function suppressSectionHeading(tex: string, slug: string): string {
+  const safe = slug.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return tex.replace(new RegExp(`\\\\section\\{[^\\n]*\\}\\\\label\\{sec:${safe}\\}`), `\\phantomsection\\label{sec:${slug}}`);
+}
+
 const HELP = `editio-render — the reference md -> tex renderer (see editio-latex/references/authoring-subset.md)
 usage:
   editio-render.ts [--root <dir>] [--all]        render every sections/*.md next to its source
@@ -355,11 +363,14 @@ if (import.meta.main) {
   // the venue's par_start nicety targets the first BODY section (the slug after the
   // abstract in build order) — venue truth stays in venue.json, prose stays neutral
   let dropSlug: string | null = null;
+  const suppressedHeadings = new Set<string>();
   if (existsSync(join(paper, "paper.json"))) {
     try {
       const venuePath = join(VENUES, String(readJSON(join(paper, "paper.json")).venue ?? "arxiv"), "venue.json");
-      if (existsSync(venuePath) && readJSON(venuePath).par_start) {
-        dropSlug = sectionOrder(paper).find((s) => s !== "abstract") ?? null;
+      if (existsSync(venuePath)) {
+        const venue = readJSON(venuePath);
+        if (venue.par_start) dropSlug = sectionOrder(paper).find((s) => s !== "abstract") ?? null;
+        for (const slug of venue.structure?.suppress_section_headings ?? []) suppressedHeadings.add(String(slug));
       }
     } catch { /* venue niceties never block a render */ }
   }
@@ -375,6 +386,7 @@ if (import.meta.main) {
       process.exit(1);
     }
     if (slug === dropSlug) tex = dropCap(tex, warn, slug);
+    if (suppressedHeadings.has(slug)) tex = suppressSectionHeading(tex, slug);
     if (toStdout) process.stdout.write(tex);
     else {
       const dest = t.replace(/\.md$/, ".tex");

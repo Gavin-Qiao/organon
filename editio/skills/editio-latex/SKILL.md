@@ -1,6 +1,13 @@
 ---
 name: editio-latex
-description: Build the paper — set up a TeX distribution in minutes, scaffold or rebuild the .editio/paper/ workspace for a venue, compile the three modes (draft/publish/blind), preview a single section, and keep notation defined-once. Use when installing or detecting TeX, adding a venue, running latexmk, switching modes, or the build breaks. The toolchain is the user's (skills, not stacks): latexmk is the swappable reference driver, venues are data folders.
+description: >-
+  Build the paper — set up a TeX distribution in minutes, scaffold or rebuild
+  the .editio/paper/ workspace for a venue, compile the three modes
+  (draft/publish/blind), preview a single section, and keep notation
+  defined-once. Use when installing or detecting TeX, adding a venue, running
+  latexmk, switching modes, or the build breaks. The toolchain is the user's
+  (skills, not stacks): latexmk is the swappable reference driver, venues are
+  data folders.
 ---
 
 # editio-latex — the typeset layer
@@ -28,7 +35,7 @@ and a venue is a data folder you can add without touching a script.
 ## Scaffold a workspace
 
 ```
-bun "<plugin-root>/scripts/editio-scaffold.ts" [--venue arxiv|tpami] [--order imrad|cs-systems|theory] [--force]
+bun "<plugin-root>/scripts/editio-scaffold.ts" [--venue arxiv|tpami|nmi] [--order imrad|cs-systems|theory|nature-article] [--force]
 ```
 
 Idempotent: authored files (`paper.json`, `sections/*.md`, `refs.bib`, the schema) are seeded
@@ -110,8 +117,17 @@ defined-once-and-used check lands in editio-lint (Phase 5).
 ## Venues are data
 
 `templates/venues/<id>/venue.json` (class, options, columns, widths in mm, bib style, author
-format, notes). Adding a venue = adding a folder; the scaffold and the coming figure/lint
-skills read the same file. Seeded today: `arxiv`, `tpami`.
+format, structure, limits, live policy sources, notes). Adding a venue = adding a folder;
+the scaffold, renderer, doctor, and figure skill read the same file. Seeded today: `arxiv`,
+`tpami`, `nmi`.
+
+The `nmi` profile is explicitly an **Article** profile. A fresh scaffold records `venue: nmi`
+and `order: nature-article`, suppresses the printed Introduction heading, and checks the live
+Article limits: 3,500 main-text words, 150 abstract words, six main display items, and ten
+Extended Data items; the 50-reference value remains advisory because NMI calls it a guideline.
+The generated two-column standard-`article` PDF is a review/authoring proxy sized to Nature's
+88/180mm artwork slots, not a claim to reproduce Nature house style. Initial submission is
+format-flexible; after acceptance, Nature imposes a distinct editable-source contract.
 
 ## The authoring subset
 

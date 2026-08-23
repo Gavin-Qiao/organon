@@ -366,6 +366,53 @@ test("a build exceeding the venue page limit is flagged; one within it is a note
   expect(r2.out).toContain("pages: build/main.pdf 11/12");
 });
 
+test("NMI budgets main text, abstract, and display items instead of pretending pages are the constraint", () => {
+  const root = healthy("nmi");
+  const words = (n: number) => Array.from({ length: n }, () => "word").join(" ");
+  writeFileSync(paper(root, "sections", "abstract.md"), [
+    "---", "class: doco:Abstract", "status: drafting", "grounds: []", "---",
+    "# Abstract", "", words(151), "",
+  ].join("\n"));
+  const figures = Array.from({ length: 7 }, (_, i) => [
+    "\\begin{figure}[tb]", `\\caption{Item ${i + 1}}`, "\\end{figure}",
+  ].join("\n")).join("\n");
+  writeFileSync(paper(root, "sections", "introduction.md"), [
+    "---", "class: deo:Introduction", "status: drafting", "grounds: []", "---",
+    "# Introduction", "", words(3501), "", "```latex+", figures, "```", "",
+  ].join("\n"));
+  expect(run(RENDER, root, "--all").status).toBe(0);
+  const over = run(DOCTOR, root);
+  expect(over.out).toContain("FLAG budget");
+  expect(over.out).toContain("main-text source estimate is 3501 words");
+  expect(over.out).toContain("abstract source estimate is 151 words");
+  expect(over.out).toContain("7 main display items");
+
+  writeFileSync(paper(root, "sections", "abstract.md"), [
+    "---", "class: doco:Abstract", "status: drafting", "grounds: []", "---",
+    "# Abstract", "", words(150), "",
+  ].join("\n"));
+  writeFileSync(paper(root, "sections", "introduction.md"), [
+    "---", "class: deo:Introduction", "status: drafting", "grounds: []", "---",
+    "# Introduction", "", words(3500), "", "```latex+", figures.replace(/\\begin\{figure\}[\s\S]*?\\end\{figure\}\n?/, ""), "```", "",
+  ].join("\n"));
+  expect(run(RENDER, root, "--all").status).toBe(0);
+  const within = run(DOCTOR, root);
+  expect(within.out).not.toContain("FLAG budget");
+  expect(within.out).toContain("main text: 3500/3500 words");
+  expect(within.out).toContain("abstract: 150/150 words");
+  expect(within.out).toContain("display items: 6/6");
+});
+
+test("NMI Discussion subheadings are a venue-structure finding", () => {
+  const root = healthy("nmi");
+  const discussion = paper(root, "sections", "discussion.md");
+  writeFileSync(discussion, read(discussion) + "\n## Not permitted here\n\nInterpretation.\n");
+  expect(run(RENDER, root, "--all").status).toBe(0);
+  const r = run(DOCTOR, root);
+  expect(r.out).toContain("FLAG venue");
+  expect(r.out).toContain("forbids subheadings in sections/discussion.md");
+});
+
 test("outside any git repo the doctor notes untracked history without flagging", () => {
   const root = healthy(); // scratch dirs live under the OS tmpdir, outside any repo
   const r = run(DOCTOR, root);

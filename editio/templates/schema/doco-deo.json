@@ -65,6 +65,15 @@
       "deo:RelatedWork",
       "deo:Conclusion",
       "doco:BibliographicReferenceList"
+    ],
+    "nature-article": [
+      "doco:Abstract",
+      "deo:Introduction",
+      "deo:Results",
+      "deo:Discussion",
+      "deo:Methods",
+      "deo:Acknowledgements",
+      "doco:BibliographicReferenceList"
     ]
   },
   "section_slugs": {

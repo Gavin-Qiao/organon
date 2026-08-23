@@ -90,15 +90,16 @@ function main(argv: string[]): number {
   if (!existsSync(gatePath)) { copyFileSync(join(TEMPLATES, "schema", "doco-deo.json"), gatePath); log("seeded .editio/schema/doco-deo.json"); }
   const gate = readJSON(gatePath);
 
-  // 2. paper.json — authored; placeholders only, never overwritten.
-  if (seed(join(paper, "paper.json"), readFileSync(join(TEMPLATES, "paper.json"), "utf8"))) {
-    log("seeded paper.json (placeholder identity — edit it; it is the only place your name goes)");
-  }
-  const meta = readJSON(join(paper, "paper.json"));
-
-  // 3. Resolve venue + order (flags override paper.json; paper.json stays untouched).
-  const venueId = arg(argv, "venue") ?? meta.venue ?? "arxiv";
-  const orderId = arg(argv, "order") ?? meta.order ?? "cs-systems";
+  // 2–3. Resolve venue + order before seeding paper.json. On a NEW workspace the
+  // CLI selections become authored metadata, so `/editio nmi` cannot create a
+  // main.tex for NMI while paper.json still says arxiv (the old immediate-drift
+  // footgun). On an EXISTING workspace flags remain non-mutating overrides: a
+  // venue experiment never silently rewrites authored metadata.
+  const metaPath = join(paper, "paper.json");
+  const fresh = !existsSync(metaPath);
+  const templateMeta = readJSON(join(TEMPLATES, "paper.json"));
+  const existingMeta = fresh ? templateMeta : readJSON(metaPath);
+  const venueId = arg(argv, "venue") ?? existingMeta.venue ?? "arxiv";
   const venuePath = join(TEMPLATES, "venues", venueId, "venue.json");
   if (!existsSync(venuePath)) {
     const known = readdirSync(join(TEMPLATES, "venues"));
@@ -106,11 +107,17 @@ function main(argv: string[]): number {
     return 1;
   }
   const venue = readJSON(venuePath);
+  const orderId = arg(argv, "order") ?? (fresh ? venue.default_order : existingMeta.order) ?? "cs-systems";
   const order: string[] = gate.orders?.[orderId];
   if (!order) {
     console.error(`editio-scaffold: unknown order "${orderId}" — available: ${Object.keys(gate.orders ?? {}).join(", ")}`);
     return 1;
   }
+  if (fresh) {
+    writeFileSync(metaPath, `${JSON.stringify({ ...templateMeta, venue: venueId, order: orderId }, null, 2)}\n`);
+    log(`seeded paper.json (venue ${venueId}, order ${orderId}; placeholder identity — edit it; it is the only place your name goes)`);
+  }
+  const meta = readJSON(metaPath);
 
   // 4. The render layer — derived from the plugin; refresh with --force.
   if (generate(join(paper, "editio.sty"), readFileSync(join(TEMPLATES, "latex", "editio.sty"), "utf8"), force)) log("wrote editio.sty");
@@ -202,7 +209,9 @@ function main(argv: string[]): number {
       .replace("EDITIO_FIG_W_IN", wIn.toFixed(2))
       .replace("EDITIO_FIG_H_IN", (wIn / 1.618).toFixed(2))
       .replace("EDITIO_FULL_W_IN", fullIn.toFixed(2))
-      .replace("EDITIO_FONT_PT", String(venue.figure_font_pt ?? 8));
+      .replace("EDITIO_FONT_PT", String(venue.figure_font_pt ?? 8))
+      .replace("EDITIO_FONT_FAMILY", String(venue.figure_font_family ?? "serif"))
+      .replace("EDITIO_MATH_FONTSET", String(venue.figure_math_fontset ?? "cm"));
     if (generate(join(paper, "figures", "editio.mplstyle"), mpl, force)) {
       log(`wrote figures/editio.mplstyle (${venue.column_width_mm}mm column, ${venue.figure_font_pt ?? 8}pt)`);
     }

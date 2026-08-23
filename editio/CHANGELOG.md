@@ -6,6 +6,28 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- **Nature Machine Intelligence Article venue profile.** `--venue nmi` now selects the
+  official Article order (unheaded Introduction → Results → Discussion → Methods), optional
+  double-anonymized review semantics, 88/180mm original-research artwork slots, 7pt
+  sans-serif figure type, numerical references, and live-source policy notes. The profile
+  is explicit that its standard-article PDF is an initial-review proxy, not Nature house
+  style or an Acceptance-in-Principle source package.
+- **Venue budgets beyond pages.** The doctor now checks venue-data limits for main-text and
+  abstract words, main and Extended Data display items, and reports reference guidelines
+  without turning advisory guidance into a hard failure. The shared word estimator removes
+  Editio claim machinery, citations, headings, and fenced legends instead of charging them
+  to the author.
+
+### Fixed
+
+- **Fresh scaffolds persist the requested venue and its default order.** Starting with
+  `--venue tpami` or `--venue nmi` no longer generates one venue while leaving the authored
+  `paper.json` at `arxiv`. Existing workspaces remain non-mutating when flags are used, so
+  intentional venue experiments still surface as doctor drift rather than silently changing
+  paper metadata.
+
 ## [0.6.0] - 2026-07-09
 
 ### Added

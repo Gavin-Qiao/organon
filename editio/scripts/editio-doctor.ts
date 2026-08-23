@@ -37,9 +37,9 @@
  *              markdown IS the paper, so git is its version history — milestone tags,
  *              diffs, "the version I sent co-authors"; editio does not rebuild
  *              version control one layer up)
- *   budget     a built PDF exceeding the venue's page limit (venue.json
- *              limits.pages_regular vs the build's own page count) — the overlength
- *              bill surfaces before submission, not on the invoice
+ *   budget     the venue's enforceable budget surface: built-PDF pages where relevant,
+ *              plus source-word and display-item limits (NMI). Advisory reference
+ *              guidance is reported but does not fail --strict.
  *   paths      naked file paths in section prose (generation dirt: workspace
  *              internals, absolute paths leaking a username, stray artifact files) —
  *              a path in inline code or a fence is deliberate typesetting and exempt;
@@ -54,7 +54,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { identityTexOf } from "./editio-identity.ts";
-import { findRoot, paperDir, readJSON } from "./lib.ts";
+import { findRoot, markdownProseWordCount, paperDir, parseFrontmatter, readJSON } from "./lib.ts";
 
 const PLUGIN = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TEMPLATES = join(PLUGIN, "templates");
@@ -85,6 +85,33 @@ export function pdfPages(bytes: string): number | null {
   if (counts.length) return Math.max(...counts);
   const pages = bytes.match(/\/Type\s*\/Page\b/g);
   return pages ? pages.length : null;
+}
+
+/** Manuscript-bearing source: prose plus raw/transforming LaTeX fences, with
+ * code/verbatim fences removed. Used for venue display-item and citation counts. */
+export function manuscriptSurface(md: string): string {
+  const latex: string[] = [];
+  let prose = md.replace(/```latex\+?\n([\s\S]*?)```/g, (_, body: string) => { latex.push(body); return " "; });
+  prose = prose.replace(/```[^\n]*\n[\s\S]*?```/g, " ");
+  return `${prose}\n${latex.join("\n")}`;
+}
+
+export function displayItemCount(md: string): number {
+  return (manuscriptSurface(md).match(/\\begin\{(?:figure|table)\*?\}/g) ?? []).length;
+}
+
+export function citationKeys(md: string): Set<string> {
+  const out = new Set<string>();
+  const src = manuscriptSurface(md);
+  const add = (raw: string) => {
+    for (const part of raw.split(/[;,]/)) {
+      const key = part.trim().replace(/^@/, "");
+      if (key && !/^(?:fig|tab|sec|eq|num):/.test(key)) out.add(key);
+    }
+  };
+  for (const m of src.matchAll(/\[@([^\]]+)\]/g)) add(m[1]);
+  for (const m of src.matchAll(/\\(?:cite\w*|selfcite)\{([^}]+)\}/g)) add(m[1]);
+  return out;
 }
 
 /** Path-shaped tokens that read as generation dirt in paper prose, most specific first. */
@@ -216,6 +243,8 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     ? readdirSync(sectionsDir).filter((f) => f.endsWith(".md")).map((f) => f.replace(/\.md$/, "")).sort()
     : [];
   const authors: string[] = Array.isArray(meta.authors) ? meta.authors.map((a: any) => String(a?.name ?? "")).filter(Boolean) : [];
+  const sectionStats: { slug: string; cls: string; words: number; displayItems: number; hasSubheadings: boolean }[] = [];
+  const cited = new Set<string>();
   let stale = 0;
   for (const slug of slugs) {
     const mdPath = join(sectionsDir, `${slug}.md`);
@@ -228,6 +257,15 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
     }
 
     const md = norm(readFileSync(mdPath, "utf8"));
+    const parsed = parseFrontmatter(md);
+    sectionStats.push({
+      slug,
+      cls: String(parsed.data.class ?? "?"),
+      words: markdownProseWordCount(parsed.body),
+      displayItems: displayItemCount(md),
+      hasSubheadings: /^#{2,3}\s+/m.test(parsed.body),
+    });
+    for (const key of citationKeys(md)) cited.add(key);
     for (const m of md.matchAll(/```latex\n([\s\S]*?)```/g)) {
       if (/\\(cite|ref|cref|Cref)\b/.test(m[1])) {
         const line = md.slice(0, m.index!).split("\n").length;
@@ -258,6 +296,18 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
   }
   if (stale) flag("render", `${stale} section(s) have .md newer than .tex — run editio-render --all`);
   notes.push(`sections: ${slugs.length}`);
+
+  // venue structure — data, not hard-coded journal names. NMI uses this for an
+  // unheaded Introduction (handled by the renderer) and a Discussion with no
+  // subheadings (checked here before submission).
+  if (venue) {
+    const forbidden = new Set<string>((venue.structure?.forbid_subheadings ?? []).map(String));
+    for (const s of sectionStats) {
+      if (forbidden.has(s.slug) && s.hasSubheadings) {
+        flag("venue", `venue "${venueId}" forbids subheadings in sections/${s.slug}.md`);
+      }
+    }
+  }
 
   // strays — editio builds out-of-tree to build*/ dirs, so a PDF in the paper source
   // root is a hand-saved copy (a real paper grew a 3-day-stale main.pdf and two
@@ -350,6 +400,35 @@ export function diagnose(root: string): { findings: Finding[]; notes: string[] }
       if (n > pagesLimit) flag("budget", `${rel} runs ${n} pages — venue "${venueId}" bills past ${pagesLimit} (${venue.limits?.note ?? "overlength policy"})`);
       else notes.push(`pages: ${rel} ${n}/${pagesLimit}`);
     }
+  }
+
+  // Venue budgets beyond pages. Nature-family venues are constrained by prose
+  // and display items, so a page-only doctor would be falsely reassuring.
+  const limits = venue?.limits ?? {};
+  const excluded = new Set<string>((limits.main_text_exclude_classes ?? []).map(String));
+  if (typeof limits.main_text_words === "number") {
+    const n = sectionStats.filter((s) => !excluded.has(s.cls)).reduce((sum, s) => sum + s.words, 0);
+    if (n > limits.main_text_words) flag("budget", `main-text source estimate is ${n} words — venue "${venueId}" allows ${limits.main_text_words} (${limits.note ?? "venue word policy"})`);
+    else notes.push(`main text: ${n}/${limits.main_text_words} words`);
+  }
+  if (typeof limits.abstract_words === "number") {
+    const n = sectionStats.filter((s) => s.cls === "doco:Abstract").reduce((sum, s) => sum + s.words, 0);
+    if (n > limits.abstract_words) flag("budget", `abstract source estimate is ${n} words — venue "${venueId}" allows ${limits.abstract_words}`);
+    else notes.push(`abstract: ${n}/${limits.abstract_words} words`);
+  }
+  const extendedClasses = new Set<string>((limits.extended_data_classes ?? []).map(String));
+  const mainDisplayItems = sectionStats.filter((s) => !extendedClasses.has(s.cls)).reduce((sum, s) => sum + s.displayItems, 0);
+  const extendedItems = sectionStats.filter((s) => extendedClasses.has(s.cls)).reduce((sum, s) => sum + s.displayItems, 0);
+  if (typeof limits.display_items === "number") {
+    if (mainDisplayItems > limits.display_items) flag("budget", `${mainDisplayItems} main display items — venue "${venueId}" allows ${limits.display_items}`);
+    else notes.push(`display items: ${mainDisplayItems}/${limits.display_items}`);
+  }
+  if (typeof limits.extended_data_items === "number") {
+    if (extendedItems > limits.extended_data_items) flag("budget", `${extendedItems} Extended Data items — venue "${venueId}" allows ${limits.extended_data_items}`);
+    else notes.push(`Extended Data: ${extendedItems}/${limits.extended_data_items}`);
+  }
+  if (typeof limits.references_guideline === "number") {
+    notes.push(`references: ${cited.size}${cited.size > limits.references_guideline ? ` (above venue guideline ${limits.references_guideline}; advisory, not a hard gate)` : `/${limits.references_guideline} guideline`}`);
   }
 
   return { findings, notes };

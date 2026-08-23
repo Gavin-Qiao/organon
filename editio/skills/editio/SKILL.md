@@ -23,7 +23,7 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | You want to… | Use |
 |---|---|
 | start or resume a paper | read and execute `<plugin-root>/commands/editio.md` (the `/editio` adapter in Claude Code) |
-| lay down / rebuild the workspace for a venue | `bun "<plugin-root>/scripts/editio-scaffold.ts" --venue arxiv` |
+| lay down / rebuild the workspace for a venue | `bun "<plugin-root>/scripts/editio-scaffold.ts" --venue arxiv|tpami|nmi` |
 | frame the argument, seed and write sections | the `editio-structure` skill |
 | render markdown sections to LaTeX | `bun "<plugin-root>/scripts/editio-render.ts" --all` |
 | build the PDF, preview one section, set up TeX, notation | the `editio-latex` skill |
@@ -31,7 +31,7 @@ A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup)
 | see where the paper stands (per-section claim tallies, drafted words vs `budget:`, grounds health) | `bun "<plugin-root>/scripts/editio-status.ts"` (`--claims` lists each ungraded/unsourced span at file:line) |
 | audit a draft's claims + AI tells | the `grounded-writing-reviewer` skill, then apply its grades (below) |
 | run the publish gate (no ungraded / unsourced / overclaims) | `bun "<plugin-root>/scripts/editio-status.ts" --gate` (exit 1 on violations) |
-| check the workspace against the installed plugin (stale scaffold, declared-order drift, venue drift, hand-finished metadata, unrendered/unwired sections, identity in prose, stray PDFs in the source root, gitignored/untracked sources, builds over the venue page limit, naked file paths in prose) | `bun "<plugin-root>/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
+| check the workspace against the installed plugin (scaffold/order/venue drift, stale/unwired sections, identity/path leaks, VCS hazards, and venue-specific page/word/display budgets) | `bun "<plugin-root>/scripts/editio-doctor.ts"` (report-only; `--strict` exits 1 for CI) |
 | change the title / authors / corresponding author everywhere at once | edit `paper.json`, then `bun "<plugin-root>/scripts/editio-identity.ts"` (or `editio-render --all`) — regenerates `front/identity.tex`, the data macros every document assembles from |
 | bind a result value once, reference it everywhere (`@num:handle`) | the `editio-numbers` skill + `numbers.json`; `bun "<plugin-root>/scripts/editio-numbers.ts" --write` |
 | verify the paper's numbers still match their sources | `bun "<plugin-root>/scripts/editio-numbers.ts"` (`--gate` exits 1 on unknown/stale/unwritten bindings) |

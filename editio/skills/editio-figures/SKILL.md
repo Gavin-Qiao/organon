@@ -30,6 +30,9 @@ contracts.
    author's call. **Never post-scale** (`width=\columnwidth` around a wrong-sized PDF shrinks every
    font out of spec) and **never save with `bbox_inches='tight'`** (it re-crops the page and
    changes the physical width under you).
+   Venue typography travels with the same data: the NMI profile uses Nature's 88/180mm
+   original-research slots and 7pt sans-serif labels (the permitted 5–7pt range), while
+   TPAMI retains its IEEE-sized style.
 4. **Build through the menu** (`references/tools-by-job.md`) — vector PDF by default, colors
    and redundant encoding per `references/color-accessibility.md`, field conventions per
    `references/domain-figures.md`.

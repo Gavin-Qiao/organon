@@ -45,6 +45,7 @@ test("the structure gate is strict, ordered, and slug-complete", () => {
 test("every venue file carries the fields scaffold and figures need", () => {
   const venues = readdirSync(join(TEMPLATES, "venues"));
   expect(venues).toContain("arxiv");
+  expect(venues).toContain("nmi");
   expect(venues).toContain("tpami");
   for (const v of venues) {
     const j = JSON.parse(readFileSync(join(TEMPLATES, "venues", v, "venue.json"), "utf8"));
@@ -56,9 +57,25 @@ test("every venue file carries the fields scaffold and figures need", () => {
   }
 });
 
+test("the NMI Article profile carries live-source budgets, structure, and artwork constraints", () => {
+  const nmi = JSON.parse(readFileSync(join(TEMPLATES, "venues", "nmi", "venue.json"), "utf8"));
+  expect(nmi.default_order).toBe("nature-article");
+  expect(nmi.limits.main_text_words).toBe(3500);
+  expect(nmi.limits.abstract_words).toBe(150);
+  expect(nmi.limits.display_items).toBe(6);
+  expect(nmi.limits.extended_data_items).toBe(10);
+  expect(nmi.structure.suppress_section_headings).toContain("introduction");
+  expect(nmi.structure.forbid_subheadings).toContain("discussion");
+  expect(nmi.column_width_mm).toBe(88);
+  expect(nmi.full_width_mm).toBe(180);
+  expect(nmi.figure_font_pt).toBe(7);
+  expect(nmi.figure_font_family).toBe("sans-serif");
+  expect(nmi.sources.content_type).toMatch(/^https:\/\/www\.nature\.com\//);
+});
+
 test("the mplstyle template carries the venue tokens and the Okabe-Ito cycle", () => {
   const mpl = readFileSync(join(TEMPLATES, "figures", "editio.mplstyle"), "utf8");
-  for (const token of ["EDITIO_VENUE", "EDITIO_FIG_W_IN", "EDITIO_FIG_H_IN", "EDITIO_FULL_W_IN", "EDITIO_FONT_PT"]) {
+  for (const token of ["EDITIO_VENUE", "EDITIO_FIG_W_IN", "EDITIO_FIG_H_IN", "EDITIO_FULL_W_IN", "EDITIO_FONT_PT", "EDITIO_FONT_FAMILY", "EDITIO_MATH_FONTSET"]) {
     expect(mpl, `missing token ${token}`).toContain(token);
   }
   for (const hex of ["0072B2", "D55E00", "009E73", "E69F00", "56B4E9", "CC79A7", "F0E442"]) {

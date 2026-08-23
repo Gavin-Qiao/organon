@@ -10,6 +10,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const SCRIPT = join(import.meta.dir, "..", "editio-scaffold.ts");
+const RENDER = join(import.meta.dir, "..", "editio-render.ts");
 const tmps: string[] = [];
 afterAll(() => { for (const d of tmps) { try { rmSync(d, { recursive: true, force: true }); } catch { /* ignore */ } } });
 
@@ -68,10 +69,39 @@ test("tpami venue swaps the class and bib style; unknown venues list what exists
   expect(main).toContain("\\bibliographystyle{IEEEtran}");
   expect(main).toContain("\\usepackage{dblfloatfix}"); // figure* discipline ships by construction
   expect(main).toContain("\\renewcommand{\\dbltopfraction}{0.9}");
+  expect(JSON.parse(read(paper(root, "paper.json"))).venue).toBe("tpami");
   const bad = run(scratch(), "--venue", "nope");
   expect(bad.status).toBe(1);
   expect(bad.out).toContain("arxiv");
+  expect(bad.out).toContain("nmi");
   expect(bad.out).toContain("tpami");
+});
+
+test("a fresh NMI scaffold records its venue/order and applies the Article structure", () => {
+  const root = scratch();
+  expect(run(root, "--venue", "nmi").status).toBe(0);
+  const meta = JSON.parse(read(paper(root, "paper.json")));
+  expect(meta.venue).toBe("nmi");
+  expect(meta.order).toBe("nature-article");
+
+  const main = read(paper(root, "main.tex"));
+  expect(main).toContain("\\documentclass[11pt,a4paper,twocolumn]{article}");
+  expect(main).toContain("\\usepackage[numbers,sort&compress]{natbib}");
+  expect(main.indexOf("sections/results")).toBeLessThan(main.indexOf("sections/discussion"));
+  expect(main.indexOf("sections/discussion")).toBeLessThan(main.indexOf("sections/methods"));
+  expect(main).not.toContain("sections/conclusion");
+
+  const style = read(paper(root, "figures", "editio.mplstyle"));
+  expect(style).toContain("figure.figsize: 3.46, 2.14");
+  expect(style).toContain("font.family: sans-serif");
+  expect(style).toContain("font.size: 7");
+  expect(style).toContain("mathtext.fontset: dejavusans");
+
+  const rendered = spawnSync(process.execPath, [RENDER, "--root", root, "--all"], { encoding: "utf8" });
+  expect(rendered.status).toBe(0);
+  const intro = read(paper(root, "sections", "introduction.tex"));
+  expect(intro).toContain("\\phantomsection\\label{sec:introduction}");
+  expect(intro).not.toContain("\\section{Introduction}");
 });
 
 test("the gitignore line is added exactly once across runs", () => {

@@ -1,5 +1,5 @@
 ---
-description: Start or resume a paper end to end — check the promptus store, scaffold .editio/paper/ for a venue, report section status, and route the next step (structure → render → build → audit). Run with no argument to resume, or a venue id (arxiv, tpami) to start.
+description: Start or resume a paper end to end — check the promptus store, scaffold .editio/paper/ for a venue, report section status, and route the next step (structure → render → build → audit). Run with no argument to resume, or a venue id (arxiv, tpami, nmi) to start.
 argument-hint: "[venue]"
 ---
 
@@ -12,7 +12,8 @@ Work through this checklist, then stop at the single next action.
    store keeps every claim `.unsourced`, say so honestly.
 2. **TeX present?** `latexmk -v` — if absent, run the 5-minute setup in the `editio-latex`
    skill (interactive; the user picks the distribution).
-3. **Workspace.** No `.editio/paper/` → scaffold it (venue from `$ARGUMENTS`, default arxiv):
+3. **Workspace.** No `.editio/paper/` → scaffold it (venue from `$ARGUMENTS`, default arxiv;
+   `nmi` selects the official Article order and venue budgets):
    `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-scaffold.ts" --venue <id>` — then tell the user
    `paper.json` is where title/authors go (placeholders ship; nobody's identity is assumed).
 4. **Resume report.** Run `bun "${CLAUDE_PLUGIN_ROOT}/scripts/editio-status.ts"` — one line
