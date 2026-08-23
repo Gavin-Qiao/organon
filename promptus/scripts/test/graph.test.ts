@@ -96,6 +96,19 @@ test("kb-graph lint: an orphan is listed; a connected unit is not", () => {
   expect(out).not.toContain("y-target");       // a unit with any edge is not flagged
 });
 
+test("kb-graph lint: a resolved typed relation connects both units for orphan classification", () => {
+  const root = scaffold();
+  expect(finding(root, "relation target").status).toBe(0);
+  expect(add(root, [
+    "--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED",
+    "--title", "relation source", "--rel", "supports:relation-target",
+  ], "The typed relation is the only edge.").status).toBe(0);
+  expect(index(root).status).toBe(0);
+  const linted = graph(root, ["lint", "--strict"]);
+  expect(linted.status).toBe(0);
+  expect(linted.stdout).toContain("clean");
+});
+
 test("kb-graph lint --strict: exits non-zero on a flaw, zero when clean", () => {
   const dirty = scaffold();
   finding(dirty, "island");                    // an orphan

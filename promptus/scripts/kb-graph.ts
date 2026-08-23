@@ -1,13 +1,14 @@
 #!/usr/bin/env bun
 /**
- * kb-graph.ts — query the [[link]] graph kb-index already built. No embeddings: the links
- * ARE the graph, centrality is plain graph math (PageRank, as HippoRAG does it but without
- * the vectors), and a dangling handle is found by string match. Reads the derived
+ * kb-graph.ts — query the Markdown graph kb-index already built. No embeddings: PageRank
+ * uses the resolved [[link]] page graph, typed relations also count for connectivity health,
+ * centrality is plain graph math (as HippoRAG does it but without vectors), and a dangling
+ * handle is found by string match. Reads the derived
  * .promptus/cache/graph.json (+ CATALOG.md for titles); rerun kb-index if they are stale.
  *
  * Usage:
  *   kb-graph lint  [--strict]     structural health — dangling [[handles]] (with a "did you
- *                                 mean?" by slug similarity) + orphans (nothing links in or out).
+ *                                 mean?" by slug similarity) + orphans (no resolved wikilink or typed relation).
  *                                 --strict exits non-zero when anything is flagged (gates a checkpoint).
  *   kb-graph rank  [--top <n>] [--history]
  *                                 load-bearing active units by PageRank over the page-link graph;
@@ -32,7 +33,12 @@ import { derivedDir, findProjectRoot } from "./lib/paths.ts";
 import { parseFrontmatter } from "./lib/frontmatter.ts";
 import { readCached } from "./lib/units.ts";
 
-interface Graph { nodes: string[]; out: Record<string, string[]>; inDeg: Record<string, number> }
+interface Graph {
+  nodes: string[];
+  out: Record<string, string[]>;
+  inDeg: Record<string, number>;
+  relationDegree?: Record<string, number>;
+}
 
 const slugOf = (path: string) => path.split("#")[0].split("/").pop()!.replace(/\.md$/, "");
 
@@ -102,14 +108,16 @@ function lint(g: Graph, lab: Map<string, string>, strict: boolean): number {
   const set = new Set(g.nodes);
   const dangling: Array<{ from: string; to: string; hint: string }> = [];
   for (const [from, tos] of Object.entries(g.out)) for (const to of tos) if (!set.has(to)) dangling.push({ from: slugOf(from), to, hint: nearest(to, g.nodes) });
-  const orphans = g.nodes.filter((n) => (g.inDeg[n] ?? 0) === 0 && (g.out[n] ?? []).length === 0);
+  const orphans = g.nodes.filter((n) =>
+    (g.inDeg[n] ?? 0) === 0 && (g.out[n] ?? []).length === 0 && (g.relationDegree?.[n] ?? 0) === 0,
+  );
 
   if (dangling.length) {
     console.log(`dangling [[handles]] (${dangling.length}) — the link's target is not a unit:`);
     for (const d of dangling) console.log(`    ${d.from} → [[${d.to}]]${d.hint ? `    did you mean: ${d.hint}?` : ""}`);
   }
   if (orphans.length) {
-    console.log(`orphans (${orphans.length}) — nothing links in or out (wire them in, or retire them):`);
+    console.log(`orphans (${orphans.length}) — no resolved wikilink or typed relation (wire them in, or retire them):`);
     for (const o of orphans) console.log(`    ${o}${lab.has(o) ? `    (${lab.get(o)})` : ""}`);
   }
   if (!dangling.length && !orphans.length) console.log("kb-graph lint: clean — no dangling handles, no orphans.");

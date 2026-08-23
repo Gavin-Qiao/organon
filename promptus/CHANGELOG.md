@@ -17,6 +17,28 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.8.1] - 2026-08-23
+
+### Changed
+
+- **Count resolved typed relations as graph connectivity.** Relation-only findings no longer
+  appear as orphans; PageRank remains deliberately limited to the wikilink page graph.
+- **Separate current evidence health from archival drift.** Artifact failures owned by active
+  units remain hard failures, while failures owned by units made `SUPERSEDED` through a resolved
+  lifecycle relation are retained as explicit archival warnings and do not block session resume.
+
+### Fixed
+
+- **Make ledger links survive the authoritative rebuild.** `kb-add --links` now serializes a
+  `Related:` footer into ledger Markdown and emits the same anchored catalog card that `kb-index`
+  reconstructs, so a successful write round-trips without losing its edge.
+- **Serialize concurrent store writers.** `kb-add` and `kb-now` now share a project-local lease,
+  re-read source only after acquiring it, replace source files atomically, and mint a deterministic
+  suffix on same-second ledger ID and anchor collisions, preventing multi-agent lost updates and
+  keeping every new event independently retrievable.
+- **Use one fence-aware ledger parser in doctor and indexer.** A quoted `### [timestamp]` example
+  inside a code fence no longer inflates doctor counts or creates false catalog-lag diagnoses.
+
 ## [0.8.0] - 2026-08-23
 
 ### Added
@@ -484,7 +506,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.1...HEAD
+[0.8.1]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.0...promptus-v0.8.1
 [0.8.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.7.0...promptus-v0.8.0
 [0.7.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.2...promptus-v0.7.0
 [0.6.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.1...promptus-v0.6.2

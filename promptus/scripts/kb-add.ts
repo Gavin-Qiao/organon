@@ -27,7 +27,7 @@
  * style. Low friction is a hard requirement — friction is what made the old script drift.
  */
 
-import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import { nowISO, stampUTC, nowLocalStamp } from "./lib/clock.ts";
@@ -38,6 +38,8 @@ import { loadVocab, validate, type Relation, type UnitInput, type Vocab } from "
 import { derivedDir, findProjectRoot, indexPath, insertBeforeSentinel, storePath } from "./lib/paths.ts";
 import { parseArtifactSpec, serializeArtifactSpec } from "./lib/artifacts.ts";
 import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
+import { atomicStoreWrite, withStoreLock } from "./lib/store-lock.ts";
+import { ledgerHeads } from "./lib/units.ts";
 
 type Args = Record<string, string | boolean>;
 
@@ -114,8 +116,25 @@ function appendCatalog(root: string, line: string): string {
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
   const head = "# Promptus card-catalog (DERIVED — rebuilt by kb-index; safe to delete)\n\n";
   const cur = existsSync(catalog) ? readFileSync(catalog, "utf8") : head;
-  writeFileSync(catalog, `${cur.replace(/\n*$/, "\n")}${line}\n`);
+  atomicStoreWrite(root, catalog, `${cur.replace(/\n*$/, "\n")}${line}\n`);
   return catalog;
+}
+
+function uniqueLedgerId(base: string, ledger: string): string {
+  const ids = new Set([...ledger.matchAll(/^<!-- kb:id (\S+) -->$/gm)].map((match) => match[1]));
+  if (!ids.has(base)) return base;
+  let ordinal = 2;
+  while (ids.has(`${base}-${ordinal}`)) ordinal++;
+  return `${base}-${ordinal}`;
+}
+
+function uniqueLedgerStamp(base: string, ledger: string): string {
+  const anchors = new Set(ledgerHeads(ledger.replace(/\r\n/g, "\n")).map((head) => head.anchor));
+  const normalized = base.replace(/ /g, "T");
+  if (!anchors.has(normalized)) return base;
+  let ordinal = 1;
+  while (anchors.has(`${normalized}.${String(ordinal).padStart(3, "0")}`)) ordinal++;
+  return `${base}.${String(ordinal).padStart(3, "0")}`;
 }
 
 const TEMPLATE_VOCAB = join(dirname(fileURLToPath(import.meta.url)), "..", "templates", "schema", "kb-vocab.json");
@@ -165,70 +184,91 @@ function main(argv: string[]): number {
   const sub = vocab.substrates[unit.substrate];
   const dry = a["dry-run"] === true;
   const body = process.stdin.isTTY ? "" : readFileSync(0, "utf8").replace(/\s+$/, "");
-  const id = mintId(sub.prefix, stampUTC(nowISO()), unit.title);
+  const idBase = mintId(sub.prefix, stampUTC(nowISO()), unit.title);
   const slug = slugify(unit.title);
   const links = Array.from(new Set([...(unit.links ?? []), ...extractLinks(body)]));
 
-  let assembled: string;
-  let unitFile: string;
-  const writes: Array<[string, string]> = []; // [path, content] for the non-dry pass
+  const prepare = () => {
+    let id = idBase;
+    let assembled: string;
+    let unitFile: string;
+    let catalogPath: string;
+    const writes: Array<[string, string]> = [];
 
-  if (sub.envelope === "log") {
-    const relFooter = relations.length ? `\n${relations.map((r) => `↳ ${r.type} ${r.target}`).join("\n")}` : "";
-    const artifactHeader = artifacts.length ? `${artifacts.map((artifact) => `<!-- kb:artifact ${artifact} -->`).join("\n")}\n` : "";
-    assembled = `### [${nowLocalStamp()}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n<!-- kb:id ${id} -->\n${artifactHeader}${body}${relFooter}\n`;
-    unitFile = storePath(root, vocab, unit.substrate);
-    if (!existsSync(unitFile)) fail(`ledger not found: ${rel(root, unitFile)} — run /promptus-init first`);
-    writes.push([unitFile, insertBeforeSentinel(readFileSync(unitFile, "utf8"), assembled, vocab.sentinel)]);
-  } else if (sub.envelope === "page") {
-    const fm: Frontmatter = { id, substrate: unit.substrate, kind: unit.kind, status: unit.status, created: nowLocalStamp() };
-    if (unit.source) fm.source = unit.source;
-    if (unit.reuse) fm.reuse = unit.reuse;
-    if (relations.length) fm.relations = relations.map((r) => `${r.type}:${r.target}`);
-    if (links.length) fm.links = links;
-    if (artifacts.length) fm.artifacts = artifacts;
-    const related = links.length ? `\n\nRelated: ${links.map((l) => `[[${l}]]`).join(" · ")}` : "";
-    assembled = `${serializeFrontmatter(fm)}# ${unit.title}\n\n${body}${related}\n`;
-    unitFile = storePath(root, vocab, unit.substrate, slug);
-    if (existsSync(unitFile)) fail(`a ${unit.substrate} already exists at ${rel(root, unitFile)} — pick a distinct title or edit it directly`);
-    writes.push([unitFile, assembled]);
-  } else {
-    // memory: one file per fact + a pointer in the MEMORY.md index
-    const fm: Frontmatter = { id, name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
-    if (links.length) fm.links = links;
-    if (artifacts.length) fm.artifacts = artifacts;
-    assembled = `${serializeFrontmatter(fm)}\n${body}\n`;
-    unitFile = storePath(root, vocab, unit.substrate, slug);
-    if (existsSync(unitFile)) fail(`a memory unit already exists at ${rel(root, unitFile)}`);
-    writes.push([unitFile, assembled]);
-    const idx = indexPath(root, vocab, unit.substrate);
-    if (idx && existsSync(idx)) {
-      const pointer = `- [${unit.title}](${slug}.md) — ${str(a, "desc") ?? unit.title}`;
-      const cur = readFileSync(idx, "utf8");
-      writes.push([idx, cur.includes(vocab.sentinel) ? insertBeforeSentinel(cur, pointer, vocab.sentinel) : `${cur.replace(/\n*$/, "\n")}${pointer}\n`]);
+    if (sub.envelope === "log") {
+      unitFile = storePath(root, vocab, unit.substrate);
+      if (!existsSync(unitFile)) throw new Error(`ledger not found: ${rel(root, unitFile)} — run /promptus-init first`);
+      const current = readFileSync(unitFile, "utf8");
+      id = uniqueLedgerId(idBase, current);
+      const linkFooter = (unit.links ?? []).length
+        ? `\nRelated: ${Array.from(new Set(unit.links)).map((link) => `[[${link}]]`).join(" · ")}`
+        : "";
+      const relFooter = relations.length ? `\n${relations.map((r) => `↳ ${r.type} ${r.target}`).join("\n")}` : "";
+      const artifactHeader = artifacts.length ? `${artifacts.map((artifact) => `<!-- kb:artifact ${artifact} -->`).join("\n")}\n` : "";
+      const displayStamp = uniqueLedgerStamp(nowLocalStamp(), current);
+      assembled = `### [${displayStamp}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n<!-- kb:id ${id} -->\n${artifactHeader}${body}${linkFooter}${relFooter}\n`;
+      catalogPath = `${rel(root, unitFile)}#${displayStamp.replace(/ /g, "T")}`;
+      writes.push([unitFile, insertBeforeSentinel(current, assembled, vocab.sentinel)]);
+    } else if (sub.envelope === "page") {
+      const fm: Frontmatter = { id, substrate: unit.substrate, kind: unit.kind, status: unit.status, created: nowLocalStamp() };
+      if (unit.source) fm.source = unit.source;
+      if (unit.reuse) fm.reuse = unit.reuse;
+      if (relations.length) fm.relations = relations.map((r) => `${r.type}:${r.target}`);
+      if (links.length) fm.links = links;
+      if (artifacts.length) fm.artifacts = artifacts;
+      const related = links.length ? `\n\nRelated: ${links.map((l) => `[[${l}]]`).join(" · ")}` : "";
+      assembled = `${serializeFrontmatter(fm)}# ${unit.title}\n\n${body}${related}\n`;
+      unitFile = storePath(root, vocab, unit.substrate, slug);
+      catalogPath = rel(root, unitFile);
+      if (existsSync(unitFile)) throw new Error(`a ${unit.substrate} already exists at ${rel(root, unitFile)} — pick a distinct title or edit it directly`);
+      writes.push([unitFile, assembled]);
+    } else {
+      const fm: Frontmatter = { id, name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
+      if (links.length) fm.links = links;
+      if (artifacts.length) fm.artifacts = artifacts;
+      assembled = `${serializeFrontmatter(fm)}\n${body}\n`;
+      unitFile = storePath(root, vocab, unit.substrate, slug);
+      catalogPath = rel(root, unitFile);
+      if (existsSync(unitFile)) throw new Error(`a memory unit already exists at ${rel(root, unitFile)}`);
+      writes.push([unitFile, assembled]);
+      const idx = indexPath(root, vocab, unit.substrate);
+      if (idx && existsSync(idx)) {
+        const pointer = `- [${unit.title}](${slug}.md) — ${str(a, "desc") ?? unit.title}`;
+        const cur = readFileSync(idx, "utf8");
+        writes.push([idx, cur.includes(vocab.sentinel) ? insertBeforeSentinel(cur, pointer, vocab.sentinel) : `${cur.replace(/\n*$/, "\n")}${pointer}\n`]);
+      }
     }
-  }
-
-  const catLine = catalogLine(unit.substrate, unit.status, unit.title, rel(root, unitFile), id, links);
+    return { id, assembled, unitFile, writes, catLine: catalogLine(unit.substrate, unit.status, unit.title, catalogPath, id, links) };
+  };
 
   if (dry) {
-    console.log(`[dry-run] would write ${rel(root, unitFile)}:`);
+    let prepared: ReturnType<typeof prepare>;
+    try { prepared = prepare(); }
+    catch (error) { console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`); return 1; }
+    console.log(`[dry-run] would write ${rel(root, prepared.unitFile)}:`);
     console.log("----------------------------------------");
-    console.log(assembled.replace(/\n$/, ""));
+    console.log(prepared.assembled.replace(/\n$/, ""));
     console.log("----------------------------------------");
-    console.log(`catalog += ${catLine}`);
+    console.log(`catalog += ${prepared.catLine}`);
     return 0;
   }
 
-  for (const [p, c] of writes) {
-    mkdirSync(dirname(p), { recursive: true });
-    writeFileSync(p, c);
+  let committed: ReturnType<typeof prepare> & { catalog: string };
+  try {
+    committed = withStoreLock(root, () => {
+      const prepared = prepare();
+      for (const [path, content] of prepared.writes) atomicStoreWrite(root, path, content);
+      const catalog = appendCatalog(root, prepared.catLine);
+      if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
+      return { ...prepared, catalog };
+    });
+  } catch (error) {
+    console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`);
+    return 1;
   }
-  const catalog = appendCatalog(root, catLine);
-  if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
   console.log(`kb-add: ${unit.substrate}:${unit.status} — ${unit.title}`);
-  console.log(`  -> ${rel(root, unitFile)}  (id ${id})`);
-  console.log(`  catalog: ${rel(root, catalog)}  ·  run \`bun scripts/kb-index.ts\` to rebuild authoritatively`);
+  console.log(`  -> ${rel(root, committed.unitFile)}  (id ${committed.id})`);
+  console.log(`  catalog: ${rel(root, committed.catalog)}  ·  run \`bun scripts/kb-index.ts\` to rebuild authoritatively`);
   return 0;
 }
 

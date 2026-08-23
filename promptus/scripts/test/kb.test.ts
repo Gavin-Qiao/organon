@@ -58,6 +58,22 @@ test("kb-add round-trips a ledger unit, and kb-index lists it with substrate:sta
   expect(catalog(root)).toContain("ledger:VALIDATED · Chose bun over node");
 });
 
+test("kb-add --links round-trips a ledger unit exactly through authoritative reindexing", () => {
+  const root = scaffold();
+  expect(add(root, ["--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED", "--title", "Psi provenance target"], "target").status).toBe(0);
+  const written = add(root, [
+    "--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED",
+    "--title", "Connect Psi provenance", "--links", "psi-provenance-target",
+  ], "The body deliberately carries no wikilink; --links is the only source of this edge.");
+  expect(written.status).toBe(0);
+  expect(ledger(root)).toContain("Related: [[psi-provenance-target]]");
+  const before = catalog(root).split(/\r?\n/).find((line) => line.includes("Connect Psi provenance"));
+  expect(before).toContain("[[psi-provenance-target]]");
+  expect(index(root).status).toBe(0);
+  const after = catalog(root).split(/\r?\n/).find((line) => line.includes("Connect Psi provenance"));
+  expect(after).toBe(before);
+});
+
 test("kb-add preserves JavaScript replacement-token bytes in ledger prose", () => {
   const root = scaffold();
   const body = "Keep `$` and `$n > 0$`; also keep $&, $', and $$ literally.";

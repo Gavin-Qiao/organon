@@ -13,9 +13,11 @@ back against real use. Do not manufacture roadmap features merely because they s
 > live in each `plugin.json`, never in prose). Two plugins under the `organon` marketplace
 > (Claude Code: `.claude-plugin/marketplace.json`; Codex: `.agents/plugins/marketplace.json`):
 > **`promptus/`** — the store: STORE `kb-add`
-> (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
+> (+ the NOW-header writer `kb-now`; both serialize source mutations), KEEP `kb-index` +
+> `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`, read-only session preflight
-> `promptus-session-doctor`; skills `promptus`, `recall`, `grannie`, `telos`,
+> `promptus-session-doctor`; the health gate keeps current artifact failures red while treating
+> superseded-unit drift as archival warnings; skills `promptus`, `recall`, `grannie`, `telos`,
 > `research-ledger`, `thinker-round`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
 > `editio-structure` + `editio-latex` + `editio-figures` skills, the scaffold + renderer +
 > figcheck scripts, `humanizer`; tables/bib land in later phases (design of record:

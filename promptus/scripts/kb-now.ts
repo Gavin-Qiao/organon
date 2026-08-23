@@ -17,11 +17,12 @@
  * stdin replaces the region between the sentinels and MUST contain every section in
  * REQUIRED, or it is refused with the missing set.
  */
-import { readFileSync, writeFileSync, renameSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { nowLocalStamp } from "./lib/clock.ts";
 import { loadVocab } from "./lib/vocab.ts";
 import { findProjectRoot, storePath } from "./lib/paths.ts";
 import { ledgerEntries } from "./lib/units.ts";
+import { atomicStoreWrite, withStoreLock } from "./lib/store-lock.ts";
 
 const NOW_START = "<!-- now:start -->";
 const NOW_END = "<!-- now:end -->";
@@ -66,39 +67,45 @@ function main(argv: string[]): number {
   const suppliedLines = supplied.split("\n").length;
   if (suppliedLines > maxLines) fail(`NOW-header has ${suppliedLines} lines, above --max-lines ${maxLines}`);
 
-  const text = readFileSync(ledger, "utf8").replace(/\r\n/g, "\n");
-  if (text.indexOf(NOW_START) < 0 || text.indexOf(NOW_END) < 0 || text.indexOf(NOW_END) < text.indexOf(NOW_START)) {
-    fail(`ledger has no ${NOW_START} … ${NOW_END} region — run /promptus-init, or add the markers`);
-  }
-  if (!UPDATED.test(text)) fail("ledger has no `**Updated:**` line to stamp");
-
-  // The gate, not the agent, owns freshness. Prefer the latest stable id; legacy
-  // entries without one get a deterministic anchor key until next amended.
-  const entries = ledgerEntries(ledger);
-  const latest = entries.at(-1);
-  const through = latest ? (/^<!-- kb:id (\S+) -->$/m.exec(latest.text)?.[1] ?? `anchor:${latest.anchor}`) : "EMPTY";
-  const withoutMarkers = supplied.replace(NOW_MARKER, "").replace(/\n{3,}/g, "\n\n").trim();
-  const body = withoutMarkers.replace(/^#{2,3}\s+NOW\s*$/m, (heading) => `${heading}\n<!-- kb:now-through ${through} -->`);
-
-  // 1. The script owns the date — local, matching the log; the LLM supplies only the note.
-  const note = arg(argv, "note");
-  const stamp = `${nowLocalStamp().slice(0, 10)}${note ? ` (${note})` : ""}`;
-  const stamped = text.replace(UPDATED, (_m, pre: string, tail?: string) => `${pre}${stamp}${tail ?? ""}`);
-
-  // 2. Bounded write: recompute the region on the stamped text (the stamp shifts offsets), then
-  //    replace only between the sentinels — the log and the framing are physically out of reach.
-  const s = stamped.indexOf(NOW_START);
-  const e = stamped.indexOf(NOW_END);
-  const next = `${stamped.slice(0, s + NOW_START.length)}\n\n${body}\n\n${stamped.slice(e)}`;
+  const prepare = () => {
+    const text = readFileSync(ledger, "utf8").replace(/\r\n/g, "\n");
+    if (text.indexOf(NOW_START) < 0 || text.indexOf(NOW_END) < 0 || text.indexOf(NOW_END) < text.indexOf(NOW_START)) {
+      throw new Error(`ledger has no ${NOW_START} … ${NOW_END} region — run /promptus-init, or add the markers`);
+    }
+    if (!UPDATED.test(text)) throw new Error("ledger has no `**Updated:**` line to stamp");
+    const entries = ledgerEntries(ledger);
+    const latest = entries.at(-1);
+    const through = latest ? (/^<!-- kb:id (\S+) -->$/m.exec(latest.text)?.[1] ?? `anchor:${latest.anchor}`) : "EMPTY";
+    const withoutMarkers = supplied.replace(NOW_MARKER, "").replace(/\n{3,}/g, "\n\n").trim();
+    const body = withoutMarkers.replace(/^#{2,3}\s+NOW\s*$/m, (heading) => `${heading}\n<!-- kb:now-through ${through} -->`);
+    const note = arg(argv, "note");
+    const stamp = `${nowLocalStamp().slice(0, 10)}${note ? ` (${note})` : ""}`;
+    const stamped = text.replace(UPDATED, (_m, pre: string, tail?: string) => `${pre}${stamp}${tail ?? ""}`);
+    const s = stamped.indexOf(NOW_START);
+    const e = stamped.indexOf(NOW_END);
+    const next = `${stamped.slice(0, s + NOW_START.length)}\n\n${body}\n\n${stamped.slice(e)}`;
+    return { body, next, stamp };
+  };
 
   if (dry) {
-    console.log(`[dry-run] would stamp Updated: ${stamp} and replace the NOW region:\n`);
-    console.log(`${NOW_START}\n\n${body}\n\n${NOW_END}`);
+    let prepared: ReturnType<typeof prepare>;
+    try { prepared = prepare(); }
+    catch (error) { console.error(`kb-now: ${error instanceof Error ? error.message : String(error)}`); return 1; }
+    console.log(`[dry-run] would stamp Updated: ${prepared.stamp} and replace the NOW region:\n`);
+    console.log(`${NOW_START}\n\n${prepared.body}\n\n${NOW_END}`);
     return 0;
   }
-  const tmp = `${ledger}.tmp`;
-  writeFileSync(tmp, next);
-  renameSync(tmp, ledger); // atomic over the original
+  let stamp: string;
+  try {
+    stamp = withStoreLock(root, () => {
+      const prepared = prepare();
+      atomicStoreWrite(root, ledger, prepared.next);
+      return prepared.stamp;
+    });
+  } catch (error) {
+    console.error(`kb-now: ${error instanceof Error ? error.message : String(error)}`);
+    return 1;
+  }
   console.log(`kb-now: NOW-header updated — stamped ${stamp}.`);
   return 0;
 }

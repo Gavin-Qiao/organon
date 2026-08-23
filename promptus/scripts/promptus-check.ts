@@ -17,9 +17,10 @@ interface Graph {
   nodes?: string[];
   out?: Record<string, string[]>;
   inDeg?: Record<string, number>;
+  relationDegree?: Record<string, number>;
   relations?: Array<{ from: string; type: string; to: string; resolved?: boolean }>;
   dangling?: Dangling[];
-  artifacts?: Array<{ from: string; spec: string }>;
+  artifacts?: Array<{ from: string; spec: string; status?: string }>;
 }
 interface DebtBaseline {
   schema: "promptus.health-baseline.v1";
@@ -115,6 +116,8 @@ function nowFreshness(ledger: string) {
 }
 
 const danglingKey = (item: Dangling) => `${item.from}→${item.target}`;
+const isArchivalArtifactStatus = (status: string | undefined) =>
+  String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase() === "SUPERSEDED";
 
 function main(argv: string[]): number {
   if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
@@ -158,13 +161,18 @@ function main(argv: string[]): number {
   const dangling = graph.dangling ?? Object.entries(out).flatMap(([from, targets]) =>
     targets.filter((target) => !nodes.has(target)).map((target) => ({ from, target, reason: "legacy-derived" })),
   );
-  const orphans = [...nodes].filter((node) => (graph.inDeg?.[node] ?? 0) === 0 && (out[node] ?? []).length === 0);
+  const orphans = [...nodes].filter((node) =>
+    (graph.inDeg?.[node] ?? 0) === 0 && (out[node] ?? []).length === 0 && (graph.relationDegree?.[node] ?? 0) === 0,
+  );
 
   const artifactChecks = (graph.artifacts ?? []).map((record) => {
-    try { return { from: record.from, spec: record.spec, ...checkArtifact(root, parseArtifactSpec(record.spec)) }; }
-    catch (error) { return { from: record.from, spec: record.spec, ok: false, outcome: "invalid-spec", error: error instanceof Error ? error.message : String(error) }; }
+    try { return { from: record.from, spec: record.spec, status: record.status, ...checkArtifact(root, parseArtifactSpec(record.spec)) }; }
+    catch (error) { return { from: record.from, spec: record.spec, status: record.status, ok: false, outcome: "invalid-spec", error: error instanceof Error ? error.message : String(error) }; }
   });
-  const artifactFailures = artifactChecks.filter((check) => !check.ok);
+  const currentArtifactChecks = artifactChecks.filter((check) => !isArchivalArtifactStatus(check.status));
+  const archivalArtifactChecks = artifactChecks.filter((check) => isArchivalArtifactStatus(check.status));
+  const artifactFailures = currentArtifactChecks.filter((check) => !check.ok);
+  const archivalArtifactWarnings = archivalArtifactChecks.filter((check) => !check.ok);
 
   const vocab = loadVocab(root);
   const ledger = storePath(root, vocab, "ledger");
@@ -203,7 +211,7 @@ function main(argv: string[]): number {
     now,
     unclassified: unclassified.map((card) => ({ title: card.title, path: card.path })),
     duplicateIds: duplicateIds.map(([id, matches]) => ({ id, paths: matches.map((card) => card.path) })),
-    unresolvedRelations, dangling, orphans, artifactChecks, artifactFailures, thinkerExchange,
+    unresolvedRelations, dangling, orphans, artifactChecks, artifactFailures, archivalArtifactWarnings, thinkerExchange,
     ratchet: { enabled: ratchet, baselinePath: relative(root, baselinePath).replace(/\\/g, "/"), baselineMissing, newDebt },
     baselineRecorded: recordBaseline,
     healthy: errors === 0,
@@ -221,7 +229,8 @@ function main(argv: string[]): number {
     console.log(`  ${now.configured && !now.fresh ? "FAIL" : "ok  "} NOW freshness${now.configured ? `: ${now.markers[0] ?? "missing"} / expected ${now.expected}` : " (not configured)"}`);
     console.log(`  ${duplicateIds.length ? "FAIL" : "ok  "} duplicate ids: ${duplicateIds.length}`);
     console.log(`  ${unresolvedRelations.length ? "FAIL" : "ok  "} unresolved relation targets: ${unresolvedRelations.length}`);
-    console.log(`  ${artifactFailures.length ? "FAIL" : "ok  "} artifact dependencies: ${artifactChecks.length - artifactFailures.length}/${artifactChecks.length} verified`);
+    console.log(`  ${artifactFailures.length ? "FAIL" : "ok  "} current artifact dependencies: ${currentArtifactChecks.length - artifactFailures.length}/${currentArtifactChecks.length} verified`);
+    console.log(`  ${archivalArtifactWarnings.length ? "WARN" : "ok  "} archival artifact drift: ${archivalArtifactWarnings.length}/${archivalArtifactChecks.length}`);
     if (thinkerExchange.present && thinkerExchange.markerValid) {
       console.log(`  ${thinkerInvalid ? "FAIL" : "ok  "} thinker exchange: ${thinkerExchange.rounds.length} round(s)`);
       for (const issue of thinkerExchange.issues.slice(0, 10)) console.log(`    thinker ${issue}`);
@@ -235,6 +244,7 @@ function main(argv: string[]): number {
     for (const [id] of duplicateIds.slice(0, 10)) console.log(`    duplicate id ${id}`);
     for (const edge of unresolvedRelations.slice(0, 10)) console.log(`    unresolved ${edge.type} ${edge.to} from ${edge.from}`);
     for (const failure of artifactFailures.slice(0, 10)) console.log(`    artifact ${failure.from}: ${failure.spec} — ${failure.outcome}`);
+    for (const warning of archivalArtifactWarnings.slice(0, 10)) console.log(`    archival artifact ${warning.from}: ${warning.spec} — ${warning.outcome}`);
     for (const category of ["unclassified", "dangling", "orphans"] as const) for (const item of newDebt[category].slice(0, 10)) console.log(`    new ${category}: ${item}`);
     if (indexFailed && indexError) console.log(`    ${indexError.split(/\r?\n/)[0]}`);
   }

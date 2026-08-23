@@ -35,7 +35,10 @@ echo "<prose body>" | bun "<plugin-root>/scripts/kb-add.ts" \
 The script stamps the local `### [YYYY-MM-DD HH:MM:SS] KIND/STATUS — title` header from the
 system clock, mints the id, inserts above the sentinel, and refreshes the catalog. **Never
 hand-type a `### [ts]` line** — hand-typed timestamps drift (that is how a past ledger lost a
-day). The checkpoint refreshes the NOW-header through `kb-now`, never by freehand ledger editing.
+day). Explicit `--links` are serialized into the entry so an authoritative reindex cannot erase
+them. Concurrent `kb-add`/`kb-now` processes serialize and atomically replace the ledger, so one
+agent cannot overwrite another's event. The checkpoint refreshes the NOW-header through `kb-now`,
+never by freehand ledger editing.
 
 ## Three facets: KIND, STATUS, RELATION
 

@@ -10,7 +10,7 @@
  *   3. Rebuild CATALOG.md plus the bounded lexical search.json (both disposable).
  *   4. Rebuild graph.json — canonical [[link]] adjacency + typed relations (CiTO/PROV IRIs).
  *   5. Apply relation inverse_status (a `supersedes`/`fixes` target is marked SUPERSEDED in place).
- *   6. Lint + report: orphans (no links in/out) and unresolved links (target not a file).
+ *   6. Lint + report: orphans (no resolved wikilink or typed relation) and unresolved links.
  *   7. Idempotent. With --strict, exit non-zero when lint finds problems (gates /checkpoint).
  */
 
@@ -219,15 +219,19 @@ export function main(argv: string[]): number {
     const matches = ledgerByTitle.get(legacy) ?? [];
     return matches.length === 1 ? matches[0] : undefined;
   };
+  const nodes = new Set(liveUnits.filter((u) => u.slug).map((u) => u.slug!));
+  const relationDegree: Record<string, number> = Object.fromEntries([...nodes].map((slug) => [slug, 0]));
   const relEdges: Array<{ from: string; type: string; to: string; rawTo?: string; resolved: boolean; cito?: string; prov?: string }> = [];
-  const artifacts: Array<{ from: string; spec: string }> = [];
   for (const u of liveUnits) {
     const from = u.id ?? u.slug ?? u.relPath;
-    for (const spec of u.artifacts) artifacts.push({ from, spec });
     for (const r of u.relations) {
       const spec = vocab.relations[r.type] ?? {};
       const target = resolveTarget(r.target);
       if (spec.inverse_status && target) target.status = spec.inverse_status;
+      if (target) {
+        if (u.slug) relationDegree[u.slug] = (relationDegree[u.slug] ?? 0) + 1;
+        if (target.slug) relationDegree[target.slug] = (relationDegree[target.slug] ?? 0) + 1;
+      }
       relEdges.push({
         from,
         type: r.type,
@@ -239,8 +243,14 @@ export function main(argv: string[]): number {
       });
     }
   }
+  // Collect after inverse-status transitions so artifact custody sees the unit's effective
+  // lifecycle state regardless of source traversal order.
+  const artifacts: Array<{ from: string; spec: string; status: string }> = [];
+  for (const u of liveUnits) {
+    const from = u.id ?? u.slug ?? u.relPath;
+    for (const spec of u.artifacts) artifacts.push({ from, spec, status: u.status });
+  }
 
-  const nodes = new Set(liveUnits.filter((u) => u.slug).map((u) => u.slug!));
   const out: Record<string, string[]> = {};
   const unitOut: Record<string, string[]> = {};
   const inDeg: Record<string, number> = Object.fromEntries([...nodes].map((s) => [s, 0]));
@@ -276,7 +286,7 @@ export function main(argv: string[]): number {
     for (const target of out[key]) if (nodes.has(target)) inDeg[target]++;
     unitOut[u.id ?? key] = [...new Set(stableTargets)];
   }
-  const orphans = [...nodes].filter((s) => inDeg[s] === 0 && (out[s] ?? []).length === 0);
+  const orphans = [...nodes].filter((s) => inDeg[s] === 0 && (out[s] ?? []).length === 0 && (relationDegree[s] ?? 0) === 0);
 
   const lines = liveUnits
     .map((u) => {
@@ -294,7 +304,7 @@ export function main(argv: string[]): number {
   writeFileSync(join(dir, "CATALOG.md"), catalog);
   writeFileSync(
     join(dir, "graph.json"),
-    `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relations: relEdges, dangling, external, artifacts }, null, 2)}\n`,
+    `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relationDegree, relations: relEdges, dangling, external, artifacts }, null, 2)}\n`,
   );
   const catalogHash = createHash("sha256").update(catalog).digest("hex");
   const searchSources: SearchSourceDocument[] = units.map((unit) => ({
@@ -317,7 +327,7 @@ export function main(argv: string[]): number {
     for (const e of dangling.slice(0, 25)) log(`    ${e.from} → [[${e.target}]] (${e.reason})`);
   }
   if (orphans.length) {
-    log(`  orphans (${orphans.length}) — nothing links in or out:`);
+    log(`  orphans (${orphans.length}) — no resolved wikilink or typed relation:`);
     for (const o of orphans.slice(0, 25)) log(`    ${o}`);
   }
   if (dangling.length + orphans.length === 0) log("  clean.");

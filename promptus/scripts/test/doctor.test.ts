@@ -328,6 +328,43 @@ test("a hand-appended ledger entry shows as catalog lag; kb-index clears it", ()
   expect(doctor(root, ["check"]).stdout).not.toContain("FLAG catalog");
 });
 
+test("doctor and indexer share the fence-aware ledger parser", () => {
+  const root = scaffoldLegacy("root");
+  expect(doctor(root, ["migrate", "--apply"]).status).toBe(0);
+  const ledger = join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md");
+  writeFileSync(ledger, readFileSync(ledger, "utf8").replace(
+    "the headline result lives here",
+    "the headline result lives here\n\n```markdown\n### [2099-01-01 00:00:00] RESULT/VALIDATED — format example, not an event\n```",
+  ));
+  const checked = doctor(root, ["check", "--json"]);
+  expect(checked.status).toBe(0);
+  const report = JSON.parse(checked.stdout);
+  expect(report.ledgerUnits).toBe(1);
+  expect(report.catalogLag).toBeNull();
+});
+
+test("doctor keeps current artifact failures red but permits archival warnings", () => {
+  const root = scaffoldLegacy("root");
+  expect(doctor(root, ["migrate", "--apply"]).status).toBe(0);
+  const healthPath = join(root, ".promptus", "cache", "health.json");
+  const base = {
+    checkedAt: "2026-08-23T00:00:00.000Z", units: 3, sourceFiles: 3,
+    unclassified: [], dangling: [], orphans: [], now: { fresh: true },
+    artifactFailures: [], archivalArtifactWarnings: [{ from: "old", spec: "old|x|-" }],
+  };
+  writeFileSync(healthPath, JSON.stringify(base));
+  let report = JSON.parse(doctor(root, ["check", "--json"]).stdout);
+  expect(report.debt.artifactFailures).toBe(0);
+  expect(report.debt.archivalArtifactWarnings).toBe(1);
+  expect(report.fullyHealthy).toBe(true);
+
+  writeFileSync(healthPath, JSON.stringify({ ...base, artifactFailures: [{ from: "current", spec: "current|x|-" }] }));
+  report = JSON.parse(doctor(root, ["check", "--json"]).stdout);
+  expect(report.debt.artifactFailures).toBe(1);
+  expect(report.debt.archivalArtifactWarnings).toBe(1);
+  expect(report.fullyHealthy).toBe(false);
+});
+
 test("root-level twins of namespaced stores are flagged by name on a current layout", () => {
   const root = scaffoldLegacy("root");
   doctor(root, ["migrate", "--apply"]);

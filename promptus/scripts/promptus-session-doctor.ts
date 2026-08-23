@@ -46,9 +46,10 @@ interface GraphDocument {
   nodes?: string[];
   out?: Record<string, string[]>;
   inDeg?: Record<string, number>;
+  relationDegree?: Record<string, number>;
   dangling?: Array<{ from: string; target: string; reason?: string }>;
   relations?: Array<{ from?: string; type?: string; to?: string; rawTo?: string; resolved?: boolean }>;
-  artifacts?: Array<{ from: string; spec: string }>;
+  artifacts?: Array<{ from: string; spec: string; status?: string }>;
 }
 
 const HELP = `promptus-session-doctor — read-only preflight for a resuming agent
@@ -293,7 +294,9 @@ function extraTrees(root: string, recognized: Set<string> = new Set()): Array<{ 
 function countOrphans(graph: GraphDocument): number {
   const nodes = graph.nodes ?? [];
   const out = graph.out ?? {};
-  return nodes.filter((node) => (graph.inDeg?.[node] ?? 0) === 0 && (out[node] ?? []).length === 0).length;
+  return nodes.filter((node) =>
+    (graph.inDeg?.[node] ?? 0) === 0 && (out[node] ?? []).length === 0 && (graph.relationDegree?.[node] ?? 0) === 0,
+  ).length;
 }
 
 function slugOf(path: string | undefined): string | undefined {
@@ -345,6 +348,9 @@ function outcomeCounts(values: Array<{ outcome?: string }>): Record<string, numb
   }
   return counts;
 }
+
+const isArchivalArtifactStatus = (status: string | undefined) =>
+  String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase() === "SUPERSEDED";
 
 function relationCounts(values: NonNullable<GraphDocument["relations"]>): Record<string, { resolved: number; unresolved: number }> {
   const counts: Record<string, { resolved: number; unresolved: number }> = {};
@@ -535,8 +541,10 @@ function main(argv: string[]): number {
     orphans: lengthOf(health?.orphans),
     artifactChecks: lengthOf(health?.artifactChecks),
     artifactFailures: lengthOf(health?.artifactFailures),
+    archivalArtifactWarnings: lengthOf(health?.archivalArtifactWarnings),
     artifactOutcomes: outcomeCounts(Array.isArray(health?.artifactChecks) ? health.artifactChecks : []),
     artifactFailureSample: Array.isArray(health?.artifactFailures) ? health.artifactFailures.slice(0, 8) : [],
+    archivalArtifactWarningSample: Array.isArray(health?.archivalArtifactWarnings) ? health.archivalArtifactWarnings.slice(0, 8) : [],
     ratchetNewDebt: {
       unclassified: lengthOf(health?.ratchet?.newDebt?.unclassified),
       dangling: lengthOf(health?.ratchet?.newDebt?.dangling),
@@ -594,6 +602,7 @@ function main(argv: string[]): number {
   if (receiptNewDebt) addIssue(healthFresh ? "error" : "warning", "RATCHET_DEBT", `health receipt names ${receiptNewDebt} post-baseline classification/graph defect(s)${healthFresh ? "" : " (receipt is stale)"}`);
   if (cached.dangling || cached.orphans) addIssue("warning", "GRAPH_DEBT", `cached graph names ${cached.dangling} dangling link(s) and ${cached.orphans} orphan(s)${healthFresh ? "" : " (receipt is stale)"}`);
   if (cached.artifactFailures) addIssue(healthFresh ? "error" : "warning", "ARTIFACT_DEBT", `health receipt names ${cached.artifactFailures}/${cached.artifactChecks} failed artifact dependencies${healthFresh ? "" : " (receipt is stale)"}`);
+  if (cached.archivalArtifactWarnings) addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT", `health receipt names ${cached.archivalArtifactWarnings} failed artifact dependency record(s) owned by superseded units; active evidence remains unaffected${healthFresh ? "" : " (receipt is stale)"}`);
 
   const cachedGraph = {
     authoritative: healthFresh,
@@ -618,18 +627,29 @@ function main(argv: string[]): number {
 
   const deepArtifacts = argv.includes("--artifacts");
   const artifactStarted = performance.now();
-  let artifactChecks: Array<{ from: string; spec: string; ok: boolean; outcome: string }> = [];
+  let artifactChecks: Array<{ from: string; spec: string; status?: string; ok: boolean; outcome: string }> = [];
   if (deepArtifacts) {
     artifactChecks = (graph.artifacts ?? []).map((record) => {
       try {
         const checked = checkArtifact(root, parseArtifactSpec(record.spec));
-        return { from: record.from, spec: record.spec, ok: checked.ok, outcome: checked.outcome };
+        return { from: record.from, spec: record.spec, status: record.status, ok: checked.ok, outcome: checked.outcome };
       } catch (error) {
-        return { from: record.from, spec: record.spec, ok: false, outcome: `invalid-spec: ${error instanceof Error ? error.message : String(error)}` };
+        return { from: record.from, spec: record.spec, status: record.status, ok: false, outcome: `invalid-spec: ${error instanceof Error ? error.message : String(error)}` };
       }
     });
-    const failures = artifactChecks.filter((check) => !check.ok);
-    if (failures.length) addIssue("warning", "ARTIFACTS_FAIL_NOW", `${failures.length}/${artifactChecks.length} cached artifact dependencies fail a live read-only check`);
+    const failures = artifactChecks.filter((check) => !check.ok && !isArchivalArtifactStatus(check.status));
+    const archivalWarnings = artifactChecks.filter((check) => !check.ok && isArchivalArtifactStatus(check.status));
+    if (failures.length) addIssue("error", "ARTIFACTS_FAIL_NOW", `${failures.length} current artifact dependencies fail a live read-only check`);
+    const artifactKey = (check: { from: string; spec: string }) => `${check.from}\0${check.spec}`;
+    const cachedArchivalKeys = new Set(
+      (Array.isArray(health?.archivalArtifactWarnings) ? health.archivalArtifactWarnings : []).map(artifactKey),
+    );
+    const liveArchivalKeys = new Set(archivalWarnings.map(artifactKey));
+    const archivalChanged = cachedArchivalKeys.size !== liveArchivalKeys.size
+      || [...liveArchivalKeys].some((key) => !cachedArchivalKeys.has(key));
+    if (archivalWarnings.length && (!healthFresh || archivalChanged)) {
+      addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT_NOW", `${archivalWarnings.length} superseded-unit artifact dependencies fail a live read-only check`);
+    }
     if (!healthFresh && artifactChecks.length) addIssue("warning", "ARTIFACT_COVERAGE_STALE", "live artifact checks cover only dependencies in a stale graph cache");
   } else if (cachedGraph.artifactRecords) {
     addIssue("info", "ARTIFACTS_NOT_RECHECKED", `pass --artifacts to re-hash ${cachedGraph.artifactRecords} cached dependencies without writing`);
@@ -648,15 +668,15 @@ function main(argv: string[]): number {
   const retrievalReady = cacheReady;
   const graphTraversalReady = healthFresh && cachedGraph.unresolvedRelations === 0 && aliasRegistry.recoverableDangling === 0;
   const graphTraversalComplete = graphTraversalReady && cachedGraph.dangling === 0;
+  const artifactFailuresNow = artifactChecks.filter((check) => !check.ok && !isArchivalArtifactStatus(check.status));
+  const archivalArtifactWarningsNow = artifactChecks.filter((check) => !check.ok && isArchivalArtifactStatus(check.status));
   const hardIntegrityReady = healthFresh && cached.duplicateIds === 0 && cached.unresolvedRelations === 0
-    && cached.artifactFailures === 0 && (!baselineValid || computedNewDebtCount === 0)
+    && cached.artifactFailures === 0 && artifactFailuresNow.length === 0 && (!baselineValid || computedNewDebtCount === 0)
     && !health?.ratchet?.baselineMissing && !cached.indexFailed && !cached.staleFlag && thinkerReady;
   const sessionReady = orientationReady && retrievalReady && graphTraversalReady && hardIntegrityReady;
   const integrityReceiptReady = healthFresh && cached.duplicateIds === 0 && cached.unresolvedRelations === 0
     && cached.unclassified === 0 && cached.artifactFailures === 0
     && (!baselineValid || computedNewDebtCount === 0);
-  const artifactFailuresNow = artifactChecks.filter((check) => !check.ok);
-
   const result = {
     schema: "promptus.session-doctor.v1",
     root: fwd(root),
@@ -737,8 +757,10 @@ function main(argv: string[]): number {
       checked: artifactChecks.length,
       uniqueChecked: new Set(artifactChecks.map((check) => check.spec)).size,
       failures: artifactFailuresNow.length,
+      archivalWarnings: archivalArtifactWarningsNow.length,
       outcomes: outcomeCounts(artifactChecks),
       sample: artifactFailuresNow.slice(0, 8),
+      archivalSample: archivalArtifactWarningsNow.slice(0, 8),
     },
     issues,
     timingMs: {
@@ -762,7 +784,7 @@ function main(argv: string[]): number {
     console.log(`  ${orientationReady ? "ok  " : "FAIL"} handoff: ${markers[0] ?? "missing"} / expected ${expected}${missingOrientation.length ? ` · missing ${missingOrientation.join(", ")}` : ""}`);
     console.log(`  ${retrievalReady ? "ok  " : "FAIL"} retrieval: source receipt ${healthFresh ? "current" : "STALE"} · catalog missing/mismatch/extra ${catalogCoverage.missing}/${catalogCoverage.identityMismatches}/${catalogCoverage.extra} · live search ${searchCoverage.missing}/${searchCoverage.identityMismatches}/${searchCoverage.extra} · cold search ${coldSearchCoverage.missing}/${coldSearchCoverage.identityMismatches}/${coldSearchCoverage.extra}`);
     console.log(`  ${graphTraversalReady ? "ok  " : "FAIL"} graph traversal gate (${graphTraversalComplete ? "complete" : "incomplete"}): ${cachedGraph.unresolvedRelations} unresolved relation(s) · ${aliasRegistry.recoverableDangling} recoverable alias edge(s) unapplied · ${cachedGraph.dangling} dangling handle(s)`);
-    console.log(`  ${hardIntegrityReady ? "ok  " : "FLAG"} cached integrity (${healthFresh ? "current" : "STALE — not authoritative"}): ${cached.duplicateIds} duplicate · ${cached.unresolvedRelations} relation · ${cached.unclassified} unclassified · ${cached.artifactFailures} artifact failure(s)`);
+    console.log(`  ${hardIntegrityReady ? "ok  " : "FLAG"} cached integrity (${healthFresh ? "current" : "STALE — not authoritative"}): ${cached.duplicateIds} duplicate · ${cached.unresolvedRelations} relation · ${cached.unclassified} unclassified · ${cached.artifactFailures} current artifact failure(s) · ${cached.archivalArtifactWarnings} archival warning(s)`);
     if (thinkerExchange.present && thinkerExchange.markerValid) console.log(`  ${thinkerReady ? "ok  " : "FAIL"} thinker exchange: ${thinkerExchange.rounds.length} round(s)`);
     for (const issue of issues) console.log(`  ${issue.severity.toUpperCase().padEnd(7)} ${issue.code}: ${issue.message}`);
     console.log(`  ${result.guarantee}`);
