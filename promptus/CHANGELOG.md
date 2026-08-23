@@ -17,6 +17,59 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-08-23
+
+### Added
+
+- **Add useful external thinker rounds.** The `thinker-round` skill and deterministic companion
+  scaffold one self-contained theory question plus a frozen refute-first plan, seal their hashes,
+  retain an operator-returned response byte-for-byte, reject wrong-round/prompt-echo/duplicate
+  returns, quarantine valid intake as `lit:UNTRUSTED`, and show a round adjudicated only after a
+  normal `derives-from` finding records the main agent's independent verdict. The outside thinker
+  receives no workspace, tools, network, session history, or implied authority. Doctor, session
+  preflight, and whole-store health recognize the governed exchange and reject custody drift.
+- **Add a strictly read-only session doctor.** `promptus-session-doctor` preflights a long-running
+  project before an agent trusts NOW, catalog/search, graph traversal, or a health receipt; it
+  diagnoses stale and ambiguous state without reindexing, repairing, refreshing, or baselining.
+- **Add bounded lexical retrieval without embeddings.** `kb-index` derives a disposable
+  BM25-style `search.json`; `kb-find` ranks results, caps them at 20 by default, supports
+  exact phrases and required/all-term queries, and searches cold history only with `--history`.
+- **Add enforceable artifact dependencies.** `kb-add --artifact "role|path|sha256-or--"`
+  records project-relative artifacts; `promptus-check` rejects missing files and hash mismatches.
+- **Add a no-new-debt ratchet.** `promptus-check --record-baseline` records inherited
+  classification/link/orphan debt; `--ratchet` rejects only newly introduced debt.
+- **Add a deterministic status read port.** `promptus-status` returns the Telos north star plus
+  NOW, the blocking frontier, next action, and resume point for `/grannie status`.
+- **Add thinker quarantine.** `kb-ingest quarantine` preserves supplied bytes, provenance, and
+  SHA-256 as `lit:UNTRUSTED` and deliberately promotes no claim.
+
+### Changed
+
+- **Make NOW freshness gate-owned.** `kb-now` writes exactly one latest-unit marker and caps the
+  live region; `promptus-check` rejects a stale configured marker.
+- **Canonicalize graph identity** across stable IDs, slugs, and unique aliases, while keeping
+  ambiguous aliases as explicit debt and external URIs out of dangling-link counts.
+- **Make graph importance status-aware.** `kb-graph rank` excludes superseded, refuted, and
+  retired units unless `--history` is explicit.
+
+### Fixed
+
+- **Preserve every legacy same-second ledger result in lexical retrieval.** Search keys now use a
+  stable ID when available and the complete path-plus-title identity otherwise, so valid legacy
+  batches that share a second do not collapse in `kb-find`. The disposable search schema advances
+  to v2: `kb-find` safely rebuilds an old cache in memory, while the session doctor requires a
+  durable re-index before declaring the project ready.
+- **Make `kb-get` fail closed.** Unanchored ledger paths no longer dump the log, and output is
+  capped at 64 KiB unless a larger or whole-file read is explicit.
+- **Make every primary script's `--help` work without an initialized project.**
+- **Make `promptus-doctor` book-keep a current-layout store.** A namespaced repo whose vocab
+  is behind the template, whose catalog lags, whose `.gitignore` still hides `.promptus/`,
+  or which carries leftover derived files / extra ungoverned trees is no longer reported
+  fully healthy merely because layout is `current`. `migrate` / `upgrade` dry-run the
+  non-content repairs (merge vocab keeping custom extended terms such as LOCK/CHECKPOINT,
+  narrow gitignore to cache, rebuild the derived index, optionally `--record-baseline`);
+  `--apply` never edits unit body bytes.
+
 ## [0.7.0] - 2026-07-09
 
 ### Added
@@ -431,7 +484,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.7.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.0...HEAD
+[0.8.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.7.0...promptus-v0.8.0
 [0.7.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.2...promptus-v0.7.0
 [0.6.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.1...promptus-v0.6.2
 [0.6.1]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.0...promptus-v0.6.1

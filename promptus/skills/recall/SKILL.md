@@ -21,16 +21,17 @@ store, check it rather than asserting from memory.
 2. **Retrieve header-first, then fetch only what you need.** Two tiers — find the headers, then
    pull just the bodies the headers earned. For each sub-question:
    ```
-   bun "<plugin-root>/scripts/kb-find.ts" "<sub-question>" [--substrate ledger|finding|lit|memory] [--status <S>] [--hops <n>] [--snippet]
+   bun "<plugin-root>/scripts/kb-find.ts" "<sub-question>" [--all] [--substrate ledger|finding|lit|memory] [--status <S>] [--hops <n>] [--snippet]
    ```
-   The card-catalog is the index: read the returned headers (add `--snippet` to see the matched
+   Retrieval is ranked and capped at 20 by default: read the returned headers (add `--snippet` to see the matched
    line), decide which units are worth the body, then fetch just those — never the whole ledger:
    ```
    bun "<plugin-root>/scripts/kb-get.ts" "<path>" [--title "<title>"]   # <path> = kb-find's 3rd ` · ` column
    ```
    `kb-get` returns one unit's text — a page's whole file, or a single ledger entry's slice (not
-   the ~200 it shares a file with); `--title` disambiguates a same-second anchor. Widen `--hops`
-   (1–2) when you need associative neighbours, not just direct keyword hits.
+   the ~200 it shares a file with); unanchored ledgers are refused. `--title` disambiguates a
+   same-second anchor. Widen `--hops` (1–2) for associative neighbours. Add `--history` only when
+   the question genuinely asks about archived, refuted, or superseded work.
 3. **Confidence-gate on status** — this is the calibration source:
    - `ledger:CONJECTURED`, `finding:CONJECTURED`, `memory:provisional` → **weak**; hedge.
    - `finding:VALIDATED`, `ledger:VALIDATED`, `memory:validated` → **firm**; state plainly.

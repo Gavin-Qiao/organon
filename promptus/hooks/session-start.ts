@@ -8,7 +8,14 @@
  * no-op outside a Promptus repo (no Telos and no ledger → nothing emitted).
  */
 import { readFileSync } from "node:fs";
-import { readHookInput, projectRoot, ledgerPath, telosPath, telosBlock } from "./_lib.ts";
+import {
+  readHookInput,
+  projectRoot,
+  ledgerPath,
+  telosPath,
+  telosBlock,
+  nowBlock,
+} from "./_lib.ts";
 
 const input = await readHookInput();
 const root = projectRoot(input);
@@ -17,26 +24,15 @@ const root = projectRoot(input);
 const tp = telosPath(root);
 const telos = tp ? telosBlock(readFileSync(tp, "utf8")) : "";
 
-// (2) NOW-header — the live state: "## NOW" down to the "## Log" that starts the append-only
-// entries. Fall back to the RESUME block, then the top of the file.
+// (2) NOW-header — marker-bounded live state, with legacy heading fallback.
 const lp = ledgerPath(root);
 let now = "";
 let title = "Promptus project";
 if (lp) {
-  const lines = readFileSync(lp, "utf8").split(/\r?\n/);
+  const ledger = readFileSync(lp, "utf8");
+  const lines = ledger.split(/\r?\n/);
   title = (lines.find((l) => /^# /.test(l)) || "# Research Ledger").replace(/^#\s*/, "").trim();
-  const nowI = lines.findIndex((l) => /^## NOW/.test(l));
-  const logI = lines.findIndex((l) => /^## Log\b/.test(l));
-  if (nowI !== -1) {
-    const end = logI > nowI ? logI : Math.min(lines.length, nowI + 60);
-    now = lines.slice(nowI, end).join("\n").trim();
-  } else {
-    const resumeI = lines.findIndex((l) => /RESUME HERE/.test(l));
-    now =
-      resumeI !== -1
-        ? lines.slice(resumeI, Math.min(lines.length, resumeI + 14)).join("\n").trim()
-        : lines.slice(0, 30).join("\n").trim();
-  }
+  now = nowBlock(ledger);
 }
 
 if (!telos && !now) process.exit(0);

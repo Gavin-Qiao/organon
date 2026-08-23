@@ -1,6 +1,6 @@
 ---
 name: promptus-check
-description: Run the authoritative Promptus whole-store health gate. Use to verify source/index freshness, stable-ID uniqueness, classification, typed relations, and optionally strict graph health.
+description: Run the authoritative Promptus whole-store health gate. Use to verify source/NOW freshness, artifacts, stable-ID uniqueness, classification, typed relations, governed thinker custody, and full or ratcheted graph health.
 ---
 
 # Promptus check — portable workflow adapter

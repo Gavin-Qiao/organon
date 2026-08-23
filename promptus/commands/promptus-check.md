@@ -1,17 +1,23 @@
 ---
-description: Rebuild and verify the whole Promptus store — freshness, stable IDs, classification, typed relations, and optional strict graph health.
-argument-hint: "[--strict-graph] [--json] [--no-index]"
+description: Verify source/NOW freshness, artifacts, stable IDs, classification, typed relations, thinker custody, and full or ratcheted graph health.
+argument-hint: "[--ratchet | --record-baseline] [--strict-graph] [--json] [--no-index]"
 ---
 
 # /promptus:promptus-check — authoritative store health
 
-From the project root, run:
+From the project root, choose exactly one profile. For ordinary zero-classification-debt health,
+run:
 
 ```bash
 bun "${CLAUDE_PLUGIN_ROOT}/scripts/promptus-check.ts" --strict $ARGUMENTS
 ```
 
-Report the unit/source counts, source fingerprint, and every failing category. Normal strict
-mode rejects stale indexes, duplicate IDs, unresolved typed relations, and unclassified units;
-dangling wikilinks and orphans remain visible warnings. When `--strict-graph` is supplied, graph
-debt is blocking too. Do not edit `.promptus/cache/` by hand; rebuild it.
+If `$ARGUMENTS` contains `--ratchet` or `--record-baseline`, omit the implicit `--strict` and pass
+the arguments directly; combining `--strict` with the ratchet would defeat its inherited-debt
+contract.
+
+Report the unit/source counts, source fingerprint, NOW marker, artifact count, and every failing
+category. Normal strict mode rejects stale state, duplicate IDs, unresolved relations, invalid
+artifacts, damaged sealed thinker exchanges, and unclassified units; graph debt remains visible. Use `--record-baseline` once to name
+inherited classification/graph debt, then `--ratchet` to reject only newly introduced debt.
+`--strict-graph` instead requires zero graph debt. Never edit the cache or baseline by hand.

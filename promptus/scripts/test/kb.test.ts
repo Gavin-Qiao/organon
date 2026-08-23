@@ -58,6 +58,17 @@ test("kb-add round-trips a ledger unit, and kb-index lists it with substrate:sta
   expect(catalog(root)).toContain("ledger:VALIDATED · Chose bun over node");
 });
 
+test("kb-add preserves JavaScript replacement-token bytes in ledger prose", () => {
+  const root = scaffold();
+  const body = "Keep `$` and `$n > 0$`; also keep $&, $', and $$ literally.";
+  const r = add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "Literal replacement tokens"], body);
+  expect(r.status).toBe(0);
+  const text = ledger(root);
+  expect(text).toContain(body);
+  expect(text.split("# Research Ledger — test")).toHaveLength(2);
+  expect(text.split("<!-- kb:append-point -->")).toHaveLength(2);
+});
+
 test("kb-add writes finding → .promptus/docs/<slug>.md and lit → .promptus/docs/lit/<slug>.md", () => {
   const root = scaffold();
   add(root, ["--substrate", "finding", "--kind", "RESULT", "--status", "VALIDATED", "--title", "Header beats vector at this scale"], "Because the corpus is small.");

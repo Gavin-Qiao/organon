@@ -21,11 +21,24 @@ import { readFileSync, writeFileSync, renameSync } from "node:fs";
 import { nowLocalStamp } from "./lib/clock.ts";
 import { loadVocab } from "./lib/vocab.ts";
 import { findProjectRoot, storePath } from "./lib/paths.ts";
+import { ledgerEntries } from "./lib/units.ts";
 
 const NOW_START = "<!-- now:start -->";
 const NOW_END = "<!-- now:end -->";
-const REQUIRED = ["## NOW", "## Open frontier", "## Next actions", "RESUME HERE"];
+const REQUIRED: Array<[string, RegExp]> = [
+  ["NOW", /^#{2,3}\s+NOW\s*$/m],
+  ["Open frontier", /^#{2,3}\s+Open frontier\s*$/m],
+  ["Next actions", /^#{2,3}\s+Next actions\s*$/m],
+  ["RESUME HERE", /^#{2,3}\s+.*RESUME HERE.*$/m],
+];
 const UPDATED = /(^\*\*Updated:\*\*\s+).*?(\s+·\s+.*)?$/m;
+const NOW_MARKER = /^<!-- kb:now-through \S+ -->\s*$/gm;
+
+const HELP = `kb-now — bounded writer for the resumable NOW-header
+usage: kb-now [--note "<short note>"] [--max-lines <n>] [--root <dir>] [--dry-run] < now.md
+The input must contain NOW, Open frontier, Next actions, and RESUME headings.
+The gate stamps Updated, inserts exactly one freshness marker for the latest
+ledger unit, caps the region at 120 lines by default, and touches no log text.`;
 
 function fail(msg: string): never {
   console.error(`kb-now: ${msg}`);
@@ -38,21 +51,34 @@ function arg(argv: string[], k: string): string | undefined {
 }
 
 function main(argv: string[]): number {
+  if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
   const root = findProjectRoot(arg(argv, "root") ?? process.cwd());
   const ledger = storePath(root, loadVocab(root), "ledger");
   const dry = argv.includes("--dry-run");
 
   // The LLM supplies only the prose body.
-  const body = (process.stdin.isTTY ? "" : readFileSync(0, "utf8")).replace(/\r\n/g, "\n").trim();
-  if (!body) fail("empty NOW-header on stdin — pipe the new header (## NOW … RESUME) in");
-  const missing = REQUIRED.filter((s) => !body.includes(s));
+  const supplied = (process.stdin.isTTY ? "" : readFileSync(0, "utf8")).replace(/\r\n/g, "\n").trim();
+  if (!supplied) fail("empty NOW-header on stdin — pipe the new header (## NOW … RESUME) in");
+  const missing = REQUIRED.filter(([, pattern]) => !pattern.test(supplied)).map(([name]) => name);
   if (missing.length) fail(`NOW-header missing required section(s): ${missing.join(", ")}`);
+  const maxLines = Number(arg(argv, "max-lines") ?? 120);
+  if (!Number.isInteger(maxLines) || maxLines < 1) fail("--max-lines must be a positive integer");
+  const suppliedLines = supplied.split("\n").length;
+  if (suppliedLines > maxLines) fail(`NOW-header has ${suppliedLines} lines, above --max-lines ${maxLines}`);
 
   const text = readFileSync(ledger, "utf8").replace(/\r\n/g, "\n");
   if (text.indexOf(NOW_START) < 0 || text.indexOf(NOW_END) < 0 || text.indexOf(NOW_END) < text.indexOf(NOW_START)) {
     fail(`ledger has no ${NOW_START} … ${NOW_END} region — run /promptus-init, or add the markers`);
   }
   if (!UPDATED.test(text)) fail("ledger has no `**Updated:**` line to stamp");
+
+  // The gate, not the agent, owns freshness. Prefer the latest stable id; legacy
+  // entries without one get a deterministic anchor key until next amended.
+  const entries = ledgerEntries(ledger);
+  const latest = entries.at(-1);
+  const through = latest ? (/^<!-- kb:id (\S+) -->$/m.exec(latest.text)?.[1] ?? `anchor:${latest.anchor}`) : "EMPTY";
+  const withoutMarkers = supplied.replace(NOW_MARKER, "").replace(/\n{3,}/g, "\n\n").trim();
+  const body = withoutMarkers.replace(/^#{2,3}\s+NOW\s*$/m, (heading) => `${heading}\n<!-- kb:now-through ${through} -->`);
 
   // 1. The script owns the date — local, matching the log; the LLM supplies only the note.
   const note = arg(argv, "note");

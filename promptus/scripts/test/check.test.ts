@@ -82,6 +82,34 @@ test("--no-index detects source drift against the last health receipt", () => {
   expect(result.out).toContain("FAIL source/index freshness");
 });
 
+test("ratchet accepts inherited dangling and orphan debt and fails only newly introduced debt", () => {
+  const root = scaffold();
+  writeFileSync(join(root, ".promptus", "docs", "alpha.md"), [
+    "---", "id: finding-alpha", "substrate: finding", "kind: CLAIM", "status: VALIDATED", "links: [missing-old]", "---",
+    "# Alpha", "", "See [[missing-old]].", "",
+  ].join("\n"));
+  writeFileSync(join(root, ".promptus", "docs", "orphan-old.md"), [
+    "---", "id: finding-orphan-old", "substrate: finding", "kind: CLAIM", "status: VALIDATED", "---",
+    "# Orphan old", "",
+  ].join("\n"));
+  expect(run(root, ["--record-baseline"]).status).toBe(0);
+  expect(run(root, ["--ratchet"]).status).toBe(0);
+  writeFileSync(join(root, ".promptus", "docs", "gamma.md"), [
+    "---", "id: finding-gamma", "substrate: finding", "kind: CLAIM", "status: VALIDATED", "links: [missing-new]", "---",
+    "# Gamma", "", "See [[missing-new]].", "",
+  ].join("\n"));
+  writeFileSync(join(root, ".promptus", "docs", "orphan-new.md"), [
+    "---", "id: finding-orphan-new", "substrate: finding", "kind: CLAIM", "status: VALIDATED", "---",
+    "# Orphan new", "",
+  ].join("\n"));
+  const result = run(root, ["--ratchet"]);
+  expect(result.status).toBe(1);
+  expect(result.out).toContain("new dangling");
+  expect(result.out).toContain("missing-new");
+  expect(result.out).toContain("new orphans");
+  expect(result.out).toContain("orphan-new");
+});
+
 test("graph debt is visible without blocking the normal strict profile", () => {
   const root = scaffold();
   writeFileSync(join(root, ".promptus", "docs", "alpha.md"), [

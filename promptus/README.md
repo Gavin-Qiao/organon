@@ -42,9 +42,10 @@ principles follow.
    confidence attached*, so what you write calibrates to what you actually know. This is the hinge
    between honest prose and honest research.
 
-4. **A header beats a vector — at this scale.** For a small, dense, status-tagged corpus a
-   hand-written header is a better retrieval key than an embedding, and the `[[wikilinks]]`
-   already *are* the graph. So v1 has no embeddings and no database. The heavy machinery turns on
+4. **A lexical unit beats a vector — at this scale.** For a small, dense, status-tagged corpus a
+   status-bearing lexical unit is a better retrieval key than an embedding, and the `[[wikilinks]]`
+   already *are* the graph. Promptus derives a bounded BM25-style lexical index, but still has no
+   embeddings and no database. The heavy machinery turns on
    only past a threshold you have **measured** — never on spec.
 
 5. **Prefer a script over a server.** The mechanics are a handful of TypeScript files on bun,
@@ -98,11 +99,17 @@ gate. The three verbs, under the hood:
 echo "Chose bun so bun:sqlite is a one-line upgrade later." \
   | bun promptus/scripts/kb-add.ts --substrate ledger --kind DECISION --status VALIDATED --title "Chose bun"
 
-# KEEP — rebuild the derived card-catalog + link graph
+# KEEP — rebuild the derived card-catalog + lexical index + link graph
 bun promptus/scripts/kb-index.ts
 
-# RETRIEVE — header-first, every hit tagged substrate:status
+# PREFLIGHT — read-only; fail closed before a session trusts NOW or the cache
+bun promptus/scripts/promptus-session-doctor.ts
+
+# RETRIEVE — ranked and bounded (20 by default), every hit tagged substrate:status
 bun promptus/scripts/kb-find.ts "bun"
+
+# ORIENT — exact north star, NOW, blocker, next action, and resume point
+bun promptus/scripts/promptus-status.ts
 ```
 
 (Those paths are from the Organon repo root; an installed skill resolves the plugin from its own
@@ -116,13 +123,13 @@ Code) to flush anything unrecorded. The `promptus` skill is the portable map
 flowchart LR
   AG(["LLM agent"]) -- "prose body (stdin)" --> ADD["STORE · kb-add<br/>the gate"]
   ADD --> MD[("Markdown — the only truth<br/>Telos · Ledger · docs + lit · memory")]
-  MD -- "KEEP · kb-index" --> IDX[("Derived index, disposable<br/>CATALOG.md · graph.json")]
-  IDX --> FIND["RETRIEVE · kb-find<br/>header-first → kb-get body-fetch"]
+  MD -- "KEEP · kb-index" --> IDX[("Derived index, disposable<br/>CATALOG.md · search.json · graph.json")]
+  IDX --> FIND["RETRIEVE · kb-find<br/>ranked + bounded → kb-get"]
   IDX --> GR["kb-graph<br/>rank · lint · suggest"]
   FIND --> REC["recall · verify claim ↔ source"]
   REC --> AG
   GR -. "navigate / heal" .-> MD
-  P(["a person"]) -- "/grannie explain X" --> GRAN["grannie · the human read-port"]
+  P(["a person"]) -- "/grannie explain X · /grannie status" --> GRAN["grannie · the human read-port"]
   GRAN --> FIND
 ```
 
@@ -144,21 +151,31 @@ flowchart LR
   off-vocab kind/status is warned about but still written). `scripts/kb-amend.ts` is the matching
   gate for metadata transitions on an existing curated unit: it preserves the body, validates the
   requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
-- **KEEP** → `scripts/kb-index.ts` (rebuild the derived `.promptus/cache/CATALOG.md` card-catalog +
-  `graph.json`, resolve supersedes, lint orphans / unresolved links), `scripts/kb-graph.ts lint`
+- **KEEP** → `scripts/kb-index.ts` (rebuild the derived `.promptus/cache/CATALOG.md`,
+  `search.json`, and `graph.json`; resolve stable IDs/slugs/aliases and supersession; keep archived
+  ledger units as opt-in cold history), `scripts/kb-graph.ts lint`
   (graph health: dangling `[[handles]]` with a "did you mean?", orphans),
-  `scripts/promptus-check.ts --strict` (authoritative integrity + freshness gate), + `/promptus:checkpoint`.
-- **RETRIEVE** → two tiers. `scripts/kb-find.ts` (header-first — read the card-catalog, grep bodies,
-  walk the `[[link]]` graph, filter by status) says *which* units; `scripts/kb-get.ts` then returns a
-  single unit's body — one ledger entry's slice, not the whole 140 KB file. The `recall` skill drives
+  `scripts/promptus-check.ts --strict` (authoritative integrity, NOW, artifact, thinker-custody, and freshness gate;
+  `--ratchet` enforces no new inherited debt), + `/promptus:checkpoint`.
+- **PREFLIGHT** → `scripts/promptus-session-doctor.ts` is the strictly read-only gate a session
+  agent runs before trusting a long-running project's NOW or cache. It compares every live source
+  unit with catalog/search and every archived unit with cold search, detects ambiguous identities and search keys, distinguishes stale
+  receipts from current evidence, and diagnoses graph, alias, ratchet, artifact, and layout debt.
+  It never reindexes, repairs, refreshes, or baselines.
+- **RETRIEVE** → two tiers. `scripts/kb-find.ts` ranks the lexical index, caps output at 20,
+  optionally walks the `[[link]]` graph, and opens cold history only with `--history`; it says
+  *which* units. `scripts/kb-get.ts` then returns one bounded body — one ledger entry's slice,
+  never an accidental whole-log dump. The `recall` skill drives
   both (decompose → retrieve → confidence-gate → verify → synthesize). `scripts/kb-graph.ts` navigates
   the graph itself: `rank` (PageRank — the load-bearing units) and `suggest` (latent links —
   related-but-unlinked pairs to connect, by shared vocabulary + shared source).
 
 **The human read-port.** The agent operates the verbs above; a human reads in through **`grannie`** —
 `/grannie explain <concept>` retrieves from the store and answers in plain language, grounded and
-honest about confidence (a `CONJECTURED` claim is hedged, a `DEADEND` named). It's the one
-human-initiated loop. Two more skills support the agent's *own* writing — not a separate audience:
+honest about confidence (a `CONJECTURED` claim is hedged, a `DEADEND` named). `/grannie status`
+first reads `promptus-status`, then translates the exact north star, current state, blocker, next
+action, and resume point. This is the one human-initiated loop. Two more skills support the agent's
+*own* writing — not a separate audience:
 
 - `humanizer` — the **style toolkit** (de-AI, human-voice patterns), now shipped by the **editio**
   plugin in this marketplace: grannie dials it to maximum accessibility when editio is installed,
@@ -179,6 +196,26 @@ flowchart TB
   CAL -- "DEADEND / REFUTED" --> X["say it didn't work"]
   S & H & C & X --> G["grannie explains it plainly,<br/>at honest confidence<br/>(dialing editio's humanizer when installed)"]
 ```
+
+## External thinker rounds
+
+When local reasoning reaches one sharply stated theoretical bottleneck, the `thinker-round` skill
+can prepare a self-contained prompt for a stateless outside reasoner. The thinker gets no workspace,
+tools, network, session history, or prior-round memory. The operator carries the sealed prompt out
+and returns the answer; Promptus never claims to contact the thinker itself.
+
+The useful loop is intentionally short:
+
+`retrieve first → one bounded question → freeze refute-first checks → preserve exact return → lit:UNTRUSTED → independently checked finding`
+
+`thinker-round.ts` handles only custody: scaffolding, sealing hashes, exact-byte retention,
+wrong-round/prompt-echo/duplicate detection, and quarantine through `kb-ingest`. The main agent does
+the intellectual work: construct the question, reconstruct the answer, try to break it, and write a
+normal `finding` linked by `derives-from` only for what survives. The raw answer never promotes
+itself, and a round grants no implementation, experiment, publication, commit, or release authority.
+
+Use it for a proof, counterexample, exact bound, missing lemma, or similarly load-bearing theory
+question—not for brainstorming, code review, source research, or any task that needs the workspace.
 
 ## The papers-scale crossing
 
@@ -201,24 +238,28 @@ Claude Code exposes these command adapters; Codex uses the corresponding skills 
 |---|---|
 | `/promptus:help` | the map — stores, verbs, and where to start |
 | `/promptus:promptus-init` | scaffold the four stores + the `AGENTS.md` cadence in a repo (idempotent) |
+| `/promptus:promptus-session-doctor` | strictly read-only session preflight; fail closed when NOW, cache, identity, or graph traversal cannot be trusted |
 | `/promptus:checkpoint` | minimal pre-compaction flush — store what's unrecorded, refresh the NOW-header |
-| `/promptus:promptus-doctor` | diagnose & migrate a repo's Promptus layout to the current namespace + vocab; flags event-shaped Telos lines (dates, event ids, NOW-shaped headings) with their routing |
-| `/promptus:promptus-check` | rebuild and verify the whole store — freshness, stable IDs, classification, typed relations; add `--strict-graph` to make graph debt blocking |
-| `/promptus:promptus-ingest` | curate deep-research notes into `lit:` units (backfill sources, promote findings) |
+| `/promptus:promptus-doctor` | diagnose, migrate, and book-keep a repo's Promptus store (layout + behind-template vocab merge keeping custom terms; dry-run first; never edits unit bodies); recognizes governed thinker exchanges and flags damaged exchanges, event-shaped Telos lines, extra trees, catalog/digest lag, and unratcheted debt |
+| `/promptus:promptus-check` | verify NOW/source freshness, artifacts, IDs, classification, relations, and sealed thinker custody; use `--ratchet` for no-new-debt or `--strict-graph` for zero graph debt |
+| `/promptus:promptus-ingest` | curate external notes into `lit:` units (backfill, promote, or quarantine untrusted thinker output) |
+| `/promptus:thinker-round` | prepare one workspace-free theory question, receive the operator-carried return as untrusted evidence, and independently adjudicate it |
 | `/promptus:promptus-graph` | inspect the knowledge graph — `rank` (PageRank), `lint` (health), `suggest` (latent links) |
 
 | skill | role |
 |---|---|
 | `promptus` | orchestrator — picks the right verb / script / skill |
 | `promptus-init` | scaffold the four stores and portable `AGENTS.md` cadence |
+| `promptus-session-doctor` | read-only preflight for a resuming session agent |
 | `promptus-checkpoint` | minimal pre-compaction flush and Telos drift check |
 | `promptus-check` | authoritative whole-store integrity gate |
-| `promptus-doctor` | layout diagnosis and dry-run-first migration |
+| `promptus-doctor` | layout diagnosis and dry-run-first migration/upgrade (book-keep a current-layout store without rewriting units) |
 | `promptus-ingest` | provenance-preserving research curation |
+| `thinker-round` | stateless external-theory round: strong prompt, frozen checks, exact return, quarantine, independent verdict |
 | `promptus-graph` | graph rank / lint / suggest workflows |
 | `research-ledger` | the store-as-you-go recording habit (append via `kb-add`, never freehand) |
 | `recall` | retrieval reasoning — decompose → `kb-find` → verify each claim → synthesize |
-| `grannie` | plain-language ELI90 renderer for a stored concept |
+| `grannie` | plain-language renderer for a stored concept or deterministic project status |
 | `telos` | scaffold a project's four stores, Telos first — then keep the Telos direction-only as it evolves (events → ledger, frontier → NOW-header) |
 | `grounded-writing-reviewer` | read-only style + evidence audit used by both hosts |
 
@@ -255,12 +296,12 @@ launches it, sends a real `apply_patch` payload, and verifies that a freehand le
 ## Layout
 
 ```
-scripts/    kb-add · kb-amend · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-export · promptus-check · check-pr-title · ledger-append · validate-plugin · changelog · lib/ · test/
-skills/     promptus · recall · grannie · research-ledger · telos · promptus-{init,checkpoint,check,doctor,ingest,graph} · grounded-writing-reviewer
-commands/   help · checkpoint · promptus-init · promptus-doctor · promptus-ingest · promptus-graph · promptus-check
+scripts/    kb-add · kb-amend · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-ingest · kb-export · thinker-round · promptus-check · promptus-session-doctor · promptus-status · check-pr-title · ledger-append · validate-plugin · changelog · lib/ · test/
+skills/     promptus · recall · grannie · research-ledger · telos · thinker-round · promptus-{init,checkpoint,check,doctor,session-doctor,ingest,graph} · grounded-writing-reviewer
+commands/   help · checkpoint · thinker-round · promptus-init · promptus-doctor · promptus-session-doctor · promptus-ingest · promptus-graph · promptus-check
 agents/     grounded-writing-reviewer
 hooks/      session-start · protect-gate · auto-index · checkpoint-nudge (+ Claude hooks.json · Codex codex.json)
-templates/  the per-project scaffolds (incl. the default schema/kb-vocab.json)
+templates/  the per-project scaffolds + thinker prompt/validation protocol (incl. the default schema/kb-vocab.json)
 ../.promptus/  the Organon repo using Promptus on itself — TELOS · ledger · docs (findings + lit) · memory · schema (cache/ is derived)
 ```
 

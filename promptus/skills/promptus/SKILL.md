@@ -18,9 +18,12 @@ This skill is the map: pick the verb, run the piece.
 
 | You are about to… | Verb | Do |
 |---|---|---|
+| resume a long-running project or trust its NOW/cache | PREFLIGHT | the `promptus-session-doctor` skill; strictly read-only, stop on stale or ambiguous state |
 | record a decision / run / observation / dead-end / finding | STORE | `bun "<plugin-root>/scripts/kb-add.ts" --substrate ledger …` (or the `research-ledger` skill for the habit) |
 | distill a settled finding into a concept page | STORE | `kb-add --substrate finding …` (one concept per file, `[[linked]]`) |
 | capture external prior art you read | STORE | `kb-add --substrate lit --source "<src#anchor>" …` |
+| ask a stateless outside reasoner to attack one precise theoretical bottleneck | — | the `thinker-round` skill: retrieve first → seal one self-contained prompt + refute-first plan → operator transports → quarantine return → independently adjudicate |
+| preserve an external thinker response before auditing it | STORE | `kb-ingest quarantine <file> --source "<provenance>" --apply` → `lit:UNTRUSTED`; promote no claim automatically |
 | remember a durable, cross-session fact | STORE | `kb-add --substrate memory …` |
 | change the status or metadata of an existing curated unit | STORE | `bun "<plugin-root>/scripts/kb-amend.ts" --path <path> --substrate <finding|lit|memory> --kind <kind> --status <status>` |
 | make the index current after writes | BOOK-KEEP | `bun "<plugin-root>/scripts/kb-index.ts"` |
@@ -28,6 +31,7 @@ This skill is the map: pick the verb, run the piece.
 | check the knowledge web's health (dangling `[[links]]`, orphans) | BOOK-KEEP | `bun "<plugin-root>/scripts/kb-graph.ts" lint` |
 | flush a session before compaction | BOOK-KEEP | the `promptus-checkpoint` skill (`/promptus:checkpoint` in Claude Code) |
 | answer "what did we decide / find / read about X" | RETRIEVE | the `recall` skill (drives `kb-find` → `kb-get`) |
+| answer "where are we / what blocks us / what is next" for a person | RETRIEVE | `/grannie status` (drives deterministic `promptus-status`, then explains plainly) |
 | read one unit's body without opening the whole ledger | RETRIEVE | `bun "<plugin-root>/scripts/kb-get.ts" "<path>"` (the `path` column `kb-find` prints) |
 | find the load-bearing units (what to read first) | RETRIEVE | `bun "<plugin-root>/scripts/kb-graph.ts" rank` |
 | find related-but-unlinked notes to connect | RETRIEVE | `bun "<plugin-root>/scripts/kb-graph.ts" suggest` |
@@ -49,13 +53,14 @@ is tagged `substrate:status` — `ledger:DEADEND`, `finding:VALIDATED`, `lit:CIT
 
 The `[[wikilinks]]` between units *are* the graph (no DB, no embeddings — see the invariant);
 `kb-index` derives `.promptus/cache/graph.json` from them, and `kb-graph` queries it:
-- `kb-graph rank` — PageRank over the page-link graph: the load-bearing units, what to read first.
+- `kb-graph rank` — PageRank over active page units; add `--history` to include inactive units.
 - `kb-graph lint` — health: dangling `[[handles]]` (with a "did you mean?") and orphans. `--strict` to gate.
 - `kb-graph suggest` — latent links: unit pairs that are unlinked but probably related (shared
   vocabulary + shared source), so you can draw the missing `[[link]]`. Suggest-only; you judge.
 
-Retrieval is two-tier: `kb-find` reads the card-catalog of headers (cheap, header-first), then
-`kb-get` fetches only the bodies the headers earned — so a ledger term never costs the whole file.
+Retrieval is two-tier: `kb-find` uses the disposable lexical index (ranked, capped at 20), then
+`kb-get` fetches only the bodies the ranked headers earned — an unanchored ledger is refused and
+each fetch has a byte ceiling, so a mistaken request cannot dump the whole store.
 
 ## The invariant (do not break)
 

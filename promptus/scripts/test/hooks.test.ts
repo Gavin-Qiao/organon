@@ -9,7 +9,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { telosBlock } from "../../hooks/_lib.ts";
+import { nowBlock, telosBlock } from "../../hooks/_lib.ts";
 import { gateDecision, parseApplyPatch } from "../../hooks/protect-gate.ts";
 
 const PLUGIN_ROOT = join(import.meta.dir, "..", "..");
@@ -37,6 +37,40 @@ test("telosBlock: an over-long Telos is capped, with a pointer to the full file"
   expect(block).not.toContain("line 200");
   expect(block).toContain("read the full .promptus/TELOS.md");
   expect(block.split("\n").length).toBeLessThan(170);
+});
+
+test("nowBlock: explicit markers exclude an intervening glossary", () => {
+  const text = `# Ledger
+
+<!-- now:start -->
+
+## NOW
+Current live state.
+
+## <<< RESUME HERE >>>
+Resume the current experiment.
+
+<!-- now:end -->
+
+## Glossary
+Legacy material that must not be injected.
+
+## Log
+Append-only history.`;
+  const block = nowBlock(text);
+  expect(block).toContain("Current live state.");
+  expect(block).toContain("Resume the current experiment.");
+  expect(block).not.toContain("Glossary");
+  expect(block).not.toContain("Append-only history");
+});
+
+test("nowBlock: legacy heading layout remains bounded", () => {
+  const body = Array.from({ length: 200 }, (_, index) => `state ${index}`).join("\n");
+  const block = nowBlock(`# Ledger\n\n## NOW\n${body}\n\n## Log\nold`, 20);
+  expect(block).toContain("state 0");
+  expect(block).not.toContain("state 100");
+  expect(block).not.toContain("old");
+  expect(block).toContain("NOW truncated");
 });
 
 test("protect-gate parses every Codex apply_patch target", () => {

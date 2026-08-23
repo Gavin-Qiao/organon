@@ -23,14 +23,19 @@
  *       links the move would break (`research-ledger.md`, `telos.md` — case-insensitive —
  *       and bare `./sibling.md`). Any pre-existing frontmatter is replaced, not stacked.
  *
+ *   kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"] [--apply]
+ *       Preserve an external thinker response verbatim as `lit:UNTRUSTED` with SHA-256.
+ *       No assertion is extracted or promoted; checked claims enter separately through kb-add.
+ *
  * DRY-RUN by default; pass `--apply` to write. `status` defaults to BACKGROUND (reference
  * knowledge); promote a unit to CITE by hand when you actually lean on it.
  */
 
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 import { nowISO, nowLocalStamp, stampUTC } from "./lib/clock.ts";
-import { mintId } from "./lib/ids.ts";
+import { mintId, slugify } from "./lib/ids.ts";
 import { findProjectRoot } from "./lib/paths.ts";
 import { known, loadVocab } from "./lib/vocab.ts";
 
@@ -172,7 +177,15 @@ function planPromote(root: string, file: string, source: string, kind: string): 
 }
 
 function main(argv: string[]): number {
-  const args = argv.filter((a) => !a.startsWith("--"));
+  if (argv.includes("--help") || argv.includes("-h")) {
+    console.log("kb-ingest — provenance-preserving external-note curation\nusage: kb-ingest <backfill | promote <file> | quarantine <file>> [--source <s>] [--title <t>] [--apply] [--root <dir>]");
+    return 0;
+  }
+  const args: string[] = [];
+  for (let index = 0; index < argv.length; index++) {
+    if (!argv[index].startsWith("--")) { args.push(argv[index]); continue; }
+    if (argv[index] !== "--apply" && argv[index] !== "--help") index++; // skip the flag's value
+  }
   const has = (f: string) => argv.includes(`--${f}`);
   const valOf = (f: string) => { const i = argv.indexOf(`--${f}`); return i >= 0 ? argv[i + 1] : undefined; };
   const cmd = args[0];
@@ -222,7 +235,36 @@ function main(argv: string[]): number {
     return 0;
   }
 
-  console.error("kb-ingest: usage: kb-ingest <backfill|promote> [...]");
+  if (cmd === "quarantine") {
+    const file = args[1];
+    const source = valOf("source");
+    if (!file || !source) { console.error('kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"] [--apply]'); return 2; }
+    const input = file.startsWith("/") ? file : join(root, file);
+    if (!existsSync(input)) { console.error(`kb-ingest quarantine: not found: ${fwd(input)}`); return 2; }
+    const raw = readFileSync(input);
+    const content = raw.toString("utf8");
+    const title = valOf("title") ?? h1(content, basename(file).replace(/\.[^.]+$/, ""));
+    const slug = slugify(title);
+    const target = join(root, LIT_DIR, slug + ".md");
+    if (existsSync(target)) { console.error(`kb-ingest quarantine: target already exists: ${LIT_DIR}/${slug}.md`); return 2; }
+    const hash = createHash("sha256").update(raw).digest("hex");
+    const id = mintId("lit", stampUTC(nowISO()), title);
+    const fm = [
+      "---", `id: ${id}`, "substrate: lit", "kind: NOTE", "status: UNTRUSTED",
+      `source: ${JSON.stringify(source)}`, `content_sha256: ${hash}`, `created: ${nowLocalStamp()}`, "---", "",
+    ].join("\n");
+    console.log(`kb-ingest quarantine ${apply ? "" : "(dry-run — pass --apply)"} — ${fwd(file)} → ${LIT_DIR}/${slug}.md`);
+    console.log(`  status: UNTRUSTED · source: ${source} · sha256: ${hash}`);
+    console.log("  No claims were extracted or validated. Promote checked claims separately as finding:CONJECTURED or stronger.");
+    if (apply) {
+      mkdirSync(dirname(target), { recursive: true });
+      writeFileSync(target, Buffer.concat([Buffer.from(fm), raw]));
+      console.log(`  quarantined. Link later claims to [[${slug}]].`);
+    } else console.log("  No files were touched.");
+    return 0;
+  }
+
+  console.error("kb-ingest: usage: kb-ingest <backfill|promote|quarantine> [...]");
   return 2;
 }
 

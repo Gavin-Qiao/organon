@@ -1,6 +1,6 @@
 ---
 name: telos
-description: Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first — and maintain the Telos as direction shifts. Use when initializing Promptus in a repo, AND whenever about to edit `.promptus/TELOS.md`: Telos edits are OPERATOR-TRIGGERED — the agent registers evidence in the research ledger (kb-add) and proposes; the boundary routes everything else to the ledger, NOW-header, or memory. Drives the templates/ scaffolds.
+description: "Stand up a project's Promptus stores under a single `.promptus/` namespace, Telos first — and maintain the Telos as direction shifts. Use when initializing Promptus in a repo, AND whenever about to edit `.promptus/TELOS.md`: Telos edits are OPERATOR-TRIGGERED — the agent registers evidence in the research ledger (kb-add) and proposes; the boundary routes everything else to the ledger, NOW-header, or memory. Drives the templates/ scaffolds."
 ---
 
 # telos — scaffold the stores, keep the compass clean

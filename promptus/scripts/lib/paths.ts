@@ -51,5 +51,8 @@ export function derivedDir(root: string): string {
 export function insertBeforeSentinel(content: string, block: string, sentinel: string): string {
   if (!content.includes(sentinel)) throw new Error(`sentinel not found: ${sentinel}`);
   const entry = block.endsWith("\n") ? block : `${block}\n`;
-  return content.replace(sentinel, `${entry}\n${sentinel}`);
+  // A replacement string interprets `$&`, dollar-backtick, and `$'` as substitution tokens.
+  // Ledger prose commonly contains those byte sequences inside Markdown/math, so
+  // return the replacement from a callback to preserve user content literally.
+  return content.replace(sentinel, () => `${entry}\n${sentinel}`);
 }

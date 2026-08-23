@@ -22,9 +22,9 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    ```
    Lead with the dead-ends and mistakes — those are the ones that get skipped. Be terse.
 3. **Refresh the NOW-header through the gate.** Pipe the new header (the `## NOW … Open frontier …
-   Next actions … RESUME` region) to `kb-now` — it owns the `Updated:` stamp (from the clock, never
-   hand-typed), checks the required sections, and writes a bounded replacement between the `now:`
-   markers:
+   Next actions … RESUME` region) to `kb-now` — it owns the `Updated:` stamp and the exact
+   latest-ledger freshness marker, checks the required sections and size, and writes a bounded
+   replacement between the `now:` markers:
    ```
    echo "<## NOW … / ## Open frontier … / ## Next actions … / ## <<< RESUME … >>> …>" | \
      bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-now.ts" --note "<short, e.g. the version>"
@@ -47,8 +47,9 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    - **Drift** → a terse, specific flag: name the tension, the commitment or invariant at stake,
      and what would resolve it. This is for the human steward — surface it at the **top** of the
      report (step 6), not buried. Never invent drift; flag only what the entries actually show.
-6. **Re-index + report.** `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"` to refresh the
-   catalog and surface orphans / unresolved links. Then the summary — **lead with the drift verdict
+6. **Re-index, health-check, and report.** Rebuild with `kb-index`, then run
+   `promptus-check --ratchet` when the project has a recorded debt baseline (otherwise run normal
+   `promptus-check` and explicitly report the debt). Then the summary — **lead with the drift verdict
    from step 5** (a flag for the human if the work has wandered, otherwise "on course"), then: N
    added (by kind), anything flagged, and the resume line. Then it's safe to `/compact`.
 

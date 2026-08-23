@@ -1,6 +1,6 @@
 ---
-description: Curate already-collected deep-research into provenance-bearing lit units — backfill a source onto existing lit notes, or promote an external note out of the finding store. Never invents a source.
-argument-hint: "[backfill | promote <file> --source <s>] [--apply]"
+description: Curate external research into provenance-bearing lit units — backfill, promote, or quarantine untrusted thinker output. Never invents provenance or validates an import.
+argument-hint: "[backfill | promote <file> | quarantine <file>] [--source <s>] [--apply]"
 ---
 
 # /promptus-ingest — give deep-research notes their provenance
@@ -33,12 +33,24 @@ nothing is recoverable. Dry-run by default.
    The move replaces any stale frontmatter (it won't stack a second block) and fixes the relative
    links the move breaks. The prose is never edited.
 
-3. **Re-index + verify.** `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"`, then confirm the units
+3. **Quarantine an external thinker response before interpreting it.** For an operator-mediated,
+   stateless theory round, use `/promptus:thinker-round`; it seals the question and validation plan
+   and invokes this primitive at intake. For a standalone return, preserve its exact bytes, declared
+   provenance, and content hash without granting claim status:
+   ```
+   bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-ingest.ts" quarantine <response.txt> \
+       --source "external-thinker:<round>" --title "<round title>" --apply --root .
+   ```
+   This writes `lit:UNTRUSTED`. Check substantive assertions separately and store only those
+   audits as findings linked back to the quarantined unit.
+
+4. **Re-index + verify.** `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-index.ts"`, then confirm the units
    read `lit:<status>` with their `source`, and spot-check retrieval (`kb-find` by topic *and* by
    the run-id/source).
 
 ## What it does NOT do
 
-It does not invent a source, edit a unit's prose, or decide `lit`-vs-`finding` for you — that
+It does not invent a source, edit a unit's prose, extract or validate thinker claims, or decide
+`lit`-vs-`finding` for you — that
 classification is yours. Default `status` is `BACKGROUND` (reference knowledge); promote a unit to
 `CITE` by hand when you actually lean on it.
