@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-23 (Editio 0.7.0 release candidate validated)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-23 (Promptus 0.8.1 and Editio 0.7.0 released)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,28 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260823T134031Z-prepare-the-editio-v070-release-commit -->
-Promptus v0.8.1 is released and locally installed; Editio v0.7.0 is finalized and fully validated on the rebased release branch.
+<!-- kb:now-through event-20260823T134548Z-release-editio-v070-and-refresh-the-local-codex-plugin -->
+Promptus v0.8.1 and Editio v0.7.0 are released, published, installed through Codex, and smoke-tested from their installed caches.
 
-- Editio remains a general paper-preparation tool: reusable venue contracts with NMI and NeurIPS adapters, no project-specific scientific policy.
-- Both Editio manifests and the dated changelog agree on 0.7.0; the repository gate passes 321 tests with 1,658 expectations.
-- The official-kit NeurIPS smoke compiles draft, blind, and publish modes, and strict doctor reports the v0.7.0 workspace healthy.
+- Promptus v0.8.1 ships the five Psi-derived correctness repairs; 45 superseded Psi dependency failures become archival warnings while 72 non-superseded failures remain red.
+- Editio v0.7.0 ships reusable venue contracts plus sourced NMI and NeurIPS adapters without project-specific paper policy.
+- Both local organon plugins are installed and enabled at their released versions; reload running sessions to discover new skill text.
 
 ## Open frontier
 
-- Commit and push the Editio v0.7.0 release line.
-- Merge only after all required Linux, macOS, Windows, hygiene, validation, and title checks pass.
-- Tag the merged main commit, verify GitHub publication, then update and smoke-test local editio@organon.
+- Dogfood the releases in Psi, MoT, Probatio, and active papers; improve Organon only from reproduced project failures.
+- In Psi, distinguish or repair the 72 remaining non-superseded artifact failures before broadening lifecycle semantics.
+- Keep three health lights, run cards, impact tracing, frontier-aware retrieval, and a distillation queue as problem-led backlog; keep SQLite derived-only and deferred until a measured threshold.
 
 ## Next actions
 
-1. Run the final strict health, session preflight, changelog, skill, and diff gates.
-2. Create and push the conventional Editio release commit and PR.
-3. Merge green, tag editio-v0.7.0, verify publication, and refresh the local Codex plugin.
+1. Resume the next real project with installed Promptus Session Doctor and record any concrete failure.
+2. Adopt Editio v0.7.0 in the next active paper and verify its venue-specific workspace before changing generated files.
+3. Reload Codex sessions as needed; no further release work is open.
 
 ## <<< RESUME HERE >>>
 
-Resume at the final Editio v0.7.0 release gate; publication is authorized.
+Resume from released Organon by dogfooding the installed plugins; there is no active release candidate.
 
 <!-- now:end -->
 
@@ -772,5 +772,18 @@ Editio v0.7.0 is finalized as a project-agnostic paper-preparation release. It a
 On the exact rebased release tree, both adapter manifests and the dated changelog agree on 0.7.0; the complete repository gate passes 321 tests with 1,658 expectations; all three changed Editio skills pass structural validation; and a fresh official-kit NeurIPS workspace compiles in draft, blind, and publish modes. Strict Editio Doctor reports scaffold v0.7.0, verifies the official style and completed checklist, checks all three mode budgets, and reports the workspace healthy. No tag, publication, or local Editio update has yet occurred.
 Related: [[editio-general-venue-contracts-and-neurips-adapter]]
 ↳ extends event-20260823T134015Z-keep-editio-venue-adapters-project-agnostic
+
+### [2026-08-23 09:45:48] RESULT/VALIDATED — Release Editio v0.7.0 and refresh the local Codex plugin
+<!-- kb:id event-20260823T134548Z-release-editio-v070-and-refresh-the-local-codex-plugin -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|3e5de9f8f3e64125abecf06046d42c7006f231a6b892814e6369ed202f4c33a5 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|16e88197505b2fc2261e5f707603d290f944128deec3d4098cc331d97a7a5c79 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|5d875f87d443bb031642e608f476633ee6c9f769f6720c19891e7ce03522810b -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+Editio v0.7.0 is publicly released. PR #41 passed the conventional-title, hygiene, Linux validation, macOS, and Windows gates and merged as 7118b3e13321821d1f1f73728d453f7e4ed5f58e. Tag editio-v0.7.0 targets that exact main commit; release workflow 32643246230 passed tests, store health, manifest/tag, changelog, and publication gates and created https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.7.0.
+
+Codex updated editio@organon through the supported plugin command to cache version 0.7.0 without direct cache edits. The installed tree matches the released editio source apart from Codex-generated command adapters. The installed Doctor verifies the official NeurIPS 2026 style and completed checklist, checks draft/blind/publish content-page and PDF-size budgets, and reports the scaffold v0.7.0 smoke workspace healthy. Promptus 0.8.1 and Editio 0.7.0 are both installed and enabled; running sessions may require reload to discover the new skill text.
+Related: [[editio-general-venue-contracts-and-neurips-adapter]]
+↳ supersedes event-20260823T134031Z-prepare-the-editio-v070-release-commit
 
 <!-- kb:append-point -->
