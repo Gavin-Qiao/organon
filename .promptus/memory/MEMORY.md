@@ -10,4 +10,8 @@
 
 - [GitHub stacked-PR merges: retarget children before deleting branches](github-stacked-pr-merges-retarget-children-before-deleting-branc.md) — delete-branch cascade-closes stacked PRs; safe merge protocol for release chains
 
+- [Discuss the next Promptus release before publishing](discuss-the-next-promptus-release-before-publishing.md) — Next Promptus release requires operator review of the combined local development line
+
+- [Organon development is driven by real-project dogfooding](organon-development-is-driven-by-real-project-dogfooding.md) — Organon development is driven by real-project dogfooding
+
 <!-- kb:append-point -->

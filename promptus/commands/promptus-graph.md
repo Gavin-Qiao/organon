@@ -1,6 +1,6 @@
 ---
 description: Inspect the knowledge graph — rank load-bearing units (PageRank), lint health (dangling handles + orphans), and suggest latent links (related-but-unlinked pairs). Read-only, no embeddings.
-argument-hint: "[rank|lint|suggest] [--top <n>] [--knn <k>] [--strict]"
+argument-hint: "[rank|lint|suggest] [--history] [--top <n>] [--knn <k>] [--strict]"
 ---
 
 # /promptus-graph — inspect the knowledge graph
@@ -17,8 +17,9 @@ string match. If the index is stale, run `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-
    ```
    bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-graph.ts" lint --root .
    ```
-2. **Importance — `rank`.** Rank the load-bearing units by PageRank over the page-link graph (with
-   in/out degree alongside) — what to read first, and what a change ripples out to. `--top n` caps it.
+2. **Importance — `rank`.** Rank active load-bearing units by PageRank over the page-link graph.
+   Superseded, refuted, and retired units are excluded unless historical analysis adds
+   `--history`; `--top n` caps the list.
    ```
    bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-graph.ts" rank --root . --top 20
    ```

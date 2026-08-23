@@ -79,8 +79,9 @@ lives. The ledger entry then records only the event, as it should.
 
 ## Disciplines that make it worth keeping
 
-1. **Artifact-coupling.** Every `RESULT` names a reproducible artifact (path or run-id) *and*
-   quotes the key number inline, so a reader can spot-check without opening it.
+1. **Artifact-coupling.** Every `RESULT` names a reproducible artifact *and* quotes the key number
+   inline. Prefer repeated `--artifact "role|relative/path|sha256-or--"`; `promptus-check` then
+   verifies existence and, when supplied, exact bytes.
 2. **Failure-first honesty.** Record what broke and why. The `DEADEND` trail is the most
    valuable part of the file.
 3. **Attribution.** Say what produced a claim (a run, a proof, a model, the operator).

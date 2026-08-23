@@ -49,3 +49,47 @@ export function telosBlock(text: string, cap = 160): string {
   }
   return lines.join("\n").trim();
 }
+
+/**
+ * The bounded live-state block to inject at session start.
+ *
+ * Current ledgers delimit the authoritative block explicitly.  Prefer those
+ * markers so intervening sections such as a glossary can never leak into the
+ * startup context.  The legacy heading-based fallback keeps older stores
+ * resumable, and the line cap is a final runaway guard for both layouts.
+ */
+export function nowBlock(text: string, cap = 120): string {
+  const lines = text.split(/\r?\n/);
+  const startI = lines.findIndex((line) => line.trim() === "<!-- now:start -->");
+  const endI =
+    startI === -1
+      ? -1
+      : lines.findIndex(
+          (line, index) => index > startI && line.trim() === "<!-- now:end -->",
+        );
+
+  let selected: string[];
+  if (startI !== -1 && endI > startI) {
+    selected = lines.slice(startI + 1, endI);
+  } else {
+    const nowI = lines.findIndex((line) => /^## NOW\b/.test(line));
+    const logI = lines.findIndex((line) => /^## Log\b/.test(line));
+    if (nowI !== -1) {
+      selected = lines.slice(nowI, logI > nowI ? logI : lines.length);
+    } else {
+      const resumeI = lines.findIndex((line) => /RESUME HERE/.test(line));
+      selected =
+        resumeI !== -1
+          ? lines.slice(resumeI, Math.min(lines.length, resumeI + 14))
+          : lines.slice(0, 30);
+    }
+  }
+
+  if (selected.length > cap) {
+    return (
+      selected.slice(0, cap).join("\n").trimEnd() +
+      "\n\n(NOW truncated — read .promptus/ledger/RESEARCH-LEDGER.md between the now markers)"
+    );
+  }
+  return selected.join("\n").trim();
+}

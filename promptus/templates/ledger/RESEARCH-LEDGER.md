@@ -20,6 +20,7 @@
 
 <!-- now:start -->
 ## NOW
+<!-- kb:now-through EMPTY -->
 <3–6 lines: what is true today.>
 
 ## Open frontier

@@ -4,13 +4,19 @@ This repo dogfoods its own methodology. When you work here, you are both buildin
 the toolbox and using it. This file is the portable read surface (the `AGENTS.md`
 convention); the fuller map is the `promptus` skill (`/promptus:help` in Claude Code).
 
+**Development is problem-led through Mohan's real projects.** Psi, MoT, Probatio, and the other
+long-running projects expose concrete failures and workarounds; reproduce those, extract the
+general problem, make the smallest reusable improvement to Promptus or Editio, and validate it
+back against real use. Do not manufacture roadmap features merely because they sound useful.
+
 > **Current state: a marketplace monorepo, both plugins released** (per-plugin tags; versions
 > live in each `plugin.json`, never in prose). Two plugins under the `organon` marketplace
 > (Claude Code: `.claude-plugin/marketplace.json`; Codex: `.agents/plugins/marketplace.json`):
 > **`promptus/`** — the store: STORE `kb-add`
 > (+ the NOW-header writer `kb-now`), KEEP `kb-index` + `kb-graph` (`rank` / `lint` /
-> `suggest`), RETRIEVE `kb-find` → `kb-get`; skills `promptus`, `recall`, `grannie`, `telos`,
-> `research-ledger`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
+> `suggest`), RETRIEVE `kb-find` → `kb-get`, read-only session preflight
+> `promptus-session-doctor`; skills `promptus`, `recall`, `grannie`, `telos`,
+> `research-ledger`, `thinker-round`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
 > `editio-structure` + `editio-latex` + `editio-figures` skills, the scaffold + renderer +
 > figcheck scripts, `humanizer`; tables/bib land in later phases (design of record:
 > `.promptus/docs/editio-design-memo.md` + the ledger's supersede chain). The agent operates
@@ -20,19 +26,26 @@ convention); the fuller map is the `promptus` skill (`/promptus:help` in Claude 
 ## Cadence
 
 1. **Read `.promptus/TELOS.md` first.** It holds the north star and the invariant that never bends.
-2. **Store as you go.** Don't hand-edit the ledger or `.promptus/docs/`. Every unit goes in
+2. **Preflight before resuming.** Run `bun promptus/scripts/promptus-session-doctor.ts` before a
+   session trusts NOW or the derived cache. It is read-only; stop and report a non-zero result.
+3. **Store as you go.** Don't hand-edit the ledger or `.promptus/docs/`. Every unit goes in
    through the gated writer-jig:
    ```
    echo "<prose body>" | bun promptus/scripts/kb-add.ts --substrate ledger --kind RESULT --status VALIDATED --title "…"
    ```
    The script owns the timestamp, the id, the placement, and the catalog update.
    This is the drift fix — freehand appends are how the old ledger lost a day.
-3. **Re-index after a batch of writes.** `bun promptus/scripts/kb-index.ts` rebuilds the derived
+4. **Re-index after a batch of writes.** `bun promptus/scripts/kb-index.ts` rebuilds the derived
    `.promptus/cache/CATALOG.md` + `graph.json`; `bun promptus/scripts/promptus-check.ts --strict`
    is the authoritative integrity gate, while `kb-graph lint` reports link debt.
-4. **Retrieve header-first.** `bun promptus/scripts/kb-find.ts "<query>"` (then `kb-get` for a unit's
+5. **Retrieve header-first.** `bun promptus/scripts/kb-find.ts "<query>"` (then `kb-get` for a unit's
    body) before you claim anything the repo already knows; every hit carries its `substrate:status`.
-5. **Checkpoint before you compact.** The `promptus-checkpoint` skill (`/promptus:checkpoint` in
+6. **Use outside theory as conjecture, not authority.** At a precise theoretical bottleneck, the
+   `thinker-round` skill seals one self-contained, workspace-free question plus project-side
+   refute-first checks. The operator carries it to the thinker and returns the response; retain it
+   as `lit:UNTRUSTED` before interpretation, then store only independently checked claims as linked
+   findings. Do not use it for workspace inspection, broad brainstorming, or release decisions.
+7. **Checkpoint before you compact.** The `promptus-checkpoint` skill (`/promptus:checkpoint` in
    Claude Code) flushes anything un-recorded into the
    stores (so a compaction can't lose it), refreshes the NOW-header, reconciles memory.
 
@@ -62,11 +75,13 @@ convention); the fuller map is the `promptus` skill (`/promptus:help` in Claude 
 - `promptus/` — the store plugin: `scripts/` (the mechanics: `kb-add` / `kb-now` STORE,
   `kb-amend` for existing-unit transitions, `kb-index` / `promptus-check` / `kb-graph` KEEP,
   `kb-find` / `kb-get` RETRIEVE, plus `kb-export`, `kb-ingest`, `promptus-doctor`,
+  `promptus-session-doctor`, `thinker-round`,
   `check-pr-title`, and `lib/`),
-  `skills/` (`promptus` the orchestrator, `recall`, `grannie`, `research-ledger`, `telos`,
+  `skills/` (`promptus` the orchestrator, `recall`, `grannie`, `research-ledger`, `telos`, `thinker-round`,
   portable command-workflow adapters, `grounded-writing-reviewer`), Claude `commands/` +
   `agents/`, dual-host `hooks/`,
-  `templates/` (per-project four-store scaffolds incl. `schema/kb-vocab.json`).
+  `templates/` (per-project four-store scaffolds plus the thinker exchange protocol, incl.
+  `schema/kb-vocab.json`).
 - `editio/` — the writing plugin: `commands/` (`/editio`), `skills/` (`editio` the orchestrator,
   `editio-structure` + its exemplar craft references, `editio-latex` + the authoring-subset
   contract, `editio-figures` + its cited craft references, `humanizer`), `scripts/`

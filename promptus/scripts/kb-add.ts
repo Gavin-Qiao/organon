@@ -36,6 +36,8 @@ import { extractLinks } from "./lib/links.ts";
 import { serializeFrontmatter, type Frontmatter } from "./lib/frontmatter.ts";
 import { loadVocab, validate, type Relation, type UnitInput, type Vocab } from "./lib/vocab.ts";
 import { derivedDir, findProjectRoot, indexPath, insertBeforeSentinel, storePath } from "./lib/paths.ts";
+import { parseArtifactSpec, serializeArtifactSpec } from "./lib/artifacts.ts";
+import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
 
 type Args = Record<string, string | boolean>;
 
@@ -66,6 +68,19 @@ function parseRelations(argv: string[]): Relation[] {
     }
   }
   return rels;
+}
+
+function parseArtifacts(argv: string[]): string[] {
+  const artifacts: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] !== "--artifact") continue;
+    const value = argv[i + 1];
+    if (!value || value.startsWith("--")) fail("--artifact requires role|relative/path|sha256-or--");
+    try { artifacts.push(serializeArtifactSpec(parseArtifactSpec(value))); }
+    catch (error) { fail(error instanceof Error ? error.message : String(error)); }
+    i++;
+  }
+  return artifacts;
 }
 
 function str(a: Args, k: string): string | undefined {
@@ -105,7 +120,17 @@ function appendCatalog(root: string, line: string): string {
 
 const TEMPLATE_VOCAB = join(dirname(fileURLToPath(import.meta.url)), "..", "templates", "schema", "kb-vocab.json");
 
+const HELP = `kb-add — gated writer for Promptus knowledge units
+usage: kb-add --substrate <ledger|finding|lit|memory> --kind <K> --status <S>
+              --title "<title>" [--source "<source>"] [--links "a,b"]
+              [--rel <type:target> ...] [--supersedes <id>]
+              [--artifact "role|relative/path|sha256-or--" ...]
+              [--root <dir>] [--dry-run] < body.md
+Artifacts are project-relative reproducibility dependencies. '-' records an
+existence-only dependency; a SHA-256 value makes promptus-check verify bytes.`;
+
 function main(argv: string[]): number {
+  if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
   const a = parseArgs(argv);
   const root = findProjectRoot(str(a, "root") ?? process.cwd());
   // The root can resolve off the Telos while the vocab file itself is gone (a fresh
@@ -120,6 +145,7 @@ function main(argv: string[]): number {
   }
   const vocab = loadVocab(root);
   const relations = parseRelations(argv);
+  const artifacts = parseArtifacts(argv);
 
   const unit: UnitInput = {
     substrate: str(a, "substrate") ?? "",
@@ -149,7 +175,8 @@ function main(argv: string[]): number {
 
   if (sub.envelope === "log") {
     const relFooter = relations.length ? `\n${relations.map((r) => `↳ ${r.type} ${r.target}`).join("\n")}` : "";
-    assembled = `### [${nowLocalStamp()}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n<!-- kb:id ${id} -->\n${body}${relFooter}\n`;
+    const artifactHeader = artifacts.length ? `${artifacts.map((artifact) => `<!-- kb:artifact ${artifact} -->`).join("\n")}\n` : "";
+    assembled = `### [${nowLocalStamp()}] ${unit.kind}/${statusDisplay(vocab, unit.status)} — ${unit.title}\n<!-- kb:id ${id} -->\n${artifactHeader}${body}${relFooter}\n`;
     unitFile = storePath(root, vocab, unit.substrate);
     if (!existsSync(unitFile)) fail(`ledger not found: ${rel(root, unitFile)} — run /promptus-init first`);
     writes.push([unitFile, insertBeforeSentinel(readFileSync(unitFile, "utf8"), assembled, vocab.sentinel)]);
@@ -159,6 +186,7 @@ function main(argv: string[]): number {
     if (unit.reuse) fm.reuse = unit.reuse;
     if (relations.length) fm.relations = relations.map((r) => `${r.type}:${r.target}`);
     if (links.length) fm.links = links;
+    if (artifacts.length) fm.artifacts = artifacts;
     const related = links.length ? `\n\nRelated: ${links.map((l) => `[[${l}]]`).join(" · ")}` : "";
     assembled = `${serializeFrontmatter(fm)}# ${unit.title}\n\n${body}${related}\n`;
     unitFile = storePath(root, vocab, unit.substrate, slug);
@@ -168,6 +196,7 @@ function main(argv: string[]): number {
     // memory: one file per fact + a pointer in the MEMORY.md index
     const fm: Frontmatter = { id, name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
     if (links.length) fm.links = links;
+    if (artifacts.length) fm.artifacts = artifacts;
     assembled = `${serializeFrontmatter(fm)}\n${body}\n`;
     unitFile = storePath(root, vocab, unit.substrate, slug);
     if (existsSync(unitFile)) fail(`a memory unit already exists at ${rel(root, unitFile)}`);
@@ -196,6 +225,7 @@ function main(argv: string[]): number {
     writeFileSync(p, c);
   }
   const catalog = appendCatalog(root, catLine);
+  if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
   console.log(`kb-add: ${unit.substrate}:${unit.status} — ${unit.title}`);
   console.log(`  -> ${rel(root, unitFile)}  (id ${id})`);
   console.log(`  catalog: ${rel(root, catalog)}  ·  run \`bun scripts/kb-index.ts\` to rebuild authoritatively`);

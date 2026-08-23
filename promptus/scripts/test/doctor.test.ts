@@ -188,7 +188,7 @@ test("migrate --apply: the vocab is re-homed, store paths .promptus/-prefixed, a
   const root = scaffoldLegacy("root");
   doctor(root, ["migrate", "--apply"]);
   const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
-  expect(v.version).toBe(3);
+  expect(v.version).toBe(4);
   expect(v.substrates.ledger.store).toBe(".promptus/ledger/RESEARCH-LEDGER.md");
   expect(v.substrates.finding.store).toBe(".promptus/docs");
   expect(v.substrates.lit.store).toBe(".promptus/docs/lit");
@@ -211,7 +211,7 @@ test("migrate --apply: an older vocab version is upgraded to the target shape", 
   expect(r.stdout).toContain("v2");
   doctor(root, ["migrate", "--apply"]);
   const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
-  expect(v.version).toBe(3); // upgraded
+  expect(v.version).toBe(4); // upgraded
   expect(v.relations.refutes).toBeDefined(); // gained the full canonical relation set
 });
 
@@ -309,6 +309,12 @@ test("check: a clean Telos — and the shipping template itself — raise no hyg
 test("a hand-appended ledger entry shows as catalog lag; kb-index clears it", () => {
   const root = scaffoldLegacy("root");
   doctor(root, ["migrate", "--apply"]); // lands on the current layout with a fresh catalog
+  const catalog = read(root, ".promptus/cache/CATALOG.md");
+  const cards = catalog.split(/\r?\n/).filter((line) => {
+    const colon = line.indexOf(":");
+    return colon > 0 && line.indexOf(" · ") > colon;
+  });
+  expect(doctor(root, ["check"]).stdout).toContain(`${cards.length} catalog units`);
   // the failure mode from the field: an entry written at the sentinel by hand, not kb-add
   const ledger = join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md");
   writeFileSync(ledger, readFileSync(ledger, "utf8").replace(
@@ -355,4 +361,143 @@ test("digest lag: lit units piling past the newest finding are flagged; a fresh 
   writeFileSync(join(root, ".promptus", "docs", "fresh-digest.md"),
     '---\nid: f2\nsubstrate: finding\nstatus: VALIDATED\ncreated: "2026-07-09 09:00:00"\n---\n# Fresh digest\n');
   expect(doctor(root, ["check"]).stdout).not.toContain("FLAG digest");
+});
+
+test("check: a marked, current thinker exchange is governed rather than an extra store", () => {
+  const root = scaffoldLegacy("root");
+  expect(doctor(root, ["migrate", "--apply"]).status).toBe(0);
+  const drafted = run("thinker-round.ts", [
+    "draft", "--id", "boundary-proof", "--title", "Can the boundary be proved?", "--apply", "--root", root,
+  ]);
+  expect(drafted.status).toBe(0);
+  const checked = doctor(root, ["check"]);
+  expect(checked.status).toBe(0);
+  expect(checked.stdout).toContain("ok   thinker: governed exchange · 1 round(s)");
+  expect(checked.stdout).not.toContain("FLAG extra: ungoverned .promptus/thinker/");
+});
+
+// ──────────────────────── current-layout book-keeping (vocab behind template) ────────────────────────
+
+function scaffoldCurrentBehind(): string {
+  const root = mkTmp("promptus-doc-behind-");
+  mkdirSync(join(root, ".promptus", "schema"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "ledger"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "docs", "lit"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "memory"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "thinker"), { recursive: true });
+  const vocab = JSON.parse(readFileSync(join(REPO, "templates", "schema", "kb-vocab.json"), "utf8"));
+  vocab.version = 3;
+  vocab.substrates.ledger.kinds.extended = ["IDEA", "MISTAKE", "FIX", "DEADEND", "LOCK", "CHECKPOINT"];
+  vocab.substrates.lit.statuses.extended = [];
+  writeFileSync(join(root, ".promptus", "schema", "kb-vocab.json"), JSON.stringify(vocab, null, 2) + "\n");
+  writeFileSync(join(root, ".promptus", "TELOS.md"), "# Telos — current behind\n\n## North star\nKeep the primitive honest.\n");
+  writeFileSync(join(root, ".promptus", "ledger", "RESEARCH-LEDGER.md"), `# Research Ledger
+
+<!-- kb:append-point -->
+### [2026-06-20 09:00:00] RESULT/VALIDATED — ledger-body-marker-aa11
+the ledger body must not change
+`);
+  writeFileSync(join(root, ".promptus", "docs", "neck-finding.md"), `# Neck finding
+
+unique-finding-body-9f3a stays put
+`);
+  writeFileSync(join(root, ".promptus", "thinker", "round-1.md"), "# Thinker round\n\nungoverned prose\n");
+  writeFileSync(join(root, ".gitignore"), "node_modules/\n/.promptus/cache/\n");
+  return root;
+}
+
+test("check: a current-layout store with a behind-template vocab is not fully healthy", () => {
+  const root = scaffoldCurrentBehind();
+  const r = doctor(root, ["check"]);
+  expect(r.status).toBe(0);
+  expect(r.stdout).toContain("layout:   current");
+  expect(r.stdout).toContain("upgrade available");
+  expect(r.stdout).toContain("behind template v4");
+  expect(r.stdout).toContain("FLAG vocab");
+  expect(r.stdout).toContain("LOCK");
+  expect(r.stdout).toContain("CHECKPOINT");
+  expect(r.stdout).toContain("lit.statuses:UNTRUSTED");
+  expect(r.stdout).toContain("FLAG extra");
+  expect(r.stdout).toContain(".promptus/thinker/");
+  expect(r.stdout).not.toContain("healthy — on the current .promptus/ layout.");
+  expect(doctor(root, ["check", "--strict"]).status).toBe(1);
+});
+
+test("check twice on a current-behind fixture reports the same layout/vocab/health flags", () => {
+  const root = scaffoldCurrentBehind();
+  const a = doctor(root, ["check", "--json"]);
+  const b = doctor(root, ["check", "--json"]);
+  expect(a.status).toBe(0);
+  expect(b.status).toBe(0);
+  const ja = JSON.parse(a.stdout);
+  const jb = JSON.parse(b.stdout);
+  expect(ja.layout).toBe("current");
+  expect(ja.layout).toBe(jb.layout);
+  expect(ja.vocabVersion).toBe(3);
+  expect(ja.vocabVersion).toBe(jb.vocabVersion);
+  expect(ja.targetVersion).toBe(jb.targetVersion);
+  expect(ja.vocabBehind).toBe(true);
+  expect(ja.vocabBehind).toBe(jb.vocabBehind);
+  expect(ja.fullyHealthy).toBe(false);
+  expect(ja.fullyHealthy).toBe(jb.fullyHealthy);
+  expect(ja.bookkeepingNeeded).toBe(true);
+  expect(ja.bookkeepingNeeded).toBe(jb.bookkeepingNeeded);
+  expect(ja.extraTrees.map((t: { rel: string }) => t.rel)).toEqual(jb.extraTrees.map((t: { rel: string }) => t.rel));
+});
+
+test("upgrade dry-run: stages a current-layout book-keeping plan but touches nothing", () => {
+  const root = scaffoldCurrentBehind();
+  const finding = read(root, ".promptus/docs/neck-finding.md");
+  const ledger = read(root, ".promptus/ledger/RESEARCH-LEDGER.md");
+  const thinker = read(root, ".promptus/thinker/round-1.md");
+  const vocab = read(root, ".promptus/schema/kb-vocab.json");
+  const r = doctor(root, ["upgrade"]);
+  expect(r.status).toBe(0);
+  expect(r.stdout).toContain("dry-run");
+  expect(r.stdout).toContain("No files were touched");
+  expect(r.stdout).toContain("merge vocab");
+  expect(r.stdout).toContain("LOCK");
+  expect(read(root, ".promptus/docs/neck-finding.md")).toBe(finding);
+  expect(read(root, ".promptus/ledger/RESEARCH-LEDGER.md")).toBe(ledger);
+  expect(read(root, ".promptus/thinker/round-1.md")).toBe(thinker);
+  expect(read(root, ".promptus/schema/kb-vocab.json")).toBe(vocab);
+  expect(exists(root, ".promptus/cache/CATALOG.md")).toBe(false);
+});
+
+test("upgrade --apply: merges behind-template vocab, keeps LOCK/CHECKPOINT, never edits unit bodies", () => {
+  const root = scaffoldCurrentBehind();
+  const finding = read(root, ".promptus/docs/neck-finding.md");
+  const ledger = read(root, ".promptus/ledger/RESEARCH-LEDGER.md");
+  const thinker = read(root, ".promptus/thinker/round-1.md");
+  const r = doctor(root, ["upgrade", "--apply"]);
+  expect(r.status).toBe(0);
+  const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
+  expect(v.version).toBe(4);
+  const kinds = [...v.substrates.ledger.kinds.core, ...v.substrates.ledger.kinds.extended];
+  expect(kinds).toContain("LOCK");
+  expect(kinds).toContain("CHECKPOINT");
+  expect(v.substrates.lit.statuses.extended).toContain("UNTRUSTED");
+  expect(read(root, ".promptus/docs/neck-finding.md")).toBe(finding);
+  expect(read(root, ".promptus/ledger/RESEARCH-LEDGER.md")).toBe(ledger);
+  expect(read(root, ".promptus/thinker/round-1.md")).toBe(thinker);
+  expect(exists(root, ".promptus/thinker/round-1.md")).toBe(true);
+  expect(exists(root, ".promptus/cache/CATALOG.md")).toBe(true);
+  const after = doctor(root, ["check"]);
+  expect(after.stdout).not.toContain("FLAG vocab");
+  expect(after.stdout).toContain("FLAG extra");
+  expect(after.stdout).not.toContain("healthy — on the current .promptus/ layout.");
+  expect(doctor(root, ["check", "--strict"]).status).toBe(0);
+});
+
+test("upgrade --apply --record-baseline writes a debt baseline without rewriting unit bodies", () => {
+  const root = scaffoldCurrentBehind();
+  const finding = read(root, ".promptus/docs/neck-finding.md");
+  const r = doctor(root, ["upgrade", "--apply", "--record-baseline"]);
+  expect(r.status).toBe(0);
+  expect(exists(root, ".promptus/schema/health-baseline.json")).toBe(true);
+  const b = JSON.parse(read(root, ".promptus/schema/health-baseline.json"));
+  expect(b.schema).toBe("promptus.health-baseline.v1");
+  expect(Array.isArray(b.dangling)).toBe(true);
+  expect(Array.isArray(b.orphans)).toBe(true);
+  expect(read(root, ".promptus/docs/neck-finding.md")).toBe(finding);
 });

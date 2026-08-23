@@ -1,0 +1,4 @@
+interface:
+  display_name: "Thinker Round"
+  short_description: "Govern stateless external theory rounds"
+  default_prompt: "Use $thinker-round to prepare, receive, and adjudicate a stateless external theory round."

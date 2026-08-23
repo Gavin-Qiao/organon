@@ -95,8 +95,10 @@ the same Bun scripts.
 
 …then just work. The `research-ledger` skill records decisions, results, and dead-ends
 through the gate as you go; `recall` retrieves them — header-first, every hit carrying its
-`substrate:status` — before you claim anything the project already answered. When the work
-is worth publishing:
+`substrate:status` — before you claim anything the project already answered. At a precise
+theoretical bottleneck, `thinker-round` can seal a self-contained question for an operator-carried,
+stateless outside reasoner; its return enters as untrusted conjecture and becomes project knowledge
+only after independent checking. When the work is worth publishing:
 
 ```text
 /editio arxiv                  # Claude Code: scaffold .editio/paper/

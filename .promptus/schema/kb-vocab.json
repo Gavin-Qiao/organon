@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "_doc": "Hybrid vocab: three orthogonal facets (KIND = the act/event, STATUS = the claim's epistemic state, RELATION = a typed link). Each substrate has a closed `core` plus a `extended` set of blessed terms; `policy` decides what happens to anything off-vocab — `permissive` warns and writes (the lab-notebook ledger), `strict` refuses (the curated library: finding/lit/memory). Grounded in PROV-O / BFO (act vs. claim), CiTO (relations), and the null-results + hedging literature. See .promptus/docs/vocab-grounding-no-single-standard-recommend-a-hybrid-gate.md.",
   "substrates": {
     "ledger": {
@@ -33,7 +33,7 @@
       "envelope": "page",
       "policy": "strict",
       "kinds": { "core": ["PAPER", "NOTE", "QUOTE"], "extended": [] },
-      "statuses": { "core": ["CITE", "BACKGROUND", "CONTESTED"], "extended": [] },
+      "statuses": { "core": ["CITE", "BACKGROUND", "CONTESTED"], "extended": ["UNTRUSTED"] },
       "requires": ["source"]
     },
     "memory": {

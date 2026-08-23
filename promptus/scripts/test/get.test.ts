@@ -133,3 +133,31 @@ test("kb-get with no path prints usage and exits 1", () => {
   expect(r.status).toBe(1);
   expect(r.stderr).toContain("usage");
 });
+
+test("kb-get refuses an unanchored ledger instead of dumping the whole log", () => {
+  const root = scaffold();
+  add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "one entry"], "private-sized body");
+  const r = get(root, [".promptus/ledger/RESEARCH-LEDGER.md", "--title", "does not rescue this"]);
+  expect(r.status).toBe(1);
+  expect(r.stderr).toContain("not one unit");
+  expect(r.stdout).toBe("");
+});
+
+test("kb-get enforces a default-independent byte ceiling and allows an explicit override", () => {
+  const root = scaffold();
+  add(root, ["--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED", "--title", "large unit"], "x".repeat(300));
+  const blocked = get(root, [".promptus/docs/large-unit.md", "--max-bytes", "64"]);
+  expect(blocked.status).toBe(1);
+  expect(blocked.stderr).toContain("above --max-bytes 64");
+  expect(blocked.stdout).toBe("");
+  const allowed = get(root, [".promptus/docs/large-unit.md", "--max-bytes", "4096"]);
+  expect(allowed.status).toBe(0);
+  expect(allowed.stdout).toContain("xxx");
+});
+
+test("kb-get --help is discoverable without a project", () => {
+  const r = run("kb-get.ts", ["--help"]);
+  expect(r.status).toBe(0);
+  expect(r.stdout).toContain("--whole-file");
+  expect(r.stdout).toContain("--max-bytes");
+});

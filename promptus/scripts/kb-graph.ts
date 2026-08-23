@@ -9,8 +9,9 @@
  *   kb-graph lint  [--strict]     structural health — dangling [[handles]] (with a "did you
  *                                 mean?" by slug similarity) + orphans (nothing links in or out).
  *                                 --strict exits non-zero when anything is flagged (gates a checkpoint).
- *   kb-graph rank  [--top <n>]    load-bearing units by PageRank over the page-link graph,
- *                                 with in/out degree alongside. [default --top 20]
+ *   kb-graph rank  [--top <n>] [--history]
+ *                                 load-bearing active units by PageRank over the page-link graph;
+ *                                 --history includes SUPERSEDED/REFUTED/RETIRED units. [--top 20]
  *   kb-graph suggest [--top <n>] [--knn <k>] [--soft]
  *                                 latent links — unit pairs that are unlinked but probably related
  *                                 (IDF-weighted shared vocabulary + a shared source). A broad "hub" note
@@ -115,17 +116,26 @@ function lint(g: Graph, lab: Map<string, string>, strict: boolean): number {
   return strict && dangling.length + orphans.length > 0 ? 1 : 0;
 }
 
-function rank(g: Graph, lab: Map<string, string>, top: number): number {
-  if (!g.nodes.length) { console.log("kb-graph rank: no page units to rank."); return 0; }
-  const pr = pageRank(g.nodes, g.out);
-  const set = new Set(g.nodes);
+const INACTIVE = new Set(["SUPERSEDED", "REFUTED", "RETIRED"]);
+function statusOf(label: string | undefined): string {
+  if (!label) return "";
+  const colon = label.indexOf(":");
+  const gap = label.indexOf("  ", colon + 1);
+  return (gap > colon ? label.slice(colon + 1, gap) : "").replace(/^[★⚠↩]/, "").trim().toUpperCase();
+}
+
+function rank(g: Graph, lab: Map<string, string>, top: number, history: boolean): number {
+  const nodes = history ? g.nodes : g.nodes.filter((node) => !INACTIVE.has(statusOf(lab.get(node))));
+  if (!nodes.length) { console.log("kb-graph rank: no active page units to rank."); return 0; }
+  const pr = pageRank(nodes, g.out);
+  const set = new Set(nodes);
   const outDeg = (n: string) => (g.out[n] ?? []).filter((t) => set.has(t)).length;
-  const ranked = [...g.nodes].sort((a, b) => pr.get(b)! - pr.get(a)! || (g.inDeg[b] ?? 0) - (g.inDeg[a] ?? 0));
-  console.log(`kb-graph rank — load-bearing units (PageRank over the page-link graph):`);
+  const ranked = [...nodes].sort((a, b) => pr.get(b)! - pr.get(a)! || (g.inDeg[b] ?? 0) - (g.inDeg[a] ?? 0));
+  console.log(`kb-graph rank — load-bearing ${history ? "historical + active" : "active"} units (PageRank over the page-link graph):`);
   ranked.slice(0, top).forEach((n, i) => {
     console.log(`  ${String(i + 1).padStart(2)}. ${pr.get(n)!.toFixed(4)}  in${g.inDeg[n] ?? 0} out${outDeg(n)}  ${lab.get(n) ?? n}  (${n})`);
   });
-  if (g.nodes.length > top) console.log(`  … ${top} of ${g.nodes.length} shown — raise --top for more.`);
+  if (nodes.length > top) console.log(`  … ${top} of ${nodes.length} shown — raise --top for more.`);
   return 0;
 }
 
@@ -231,6 +241,10 @@ function suggest(root: string, dir: string, g: Graph, top: number, knn: number, 
 }
 
 function main(argv: string[]): number {
+  if (argv.includes("--help") || argv.includes("-h")) {
+    console.log("kb-graph — inspect the derived knowledge graph\nusage: kb-graph <lint|rank|suggest> [--strict] [--history] [--top <n>] [--root <dir>]");
+    return 0;
+  }
   const flags: Record<string, string> = {};
   const pos: string[] = [];
   for (let i = 0; i < argv.length; i++) {
@@ -246,7 +260,7 @@ function main(argv: string[]): number {
   const lab = labels(dir);
 
   if (cmd === "lint") return lint(g, lab, "strict" in flags);
-  if (cmd === "rank") return rank(g, lab, Number(flags.top || 20));
+  if (cmd === "rank") return rank(g, lab, Number(flags.top || 20), "history" in flags);
   if (cmd === "suggest") return suggest(root, dir, g, Number(flags.top || 15), Number(flags.knn || 6), "soft" in flags);
   console.error(`kb-graph: unknown command "${cmd}" — use lint | rank | suggest.`);
   return 1;

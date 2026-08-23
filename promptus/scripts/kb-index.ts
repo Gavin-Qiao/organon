@@ -7,13 +7,14 @@
  *
  *   1. Walk all four stores' markdown under the project root.
  *   2. Parse each unit's header/frontmatter (frontmatter.ts), [[links]], and typed relations.
- *   3. Rebuild .promptus/cache/CATALOG.md — one line per unit (the card-catalog the model reads).
- *   4. Rebuild .promptus/cache/graph.json — [[link]] adjacency + typed relation edges (with CiTO/PROV IRIs).
+ *   3. Rebuild CATALOG.md plus the bounded lexical search.json (both disposable).
+ *   4. Rebuild graph.json — canonical [[link]] adjacency + typed relations (CiTO/PROV IRIs).
  *   5. Apply relation inverse_status (a `supersedes`/`fixes` target is marked SUPERSEDED in place).
  *   6. Lint + report: orphans (no links in/out) and unresolved links (target not a file).
  *   7. Idempotent. With --strict, exit non-zero when lint finds problems (gates /checkpoint).
  */
 
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { parseFrontmatter } from "./lib/frontmatter.ts";
@@ -22,15 +23,21 @@ import { loadVocab, type Relation, type Vocab } from "./lib/vocab.ts";
 import { derivedDir, findProjectRoot } from "./lib/paths.ts";
 import { ledgerHeads } from "./lib/units.ts";
 import { slugify } from "./lib/ids.ts";
+import { buildSearchIndex, type SearchSourceDocument } from "./lib/search.ts";
+import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
 
-interface Unit {
+export interface Unit {
   substrate: string;
   status: string;
   title: string;
   slug: string | null; // page units are link targets; ledger entries are not
   relPath: string;
   links: string[];
+  aliases: string[];
   relations: Relation[];
+  artifacts: string[];
+  text: string;
+  cold: boolean;
   id?: string;
 }
 
@@ -43,8 +50,9 @@ function parseRel(s: string): Relation | null {
 
 // Walk RECURSIVELY: a store's notes may sit in subdirectories (e.g. docs/positioning/), and a
 // non-recursive walk left those silently unindexed. But `archive/` is cold storage by convention
-// (continuations retired for bloat control) and hidden dirs (.git, …) aren't content — skip both,
-// so re-indexing doesn't re-introduce the bloat that archiving removed. README/index/memory files
+// (continuations retired for bloat control) and hidden dirs (.git, …) aren't live page content —
+// skip both. A log-store archive is passed to this walker explicitly and enters search as cold
+// history, never the live catalog/graph. README/index/memory files
 // are navigation, not units, so they're skipped too.
 function mdFiles(dir: string): string[] {
   if (!existsSync(dir)) return [];
@@ -58,8 +66,19 @@ function mdFiles(dir: string): string[] {
   return out;
 }
 
-function parseLedger(root: string, store: string): Unit[] {
-  const file = join(root, store);
+function archivedMdFiles(dir: string): string[] {
+  if (!existsSync(dir)) return [];
+  const out: string[] = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (!entry.isDirectory() || entry.name.startsWith(".")) continue;
+    const path = join(dir, entry.name);
+    if (entry.name === "archive") out.push(...mdFiles(path));
+    else out.push(...archivedMdFiles(path));
+  }
+  return out;
+}
+
+function parseLedgerFile(root: string, file: string, cold = false): Unit[] {
   if (!existsSync(file)) return [];
   const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   const heads = ledgerHeads(text); // shared, fence-aware — kb-index and kb-get slice on the same heads
@@ -72,11 +91,24 @@ function parseLedger(root: string, store: string): Unit[] {
     const relations = [...prose.matchAll(/^↳ (\S+) (.+)$/gm)].map((x) => ({ type: x[1], target: x[2].trim() }));
     const id = /^<!-- kb:id (\S+) -->$/m.exec(prose)?.[1];
     // anchor (h.anchor) is already space-free (spaces → T) so the catalog's `· path ·` columns stay parseable
-    return { substrate: "ledger", status, title: h.title, slug: null, relPath: `${store}#${h.anchor}`, links: extractLinks(body), relations, id };
+    return {
+      substrate: "ledger",
+      status,
+      title: h.title,
+      slug: null,
+      relPath: `${rel(root, file)}#${h.anchor}`,
+      links: extractLinks(body),
+      aliases: [],
+      relations,
+      artifacts: [...prose.matchAll(/^<!-- kb:artifact (.+) -->$/gm)].map((match) => match[1].trim()),
+      text: body,
+      cold,
+      id,
+    };
   });
 }
 
-function parsePage(root: string, substrate: string, file: string): Unit {
+function parsePage(root: string, substrate: string, file: string, cold = false): Unit {
   const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
   const { data, body } = parseFrontmatter(text);
   const slug = file.replace(/\\/g, "/").split("/").pop()!.replace(/\.md$/, "");
@@ -91,12 +123,17 @@ function parsePage(root: string, substrate: string, file: string): Unit {
     slug,
     relPath: rel(root, file),
     links,
+    aliases: Array.isArray(data.aliases) ? data.aliases : [],
     relations,
+    artifacts: Array.isArray(data.artifacts) ? data.artifacts : [],
+    text,
+    cold,
     id: typeof data.id === "string" ? data.id : undefined,
   };
 }
 
-function collect(root: string, vocab: Vocab): Unit[] {
+/** Read the Markdown truth into units without deriving or writing any cache files. */
+export function collectUnits(root: string, vocab: Vocab): Unit[] {
   const units: Unit[] = [];
   const norm = (p: string) => p.replace(/\\/g, "/");
   // File stores can nest (lit = docs/lit lives inside finding = docs). Each file belongs to its
@@ -111,9 +148,18 @@ function collect(root: string, vocab: Vocab): Unit[] {
   const sentinelFiles = new Set(
     Object.values(vocab.substrates).filter((s) => s.placement === "sentinel").map((s) => norm(join(root, s.store))),
   );
+  const sentinelArchiveDirs = [...sentinelFiles].map((file) => norm(join(dirname(file), "archive")));
   const owner = (fileDir: string) => fileStores.find((st) => fileDir === st.dir || fileDir.startsWith(st.dir + "/"));
 
-  for (const sub of Object.values(vocab.substrates)) if (sub.envelope === "log") units.push(...parseLedger(root, sub.store));
+  for (const sub of Object.values(vocab.substrates)) {
+    if (sub.envelope !== "log") continue;
+    const liveFile = join(root, sub.store);
+    units.push(...parseLedgerFile(root, liveFile));
+    const archive = join(dirname(liveFile), "archive");
+    if (existsSync(archive)) {
+      for (const file of mdFiles(archive)) units.push(...parseLedgerFile(root, file, true));
+    }
+  }
 
   const seen = new Set<string>();
   for (const st of fileStores) {
@@ -126,6 +172,18 @@ function collect(root: string, vocab: Vocab): Unit[] {
       units.push(parsePage(root, st.name, nf));
     }
   }
+  // Page-store archives also remain retrievable, but only through kb-find --history. A custom
+  // log whose archive happens to sit under a page store is already parsed above as log units.
+  for (const st of fileStores) {
+    for (const f of archivedMdFiles(st.dir)) {
+      const nf = norm(f);
+      if (seen.has(nf) || sentinelArchiveDirs.some((dir) => nf === dir || nf.startsWith(dir + "/"))) continue;
+      const own = owner(norm(dirname(nf)));
+      if (!own || own.name !== st.name) continue;
+      seen.add(nf);
+      units.push(parsePage(root, st.name, nf, true));
+    }
+  }
   return units;
 }
 
@@ -135,75 +193,135 @@ export function main(argv: string[]): number {
   const ri = argv.indexOf("--root");
   const root = findProjectRoot(ri >= 0 ? argv[ri + 1] : process.cwd());
   const vocab = loadVocab(root);
-  const units = collect(root, vocab);
+  const units = collectUnits(root, vocab);
+  const liveUnits = units.filter((unit) => !unit.cold);
+  const coldUnits = units.filter((unit) => unit.cold);
 
   // relation inverse_status: a `supersedes`/`fixes` target is marked SUPERSEDED in place.
-  const byId = new Map(units.filter((u) => u.id).map((u) => [u.id!, u]));
-  const bySlug = new Map(units.filter((u) => u.slug).map((u) => [u.slug!, u]));
+  const byId = new Map(liveUnits.filter((u) => u.id).map((u) => [u.id!, u]));
+  const bySlug = new Map(liveUnits.filter((u) => u.slug).map((u) => [u.slug!, u]));
+  const byAlias = new Map<string, Unit[]>();
+  for (const unit of liveUnits) {
+    for (const alias of unit.aliases) byAlias.set(alias, [...(byAlias.get(alias) ?? []), unit]);
+  }
   const ledgerByTitle = new Map<string, Unit[]>();
-  for (const u of units.filter((x) => x.substrate === "ledger")) {
+  for (const u of liveUnits.filter((x) => x.substrate === "ledger")) {
     const titleSlug = slugify(u.title);
     ledgerByTitle.set(titleSlug, [...(ledgerByTitle.get(titleSlug) ?? []), u]);
   }
   const resolveTarget = (target: string): Unit | undefined => {
     const direct = byId.get(target) ?? bySlug.get(target);
     if (direct) return direct;
+    const aliasMatches = byAlias.get(target) ?? [];
+    if (aliasMatches.length === 1) return aliasMatches[0];
     const legacy = /^event-\d{8}T\d{6}Z-(.+)$/.exec(target)?.[1];
     if (!legacy) return undefined;
     const matches = ledgerByTitle.get(legacy) ?? [];
     return matches.length === 1 ? matches[0] : undefined;
   };
-  const relEdges: Array<{ from: string; type: string; to: string; cito?: string; prov?: string }> = [];
-  for (const u of units) {
+  const relEdges: Array<{ from: string; type: string; to: string; rawTo?: string; resolved: boolean; cito?: string; prov?: string }> = [];
+  const artifacts: Array<{ from: string; spec: string }> = [];
+  for (const u of liveUnits) {
     const from = u.id ?? u.slug ?? u.relPath;
+    for (const spec of u.artifacts) artifacts.push({ from, spec });
     for (const r of u.relations) {
       const spec = vocab.relations[r.type] ?? {};
       const target = resolveTarget(r.target);
       if (spec.inverse_status && target) target.status = spec.inverse_status;
-      relEdges.push({ from, type: r.type, to: r.target, ...(spec.cito ? { cito: spec.cito } : {}), ...(spec.prov ? { prov: spec.prov } : {}) });
+      relEdges.push({
+        from,
+        type: r.type,
+        to: target?.id ?? target?.slug ?? r.target,
+        ...(target && (target.id ?? target.slug) !== r.target ? { rawTo: r.target } : {}),
+        resolved: Boolean(target),
+        ...(spec.cito ? { cito: spec.cito } : {}),
+        ...(spec.prov ? { prov: spec.prov } : {}),
+      });
     }
   }
 
-  const nodes = new Set(units.filter((u) => u.slug).map((u) => u.slug!));
+  const nodes = new Set(liveUnits.filter((u) => u.slug).map((u) => u.slug!));
   const out: Record<string, string[]> = {};
   const unitOut: Record<string, string[]> = {};
-  const stableBySlug = new Map(units.filter((u) => u.slug).map((u) => [u.slug!, u.id ?? u.slug!]));
   const inDeg: Record<string, number> = Object.fromEntries([...nodes].map((s) => [s, 0]));
-  const unresolved: Array<{ from: string; to: string }> = [];
-  for (const u of units) {
+  const dangling: Array<{ from: string; target: string; reason: "unresolved" | "ambiguous-alias" }> = [];
+  const external: Array<{ from: string; target: string }> = [];
+  const externalTarget = (target: string) => /^(?:https?:\/\/|[a-z][a-z0-9+.-]*:)/i.test(target);
+  for (const u of liveUnits) {
     const key = u.slug ?? u.relPath;
-    out[key] = u.links;
-    unitOut[u.id ?? key] = u.links.map((target) => stableBySlug.get(target) ?? target);
-    for (const t of u.links) (nodes.has(t) ? inDeg[t]++ : unresolved.push({ from: key, to: t }));
+    const pageTargets: string[] = [];
+    const stableTargets: string[] = [];
+    for (const rawTarget of u.links) {
+      if (externalTarget(rawTarget)) {
+        external.push({ from: key, target: rawTarget });
+        continue;
+      }
+      const target = resolveTarget(rawTarget);
+      if (target) {
+        stableTargets.push(target.id ?? target.slug ?? target.relPath);
+        if (target.slug) {
+          pageTargets.push(target.slug);
+        }
+      } else {
+        pageTargets.push(rawTarget);
+        stableTargets.push(rawTarget);
+        dangling.push({
+          from: key,
+          target: rawTarget,
+          reason: (byAlias.get(rawTarget)?.length ?? 0) > 1 ? "ambiguous-alias" : "unresolved",
+        });
+      }
+    }
+    out[key] = [...new Set(pageTargets)];
+    for (const target of out[key]) if (nodes.has(target)) inDeg[target]++;
+    unitOut[u.id ?? key] = [...new Set(stableTargets)];
   }
   const orphans = [...nodes].filter((s) => inDeg[s] === 0 && (out[s] ?? []).length === 0);
 
-  const lines = units
+  const lines = liveUnits
     .map((u) => {
-      const metadata = [...(u.id ? [`id:${u.id}`] : []), ...u.links.map((l) => `[[${l}]]`)];
+      const metadata = [
+        ...(u.id ? [`id:${u.id}`] : []),
+        ...u.aliases.map((alias) => `alias:${alias}`),
+        ...u.links.map((l) => `[[${l}]]`),
+      ];
       return `${u.substrate}:${u.status} · ${u.title} · ${u.relPath}${metadata.length ? ` · ${metadata.join(" ")}` : ""}`;
     })
     .sort();
   const dir = derivedDir(root);
   mkdirSync(dir, { recursive: true });
+  const catalog = `# Promptus card-catalog (DERIVED — rebuilt by kb-index; safe to delete)\n\n> ${liveUnits.length} live units · ${coldUnits.length} cold-history units · read this first; load only the bodies you need.\n\n${lines.join("\n")}\n`;
+  writeFileSync(join(dir, "CATALOG.md"), catalog);
   writeFileSync(
-    join(dir, "CATALOG.md"),
-    `# Promptus card-catalog (DERIVED — rebuilt by kb-index; safe to delete)\n\n> ${units.length} units · read this first; load only the bodies you need.\n\n${lines.join("\n")}\n`,
+    join(dir, "graph.json"),
+    `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relations: relEdges, dangling, external, artifacts }, null, 2)}\n`,
   );
-  writeFileSync(join(dir, "graph.json"), `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relations: relEdges }, null, 2)}\n`);
+  const catalogHash = createHash("sha256").update(catalog).digest("hex");
+  const searchSources: SearchSourceDocument[] = units.map((unit) => ({
+    substrate: unit.substrate,
+    status: unit.status,
+    title: unit.title,
+    path: unit.relPath,
+    text: unit.text,
+    ...(unit.id ? { id: unit.id } : {}),
+    links: unit.links,
+    cold: unit.cold,
+  }));
+  writeFileSync(join(dir, "search.json"), `${JSON.stringify(buildSearchIndex(searchSources, catalogHash))}\n`);
+  if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
 
   const linkEdges = Object.values(out).reduce((s, a) => s + a.length, 0);
-  log(`kb-index: ${units.length} units · ${linkEdges} links · ${relEdges.length} relations → .promptus/cache/CATALOG.md + graph.json`);
-  if (unresolved.length) {
-    log(`  unresolved links (${unresolved.length}) — a typo or an intentional concept-handle:`);
-    for (const e of unresolved.slice(0, 25)) log(`    ${e.from} → [[${e.to}]]`);
+  log(`kb-index: ${liveUnits.length} live + ${coldUnits.length} cold units · ${linkEdges} links · ${relEdges.length} relations → .promptus/cache/CATALOG.md + graph.json + search.json`);
+  if (dangling.length) {
+    log(`  unresolved links (${dangling.length}) — a typo, ambiguous alias, or intentional concept-handle:`);
+    for (const e of dangling.slice(0, 25)) log(`    ${e.from} → [[${e.target}]] (${e.reason})`);
   }
   if (orphans.length) {
     log(`  orphans (${orphans.length}) — nothing links in or out:`);
     for (const o of orphans.slice(0, 25)) log(`    ${o}`);
   }
-  if (unresolved.length + orphans.length === 0) log("  clean.");
-  return argv.includes("--strict") && unresolved.length + orphans.length > 0 ? 1 : 0;
+  if (dangling.length + orphans.length === 0) log("  clean.");
+  return argv.includes("--strict") && dangling.length + orphans.length > 0 ? 1 : 0;
 }
 
 if (import.meta.main) process.exit(main(process.argv.slice(2)));

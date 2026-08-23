@@ -1,20 +1,24 @@
 ---
 name: grannie
-description: Explain a concept in plain language, as if to a sharp, curious 90-year-old. Invoked as `/grannie explain <concept>`. Decides by judgement whether to look the concept up in the project store first (via the recall skill / kb-find) and ground the explanation, or just explain from general knowledge. When the editio plugin is installed, dials its humanizer's analogy, plain-word, and write-like-you-talk patterns to maximum accessibility; otherwise leans on the core patterns inlined below.
+description: Explain a concept or a Promptus project's current state in plain language, as if to a sharp, curious 90-year-old. Invoked as `/grannie explain CONCEPT` or `/grannie status`. Status uses the deterministic promptus-status read port before translating it. Concept explanations decide by judgement whether to retrieve project knowledge first.
 ---
 
 # grannie — explain a concept (ELI90)
 
-Given `/grannie explain <concept>`, make it understandable to a sharp, curious 90-year-old —
+Given `/grannie explain <concept>` or `/grannie status`, make it understandable to a sharp, curious 90-year-old —
 someone with judgement and no jargon.
 
 ## Procedure
 
-1. **Judge whether the concept lives in the store.** If it plausibly does — a term we coined,
+1. **For `/grannie status`, read before explaining.** Run
+   `bun "<plugin-root>/scripts/promptus-status.ts" --root "<project-root>" --json` and translate
+   exactly what it reports: north star, what is true now, the first blocking edge, next action,
+   and resume point. Do not infer completion from elapsed time or from an old chat summary.
+2. **For a concept, judge whether it lives in the store.** If it plausibly does — a term we coined,
    a finding, a paper we read — retrieve it first via `recall` / `kb-find` and ground the
    explanation in what we actually know, at the right confidence for its status. Otherwise,
    explain from general knowledge. *This lookup is automatic, by judgement — no flag.*
-2. **Explain for a curious 90-year-old.** Lean on the humanizer's positive patterns (the style
+3. **Explain for a curious 90-year-old.** Lean on the humanizer's positive patterns (the style
    toolkit, shipped by the editio plugin — the core ones are inlined here, so this works
    without it) dialed to maximum accessibility:
    - **P5 analogies that explain** — an analogy they can use to *predict* something, not just
@@ -23,7 +27,7 @@ someone with judgement and no jargon.
    - **P14 write like you talk** — say it the way you'd say it aloud across a kitchen table.
    - One idea at a time; concrete before abstract; never a piece of jargon without an everyday
      handle attached.
-3. **Stay honest about confidence.** If the store says the thing is `CONJECTURED` or a
+4. **Stay honest about confidence.** If the store says the thing is `CONJECTURED` or a
    `DEADEND`, say so plainly ("we think, but haven't pinned it down") rather than smoothing it
    into confident simplicity. Accessible is not the same as overconfident.
 

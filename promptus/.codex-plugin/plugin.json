@@ -1,7 +1,7 @@
 {
   "name": "promptus",
-  "version": "0.7.0",
-  "description": "A file-based research knowledge system — a substrate for the LLM agent: store / keep / retrieve what a project knows as gated markdown, navigable by status and a [[link]] graph. grannie is the human read-port (plain-language, grounded answers).",
+  "version": "0.8.0",
+  "description": "A file-based research knowledge system: gated Markdown truth, bounded lexical retrieval, provenance and artifact checks, debt-ratcheted health, and a plain-language human read port.",
   "author": {
     "name": "Mohan Qiao",
     "url": "https://github.com/Gavin-Qiao"
@@ -9,16 +9,25 @@
   "license": "GPL-3.0-only",
   "homepage": "https://github.com/Gavin-Qiao/organon",
   "repository": "https://github.com/Gavin-Qiao/organon",
-  "keywords": ["research", "knowledge-base", "ledger", "memory", "agent-substrate"],
+  "keywords": [
+    "research",
+    "knowledge-base",
+    "ledger",
+    "memory",
+    "agent-substrate"
+  ],
   "skills": "./skills/",
   "hooks": "./hooks/codex.json",
   "interface": {
     "displayName": "Promptus",
     "shortDescription": "Gated research memory for coding agents",
-    "longDescription": "Store, keep, retrieve, and explain a project's research knowledge with stable IDs, explicit epistemic status, and a markdown link graph.",
+    "longDescription": "Store, retrieve, verify, and explain research knowledge with stable IDs, epistemic status, bounded lexical search, reproducible artifacts, and a canonical Markdown link graph.",
     "developerName": "Mohan Qiao",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "websiteURL": "https://github.com/Gavin-Qiao/organon",
     "defaultPrompt": [
       "Use Promptus to record and retrieve this project's research decisions.",

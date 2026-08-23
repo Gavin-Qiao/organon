@@ -23,11 +23,12 @@
 import { existsSync } from "node:fs";
 import { join, resolve as resolvePath, sep } from "node:path";
 import { findProjectRoot } from "./lib/paths.ts";
+import { loadVocab } from "./lib/vocab.ts";
 import { ledgerEntries, readCached } from "./lib/units.ts";
 
 type Resolved = { ok: true; text: string } | { ok: false; err: string };
 
-function resolve(root: string, path: string, title?: string): Resolved {
+function resolve(root: string, path: string, title: string | undefined, ledgerFiles: Set<string>, wholeFile: boolean): Resolved {
   const [rel, anchor] = path.split("#");
   const file = join(root, rel);
   // confine to the project: a catalog path is always inside root, so a `../` escape is never a unit —
@@ -35,7 +36,14 @@ function resolve(root: string, path: string, title?: string): Resolved {
   const abs = resolvePath(file), absRoot = resolvePath(root);
   if (abs !== absRoot && !abs.startsWith(absRoot + sep)) return { ok: false, err: `refusing to read outside the project root: ${rel}` };
   if (!existsSync(file)) return { ok: false, err: `no such file: ${rel}` };
-  if (!anchor) return { ok: true, text: readCached(file) }; // a page: the file IS the unit
+  const normalized = resolvePath(file);
+  const isLedger = ledgerFiles.has(normalized)
+    || [...ledgerFiles].some((ledger) => normalized.startsWith(resolvePath(join(ledger, "..", "archive")) + sep));
+  if (!anchor && isLedger && !wholeFile) {
+    return { ok: false, err: `${rel} is a ledger log, not one unit — use an anchored path from kb-find, or explicitly pass --whole-file` };
+  }
+  if (!anchor && title) return { ok: false, err: `--title only disambiguates an anchored ledger path; ${rel} has no #anchor` };
+  if (!anchor) return { ok: true, text: readCached(file) }; // a page, or an explicit whole-log fetch
   const es = ledgerEntries(file);
   const atAnchor = es.filter((x) => x.anchor === anchor);
   if (!atAnchor.length) {
@@ -55,21 +63,57 @@ function resolve(root: string, path: string, title?: string): Resolved {
   return { ok: true, text: atAnchor[0].text }; // no title given: the first entry at the anchor
 }
 
+const HELP = `kb-get — fail-closed source-unit fetch
+usage:
+  kb-get <catalog-path>... [--title <t>] [--max-bytes <n>] [--root <dir>]
+  kb-get <ledger-file> --whole-file [--max-bytes <n>] [--root <dir>]
+rules:
+  ledger paths must carry the #anchor emitted by kb-find; an unanchored log is
+  refused unless --whole-file is explicit. Output is capped at 65536 bytes by
+  default; raise --max-bytes deliberately, or use --whole-file for an explicit
+  uncapped whole-file fetch.`;
+
 function main(argv: string[]): number {
+  if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
   const flags: Record<string, string> = {};
+  const booleans = new Set(["whole-file"]);
   const paths: string[] = [];
   for (let i = 0; i < argv.length; i++) {
-    if (argv[i].startsWith("--")) { flags[argv[i].slice(2)] = argv[i + 1] ?? ""; i++; }
+    if (argv[i].startsWith("--")) {
+      const key = argv[i].slice(2);
+      if (booleans.has(key)) flags[key] = "";
+      else {
+        const next = argv[i + 1];
+        if (next === undefined || next.startsWith("--")) { console.error(`kb-get: --${key} requires a value`); return 1; }
+        flags[key] = next;
+        i++;
+      }
+    }
     else paths.push(argv[i]);
   }
-  if (!paths.length) { console.error("kb-get: usage: kb-get <path>... [--title <t>] [--root <dir>]"); return 1; }
+  if (!paths.length) { console.error("kb-get: usage: kb-get <path>... [--title <t>] [--max-bytes <n>] [--root <dir>]"); return 1; }
 
   const root = findProjectRoot(flags.root ?? process.cwd());
+  const vocab = loadVocab(root);
+  const ledgerFiles = new Set(
+    Object.values(vocab.substrates)
+      .filter((substrate) => substrate.envelope === "log")
+      .map((substrate) => resolvePath(root, substrate.store)),
+  );
+  const maxBytes = Number(flags["max-bytes"] ?? 65536);
+  if (!Number.isInteger(maxBytes) || maxBytes < 1) { console.error("kb-get: --max-bytes must be a positive integer"); return 1; }
+  const wholeFile = "whole-file" in flags;
   const blocks: string[] = [];
   let failures = 0;
   for (const p of paths) {
-    const r = resolve(root, p, flags.title);
-    if (r.ok) blocks.push(paths.length > 1 ? `==> ${p} <==\n${r.text}` : r.text);
+    const r = resolve(root, p, flags.title, ledgerFiles, wholeFile);
+    if (r.ok) {
+      const bytes = Buffer.byteLength(r.text);
+      if (!wholeFile && bytes > maxBytes) {
+        console.error(`kb-get: refusing ${p}: unit is ${bytes} bytes, above --max-bytes ${maxBytes}; raise the ceiling deliberately`);
+        failures++;
+      } else blocks.push(paths.length > 1 ? `==> ${p} <==\n${r.text}` : r.text);
+    }
     else { console.error(`kb-get: ${r.err}`); failures++; }
   }
   if (blocks.length) console.log(blocks.join("\n\n"));

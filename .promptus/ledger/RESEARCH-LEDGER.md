@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-07-06 (0.6.2 + 0.4.0 installed and reloaded)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-23 (Promptus 0.8.0 release authorized; final gates and selective publication in progress.)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -25,45 +25,29 @@ hand-written header beats a vector at this scale.
 
 <!-- now:start -->
 
-## NOW (promptus 0.6.2 + editio 0.4.0 released, INSTALLED, and reloaded - the loop is fully closed)
-**Both plugins live everywhere as of 2026-07-07**: released (six-PR stacked line #22-#27 via #28, cuts
-#29/#30, both workflows green), installed (claude plugin update 0.6.1->0.6.2 + 0.3.0->0.4.0 - cache-key
-proof #4), and reloaded into the running session (this checkpoint runs on 0.6.2). **editio 0.4.0**:
-editio-doctor (stamp/order/venue/metadata drift; unsafe --force advice withheld) + editio-numbers (one
-SoT per number; per-handle value+hash lock; laundering refused; content-diffed gate) + 5-agent
-adversarial-audit hardening (override= honored on .unsourced ON THE RECORD; renderer warns everywhere
-it was silent; golden contract extended; subset v1.2) + budget-words in status. **promptus 0.6.2**:
-kb-add vocab reseed, doctor flags (catalog lag / root twins / DIGEST LAG), kb-find --help, the
-research-digestion duty (three homes; five July digests backfilled). Suite 208 green. Fresh-cache
-smoke: organon healthy; Psi's doctor correctly flags order+stamp+sty drift. Memory: the stacked-PR
-merge protocol (retarget children BEFORE deleting branches).
+## NOW
+
+<!-- kb:now-through event-20260823T094708Z-authorize-promptus-080-publication-and-local-update -->
+Promptus 0.8.0 publication and local update are explicitly authorized and in progress.
+
+- The Promptus-only candidate remains the combined, locally validated development line: bounded retrieval, read-only session preflight, artifact health, ratcheted checks, governed thinker rounds, and their regression fixes.
+- The release boundary includes promptus/, truthful root documentation, and Promptus store evidence. Every editio/ change and unreleased Nature Machine Intelligence finding or literature unit remains outside the release and untouched.
+- main equals origin/main, the v0.8.0 tag is absent, and the pre-release session doctor is READY.
 
 ## Open frontier
-- [ ] **Psi adopts 0.4.0** - its doctor hands the worklist: reconcile the declared order (custom order
-  in their doco-deo.json copy + paper.json, THEN --force refreshes stamp+venue preamble+sty), seed
-  numbers.json from frozen results (the 8-copy headline collapses), wire background.md or archive it,
-  run both gates pre-submission.
-- [ ] **v0.4.0 scope remainder -> 0.5.0+** (article-driven): editio-tables (id-addressed generated
-  blocks + freshness binding + overflow) first, then supplement scaffold (gate must read it),
-  page-budget surfacing, editio-bib (G8); candidates: editio-build, gate umbrella, blind-leak check,
-  dual-venue, metadata generator fixes (title escape, corresponding flag).
-- [ ] **Psi/Probatio Telos cleanup** on operator word.
-- [ ] Phases 5-6 (venue/rebuttal/structure-lint); banked: progressive-disclosure indexes, telos graph
-  node, okf export, write-time calibration.
+
+- Fresh full checks, selective index review, the release commit, tag, push, workflow publication, and local installation verification remain.
+- Historical graph debt remains visible at 15 dangling links and 2 orphans; it is non-blocking and no baseline has been recorded.
 
 ## Next actions
-1. Psi's session applies the reconcile + numbers recipes (all documented in 0.4.0's skills).
-2. Next organon build: editio-tables design; merge stacked PRs by the memory protocol.
-3. Land this checkpoint's uncommitted ledger/memory writes with the next PR.
 
-## <<< RESUME HERE AFTER COMPACTION >>>
-**PROMPTUS 0.6.2 + EDITIO 0.4.0 RELEASED AND INSTALLED (2026-07-07, suite 208, everything green).**
-The session's full arc: second dogfood -> worklists -> editio-doctor -> editio-numbers -> 5-agent
-adversarial audit -> hardening -> research-digestion duty + digest-lag tripwire -> stacked merge ->
-two cuts -> plugin update. Five finding-unit digests exist (audit playbook, numbers SoT, venue
-measurement, figure canon, dogfood-and-mine) - retrieval has the reasoning again. Read
-.promptus/TELOS.md, this header, then the Log since 2026-07-06. Uncommitted store writes ride the
-next PR. Phase forward: editio-tables, article-driven.
+1. Re-index and run the complete release and changelog gates.
+2. Stage only the approved Promptus boundary, inspect it, and commit.
+3. Tag and publish promptus-v0.8.0, watch the workflow, then update and smoke-test local installations.
+
+## <<< RESUME HERE >>>
+
+Release approval is recorded. Resume with the fresh gates and Promptus-only selective staging; do not absorb Editio/NMI changes.
 
 <!-- now:end -->
 
@@ -606,5 +590,53 @@ The operator authorized the native Codex adaptation as two backward-compatible m
 <!-- kb:id event-20260710T023722Z-editio-doctor-isolates-git-discovery-from-hook-environment -->
 The release pre-push gate exposed that editio-doctor inherited repository-local Git environment variables from the hook process. Temporary paper workspaces were therefore inspected against Organon's index and falsely reported as untracked. The doctor now clears repository-scoped Git directory, worktree, index, object, prefix, graft, shallow, and alternate-object variables before running cwd-based discovery; the test helper does the same for scratch repositories. The focused doctor suite passes 26 of 26 both normally and with GIT_DIR plus GIT_WORK_TREE deliberately polluted.
 ↳ extends event-20260710T023138Z-release-plan-for-native-codex-adapters
+
+### [2026-08-03 22:56:47] FIX/VALIDATED — Make session startup honor explicit NOW markers
+<!-- kb:id event-20260804T025647Z-make-session-startup-honor-explicit-now-markers -->
+Psi exposed a session-start context leak: its ledger has explicit now:start/now:end markers but a large glossary before ## Log, so the hook injected the glossary and produced a truncated payload of roughly 11,198 tokens. Added a nowBlock helper that prefers explicit markers, preserves the legacy heading fallback, and caps either layout at 120 lines. Session-start now delegates to that helper. Two regressions cover glossary exclusion and legacy bounding; the focused hook suite passes 9/9. The current Psi ledger extracts to 41 lines and excludes its glossary.
+
+### [2026-08-23 05:15:58] RESULT/VALIDATED — Implement governed external thinker rounds
+<!-- kb:id event-20260823T091558Z-implement-governed-external-thinker-rounds -->
+Implemented the lean prompt-only external-theory loop requested by the operator, informed by read-only audits of MoT and Psi history. The agent now retrieves first, drafts one self-contained question and a project-side refute-first plan, seals both, stops for operator transport, preserves and byte-compares the return, quarantines it as `lit:UNTRUSTED`, and recognizes adjudication only through a normal `derives-from` finding.
+
+The deterministic surface is intentionally small: `draft`, `prepare`, `receive`, and read-only `status`. It catches wrong-round returns, prompt echoes, duplicates, symlinks, path escapes, receipt drift, and interrupted intake; health gates and both doctors understand a marked exchange without treating it as a fifth store. The external prompt carries no internal Promptus jargon, and no lifecycle form or authorization matrix was added.
+
+Evidence: marketplace/plugin validation and the new skill validator pass; 10 focused thinker-round tests and all 306 repository tests pass. Documentation and portable AGENTS cadence were updated. No sister-project store was written. No commit, push, install, tag, or release was performed; the next official Promptus release remains operator-discussion-gated and must incorporate the pre-existing local development line.
+
+Related: [[stateless-thinker-rounds-require-independent-adjudication]] · [[discuss-the-next-promptus-release-before-publishing]]
+
+### [2026-08-23 05:29:19] RESULT/VALIDATED — Prepare Promptus 0.8.0 release candidate
+<!-- kb:id event-20260823T092919Z-prepare-promptus-080-release-candidate -->
+<!-- kb:artifact search-key-fix|promptus/scripts/lib/search.ts|7a3bd5fb43e921e44f07d28949ce1e0d9a345c658956cbc140fa06ab4d198e74 -->
+<!-- kb:artifact regression|promptus/scripts/test/session-doctor.test.ts|6a83d43a8700034436d4d1fb603059db69cb7e9ca9a14bd601e2e392e9419f82 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|ff3f2a1aaac0c1759018c18aa67d03edd15da4f4ad6363d271d7a9f4aeccc9fc -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|ba01e2c1a5c0a2a7e637f9b35ce9df46821cdcd5cc26d504a91f2cf542b1e1ea -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|4d35181bea82a366ad6a0e07f705a13448d15db420fb7e8e5961e8c05e899d3a -->
+The operator authorized release preparation, not publication. The release candidate now preserves every valid legacy same-second ledger result without rewriting Markdown history: modern units use their stable ids, while id-less units use their complete path-plus-title identity. The disposable lexical schema advances to v2, so `kb-find` rebuilds an old v1 cache in memory and the read-only session doctor requires a durable re-index before trusting it.
+
+The Promptus changelog and both adapter manifests are prepared as 0.8.0. Evidence: the legacy regression and deliberate-collision guard pass; Organon's session doctor changed from STOP with 23 collisions to READY with zero retrieval collisions; `bun run check` passed both marketplace adapters, strict health, and all 307 repository tests with 1,475 expectations; the versioned changelog gate found a non-empty 50-line release section; `git diff --check` is clean.
+
+The reviewable release scope is the combined local Promptus development line under `promptus/`, its truthful root documentation and Promptus store records. Existing Editio Nature Machine Intelligence source and literature work remains untouched and outside the Promptus release set. No commit, tag, push, install, local cache replacement, or publication occurred.
+
+### [2026-08-23 05:32:24] FIX/VALIDATED — Correct promptus-doctor catalog scale during release audit
+<!-- kb:id event-20260823T093224Z-correct-promptus-doctor-catalog-scale-during-release-audit -->
+<!-- kb:artifact doctor|promptus/scripts/promptus-doctor.ts|39c595306c041f526eca7da5cc71516651e57b52dd934fc18ccf906ac12702ec -->
+<!-- kb:artifact regression|promptus/scripts/test/doctor.test.ts|2324144348d94b73a5c56be253944a07f7367bd2bbd609415cd668476f050927 -->
+The release review caught a report-only count defect: `promptus-doctor check` treated the derived catalog summary line as a unit because both summary and card lines contain the visual separator. It therefore printed 245 catalog units while authoritative health and session preflight correctly reported 244.
+
+The doctor now recognizes a catalog card by its substrate/status colon preceding the field delimiter. A current-layout regression derives the expected card count from the same structural rule. The focused doctor suite passes 27/27, and Organon's doctor now reports 244 health units and 244 catalog units. No Markdown source unit was rewritten and no release action occurred.
+
+### [2026-08-23 05:41:21] DECISION/RESOLVED — Make real-project dogfooding Organon's development loop
+<!-- kb:id event-20260823T094121Z-make-real-project-dogfooding-organons-development-loop -->
+The operator clarified that development of the whole Organon marketplace—Promptus and Editio—is based on dogfooding in his projects: projects expose problems, then Organon improves. This is adopted as the default development loop rather than a one-off technique.
+
+Implication: begin roadmap work from a reproduced failure, friction point, or workaround in a real project; preserve the evidence; generalize only as far as the recurring problem warrants; implement the smallest reusable toolbox change; and validate it back in use plus the repository gates. A speculative feature without a demonstrated project problem must earn separate justification.
+
+The portable `AGENTS.md` now states this rule. It extends the already validated [[dogfood-and-mine-same-day-fix-loops-and-agent-team-ledger-mining]] method and is retained as [[organon-development-is-driven-by-real-project-dogfooding]]. The existing Telos commitment "measured by use" already points in this direction, so no Telos rewrite is needed.
+
+### [2026-08-23 05:47:08] DECISION/RESOLVED — Authorize Promptus 0.8.0 publication and local update
+<!-- kb:id event-20260823T094708Z-authorize-promptus-080-publication-and-local-update -->
+Mohan explicitly approves the exact Promptus-only release boundary for 0.8.0 and authorizes the scoped release commit, promptus-v0.8.0 tag, push, GitHub publication, and local Promptus updates. Include the combined Promptus line, its truthful root documentation, and its Promptus store evidence. Exclude every editio/ change and the unreleased Nature Machine Intelligence findings and literature; preserve them unmodified in the working tree. Publication remains contingent on fresh release checks and equality with origin/main; stop instead of widening the boundary if either fails.
+↳ extends event-20260823T092919Z-prepare-promptus-080-release-candidate
 
 <!-- kb:append-point -->

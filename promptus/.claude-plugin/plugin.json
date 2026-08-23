@@ -1,7 +1,7 @@
 {
   "name": "promptus",
-  "version": "0.7.0",
-  "description": "A file-based research knowledge system — a substrate for the LLM agent: store / keep / retrieve what a project knows as gated markdown, navigable by status and a [[link]] graph. grannie is the human read-port (plain-language, grounded answers).",
+  "version": "0.8.0",
+  "description": "A file-based research knowledge system: gated Markdown truth, bounded lexical retrieval, provenance and artifact checks, debt-ratcheted health, and a plain-language human read port.",
   "author": {
     "name": "Mohan Qiao",
     "url": "https://github.com/Gavin-Qiao"
