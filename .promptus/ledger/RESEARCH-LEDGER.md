@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-23 (v0.8.1 release authorized)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-23 (Editio 0.7.0 release candidate validated)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,28 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260823T132715Z-prepare-the-promptus-v081-release-commit -->
-Promptus v0.8.1 is finalized as a correctness-only release candidate and the operator has authorized the conventional release workflow.
+<!-- kb:now-through event-20260823T134031Z-prepare-the-editio-v070-release-commit -->
+Promptus v0.8.1 is released and locally installed; Editio v0.7.0 is finalized and fully validated on the rebased release branch.
 
-- Both manifests and the dated changelog section are aligned at 0.8.1.
-- The five Psi-derived correctness repairs and their regression fixtures are sealed by current artifact receipts.
-- Real Psi remains conservatively diagnosed: 45 superseded failures are archival warnings and 72 non-superseded failures remain red.
+- Editio remains a general paper-preparation tool: reusable venue contracts with NMI and NeurIPS adapters, no project-specific scientific policy.
+- Both Editio manifests and the dated changelog agree on 0.7.0; the repository gate passes 321 tests with 1,658 expectations.
+- The official-kit NeurIPS smoke compiles draft, blind, and publish modes, and strict doctor reports the v0.7.0 workspace healthy.
 
 ## Open frontier
 
-- Run the complete release gate, land the Promptus release commit on main, tag the merged commit, and verify the GitHub release.
-- Reinstall the released local Codex plugin and smoke-test it without editing the cache directly.
-- Then finalize and release the separate project-agnostic Editio minor line with NMI and NeurIPS venue support.
+- Commit and push the Editio v0.7.0 release line.
+- Merge only after all required Linux, macOS, Windows, hygiene, validation, and title checks pass.
+- Tag the merged main commit, verify GitHub publication, then update and smoke-test local editio@organon.
 
 ## Next actions
 
-1. Run the Promptus release gates and commit the bounded release line.
-2. Merge through the repository workflow, tag promptus-v0.8.1, and verify publication.
-3. Reinstall and smoke-test Promptus, then repeat the conventional workflow for Editio.
+1. Run the final strict health, session preflight, changelog, skill, and diff gates.
+2. Create and push the conventional Editio release commit and PR.
+3. Merge green, tag editio-v0.7.0, verify publication, and refresh the local Codex plugin.
 
 ## <<< RESUME HERE >>>
 
-Resume at the Promptus v0.8.1 release gate; release authorization is explicit.
+Resume at the final Editio v0.7.0 release gate; publication is authorized.
 
 <!-- now:end -->
 
@@ -727,5 +727,50 @@ Promptus v0.8.1 is finalized as a correctness-only patch. The release boundary c
 Both adapter manifests now agree on 0.8.1, the changelog has a non-empty dated release section and corrected compare links, plugin validation passes, and the code-complete repository suite previously passed 309 tests with 1,483 expectations. Real-Psi adjudication remains conservative: 45 superseded dependency failures become archival warnings and 72 non-superseded failures stay red. No installed cache or Psi source was edited.
 Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
 ↳ supersedes event-20260823T132056Z-finalize-the-promptus-correctness-release-candidate
+
+### [2026-08-23 09:37:03] RESULT/VALIDATED — Preserve earlier release and NMI dogfood receipts after branch reconciliation
+<!-- kb:id event-20260823T133703Z-preserve-earlier-release-and-nmi-dogfood-receipts-after-branch-r -->
+<!-- kb:artifact nmi-profile|editio/templates/venues/nmi/venue.json|caeaf62234ab05b980b251f7657a972bc465d12e8a8c8a352c1ac017a5451234 -->
+Branch reconciliation retained the newer Promptus v0.8.1 ledger and re-entered the useful facts from the older ledger-only commit through the gate. Editio v0.5.2 was released through PR #36 and installed; Promptus v0.8.0 was released through PR #39 and installed; and the NMI dogfood feature is preserved on the rebased Editio line as commit 0fb6a5a. The NMI work remains part of the unreleased Editio minor candidate, now paired with the general NeurIPS adapter. No historical unit bytes were copied around the gate.
+Related: [[editio-general-venue-contracts-and-neurips-adapter]]
+↳ extends event-20260812T014149Z-add-and-validate-nmi-support-in-editio
+
+### [2026-08-23 09:37:14] RESULT/VALIDATED — Release Promptus v0.8.1 and refresh the local Codex plugin
+<!-- kb:id event-20260823T133714Z-release-promptus-v081-and-refresh-the-local-codex-plugin -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|15c48fd4a441f91613729f4ff16ff18d6d032e88348b84c5a06f5bb2155ca204 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|f4b0a7fe6f845369af4dd73945bab09950f9ccb000a4f1f830953d1b758148e5 -->
+<!-- kb:artifact writer-lock|promptus/scripts/lib/store-lock.ts|8a9f266a07a96c98590802490d45d1914dd181156ce7d8f0436903e2d0663744 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|589721ce08b5a3af23f90de7d391f2ff005631a47582de061d0abdb8360eaf51 -->
+Promptus v0.8.1 is released from the audited correctness line. PR #40 passed the conventional-title, hygiene, Linux validation, macOS, and Windows gates and merged as 20779262d86ff78acd07a0ee479417dc9f2c36e1. Tag promptus-v0.8.1 targets that exact main commit; release workflow 32642593055 passed its tests, store health, manifest/tag, changelog, and publication gates and created the GitHub release.
+
+Codex updated promptus@organon through `codex plugin add` to cache version 0.8.1 without direct cache edits. The installed tree is byte-identical to the released promptus source except for Codex-generated migrated command skills, and its installed session doctor reports READY on the sealed release tree with zero current artifact failures. Reloading the running app session may be required before newly installed skill text is used.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+↳ supersedes event-20260823T132715Z-prepare-the-promptus-v081-release-commit
+
+### [2026-08-23 09:40:15] DECISION/RESOLVED — Keep Editio venue adapters project-agnostic
+<!-- kb:id event-20260823T134015Z-keep-editio-venue-adapters-project-agnostic -->
+Mohan clarified that NeurIPS support must not be framed around MoT or any particular paper. Editio is a general paper-preparation tool, so venue support encodes only reusable authoring and submission contracts from authoritative venue sources. Real projects expose needs and validate the tool, but project-specific scientific structure, claims, or evidence pipelines do not belong in the plugin. The released design therefore generalizes venue-owned assets, mode mapping, content-page budgets, and mandatory back matter.
+↳ extends event-20260823T133703Z-preserve-earlier-release-and-nmi-dogfood-receipts-after-branch-r
+
+### [2026-08-23 09:40:31] RESULT/VALIDATED — Prepare the Editio v0.7.0 release commit
+<!-- kb:id event-20260823T134031Z-prepare-the-editio-v070-release-commit -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|3e5de9f8f3e64125abecf06046d42c7006f231a6b892814e6369ed202f4c33a5 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|16e88197505b2fc2261e5f707603d290f944128deec3d4098cc331d97a7a5c79 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|5d875f87d443bb031642e608f476633ee6c9f769f6720c19891e7ce03522810b -->
+<!-- kb:artifact nmi-profile|editio/templates/venues/nmi/venue.json|caeaf62234ab05b980b251f7657a972bc465d12e8a8c8a352c1ac017a5451234 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact scaffold|editio/scripts/editio-scaffold.ts|1bb9f0bfc21266d9115728b687d38522c293c6359fc4a0b03e01cd65e1d75f0e -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|d985bc10b251a63e4cdb3d1def6f07b49cdc39a53bdc7ec68110426e0497ebdd -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact identity|editio/scripts/editio-identity.ts|11e6284c00fc0e378df44a4701be9bd1b0e02cf42de3a67da6127c767af71b36 -->
+<!-- kb:artifact scaffold-regression|editio/scripts/test/scaffold.test.ts|e3573b61de65f984c491bd74f8b362ff6528f011acef39b24853cad13dcf4df2 -->
+<!-- kb:artifact render-regression|editio/scripts/test/render.test.ts|238815858fe0a3cf88c92cc02d9898d53626ed4c6f239eed738dba5c98e96d38 -->
+<!-- kb:artifact doctor-regression|editio/scripts/test/doctor.test.ts|5a22a5442cc0a245cdac2bbd0cfa0e4afbf773e14c8f5b8f1dbbab492ccc782b -->
+<!-- kb:artifact template-regression|editio/scripts/test/templates.test.ts|f28a3ef0ef4071280899baed612bc10b8f12e1087cb0302be7a3370eb52c04a8 -->
+Editio v0.7.0 is finalized as a project-agnostic paper-preparation release. It adds general venue data for package modes, assembly, external-asset custody, optional sections, section-owned environments, content-page and PDF-size budgets; NMI and NeurIPS are adapters over that reusable contract rather than project policy.
+
+On the exact rebased release tree, both adapter manifests and the dated changelog agree on 0.7.0; the complete repository gate passes 321 tests with 1,658 expectations; all three changed Editio skills pass structural validation; and a fresh official-kit NeurIPS workspace compiles in draft, blind, and publish modes. Strict Editio Doctor reports scaffold v0.7.0, verifies the official style and completed checklist, checks all three mode budgets, and reports the workspace healthy. No tag, publication, or local Editio update has yet occurred.
+Related: [[editio-general-venue-contracts-and-neurips-adapter]]
+↳ extends event-20260823T134015Z-keep-editio-venue-adapters-project-agnostic
 
 <!-- kb:append-point -->

@@ -6,6 +6,8 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+## [0.7.0] - 2026-08-23
+
 ### Added
 
 - **NeurIPS Main Track venue profile through the official author kit.** `--venue neurips`
@@ -320,7 +322,8 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.7.0...HEAD
+[0.7.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...editio-v0.7.0
 [0.6.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...editio-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...editio-v0.5.2
 [0.5.1]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.0...editio-v0.5.1
