@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-23 (Promptus 0.8.0 release authorized; final gates and selective publication in progress.)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-23 (Promptus 0.8.0 PR #39 open; CI hygiene fix prepared for validation.)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,27 +27,27 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260823T094708Z-authorize-promptus-080-publication-and-local-update -->
-Promptus 0.8.0 publication and local update are explicitly authorized and in progress.
+<!-- kb:now-through event-20260823T100957Z-make-thinker-fixture-pass-repository-hygiene-without-weakening-i -->
+Promptus 0.8.0 release PR #39 is open; a CI hygiene defect is fixed locally and awaiting the updated push.
 
-- The Promptus-only candidate remains the combined, locally validated development line: bounded retrieval, read-only session preflight, artifact health, ratcheted checks, governed thinker rounds, and their regression fixes.
-- The release boundary includes promptus/, truthful root documentation, and Promptus store evidence. Every editio/ change and unreleased Nature Machine Intelligence finding or literature unit remains outside the release and untouched.
-- main equals origin/main, the v0.8.0 tag is absent, and the pre-release session doctor is READY.
+- The Promptus-only release boundary remains intact: no editio/ or Nature Machine Intelligence source or literature is included.
+- The exact release tree passed its full gate; PR CI then caught a TypeScript fixture hard break encoded as trailing spaces.
+- The fixture now emits the same bytes without source trailing whitespace, its artifact-bearing finding was recreated through kb-add with byte-identical prose, and the focused tests pass.
 
 ## Open frontier
 
-- Fresh full checks, selective index review, the release commit, tag, push, workflow publication, and local installation verification remain.
+- Commit and push the hygiene fix to PR #39, wait for all required checks, merge, retarget and publish promptus-v0.8.0, then update and smoke-test the local Codex organon/promptus plugin.
 - Historical graph debt remains visible at 15 dangling links and 2 orphans; it is non-blocking and no baseline has been recorded.
 
 ## Next actions
 
-1. Re-index and run the complete release and changelog gates.
-2. Stage only the approved Promptus boundary, inspect it, and commit.
-3. Tag and publish promptus-v0.8.0, watch the workflow, then update and smoke-test local installations.
+1. Re-index and run the complete release gates on the corrected tree.
+2. Selectively commit the Promptus-only fix and update PR #39.
+3. Merge green, publish the tag, verify the release, and update local Codex.
 
 ## <<< RESUME HERE >>>
 
-Release approval is recorded. Resume with the fresh gates and Promptus-only selective staging; do not absorb Editio/NMI changes.
+Resume at validating and pushing the PR #39 hygiene correction; do not absorb Editio/NMI changes.
 
 <!-- now:end -->
 
@@ -637,6 +637,13 @@ The portable `AGENTS.md` now states this rule. It extends the already validated 
 ### [2026-08-23 05:47:08] DECISION/RESOLVED — Authorize Promptus 0.8.0 publication and local update
 <!-- kb:id event-20260823T094708Z-authorize-promptus-080-publication-and-local-update -->
 Mohan explicitly approves the exact Promptus-only release boundary for 0.8.0 and authorizes the scoped release commit, promptus-v0.8.0 tag, push, GitHub publication, and local Promptus updates. Include the combined Promptus line, its truthful root documentation, and its Promptus store evidence. Exclude every editio/ change and the unreleased Nature Machine Intelligence findings and literature; preserve them unmodified in the working tree. Publication remains contingent on fresh release checks and equality with origin/main; stop instead of widening the boundary if either fails.
+↳ extends event-20260823T092919Z-prepare-promptus-080-release-candidate
+
+### [2026-08-23 06:09:57] FIX/VALIDATED — Make thinker fixture pass repository hygiene without weakening its artifact receipt
+<!-- kb:id event-20260823T100957Z-make-thinker-fixture-pass-repository-hygiene-without-weakening-i -->
+<!-- kb:artifact tests|promptus/scripts/test/thinker-round.test.ts|cc7087f2fc8f76584cd213b4e68859803a4f8ddbfb456096cb642b2adfbfc24d -->
+<!-- kb:artifact finding|.promptus/docs/stateless-thinker-rounds-require-independent-adjudication.md|15dbad1d487dbf3b2c468f2129f642afd9067d824228476cdf912b6412eef584 -->
+PR #39 hygiene CI correctly flagged a literal two-space Markdown hard break embedded in the TypeScript fixture; the Markdown-only hook exception does not apply to a .ts file. The source now encodes the same runtime hard break with explicit hexadecimal space escapes, so the emitted validation plan is unchanged while the source has no trailing whitespace. All 10 thinker-round tests pass and the focused diff check is clean. Because the validated finding records the test bytes as an artifact, its still-unreleased page was recreated through kb-add from its byte-identical prose body with the current hash; no knowledge unit was freehand-edited. Editio and Nature Machine Intelligence work remain untouched.
 ↳ extends event-20260823T092919Z-prepare-promptus-080-release-candidate
 
 <!-- kb:append-point -->

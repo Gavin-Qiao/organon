@@ -1,11 +1,11 @@
 ---
-id: finding-20260823T091529Z-stateless-thinker-rounds-require-independent-adjudication
+id: finding-20260823T100938Z-stateless-thinker-rounds-require-independent-adjudication
 substrate: finding
 kind: METHOD
 status: VALIDATED
-created: "2026-08-23 05:15:29"
+created: "2026-08-23 06:09:38"
 links: [report]
-artifacts: [cli|promptus/scripts/thinker-round.ts|79ab06b633aed7f9a699b9815437235effdb578c7ca2461f1d76c3d72a7ab155, custody|promptus/scripts/lib/thinker.ts|79834a95abd064cd627fc79811e8c506dccfa52006bc1b32ec1b956ff42c76b6, workflow|promptus/commands/thinker-round.md|c81f8775d77f43b4576a376ef148109b5b38da6139db77d4a882d2ed6224763a, tests|promptus/scripts/test/thinker-round.test.ts|c680df335c366e554100802f30239368a7029881b3bab755d7ebbef10c100bf5, skill|promptus/skills/thinker-round/SKILL.md|029f2cff256819637e550a441d8a3390b6e1581a2b9a82822ba19fdbfe8437fd]
+artifacts: [cli|promptus/scripts/thinker-round.ts|79ab06b633aed7f9a699b9815437235effdb578c7ca2461f1d76c3d72a7ab155, custody|promptus/scripts/lib/thinker.ts|79834a95abd064cd627fc79811e8c506dccfa52006bc1b32ec1b956ff42c76b6, workflow|promptus/commands/thinker-round.md|c81f8775d77f43b4576a376ef148109b5b38da6139db77d4a882d2ed6224763a, tests|promptus/scripts/test/thinker-round.test.ts|cc7087f2fc8f76584cd213b4e68859803a4f8ddbfb456096cb642b2adfbfc24d, skill|promptus/skills/thinker-round/SKILL.md|029f2cff256819637e550a441d8a3390b6e1581a2b9a82822ba19fdbfe8437fd]
 ---
 # Stateless thinker rounds require independent adjudication
 

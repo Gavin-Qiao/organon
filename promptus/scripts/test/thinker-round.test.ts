@@ -89,7 +89,7 @@ Mark claims proved, disproved, or conjectured. The return will be checked indepe
 function validPlan(id: string, title = "Can the bound be strict?"): string {
   return `# Validation plan — ${title}
 
-**Round:** \`${id}\`  
+**Round:** \`${id}\`\x20\x20
 **Status:** \`FROZEN_BEFORE_RESPONSE\`
 
 ## Target and stop rule
