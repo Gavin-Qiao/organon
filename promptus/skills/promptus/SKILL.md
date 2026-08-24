@@ -23,6 +23,7 @@ This skill is the map: pick the verb, run the piece.
 | distill a settled finding into a concept page | STORE | `kb-add --substrate finding …` (one concept per file, `[[linked]]`) |
 | capture external prior art you read | STORE | `kb-add --substrate lit --source "<src#anchor>" …` |
 | ask a stateless outside reasoner to attack one precise theoretical bottleneck | — | the `thinker-round` skill: retrieve first → seal one self-contained prompt + refute-first plan → operator transports → quarantine return → independently adjudicate |
+| ask whether an endeavour is converging, narrowing, parking, or reopening for good reasons | RETRIEVE | the `trajectory-review` skill: strict preflight → bounded deterministic packet → body-verified causal retrospective; read-only unless the operator separately authorizes persistence |
 | preserve an external thinker response before auditing it | STORE | `kb-ingest quarantine <file> --source "<provenance>" --apply` → `lit:UNTRUSTED`; promote no claim automatically |
 | remember a durable, cross-session fact | STORE | `kb-add --substrate memory …` |
 | change the status or metadata of an existing curated unit | STORE | `bun "<plugin-root>/scripts/kb-amend.ts" --path <path> --substrate <finding|lit|memory> --kind <kind> --status <status>` |

@@ -17,8 +17,9 @@ back against real use. Do not manufacture roadmap features merely because they s
 > `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`, read-only session preflight
 > `promptus-session-doctor`; the health gate keeps current artifact failures red while treating
-> superseded-unit drift as archival warnings; skills `promptus`, `recall`, `grannie`, `telos`,
-> `research-ledger`, `thinker-round`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
+> superseded-unit drift as archival warnings; `promptus-trajectory-review` builds a bounded,
+> read-only retrospective packet; skills `promptus`, `recall`, `grannie`, `telos`,
+> `research-ledger`, `thinker-round`, `trajectory-review`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
 > `editio-structure` + `editio-latex` + `editio-figures` skills, the scaffold + renderer +
 > figcheck scripts, `humanizer`; tables/bib land in later phases (design of record:
 > `.promptus/docs/editio-design-memo.md` + the ledger's supersede chain). The agent operates
@@ -50,7 +51,11 @@ manifest/tag state as the release boundary and never update an installed cache b
    refute-first checks. The operator carries it to the thinker and returns the response; retain it
    as `lit:UNTRUSTED` before interpretation, then store only independently checked claims as linked
    findings. Do not use it for workspace inspection, broad brainstorming, or release decisions.
-7. **Checkpoint before you compact.** The `promptus-checkpoint` skill (`/promptus:checkpoint` in
+7. **Review trajectory at natural phase boundaries.** Use `trajectory-review` when a branch closes,
+   a blocker category changes, a stopped route may reopen, the operator asks whether work is
+   converging, or a major handoff/manuscript/release approaches. It collects bounded evidence and
+   proposes judgement; it never scores progress or mutates authority automatically.
+8. **Checkpoint before you compact.** The `promptus-checkpoint` skill (`/promptus:checkpoint` in
    Claude Code) flushes anything un-recorded into the
    stores (so a compaction can't lose it), refreshes the NOW-header, reconciles memory.
 
@@ -80,9 +85,9 @@ manifest/tag state as the release boundary and never update an installed cache b
 - `promptus/` — the store plugin: `scripts/` (the mechanics: `kb-add` / `kb-now` STORE,
   `kb-amend` for existing-unit transitions, `kb-index` / `promptus-check` / `kb-graph` KEEP,
   `kb-find` / `kb-get` RETRIEVE, plus `kb-export`, `kb-ingest`, `promptus-doctor`,
-  `promptus-session-doctor`, `thinker-round`,
+  `promptus-session-doctor`, `promptus-trajectory-review`, `thinker-round`,
   `check-pr-title`, and `lib/`),
-  `skills/` (`promptus` the orchestrator, `recall`, `grannie`, `research-ledger`, `telos`, `thinker-round`,
+  `skills/` (`promptus` the orchestrator, `recall`, `grannie`, `research-ledger`, `telos`, `thinker-round`, `trajectory-review`,
   portable command-workflow adapters, `grounded-writing-reviewer`), Claude `commands/` +
   `agents/`, dual-host `hooks/`,
   `templates/` (per-project four-store scaffolds plus the thinker exchange protocol, incl.

@@ -35,6 +35,7 @@ otherwise give the map below and end at the single next step.
 | safely resume a long-running project before trusting NOW or cache | `/promptus:promptus-session-doctor` (strictly read-only) |
 | record a decision / run / finding | the `research-ledger` skill → `kb-add` |
 | get a fresh, context-free attack on one theoretical bottleneck | `/promptus:thinker-round` (operator carries the sealed prompt and return) |
+| review whether one endeavour is moving or merely accumulating local work | `/promptus:trajectory-review` (bounded read-only packet, then agent judgement) |
 | classify or update an existing curated unit | `kb-amend` |
 | run the authoritative store-integrity gate | `/promptus:promptus-check` |
 | flush state before compaction | `/promptus:checkpoint` |

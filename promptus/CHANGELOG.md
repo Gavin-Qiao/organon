@@ -17,6 +17,17 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Added
+
+- **Add bounded trajectory reviews for long-running research.** A read-only deterministic collector
+  now builds source-fingerprint-bound whole-project or exact-endeavour packets with explicit
+  boundaries, per-scope continuation, positive and negative dispositions, causal context, poison
+  checks, and no silent truncation; the companion skill retrieves every claimed body and separates
+  recorded fact from retrospective inference. Operator-approved reviews persist through `kb-add` as
+  immutable `finding:REVIEW` units with checked scope, boundaries, fingerprint, and predecessor.
+  Trajectory review helps an agent reflect on recorded evidence; it does not determine research
+  quality or choose project direction.
+
 ## [0.8.2] - 2026-08-24
 
 ### Changed

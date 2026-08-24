@@ -37,6 +37,9 @@ store, check it rather than asserting from memory.
    - `finding:VALIDATED`, `ledger:VALIDATED`, `memory:validated` → **firm**; state plainly.
    - `lit:CITE` → citable prior art; attribute it by name.
    - `ledger:DEADEND`, `finding:REFUTED`, `finding:SUPERSEDED` → say it failed / was overturned.
+   - `finding:REVIEW` → a bounded retrospective, not a project decision or independent scientific
+     source. Preserve its fact/inference boundary and fetch the underlying units before reusing a
+     load-bearing claim or recommendation.
 4. **Verify.** Read each unit you cite — its body via `kb-get` (a page or a ledger slice), or a
    lit unit's `source#anchor` at the real source. Do **not** pass through a unit you didn't read.
    If the store doesn't back the claim, say *unsupported*, don't invent.
