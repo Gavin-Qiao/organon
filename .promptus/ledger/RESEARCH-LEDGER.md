@@ -27,32 +27,32 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest -->
-Promptus v0.8.2 is release-ready: the correctness and retrieval-dogfood work is committed as 82613b3, while validated release metadata and its Promptus receipts await the conventional release commit.
+<!-- kb:now-through event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally -->
+Promptus v0.8.2 is in pull request 43. The cross-OS release-test repair is locally validated and awaits refreshed macOS and Windows CI.
 
-- Both adapter manifests agree at 0.8.2 and the dated changelog section is non-empty.
-- The complete repository gate passed all 337 tests with zero failures; the explicit changelog gate passed.
-- A mistaken package.json artifact digest in the first validation receipt was preserved then superseded with the computed digest, exercising fail-closed correction without rewriting history.
-- Publication, GitHub release verification, and local Codex reinstallation remain pending.
+- The benchmark smoke now creates its disposable index precondition on clean checkouts and proves the dry run leaves search.json byte-identical.
+- The Windows installed-action regression compares canonical filesystem identity across equivalent 8.3 and expanded paths.
+- Strict health verifies 22/22 current artifacts and the complete repository gate passes all 337 tests.
+- Both adapter manifests remain at 0.8.2 and the release-note gate is ready.
 - The RTX 5090 remains reserved; no GPU context or inference has been started.
 
 ## Open frontier
 
-- Strictly verify the corrected current receipt.
-- Commit and publish promptus-v0.8.2, then verify the GitHub release workflow.
+- Commit and push the cross-OS repair to pull request 43.
+- Require every protected-main check, including macOS and Windows, to turn green.
+- Merge, tag promptus-v0.8.2, and verify the GitHub release.
 - Refresh and validate the local Codex Promptus plugin from the released source.
-- Keep the embedding benchmark paused until the GPU queue is explicitly released.
 
 ## Next actions
 
-1. Reindex and run strict Promptus health on the corrected receipt.
-2. Commit the release metadata, push main, tag promptus-v0.8.2, and verify publication.
-3. Reinstall the local Codex plugin through the cache-safe update flow.
-4. Record the final release receipt and leave main clean.
+1. Commit and push the locally validated cross-OS repair.
+2. Merge only after the refreshed matrix passes.
+3. Tag and verify the published release.
+4. Reinstall locally, record the final receipt, and leave main clean.
 
 ## <<< RESUME HERE >>>
 
-Resume at strict verification of the corrected Promptus v0.8.2 release receipt.
+Resume at committing and pushing the validated cross-OS repair to pull request 43.
 
 <!-- now:end -->
 
@@ -876,5 +876,39 @@ The complete repository gate passed after the release-candidate lifecycle handof
 <!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
 The preceding validation event accidentally bound package.json to an uncomputed digest. The authoritative sha256sum is 161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949. This correction supersedes the bad receipt without rewriting history and rebinds the exact 0.8.2 manifests, changelog, and release-gate command source. The earlier full gate result remains 337 tests passed with zero failures; strict artifact verification is rerun after this write.
 ↳ supersedes event-20260824T065850Z-validate-the-promptus-v082-release-tree
+
+### [2026-08-24 03:05:44] FIX/OPEN — Repair Promptus v0.8.2 release tests exposed by cross-OS CI
+<!-- kb:id event-20260824T070544Z-repair-promptus-v082-release-tests-exposed-by-cross-os-ci -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+Pull request 43 CI run 32699762740 passed Linux validation but failed the macOS benchmark smoke because a clean checkout had no derived search cache, and failed Windows because the same temporary plugin path appeared once through an 8.3 alias and once expanded. The benchmark test now builds its disposable index precondition and proves the dry run leaves search.json byte-identical. The Windows assertion now compares real filesystem identity while retaining exact argv checks for the project root and flags. The 36 focused benchmark and robustness tests pass locally; full and cross-OS gates remain pending.
+↳ supersedes event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest
+
+### [2026-08-24 03:06:32] FIX/OPEN — Bind the cross-OS repair to release and benchmark evidence
+<!-- kb:id event-20260824T070632Z-bind-the-cross-os-repair-to-release-and-benchmark-evidence -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+The first cross-OS repair event superseded the active release receipt but omitted the independently active embedding-benchmark event that owned the prior benchmark-test bytes. Strict health therefore failed 25/26 current artifacts exactly as designed. This event adds both successor edges and retains the repaired test hashes plus the complete release metadata bindings. Full repository and cross-OS validation remain pending.
+↳ supersedes event-20260824T070544Z-repair-promptus-v082-release-tests-exposed-by-cross-os-ci
+↳ supersedes event-20260823T144353Z-validate-public-nemotron-retrieval-and-keep-private-stores-local
+
+### [2026-08-24 03:08:01] RESULT/VALIDATED — Validate the cross-OS Promptus release-test repair locally
+<!-- kb:id event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+After binding both lifecycle branches, strict Promptus health passed with 22/22 current artifact dependencies verified and 36/89 historical dependencies reported only as archival drift. The complete repository gate then passed adapter validation and all 337 tests with zero failures, including the clean-cache benchmark precondition and canonical Windows path assertion. This validates the repair locally; macOS and Windows CI on pull request 43 remain the external portability gate.
+↳ supersedes event-20260824T070632Z-bind-the-cross-os-repair-to-release-and-benchmark-evidence
 
 <!-- kb:append-point -->

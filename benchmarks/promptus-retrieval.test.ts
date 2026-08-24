@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   cosineSimilarity, documentChunks, evaluateRankings, reciprocalRankFusion,
@@ -41,8 +42,14 @@ test("evaluateRankings reports recall, reciprocal rank, and lifecycle contaminat
   expect(metrics.inactiveAt10).toBeCloseTo(0.25);
 });
 
-test("dry-run exercises the live Organon corpus without a key, network, or cache write", () => {
+test("dry-run exercises an indexed live corpus without a key, network, or cache write", () => {
   const repo = join(import.meta.dir, "..");
+  const searchPath = join(repo, ".promptus", "cache", "search.json");
+  const indexed = spawnSync(process.execPath, [
+    join(repo, "promptus", "scripts", "kb-index.ts"), "--root", repo,
+  ], { cwd: repo, encoding: "utf8" });
+  expect(indexed.status).toBe(0);
+  const before = readFileSync(searchPath);
   const result = spawnSync(process.execPath, [
     join(import.meta.dir, "promptus-retrieval.ts"), "--dry-run", "--root", repo,
   ], {
@@ -54,4 +61,5 @@ test("dry-run exercises the live Organon corpus without a key, network, or cache
   expect(result.stdout).toContain("Promptus retrieval benchmark");
   expect(result.stdout).toContain("No network calls or files were written.");
   expect(result.stderr).toBe("");
+  expect(readFileSync(searchPath)).toEqual(before);
 });
