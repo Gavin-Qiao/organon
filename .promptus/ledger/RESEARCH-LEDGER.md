@@ -27,29 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T120203Z-validate-the-dependency-refresh-locally-under-bun-v140 -->
+<!-- kb:now-through event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner -->
 Promptus v0.9.1 is released and installed. A separate dependency refresh is locally validated and awaiting protected cross-platform CI.
 
-- GitHub Actions use checkout 7.0.1, setup-python 7.0.0, setup-bun 2.2.0, and the already-current pre-commit/action 3.0.1.
-- Repository hooks use pre-commit-hooks 6.0.0; all six hooks pass under pre-commit 4.6.2.
-- Local Bun is upgraded from 1.3.14 to stable 1.4.0; the complete suite passes there: 352 tests, 1,912 assertions.
+- Every direct workflow action is pinned to an exact current release: checkout 7.0.1, setup-python 7.0.0, and setup-bun 2.2.0.
+- The stale pre-commit action wrapper is removed; CI installs exact pre-commit 4.6.2 and uses pre-commit-hooks 6.0.0.
+- All six hooks pass. Local Bun is stable 1.4.0, and the complete suite passes there: 352 tests, 1,912 assertions.
 - Promptus itself has no third-party package dependencies or lockfile.
 
 ## Open frontier
 
-- Prove the refreshed action runtimes on Linux, macOS, and Windows through the maintenance PR.
+- Prove the refreshed action runtimes and explicit pre-commit install on Linux, macOS, and Windows through the maintenance PR.
 - Start a genuinely new Codex task/session for MoT schema v4 to v5 and rerun MoT health there.
 - Prune only merged stale branches and worktrees after both tasks close.
 
 ## Next actions
 
-1. Commit and open the conventional dependency-maintenance PR.
-2. Merge only after every protected check passes with no Node 20 action warning.
+1. Commit the wrapper correction and open the conventional dependency-maintenance PR.
+2. Merge only after every protected check passes without the Node 20 action warning.
 3. Start the new v0.9.1 MoT task, record final receipts, and clean merged branches/worktrees.
 
 ## <<< RESUME HERE >>>
 
-Resume at protected CI for event-20260824T120203Z-validate-the-dependency-refresh-locally-under-bun-v140.
+Resume at protected CI for event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner.
 
 <!-- now:end -->
 
@@ -1074,5 +1074,13 @@ Promptus v0.9.1 is released, published, and locally active in Codex. Protected-m
 <!-- kb:artifact pre-commit-config|.pre-commit-config.yaml|bf1f95c24537f1e4380a50359c33ba9fa46ed7cfc17a0dcd5f2a857f6dbcd69a -->
 Verified and prepared the dependency refresh against maintainers official latest releases on 2026-08-24. CI and release workflows now use actions/checkout v7.0.1, actions/setup-python v7.0.0, and oven-sh/setup-bun v2.2.0; pre-commit/action was already latest at v3.0.1 and remains unchanged. The repository hook moves from pre-commit-hooks v5.0.0 to v6.0.0. Promptus has no package dependencies or lockfile: it imports only Bun and Node built-ins. The local Bun runtime was upgraded from 1.3.14 to stable 1.4.0. Latest pre-commit 4.6.2 ran all six hooks successfully, and bun run check under Bun 1.4.0 passed marketplace validation, strict health, and all 352 tests with 1,912 assertions. Protected cross-platform CI remains the final action-runtime check.
 ↳ extends event-20260824T115718Z-release-promptus-v091-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 08:04:35] FIX/VALIDATED — Replace the stale pre-commit action wrapper with an exact runner
+<!-- kb:id event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner -->
+<!-- kb:artifact ci-workflow|.github/workflows/ci.yml|5640e1f8bea3104b0256b08416a191c0f141205312e8d6d0b1542c354b84e495 -->
+<!-- kb:artifact release-workflow|.github/workflows/release.yml|1a1b4b0145efdd1b448ad354632291b2a5b868789a870e8d724afa6b1404361c -->
+<!-- kb:artifact pre-commit-config|.pre-commit-config.yaml|bf1f95c24537f1e4380a50359c33ba9fa46ed7cfc17a0dcd5f2a857f6dbcd69a -->
+The first dependency inventory correctly found pre-commit/action v3.0.1 to be its latest release, but inspecting that release exposed a hidden stale edge: the composite action installs an unpinned pre-commit and delegates caching to actions/cache v4. The CI workflow now removes that wrapper and directly installs exact pre-commit 4.6.2 before running all hooks. Every remaining direct uses dependency is an exact current release: checkout 7.0.1, setup-python 7.0.0, and setup-bun 2.2.0. Pre-commit-hooks remains 6.0.0. The corrected workflow passes YAML validation and all six local hooks; protected CI will validate the hosted Python installation path.
+↳ fixes event-20260824T120203Z-validate-the-dependency-refresh-locally-under-bun-v140
 
 <!-- kb:append-point -->

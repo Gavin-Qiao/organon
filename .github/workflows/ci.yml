@@ -69,4 +69,7 @@ jobs:
       - uses: actions/setup-python@v7.0.0
         with:
           python-version: "3.x"
-      - uses: pre-commit/action@v3.0.1
+      - name: Run pre-commit
+        run: |
+          python -m pip install --disable-pip-version-check pre-commit==4.6.2
+          pre-commit run --all-files --show-diff-on-failure
