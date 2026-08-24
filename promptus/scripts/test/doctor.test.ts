@@ -190,7 +190,8 @@ test("migrate --apply: the vocab is re-homed, store paths .promptus/-prefixed, a
   const root = scaffoldLegacy("root");
   doctor(root, ["migrate", "--apply"]);
   const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
-  expect(v.version).toBe(4);
+  expect(v.version).toBe(5);
+  expect(v.substrates.finding.kinds.extended).toContain("REVIEW");
   expect(v.substrates.ledger.store).toBe(".promptus/ledger/RESEARCH-LEDGER.md");
   expect(v.substrates.finding.store).toBe(".promptus/docs");
   expect(v.substrates.lit.store).toBe(".promptus/docs/lit");
@@ -213,7 +214,8 @@ test("migrate --apply: an older vocab version is upgraded to the target shape", 
   expect(r.stdout).toContain("v2");
   doctor(root, ["migrate", "--apply"]);
   const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
-  expect(v.version).toBe(4); // upgraded
+  expect(v.version).toBe(5); // upgraded
+  expect(v.substrates.finding.kinds.extended).toContain("REVIEW");
   expect(v.relations.refutes).toBeDefined(); // gained the full canonical relation set
 });
 
@@ -497,6 +499,7 @@ function scaffoldCurrentBehind(): string {
   const vocab = JSON.parse(readFileSync(join(REPO, "templates", "schema", "kb-vocab.json"), "utf8"));
   vocab.version = 3;
   vocab.substrates.ledger.kinds.extended = ["IDEA", "MISTAKE", "FIX", "DEADEND", "LOCK", "CHECKPOINT"];
+  vocab.substrates.finding.kinds.extended = ["SYNTHESIS"];
   vocab.substrates.lit.statuses.extended = [];
   writeFileSync(join(root, ".promptus", "schema", "kb-vocab.json"), JSON.stringify(vocab, null, 2) + "\n");
   writeFileSync(join(root, ".promptus", "TELOS.md"), "# Telos — current behind\n\n## North star\nKeep the primitive honest.\n");
@@ -521,7 +524,7 @@ test("check: a current-layout store with a behind-template vocab is not fully he
   expect(r.status).toBe(0);
   expect(r.stdout).toContain("layout:   current");
   expect(r.stdout).toContain("upgrade available");
-  expect(r.stdout).toContain("behind template v4");
+  expect(r.stdout).toContain("behind template v5");
   expect(r.stdout).toContain("FLAG vocab");
   expect(r.stdout).toContain("LOCK");
   expect(r.stdout).toContain("CHECKPOINT");
@@ -581,10 +584,11 @@ test("upgrade --apply: merges behind-template vocab, keeps LOCK/CHECKPOINT, neve
   const r = doctor(root, ["upgrade", "--apply"]);
   expect(r.status).toBe(0);
   const v = JSON.parse(read(root, ".promptus/schema/kb-vocab.json"));
-  expect(v.version).toBe(4);
+  expect(v.version).toBe(5);
   const kinds = [...v.substrates.ledger.kinds.core, ...v.substrates.ledger.kinds.extended];
   expect(kinds).toContain("LOCK");
   expect(kinds).toContain("CHECKPOINT");
+  expect(v.substrates.finding.kinds.extended).toEqual(expect.arrayContaining(["REVIEW", "SYNTHESIS"]));
   expect(v.substrates.lit.statuses.extended).toContain("UNTRUSTED");
   expect(read(root, ".promptus/docs/neck-finding.md")).toBe(finding);
   expect(read(root, ".promptus/ledger/RESEARCH-LEDGER.md")).toBe(ledger);

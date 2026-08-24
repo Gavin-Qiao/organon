@@ -17,6 +17,24 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Added
+
+- **Add bounded trajectory reviews for long-running research.** A read-only deterministic collector
+  now builds source-fingerprint-bound whole-project or exact-endeavour packets with explicit
+  boundaries, per-scope continuation, positive and negative dispositions, causal context, poison
+  checks, and no silent truncation; the companion skill retrieves every claimed body and separates
+  recorded fact from retrospective inference. Operator-approved reviews persist through `kb-add` as
+  immutable `finding:REVIEW` units with checked scope, boundaries, fingerprint, and predecessor.
+  Trajectory review helps an agent reflect on recorded evidence; it does not determine research
+  quality or choose project direction.
+
+### Fixed
+
+- **Retry Windows lock contention instead of rejecting concurrent writers.** Bun can report an
+  existing exclusive lock file as `EPERM` or `EACCES` on Windows rather than `EEXIST`; the store
+  lock now treats those Windows-only aliases as contention while preserving hard permission errors
+  on POSIX and the existing fail-closed timeout.
+
 ## [0.8.2] - 2026-08-24
 
 ### Changed

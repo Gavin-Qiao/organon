@@ -108,6 +108,9 @@ bun promptus/scripts/promptus-session-doctor.ts
 # RETRIEVE — ranked and bounded (20 by default), every hit tagged substrate:status
 bun promptus/scripts/kb-find.ts "bun"
 
+# REVIEW — read-only bounded trajectory packet; judgement stays with the agent
+bun promptus/scripts/promptus-trajectory-review.ts --scope project --max-units 200 --json
+
 # ORIENT — exact north star, NOW, blocker, next action, and resume point
 bun promptus/scripts/promptus-status.ts
 ```
@@ -125,8 +128,10 @@ flowchart LR
   ADD --> MD[("Markdown — the only truth<br/>Telos · Ledger · docs + lit · memory")]
   MD -- "KEEP · kb-index" --> IDX[("Derived index, disposable<br/>CATALOG.md · search.json · graph.json")]
   IDX --> FIND["RETRIEVE · kb-find<br/>ranked + bounded → kb-get"]
+  IDX --> TR["trajectory packet<br/>bounded evidence, no judgement"]
   IDX --> GR["kb-graph<br/>rank · lint · suggest"]
   FIND --> REC["recall · verify claim ↔ source"]
+  TR --> AG
   REC --> AG
   GR -. "navigate / heal" .-> MD
   P(["a person"]) -- "/grannie explain X · /grannie status" --> GRAN["grannie · the human read-port"]
@@ -161,6 +166,9 @@ flowchart LR
   `scripts/kb-amend.ts` is the matching
   gate for metadata transitions on an existing curated unit: it preserves the body, validates the
   requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
+  Operator-approved trajectory reviews use the same gate as immutable `finding:REVIEW` pages;
+  their scope, exclusive `since`, inclusive `through`, source fingerprint, and same-scope predecessor
+  are machine-readable and revalidated inside the store lock.
 - **KEEP** → `scripts/kb-index.ts` (rebuild the derived `.promptus/cache/CATALOG.md`,
   `search.json`, and `graph.json`; resolve stable IDs/slugs/aliases and supersession; keep archived
   ledger units as opt-in cold history), `scripts/kb-graph.ts lint`
@@ -185,6 +193,45 @@ flowchart LR
   both (decompose → retrieve → confidence-gate → verify → synthesize). `scripts/kb-graph.ts` navigates
   the graph itself: `rank` (PageRank — the load-bearing units) and `suggest` (latent links —
   related-but-unlinked pairs to connect, by shared vocabulary + shared source).
+  `scripts/promptus-trajectory-review.ts` is another bounded retrieval surface: after the existing
+  session preflight, it selects a whole-project range or the inbound causal closure of one exact
+  stable-ID endeavour root, preserves positive and negative dispositions, supplies causal context,
+  and fails rather than guessing a prior review or truncating an oversized packet. The
+  `trajectory-review` skill then fetches every body it uses and makes the retrospective judgement.
+
+## Bounded trajectory reviews
+
+Long-running research can keep excellent records and still circle locally. The trajectory-review
+workflow helps an agent reflect on recorded evidence; it does **not** determine research quality or
+choose project direction. Collection is deterministic, status-aware, source-fingerprint-bound, and
+read-only:
+
+```bash
+# Whole-project range (fails with a narrowing request above the bound)
+bun promptus/scripts/promptus-trajectory-review.ts --scope project --max-units 200 --json
+
+# One endeavour: exact stable-ID root, exclusive since, inclusive through
+bun promptus/scripts/promptus-trajectory-review.ts \
+  --scope finding-20260101T000000Z-example-root \
+  --since event-20260201T120000Z-prior-boundary \
+  --through finding-20260301T120000Z-current-boundary --json
+```
+
+With no `--since`, continuation uses only the unique tail `REVIEW` for that exact scope. Reviews of
+other interleaved endeavours do not move the boundary. The packet carries chronological headers,
+effective and source status, typed relations, causal context, positive/negative navigation groups,
+possible stopped-route challenges, bounded Telos/NOW orientation, and explicit unresolved issues—no
+unit bodies and no quality score. The skill retrieves every body it actually cites and separates
+store-backed fact from retrospective inference.
+
+Persisting remains a second, explicit act. On operator instruction, the skill sends its body through
+`kb-add --substrate finding --kind REVIEW` with the packet's `review_scope`, `review_since`,
+`review_through`, and `review_source_fingerprint`; a successor carries `extends:<prior-review-id>`.
+The write gate refuses stale fingerprints, unhealthy receipts, invalid boundaries, ambiguous chains,
+or a missing predecessor relation. Park/main-spine/retire labels stay prose judgements and never amend
+the reviewed units. Existing stores can collect packets without migration; persisting a review needs
+the template vocabulary's `REVIEW` kind, added by the normal dry-run-first
+`promptus-doctor upgrade --apply` merge while preserving project-specific terms and all unit bodies.
 
 **The human read-port.** The agent operates the verbs above; a human reads in through **`grannie`** —
 `/grannie explain <concept>` retrieves from the store and answers in plain language, grounded and
@@ -262,6 +309,7 @@ Claude Code exposes these command adapters; Codex uses the corresponding skills 
 | `/promptus:promptus-check` | verify NOW/source freshness, artifacts, IDs, classification, relations, and sealed thinker custody; use `--ratchet` for no-new-debt or `--strict-graph` for zero graph debt |
 | `/promptus:promptus-ingest` | curate external notes into `lit:` units (backfill, promote, or quarantine untrusted thinker output) |
 | `/promptus:thinker-round` | prepare one workspace-free theory question, receive the operator-carried return as untrusted evidence, and independently adjudicate it |
+| `/promptus:trajectory-review` | collect a bounded whole-project or endeavour packet, then reconstruct trajectory without scoring quality or mutating authority |
 | `/promptus:promptus-graph` | inspect the knowledge graph — `rank` (PageRank), `lint` (health), `suggest` (latent links) |
 
 | skill | role |
@@ -274,6 +322,7 @@ Claude Code exposes these command adapters; Codex uses the corresponding skills 
 | `promptus-doctor` | layout diagnosis and dry-run-first migration/upgrade (book-keep a current-layout store without rewriting units) |
 | `promptus-ingest` | provenance-preserving research curation |
 | `thinker-round` | stateless external-theory round: strong prompt, frozen checks, exact return, quarantine, independent verdict |
+| `trajectory-review` | bounded evidence packet + body-verified causal retrospective; persistence requires explicit operator instruction |
 | `promptus-graph` | graph rank / lint / suggest workflows |
 | `research-ledger` | the store-as-you-go recording habit (append via `kb-add`, never freehand) |
 | `recall` | retrieval reasoning — decompose → `kb-find` → verify each claim → synthesize |
@@ -314,9 +363,9 @@ launches it, sends a real `apply_patch` payload, and verifies that a freehand le
 ## Layout
 
 ```
-scripts/    kb-add · kb-amend · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-ingest · kb-export · thinker-round · promptus-check · promptus-session-doctor · promptus-status · check-pr-title · ledger-append · validate-plugin · changelog · lib/ · test/
-skills/     promptus · recall · grannie · research-ledger · telos · thinker-round · promptus-{init,checkpoint,check,doctor,session-doctor,ingest,graph} · grounded-writing-reviewer
-commands/   help · checkpoint · thinker-round · promptus-init · promptus-doctor · promptus-session-doctor · promptus-ingest · promptus-graph · promptus-check
+scripts/    kb-add · kb-amend · kb-now · kb-index · kb-find · kb-get · kb-graph · kb-ingest · kb-export · thinker-round · promptus-trajectory-review · promptus-check · promptus-session-doctor · promptus-status · check-pr-title · ledger-append · validate-plugin · changelog · lib/ · test/
+skills/     promptus · recall · grannie · research-ledger · telos · thinker-round · trajectory-review · promptus-{init,checkpoint,check,doctor,session-doctor,ingest,graph} · grounded-writing-reviewer
+commands/   help · checkpoint · thinker-round · trajectory-review · promptus-init · promptus-doctor · promptus-session-doctor · promptus-ingest · promptus-graph · promptus-check
 agents/     grounded-writing-reviewer
 hooks/      session-start · protect-gate · auto-index · checkpoint-nudge (+ Claude hooks.json · Codex codex.json)
 templates/  the per-project scaffolds + thinker prompt/validation protocol (incl. the default schema/kb-vocab.json)

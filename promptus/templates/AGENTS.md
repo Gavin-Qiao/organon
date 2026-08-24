@@ -20,5 +20,9 @@
    `thinker-round` skill to seal a self-contained prompt and refute-first plan. The operator carries
    it out and back; preserve the response as `lit:UNTRUSTED`, then keep only independently checked
    claims as linked findings. It is not a workspace agent or a release authority.
-7. **Checkpoint before you compact** — `/checkpoint` flushes anything un-recorded so
+7. **Review trajectory at natural boundaries** — use the `trajectory-review` skill when a branch
+   closes, its blocker changes, a stopped route may reopen, the operator asks whether work is
+   converging, or a major handoff/manuscript/release approaches. Its deterministic packet is bounded
+   and read-only; review age is advisory, never a health score or calendar mandate.
+8. **Checkpoint before you compact** — `/checkpoint` flushes anything un-recorded so
    nothing is lost, reconciles memory, then tidies.

@@ -5,6 +5,7 @@ import { closeSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, openSync, 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ledgerEntries } from "../lib/units.ts";
+import { isStoreLockContention } from "../lib/store-lock.ts";
 
 const PROMPTUS = join(import.meta.dir, "..", "..");
 const ADD = join(PROMPTUS, "scripts", "kb-add.ts");
@@ -13,6 +14,13 @@ const VOCAB = join(PROMPTUS, "templates", "schema", "kb-vocab.json");
 const roots: string[] = [];
 
 afterAll(() => { for (const root of roots) rmSync(root, { recursive: true, force: true }); });
+
+test("Windows lock-open aliases remain contention while POSIX permission errors stay hard", () => {
+  expect(isStoreLockContention("EEXIST", "linux")).toBe(true);
+  expect(isStoreLockContention("EPERM", "win32")).toBe(true);
+  expect(isStoreLockContention("EACCES", "win32")).toBe(true);
+  expect(isStoreLockContention("EPERM", "linux")).toBe(false);
+});
 
 function scaffold(): string {
   const root = mkdtempSync(join(tmpdir(), "promptus-concurrency-"));

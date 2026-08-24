@@ -43,7 +43,7 @@
  * and don't find the vocab), so this is a real fix, not a cosmetic move.
  *
  * Why book-keeping is needed on an already-namespaced repo: a long-running store can
- * sit on layout `current` while its vocab is still v3 against template v4, the catalog
+ * sit on layout `current` while its vocab is behind the template, the catalog
  * lags, a thinker exchange drifts (or ungoverned prose accretes there), or inherited dangling/orphan
  * debt has no ratchet baseline. Reporting that repo as "healthy" because the gate is
  * reachable hides the work. The upgrade never rewrites historical units.

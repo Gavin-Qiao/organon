@@ -16,6 +16,9 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    destroys the why. Digest each such report into a `finding` unit (what we now know, what
    was rejected and why, `[[links]]` to its lit units), not just a ledger event; the
    `research-ledger` skill's "three homes" table is the rule.
+   A draft trajectory review is the exception to automatic digestion: persist it as
+   `finding:REVIEW` only when the operator explicitly authorizes that second act. Store any
+   separately accepted project decision through the ordinary ledger/Telos/NOW boundary.
 2. **Add** each through the gate (the script owns the timestamp / id / placement):
    ```
    echo "<body>" | bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-add.ts" --substrate <s> --kind <K> --status <S> --title "…"

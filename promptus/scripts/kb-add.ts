@@ -9,6 +9,8 @@
  *   kb-add --substrate <ledger|finding|lit|memory> --kind <K> --status <S>
  *          --title "<t>" [--source "<src#anchor>"] [--links "a,b"] [--reuse <r>]
  *          [--desc "<one-line>"] [--rel <type:target> ...] [--supersedes <id|ref>]
+ *          [--review-scope <project|endeavour:id> --review-since <START|id>
+ *           --review-through <id> --review-fingerprint <sha256>]
  *          [--root <dir>] [--json] [--dry-run]  < body.md
  *
  * Facets: KIND (the act), STATUS (the claim's epistemic state), RELATION (a typed
@@ -41,6 +43,7 @@ import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib
 import { atomicStoreWrite, withStoreLock } from "./lib/store-lock.ts";
 import { ledgerHeads } from "./lib/units.ts";
 import { createRelationResolver, inverseLifecycleStatus } from "./lib/relation-lifecycle.ts";
+import { TrajectoryReviewError, validateReviewPersistence, type ReviewWriteFields } from "./lib/trajectory-review.ts";
 import { collectUnits } from "./kb-index.ts";
 
 type Args = Record<string, string | boolean>;
@@ -164,9 +167,14 @@ usage: kb-add --substrate <ledger|finding|lit|memory> --kind <K> --status <S>
               --title "<title>" [--source "<source>"] [--links "a,b"]
               [--rel <type:target> ...] [--supersedes <id>]
               [--artifact "role|relative/path|sha256-or--" ...]
+              [--review-scope <project|endeavour:id> --review-since <START|id>
+               --review-through <id> --review-fingerprint <sha256>]
               [--root <dir>] [--json] [--dry-run] < body.md
 Artifacts are project-relative reproducibility dependencies. '-' records an
-existence-only dependency; a SHA-256 value makes promptus-check verify bytes.`;
+existence-only dependency; a SHA-256 value makes promptus-check verify bytes.
+The --review-* fields are accepted only for finding kind REVIEW and are checked
+against the current source fingerprint, health receipt, scope, boundary, and
+same-scope predecessor before any write.`;
 
 function main(argv: string[]): number {
   if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
@@ -185,6 +193,12 @@ function main(argv: string[]): number {
   const vocab = loadVocab(root);
   const relations = parseRelations(argv);
   const artifacts = parseArtifacts(argv);
+  const reviewFields: ReviewWriteFields = {
+    scope: str(a, "review-scope"),
+    since: str(a, "review-since"),
+    through: str(a, "review-through"),
+    sourceFingerprint: str(a, "review-fingerprint"),
+  };
 
   const unit: UnitInput = {
     substrate: str(a, "substrate") ?? "",
@@ -221,6 +235,7 @@ function main(argv: string[]): number {
   const links = Array.from(new Set([...(unit.links ?? []), ...extractLinks(body)]));
 
   const prepare = () => {
+    validateReviewPersistence(root, vocab, unit, relations, reviewFields);
     let id = idBase;
     let assembled: string;
     let unitFile: string;
@@ -245,6 +260,10 @@ function main(argv: string[]): number {
       const fm: Frontmatter = { id, substrate: unit.substrate, kind: unit.kind, status: unit.status, created: nowLocalStamp() };
       if (unit.source) fm.source = unit.source;
       if (unit.reuse) fm.reuse = unit.reuse;
+      if (reviewFields.scope) fm.review_scope = reviewFields.scope;
+      if (reviewFields.since) fm.review_since = reviewFields.since;
+      if (reviewFields.through) fm.review_through = reviewFields.through;
+      if (reviewFields.sourceFingerprint) fm.review_source_fingerprint = reviewFields.sourceFingerprint.toLowerCase();
       if (relations.length) fm.relations = relations.map((r) => `${r.type}:${r.target}`);
       if (links.length) fm.links = links;
       if (artifacts.length) fm.artifacts = artifacts;
@@ -277,7 +296,10 @@ function main(argv: string[]): number {
   if (dry) {
     let prepared: ReturnType<typeof prepare>;
     try { prepared = prepare(); }
-    catch (error) { console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`); return 1; }
+    catch (error) {
+      console.error(`kb-add: ${error instanceof TrajectoryReviewError ? `${error.code}: ${error.message}` : error instanceof Error ? error.message : String(error)}`);
+      return 1;
+    }
     if (a.json === true) {
       console.log(JSON.stringify({
         schema: "promptus.kb-add.v1",
@@ -307,7 +329,7 @@ function main(argv: string[]): number {
       return { ...prepared, catalog };
     });
   } catch (error) {
-    console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`kb-add: ${error instanceof TrajectoryReviewError ? `${error.code}: ${error.message}` : error instanceof Error ? error.message : String(error)}`);
     return 1;
   }
   const nextAction = indexNextAction(root);

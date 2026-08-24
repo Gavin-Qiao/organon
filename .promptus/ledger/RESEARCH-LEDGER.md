@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24 (Record PR 45 Windows lock correction)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,30 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T071947Z-release-promptus-v082-and-refresh-the-local-codex-plugin -->
-Promptus v0.8.2 is released, published, and locally active in Codex. The correctness-release frontier is closed.
+<!-- kb:now-through event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45 -->
+Promptus v0.9.0 is in the protected-main release workflow. Feature PR 45 is open; its first matrix exposed and locally fixed a Windows-only store-lock alias.
 
-- Protected-main pull request 43 merged at cb504eec45d5363db03dfbd8de11f9aa2eb19d16 after all five Linux, macOS, Windows, hygiene, and title checks passed.
-- Tag promptus-v0.8.2 triggered release workflow 32700791934, which validated and published the GitHub release successfully.
-- The local Codex cache contains exact official version 0.8.2; source and cache match apart from generated command adapters, installed strict doctor exits zero, and installed session doctor reports READY.
-- The release audit itself produced durable cross-OS regressions for clean derived caches and alias path spelling.
-- The semantic-retrieval frontier is unchanged: embeddings remain experimental derived dogfood, and the RTX 5090 remains reserved.
+- The bounded trajectory-review feature remains fully implemented and validated.
+- Linux, macOS, hygiene, validator, and title checks passed on the first PR run.
+- Windows Bun returned EPERM for an existing exclusive lock file; the lock now retries Windows EPERM and EACCES as contention while keeping POSIX permission errors hard and preserving the timeout.
+- The targeted lock suite passes 2 tests with 37 assertions.
 
 ## Open frontier
 
-- Start a new Codex task when the newly installed Promptus 0.8.2 skills must be loaded.
-- Freeze a larger independently labelled retrieval query set before evaluating local dense integration.
-- Wait for explicit operator release of the RTX 5090 before any unsandboxed GPU access.
+- Push the Windows lock correction to PR 45 and require the complete rerun to pass before merge.
+- Cut release metadata only after the feature lands on protected main.
+- Tag, publish, and install only from a green release commit.
 
 ## Next actions
 
-1. Use Promptus 0.8.2 normally in long-running projects and dogfood any new concrete failures back into Organon.
-2. Expand the retrieval benchmark only from real project misses with independently frozen labels.
-3. Run the local Nemotron experiment only after the operator says the GPU queue is free.
+1. Run the complete local gate with the recorded correction.
+2. Amend PR 45 with the conventional fix commit and wait for all checks.
+3. Continue the v0.9.0 release workflow only after protected main is green.
 
 ## <<< RESUME HERE >>>
 
-The Promptus v0.8.2 release is complete. Resume at ordinary dogfooding or the measured retrieval benchmark; no release action remains.
+Resume at validating and pushing the Windows lock compatibility correction to feature PR 45.
 
 <!-- now:end -->
 
@@ -930,5 +929,45 @@ Pull request 43 CI run 32700230675 confirmed the benchmark repair on both platfo
 <!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
 Pull request 43 merged to protected main at cb504eec45d5363db03dfbd8de11f9aa2eb19d16 after all five checks passed, including macOS and Windows. Tag promptus-v0.8.2 points to that merge; release workflow 32700791934 completed successfully and published https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.8.2. The official semver bump was used without a development cachebuster. codex plugin add promptus@organon installed /home/mohan/.codex/plugins/cache/organon/promptus/0.8.2; its shipped tree is byte-identical to source except generated migrated-command-skills. The installed strict doctor exited zero and the installed session doctor reported READY with no errors. Promptus v0.8.2 is released and locally active; a new Codex task is the safe boundary for loading its skills.
 ↳ supersedes event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling
+
+### [2026-08-24 06:28:50] RESULT/VALIDATED — Implement bounded trajectory reviews for long-running research
+<!-- kb:id event-20260824T102850Z-implement-bounded-trajectory-reviews-for-long-running-research -->
+<!-- kb:artifact collector|promptus/scripts/promptus-trajectory-review.ts|002bbdb0811a9a92901f5d9713d248780f3ef31a6ec959e0dd4dd798f06526e5 -->
+<!-- kb:artifact trajectory-lib|promptus/scripts/lib/trajectory-review.ts|0d2bd4b3e96bdef743e487d86c8c28b1f955e31cce5f0bcc74fab4df2479209a -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|c6811a1b465f12d8b62e307f0b58851e9d0a199a21ac59ba10a8c99d39fb2721 -->
+<!-- kb:artifact regressions|promptus/scripts/test/trajectory-review.test.ts|3e09d21ab12956a9b7253a2334ded7f62240a393fbd29c8eab2fb6d954d01b0c -->
+<!-- kb:artifact skill|promptus/skills/trajectory-review/SKILL.md|6b904fa34e2b064a5d2c4195f6454bfc90264c532a72ed14e3e9649d47c58670 -->
+<!-- kb:artifact vocab|promptus/templates/schema/kb-vocab.json|c72d0b2cff1a0f526a04154479382a5c416bd2c0848083ad793933690d409657 -->
+<!-- kb:artifact readme|promptus/README.md|1fbf4e4077297e000a248e5ad5de09157ab80448d246c256385776f6e098186b -->
+<!-- kb:artifact changelog|promptus/CHANGELOG.md|946d3bf47f82300f7853c30090eff2aba61c8da0e353a486f8e0ac8ca6b780a8 -->
+Implemented the bounded trajectory-review candidate for Promptus after dogfooding the problem against MoT and the Organon store.
+
+- Added a read-only collector with existing session-doctor preflight, exact whole-project or stable-ID endeavour scope, deterministic legacy markers, per-scope continuation, bounded causal closure, explicit poison errors, source fingerprints, and no silent truncation.
+- Added an agent skill and Claude command adapter that require body retrieval for every claim, preserve negative evidence and thinker custody, distinguish recorded fact from retrospective inference, and keep all placement or reopening decisions advisory.
+- Added explicit REVIEW persistence through kb-add with machine-readable scope, since, through, and source fingerprint fields; the write gate rechecks current health, boundaries, and the exact predecessor inside the store lock.
+- Upgraded the template vocabulary to v5 with finding kind REVIEW; Organon was migrated through promptus-doctor with custom terms and all unit bodies preserved.
+- Added 12 trajectory regressions covering mixed positive and negative evidence, pre-ID history, interleaved scopes, immutable persistence, malformed and parallel chains, oversized ranges with byte and mtime preservation, same-second ordering, stale caches, hard artifact failures, stale fingerprints, and portable paths.
+- Validation at this point: focused trajectory tests 12 pass; doctor tests 32 pass; full Promptus suite 349 pass and 0 fail; skill validator passes; marketplace and plugin adapters pass.
+
+This is an unreleased local source candidate. No manifest, tag, GitHub release, commit, push, or installed Codex cache was changed.
+Related: [[bounded-trajectory-review-separates-deterministic-evidence-from]]
+↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
+↳ supersedes event-20260824T071947Z-release-promptus-v082-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 07:11:20] FIX/VALIDATED — Retry Windows lock aliases exposed by Promptus PR 45
+<!-- kb:id event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45 -->
+<!-- kb:artifact store-lock|promptus/scripts/lib/store-lock.ts|98eb4538c53b5c4ae34cedbcf0077cd56cf951ed25d91cac07e199537e00b389 -->
+<!-- kb:artifact regression|promptus/scripts/test/concurrency.test.ts|5a6051f256cf7c61d943c8d9430504a533f1f0afabc5bb98a0323e3acbc88a44 -->
+<!-- kb:artifact changelog|promptus/CHANGELOG.md|1a79fcbcc3f9d3e65c2431b6fd75cea924b9ca5e06ca2cc4fc8b12bcd83df733 -->
+Protected-main pull request 45 exposed a Windows-only store-lock compatibility failure before release.
+
+- Linux, macOS, hygiene, validator, and title checks passed.
+- Windows Bun 1.4.0 returned EPERM for three concurrent open-with-exclusive-create attempts on the existing store.lock path; the lock loop recognized only EEXIST, so those writers failed instead of waiting.
+- The smallest correction classifies EPERM and EACCES as contention only on win32. POSIX permission errors remain hard failures and the existing 30-second fail-closed timeout remains unchanged.
+- A deterministic mapping regression now covers EEXIST, Windows EPERM and EACCES, and POSIX EPERM; the 24-writer integration test still proves lossless unique writes.
+- Local targeted result: 2 tests passed, 0 failed, 37 assertions.
+
+Evidence: GitHub Actions run 32720321466, Windows job 97410154194. The release remains blocked until the updated Windows matrix passes.
+↳ fixes event-20260824T102850Z-implement-bounded-trajectory-reviews-for-long-running-research
 
 <!-- kb:append-point -->

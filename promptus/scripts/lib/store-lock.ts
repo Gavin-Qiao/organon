@@ -26,6 +26,12 @@ function errorCode(error: unknown): string | undefined {
     : undefined;
 }
 
+/** Bun on Windows can surface an existing `wx` lock as EPERM/EACCES. */
+export function isStoreLockContention(code: string | undefined, platform = process.platform): boolean {
+  return code === "EEXIST"
+    || (platform === "win32" && (code === "EPERM" || code === "EACCES"));
+}
+
 export function withStoreLock<T>(
   root: string,
   action: () => T,
@@ -45,7 +51,7 @@ export function withStoreLock<T>(
       finally { closeSync(fd); }
       break;
     } catch (error) {
-      if (errorCode(error) !== "EEXIST") throw error;
+      if (!isStoreLockContention(errorCode(error))) throw error;
       if (Date.now() >= deadline) {
         let heldBy = "unknown writer";
         try {
