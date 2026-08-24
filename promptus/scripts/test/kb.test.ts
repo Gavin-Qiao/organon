@@ -170,6 +170,67 @@ test("kb-add --supersedes + kb-index marks the prior finding SUPERSEDED", () => 
   expect(catalog(root)).toContain("finding:SUPERSEDED · Old claim");
 });
 
+test("memory supersession round-trips as a relation and retires only the derived old card", () => {
+  const root = scaffold();
+  expect(add(root, ["--substrate", "memory", "--kind", "project", "--status", "validated", "--title", "Old retrieval rule"], "Keep the old rule bytes.").status).toBe(0);
+  const oldPath = join(root, ".promptus", "memory", "old-retrieval-rule.md");
+  const oldBefore = readFileSync(oldPath);
+  const oldId = /^id:\s*(\S+)$/m.exec(oldBefore.toString("utf8"))![1];
+  expect(add(root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated",
+    "--title", "New retrieval rule", "--supersedes", oldId,
+  ], "Use the replacement rule.").status).toBe(0);
+  const newPath = join(root, ".promptus", "memory", "new-retrieval-rule.md");
+  const newBefore = readFileSync(newPath);
+  expect(newBefore.toString("utf8")).toContain(`relations: ["supersedes:${oldId}"]`);
+
+  expect(index(root).status).toBe(0);
+  expect(catalog(root)).toContain("memory:retired · Old retrieval rule");
+  expect(catalog(root)).toContain("memory:validated · New retrieval rule");
+  const graph = JSON.parse(read(root, ".promptus", "cache", "graph.json"));
+  expect(graph.relations.some((edge: { type: string; to: string; resolved: boolean }) =>
+    edge.type === "supersedes" && edge.to === oldId && edge.resolved)).toBe(true);
+  expect(readFileSync(oldPath)).toEqual(oldBefore);
+  expect(readFileSync(newPath)).toEqual(newBefore);
+});
+
+test("illegal substrate lifecycle mapping rejects writes and reindex before unit bytes change", () => {
+  const root = scaffold();
+  expect(add(root, ["--substrate", "memory", "--kind", "project", "--status", "validated", "--title", "Lifecycle old"], "old body").status).toBe(0);
+  const oldPath = join(root, ".promptus", "memory", "lifecycle-old.md");
+  const oldId = /^id:\s*(\S+)$/m.exec(readFileSync(oldPath, "utf8"))![1];
+  expect(add(root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated",
+    "--title", "Lifecycle new", "--supersedes", oldId,
+  ], "new body").status).toBe(0);
+  expect(index(root).status).toBe(0);
+  const newPath = join(root, ".promptus", "memory", "lifecycle-new.md");
+  const oldBefore = readFileSync(oldPath);
+  const newBefore = readFileSync(newPath);
+  const catalogBefore = catalog(root);
+  const graphBefore = read(root, ".promptus", "cache", "graph.json");
+  const vocabPath = join(root, ".promptus", "schema", "kb-vocab.json");
+  const vocab = JSON.parse(readFileSync(vocabPath, "utf8"));
+  vocab.relations.supersedes.inverse_status_by_substrate.memory = "SUPERSEDED";
+  writeFileSync(vocabPath, JSON.stringify(vocab, null, 2) + "\n");
+
+  const refused = add(root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated",
+    "--title", "Lifecycle third", "--supersedes", oldId,
+  ], "must not land");
+  expect(refused.status).toBe(1);
+  expect(refused.stderr).toContain('inverse status "SUPERSEDED" for memory');
+  expect(existsSync(join(root, ".promptus", "memory", "lifecycle-third.md"))).toBe(false);
+
+  const rejectedIndex = index(root);
+  expect(rejectedIndex.status).not.toBe(0);
+  expect(rejectedIndex.stderr).toContain('inverse status "SUPERSEDED" for memory');
+  expect(readFileSync(oldPath)).toEqual(oldBefore);
+  expect(readFileSync(newPath)).toEqual(newBefore);
+  expect(catalog(root)).toBe(catalogBefore);
+  expect(read(root, ".promptus", "cache", "graph.json")).toBe(graphBefore);
+});
+
 test("kb-add persists ledger ids so ledger-to-ledger supersession is authoritative", () => {
   const root = scaffold();
   const old = add(root, ["--substrate", "ledger", "--kind", "DECISION", "--status", "OPEN", "--title", "Choose the storage layout"], "Operator decision pending.");

@@ -23,6 +23,7 @@ import {
   refreshThinkerReadSurfaces,
   roundPaths,
   sha256Bytes,
+  thinkerQuarantineSlug,
   validateRoundId,
   writeExclusive,
   writeJsonExclusive,
@@ -171,23 +172,33 @@ function duplicateOf(root: string, roundId: string, hash: string, target: string
   }
   return null;
 }
-function runQuarantine(root: string, roundId: string, response: string): void {
+function runQuarantine(root: string, roundId: string, response: string, hash: string): NonNullable<IntakeReceipt["quarantine"]> {
   const result = spawnSync(process.execPath, [
     join(import.meta.dir, "kb-ingest.ts"), "quarantine", projectRelative(root, response),
     "--source", `external-thinker:${roundId}`, "--title", `External thinker ${roundId} response`,
-    "--apply", "--root", root,
+    "--target-slug", thinkerQuarantineSlug(roundId), "--json", "--apply", "--root", root,
   ], { encoding: "utf8" });
   if (result.status !== 0) throw new Error(`kb-ingest quarantine failed: ${(result.stderr || result.stdout).trim()}`);
-}
-function bindQuarantine(root: string, roundId: string, target: string, hash: string): NonNullable<IntakeReceipt["quarantine"]> {
-  if (!existsSync(target)) throw new Error(`quarantine was not created: ${projectRelative(root, target)}`);
-  const raw = readFileSync(target);
-  const { data } = parseFrontmatter(raw.toString("utf8"));
   const source = `external-thinker:${roundId}`;
-  if (data.substrate !== "lit" || data.status !== "UNTRUSTED" || data.source !== source || data.content_sha256 !== hash || typeof data.id !== "string") {
-    throw new Error("quarantine does not bind the current response");
+  let value: any;
+  try { value = JSON.parse(result.stdout); }
+  catch { throw new Error("kb-ingest quarantine returned malformed JSON"); }
+  if (
+    value?.schema !== "promptus.kb-ingest.quarantine.v1" || value.applied !== true ||
+    value.path !== projectRelative(root, quarantinePath(root, roundId)) ||
+    typeof value.id !== "string" || value.source !== source || value.status !== "UNTRUSTED" ||
+    value.content_sha256 !== hash || !/^[a-f0-9]{64}$/.test(String(value.wrapper_sha256 ?? ""))
+  ) {
+    throw new Error("kb-ingest quarantine returned a custody binding that does not match this round");
   }
-  return { path: projectRelative(root, target), id: data.id, source, status: "UNTRUSTED", content_sha256: hash, wrapper_sha256: sha256Bytes(raw) };
+  return {
+    path: value.path,
+    id: value.id,
+    source: value.source,
+    status: value.status,
+    content_sha256: value.content_sha256,
+    wrapper_sha256: value.wrapper_sha256,
+  };
 }
 
 function receive(root: string, argv: string[], apply: boolean): number {
@@ -214,8 +225,7 @@ function receive(root: string, argv: string[], apply: boolean): number {
   if (!retained.equals(raw)) throw new Error("response.md does not byte-match the supplied return");
   let quarantine: IntakeReceipt["quarantine"];
   if (disposition === "QUARANTINED") {
-    if (!existsSync(target)) runQuarantine(root, roundId, paths.response);
-    quarantine = bindQuarantine(root, roundId, target, hash);
+    quarantine = runQuarantine(root, roundId, paths.response, hash);
   }
   const intake: IntakeReceipt = {
     schema: "promptus.thinker-round.intake.v1",

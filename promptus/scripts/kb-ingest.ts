@@ -23,7 +23,8 @@
  *       links the move would break (`research-ledger.md`, `telos.md` — case-insensitive —
  *       and bare `./sibling.md`). Any pre-existing frontmatter is replaced, not stacked.
  *
- *   kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"] [--apply]
+ *   kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"]
+ *       [--target-slug <basename>] [--json] [--apply]
  *       Preserve an external thinker response verbatim as `lit:UNTRUSTED` with SHA-256.
  *       No assertion is extracted or promoted; checked claims enter separately through kb-add.
  *
@@ -32,9 +33,10 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { basename, dirname, join, relative } from "node:path";
 import { nowISO, nowLocalStamp, stampUTC } from "./lib/clock.ts";
+import { parseFrontmatter } from "./lib/frontmatter.ts";
 import { mintId, slugify } from "./lib/ids.ts";
 import { findProjectRoot } from "./lib/paths.ts";
 import { known, loadVocab } from "./lib/vocab.ts";
@@ -43,6 +45,7 @@ const fwd = (p: string) => p.replace(/\\/g, "/");
 const LIT_DIR = ".promptus/docs/lit";
 const LEDGER = ".promptus/ledger/RESEARCH-LEDGER.md";
 const SKIP = new Set(["index.md", "readme.md", "memory.md"]);
+const TARGET_SLUG = /^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$/;
 
 // run-id tokens in the operator's ledgers look like `wrum4t9p7`, `wa4o723kz`, `wf_93f1d629`
 // — always mixed letters+digits, so require a digit (rejects English words like "witnessed").
@@ -61,6 +64,18 @@ interface Plan {
   kind: string;
   target?: string; // abs, when the file moves (promote)
   linkFixes?: Array<[string, string]>;
+}
+
+interface QuarantineResult {
+  schema: "promptus.kb-ingest.quarantine.v1";
+  applied: boolean;
+  created: boolean;
+  path: string;
+  id: string;
+  source: string;
+  status: "UNTRUSTED";
+  content_sha256: string;
+  wrapper_sha256: string;
 }
 
 const stripBom = (c: string) => c.replace(/^﻿/, "");
@@ -176,21 +191,54 @@ function planPromote(root: string, file: string, source: string, kind: string): 
   return { file: abs, rel, source, how: "operator", kind, target, linkFixes: fixes };
 }
 
+function quarantineResult(
+  root: string,
+  target: string,
+  source: string,
+  contentHash: string,
+  response: Buffer,
+  applied: boolean,
+  created: boolean,
+): QuarantineResult {
+  const wrapper = readFileSync(target);
+  const { data } = parseFrontmatter(wrapper.toString("utf8"));
+  const exactTail = wrapper.length >= response.length && wrapper.subarray(wrapper.length - response.length).equals(response);
+  if (
+    data.substrate !== "lit" || data.kind !== "NOTE" || data.status !== "UNTRUSTED" ||
+    data.source !== source || data.content_sha256 !== contentHash || typeof data.id !== "string" || !exactTail
+  ) {
+    throw new Error(`target already exists with different custody metadata: ${fwd(relative(root, target))}`);
+  }
+  return {
+    schema: "promptus.kb-ingest.quarantine.v1",
+    applied,
+    created,
+    path: fwd(relative(root, target)),
+    id: data.id,
+    source,
+    status: "UNTRUSTED",
+    content_sha256: contentHash,
+    wrapper_sha256: createHash("sha256").update(wrapper).digest("hex"),
+  };
+}
+
 function main(argv: string[]): number {
   if (argv.includes("--help") || argv.includes("-h")) {
-    console.log("kb-ingest — provenance-preserving external-note curation\nusage: kb-ingest <backfill | promote <file> | quarantine <file>> [--source <s>] [--title <t>] [--apply] [--root <dir>]");
+    console.log("kb-ingest — provenance-preserving external-note curation\nusage: kb-ingest <backfill | promote <file> | quarantine <file>> [--source <s>] [--title <t>] [--target-slug <basename>] [--json] [--apply] [--root <dir>]");
     return 0;
   }
   const args: string[] = [];
+  const booleanFlags = new Set(["--apply", "--help", "--json"]);
   for (let index = 0; index < argv.length; index++) {
     if (!argv[index].startsWith("--")) { args.push(argv[index]); continue; }
-    if (argv[index] !== "--apply" && argv[index] !== "--help") index++; // skip the flag's value
+    if (!booleanFlags.has(argv[index])) index++; // skip the flag's value
   }
   const has = (f: string) => argv.includes(`--${f}`);
   const valOf = (f: string) => { const i = argv.indexOf(`--${f}`); return i >= 0 ? argv[i + 1] : undefined; };
   const cmd = args[0];
   const root = findProjectRoot(valOf("root") ?? process.cwd());
   const apply = has("apply");
+  const json = has("json");
 
   if (cmd === "backfill") {
     const plans = planBackfill(root);
@@ -238,30 +286,70 @@ function main(argv: string[]): number {
   if (cmd === "quarantine") {
     const file = args[1];
     const source = valOf("source");
-    if (!file || !source) { console.error('kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"] [--apply]'); return 2; }
+    if (!file || !source) { console.error('kb-ingest quarantine <file> --source "<provenance>" [--title "<title>"] [--target-slug <basename>] [--json] [--apply]'); return 2; }
     const input = file.startsWith("/") ? file : join(root, file);
     if (!existsSync(input)) { console.error(`kb-ingest quarantine: not found: ${fwd(input)}`); return 2; }
+    if (lstatSync(input).isSymbolicLink()) { console.error(`kb-ingest quarantine: symlink input refused: ${fwd(input)}`); return 2; }
     const raw = readFileSync(input);
     const content = raw.toString("utf8");
     const title = valOf("title") ?? h1(content, basename(file).replace(/\.[^.]+$/, ""));
-    const slug = slugify(title);
+    const targetSlug = valOf("target-slug");
+    if (targetSlug && (!TARGET_SLUG.test(targetSlug) || targetSlug.includes(".."))) {
+      console.error("kb-ingest quarantine: --target-slug must be one lowercase [a-z0-9-]+ basename without separators or '..'");
+      return 2;
+    }
+    const slug = targetSlug ?? slugify(title);
     const target = join(root, LIT_DIR, slug + ".md");
-    if (existsSync(target)) { console.error(`kb-ingest quarantine: target already exists: ${LIT_DIR}/${slug}.md`); return 2; }
     const hash = createHash("sha256").update(raw).digest("hex");
-    const id = mintId("lit", stampUTC(nowISO()), title);
-    const fm = [
-      "---", `id: ${id}`, "substrate: lit", "kind: NOTE", "status: UNTRUSTED",
-      `source: ${JSON.stringify(source)}`, `content_sha256: ${hash}`, `created: ${nowLocalStamp()}`, "---", "",
-    ].join("\n");
-    console.log(`kb-ingest quarantine ${apply ? "" : "(dry-run — pass --apply)"} — ${fwd(file)} → ${LIT_DIR}/${slug}.md`);
-    console.log(`  status: UNTRUSTED · source: ${source} · sha256: ${hash}`);
-    console.log("  No claims were extracted or validated. Promote checked claims separately as finding:CONJECTURED or stronger.");
-    if (apply) {
-      mkdirSync(dirname(target), { recursive: true });
-      writeFileSync(target, Buffer.concat([Buffer.from(fm), raw]));
-      console.log(`  quarantined. Link later claims to [[${slug}]].`);
-    } else console.log("  No files were touched.");
-    return 0;
+    try {
+      let present = false;
+      if (existsSync(target)) {
+        const entry = lstatSync(target);
+        if (entry.isSymbolicLink()) throw new Error(`symlink destination refused: ${fwd(relative(root, target))}`);
+        if (!entry.isFile()) throw new Error(`destination is not a regular file: ${fwd(relative(root, target))}`);
+        present = true;
+      }
+      let result: QuarantineResult;
+      if (present) {
+        result = quarantineResult(root, target, source, hash, raw, apply, false);
+      } else {
+        const id = mintId("lit", stampUTC(nowISO()), title);
+        const fm = [
+          "---", `id: ${id}`, "substrate: lit", "kind: NOTE", "status: UNTRUSTED",
+          `source: ${JSON.stringify(source)}`, `content_sha256: ${hash}`, `created: ${nowLocalStamp()}`, "---", "",
+        ].join("\n");
+        const wrapper = Buffer.concat([Buffer.from(fm), raw]);
+        if (apply) {
+          mkdirSync(dirname(target), { recursive: true });
+          writeFileSync(target, wrapper, { flag: "wx" });
+          result = quarantineResult(root, target, source, hash, raw, true, true);
+        } else {
+          result = {
+            schema: "promptus.kb-ingest.quarantine.v1",
+            applied: false,
+            created: false,
+            path: fwd(relative(root, target)),
+            id,
+            source,
+            status: "UNTRUSTED",
+            content_sha256: hash,
+            wrapper_sha256: createHash("sha256").update(wrapper).digest("hex"),
+          };
+        }
+      }
+      if (json) console.log(JSON.stringify(result, null, 2));
+      else {
+        console.log(`kb-ingest quarantine ${apply ? "" : "(dry-run — pass --apply)"} — ${fwd(file)} → ${LIT_DIR}/${slug}.md`);
+        console.log(`  status: UNTRUSTED · source: ${source} · sha256: ${hash}`);
+        console.log("  No claims were extracted or validated. Promote checked claims separately as finding:CONJECTURED or stronger.");
+        if (apply) console.log(`  ${result.created ? "quarantined" : "already quarantined with matching custody"}. Link later claims to [[${slug}]].`);
+        else console.log("  No files were touched.");
+      }
+      return 0;
+    } catch (error) {
+      console.error(`kb-ingest quarantine: ${error instanceof Error ? error.message : String(error)}`);
+      return 2;
+    }
   }
 
   console.error("kb-ingest: usage: kb-ingest <backfill|promote|quarantine> [...]");

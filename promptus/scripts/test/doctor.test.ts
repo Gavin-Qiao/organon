@@ -60,6 +60,7 @@ const LEDGER = `# Research Ledger — legacy
 
 <!-- now:start -->
 ## NOW
+<!-- kb:now-through anchor:2026-06-20T09:00:00 -->
 legacy now
 ## Open frontier
 - [ ] thing
@@ -125,6 +126,7 @@ test("check --strict: non-zero when a migration is needed, zero once current", (
   const root = scaffoldLegacy("root");
   expect(doctor(root, ["check", "--strict"]).status).toBe(1); // legacy → needs migration
   doctor(root, ["migrate", "--apply"]);
+  expect(run("promptus-check.ts", ["--root", root]).status).toBe(0);
   expect(doctor(root, ["check", "--strict"]).status).toBe(0); // now current
 });
 
@@ -279,6 +281,17 @@ function scaffoldCurrent(telosBody: string): string {
   return root;
 }
 
+function scaffoldCheckedCurrent(): string {
+  const root = scaffoldCurrent("# Telos — checked fixture\n\n## North star\nKeep health bound to source bytes.\n");
+  mkdirSync(join(root, ".promptus", "docs", "lit"), { recursive: true });
+  mkdirSync(join(root, ".promptus", "memory"), { recursive: true });
+  writeFileSync(join(root, ".promptus", "memory", "MEMORY.md"), "# Memory\n\n<!-- kb:append-point -->\n");
+  writeFileSync(join(root, ".gitignore"), "/.promptus/cache/\n");
+  const checked = run("promptus-check.ts", ["--root", root]);
+  if (checked.status !== 0) throw new Error(checked.stderr || checked.stdout);
+  return root;
+}
+
 test("check: flags event-shaped Telos content with line numbers and the routing", () => {
   const root = scaffoldCurrent([
     "# Telos — polluted",
@@ -343,13 +356,72 @@ test("doctor and indexer share the fence-aware ledger parser", () => {
   expect(report.catalogLag).toBeNull();
 });
 
+test("strict doctor rejects an add-two and reindex-only stale health receipt", () => {
+  const root = scaffoldCheckedCurrent();
+  for (const title of ["First post-health event", "Second post-health event"]) {
+    expect(run("kb-add.ts", [
+      "--root", root, "--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", title,
+    ], { stdin: `${title} body` }).status).toBe(0);
+  }
+  expect(run("kb-index.ts", ["--root", root]).status).toBe(0);
+
+  const json = doctor(root, ["check", "--json"]);
+  const report = JSON.parse(json.stdout);
+  expect(report.healthReceiptFresh).toBe(false);
+  expect(report.healthIssues.some((issue: string) => issue.includes("unit count mismatch"))).toBe(true);
+  expect(report.debt.units).not.toBe(report.catalogUnits);
+  const human = doctor(root, ["check"]);
+  expect(human.stdout).toContain("FLAG health-receipt");
+  expect(human.stdout).toContain("run promptus-check");
+  expect(human.stdout).not.toContain("healthy — on the current .promptus/ layout");
+  expect(doctor(root, ["check", "--strict"]).status).not.toBe(0);
+
+  expect(run("promptus-check.ts", ["--root", root]).status).toBe(0);
+  const clean = doctor(root, ["check", "--json"]);
+  expect(clean.status).toBe(0);
+  expect(JSON.parse(clean.stdout).healthReceiptFresh).toBe(true);
+  expect(doctor(root, ["check", "--strict"]).status).toBe(0);
+});
+
+test("strict doctor detects a same-count source-byte change by store hash", () => {
+  const root = scaffoldCheckedCurrent();
+  const telos = join(root, ".promptus", "TELOS.md");
+  writeFileSync(telos, readFileSync(telos, "utf8") + "Changed bytes, same source-file count.\n");
+  const report = JSON.parse(doctor(root, ["check", "--json"]).stdout);
+  expect(report.healthReceiptFresh).toBe(false);
+  expect(report.healthIssues.some((issue: string) => issue.includes("store hash mismatch"))).toBe(true);
+  expect(report.healthIssues.some((issue: string) => issue.includes("source-file count mismatch"))).toBe(false);
+  expect(doctor(root, ["check", "--strict"]).status).not.toBe(0);
+});
+
+test("strict doctor honors failed NOW, index, and current-artifact fields in a bound receipt", () => {
+  const root = scaffoldCheckedCurrent();
+  const healthPath = join(root, ".promptus", "cache", "health.json");
+  const clean = JSON.parse(readFileSync(healthPath, "utf8"));
+  const cases = [
+    { name: "NOW", value: { ...clean, now: { ...clean.now, fresh: false } }, issue: "NOW freshness failure" },
+    { name: "index", value: { ...clean, indexFailed: true }, issue: "index failure" },
+    { name: "artifact", value: { ...clean, artifactFailures: [{ from: "current", spec: "result|missing|-" }] }, issue: "current artifact failure" },
+  ];
+  for (const item of cases) {
+    writeFileSync(healthPath, JSON.stringify(item.value, null, 2) + "\n");
+    const report = JSON.parse(doctor(root, ["check", "--json"]).stdout);
+    expect(report.healthReceiptFresh).toBe(false);
+    expect(report.healthIssues.some((issue: string) => issue.includes(item.issue))).toBe(true);
+    expect(doctor(root, ["check", "--strict"]).status).not.toBe(0);
+  }
+  expect(run("promptus-check.ts", ["--root", root]).status).toBe(0);
+  expect(doctor(root, ["check", "--strict"]).status).toBe(0);
+});
+
 test("doctor keeps current artifact failures red but permits archival warnings", () => {
   const root = scaffoldLegacy("root");
   expect(doctor(root, ["migrate", "--apply"]).status).toBe(0);
   const healthPath = join(root, ".promptus", "cache", "health.json");
+  expect(run("promptus-check.ts", ["--root", root]).status).toBe(0);
+  const checked = JSON.parse(readFileSync(healthPath, "utf8"));
   const base = {
-    checkedAt: "2026-08-23T00:00:00.000Z", units: 3, sourceFiles: 3,
-    unclassified: [], dangling: [], orphans: [], now: { fresh: true },
+    ...checked, unclassified: [], dangling: [], orphans: [],
     artifactFailures: [], archivalArtifactWarnings: [{ from: "old", spec: "old|x|-" }],
   };
   writeFileSync(healthPath, JSON.stringify(base));
@@ -523,6 +595,7 @@ test("upgrade --apply: merges behind-template vocab, keeps LOCK/CHECKPOINT, neve
   expect(after.stdout).not.toContain("FLAG vocab");
   expect(after.stdout).toContain("FLAG extra");
   expect(after.stdout).not.toContain("healthy — on the current .promptus/ layout.");
+  expect(run("promptus-check.ts", ["--root", root]).status).toBe(0);
   expect(doctor(root, ["check", "--strict"]).status).toBe(0);
 });
 

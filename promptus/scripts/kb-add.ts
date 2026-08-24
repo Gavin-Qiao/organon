@@ -9,7 +9,7 @@
  *   kb-add --substrate <ledger|finding|lit|memory> --kind <K> --status <S>
  *          --title "<t>" [--source "<src#anchor>"] [--links "a,b"] [--reuse <r>]
  *          [--desc "<one-line>"] [--rel <type:target> ...] [--supersedes <id|ref>]
- *          [--root <dir>] [--dry-run]  < body.md
+ *          [--root <dir>] [--json] [--dry-run]  < body.md
  *
  * Facets: KIND (the act), STATUS (the claim's epistemic state), RELATION (a typed
  * link: --rel supersedes:<id>, refutes:<id>, supports:<id>, extends:<id>, …;
@@ -40,6 +40,8 @@ import { parseArtifactSpec, serializeArtifactSpec } from "./lib/artifacts.ts";
 import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
 import { atomicStoreWrite, withStoreLock } from "./lib/store-lock.ts";
 import { ledgerHeads } from "./lib/units.ts";
+import { createRelationResolver, inverseLifecycleStatus } from "./lib/relation-lifecycle.ts";
+import { collectUnits } from "./kb-index.ts";
 
 type Args = Record<string, string | boolean>;
 
@@ -103,6 +105,24 @@ function statusDisplay(vocab: Vocab, status: string): string {
   return vocab.status_glyphs?.[status] ?? status;
 }
 
+function shellQuoteArg(value: string): string {
+  const normalized = process.platform === "win32" ? value.replace(/\\/g, "/") : value;
+  if (/^[A-Za-z0-9_./:@%+=,-]+$/.test(normalized)) return normalized;
+  if (process.platform === "win32") return `"${normalized.replace(/"/g, '""')}"`;
+  return `'${normalized.split("'").join("'\"'\"'")}'`;
+}
+
+function indexNextAction(root: string) {
+  const script = join(import.meta.dir, "kb-index.ts");
+  const argv = ["bun", script, "--root", root];
+  return {
+    description: "Rebuild the derived Promptus index authoritatively",
+    command: argv.map(shellQuoteArg).join(" "),
+    argv: argv.map((item) => item.replace(/\\/g, "/")),
+    cwd: root.replace(/\\/g, "/"),
+  };
+}
+
 function catalogLine(sub: string, status: string, title: string, relPath: string, id: string, links: string[]): string {
   const metadata = [`id:${id}`, ...links.map((l) => `[[${l}]]`)];
   const tail = metadata.length ? ` · ${metadata.join(" ")}` : "";
@@ -144,7 +164,7 @@ usage: kb-add --substrate <ledger|finding|lit|memory> --kind <K> --status <S>
               --title "<title>" [--source "<source>"] [--links "a,b"]
               [--rel <type:target> ...] [--supersedes <id>]
               [--artifact "role|relative/path|sha256-or--" ...]
-              [--root <dir>] [--dry-run] < body.md
+              [--root <dir>] [--json] [--dry-run] < body.md
 Artifacts are project-relative reproducibility dependencies. '-' records an
 existence-only dependency; a SHA-256 value makes promptus-check verify bytes.`;
 
@@ -180,6 +200,18 @@ function main(argv: string[]): number {
   const v = validate(vocab, unit);
   if (!v.ok) fail(v.error, v.allowed);
   for (const w of v.warnings) console.error(`kb-add: warning: ${w}`);
+  if (relations.length) {
+    const current = collectUnits(root, vocab).filter((item) => !item.cold);
+    const resolver = createRelationResolver(current);
+    try {
+      for (const relation of relations) {
+        const target = resolver.resolve(relation.target);
+        if (target) inverseLifecycleStatus(vocab, relation, target);
+      }
+    } catch (error) {
+      fail(error instanceof Error ? error.message : String(error));
+    }
+  }
 
   const sub = vocab.substrates[unit.substrate];
   const dry = a["dry-run"] === true;
@@ -224,6 +256,7 @@ function main(argv: string[]): number {
       writes.push([unitFile, assembled]);
     } else {
       const fm: Frontmatter = { id, name: slug, description: str(a, "desc") ?? unit.title, type: unit.kind, status: unit.status };
+      if (relations.length) fm.relations = relations.map((r) => `${r.type}:${r.target}`);
       if (links.length) fm.links = links;
       if (artifacts.length) fm.artifacts = artifacts;
       assembled = `${serializeFrontmatter(fm)}\n${body}\n`;
@@ -245,11 +278,22 @@ function main(argv: string[]): number {
     let prepared: ReturnType<typeof prepare>;
     try { prepared = prepare(); }
     catch (error) { console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`); return 1; }
-    console.log(`[dry-run] would write ${rel(root, prepared.unitFile)}:`);
-    console.log("----------------------------------------");
-    console.log(prepared.assembled.replace(/\n$/, ""));
-    console.log("----------------------------------------");
-    console.log(`catalog += ${prepared.catLine}`);
+    if (a.json === true) {
+      console.log(JSON.stringify({
+        schema: "promptus.kb-add.v1",
+        dry_run: true,
+        path: rel(root, prepared.unitFile),
+        id: prepared.id,
+        catalog_card: prepared.catLine,
+        next_action: null,
+      }, null, 2));
+    } else {
+      console.log(`[dry-run] would write ${rel(root, prepared.unitFile)}:`);
+      console.log("----------------------------------------");
+      console.log(prepared.assembled.replace(/\n$/, ""));
+      console.log("----------------------------------------");
+      console.log(`catalog += ${prepared.catLine}`);
+    }
     return 0;
   }
 
@@ -266,9 +310,23 @@ function main(argv: string[]): number {
     console.error(`kb-add: ${error instanceof Error ? error.message : String(error)}`);
     return 1;
   }
-  console.log(`kb-add: ${unit.substrate}:${unit.status} — ${unit.title}`);
-  console.log(`  -> ${rel(root, committed.unitFile)}  (id ${committed.id})`);
-  console.log(`  catalog: ${rel(root, committed.catalog)}  ·  run \`bun scripts/kb-index.ts\` to rebuild authoritatively`);
+  const nextAction = indexNextAction(root);
+  if (a.json === true) {
+    console.log(JSON.stringify({
+      schema: "promptus.kb-add.v1",
+      substrate: unit.substrate,
+      status: unit.status,
+      title: unit.title,
+      path: rel(root, committed.unitFile),
+      id: committed.id,
+      catalog: rel(root, committed.catalog),
+      next_action: nextAction,
+    }, null, 2));
+  } else {
+    console.log(`kb-add: ${unit.substrate}:${unit.status} — ${unit.title}`);
+    console.log(`  -> ${rel(root, committed.unitFile)}  (id ${committed.id})`);
+    console.log(`  catalog: ${rel(root, committed.catalog)}  ·  run \`${nextAction.command}\` to rebuild authoritatively`);
+  }
   return 0;
 }
 

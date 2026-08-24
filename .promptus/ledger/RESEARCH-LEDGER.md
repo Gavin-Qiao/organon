@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-23 (Promptus 0.8.1 and Editio 0.7.0 released)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,28 +27,32 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260823T134548Z-release-editio-v070-and-refresh-the-local-codex-plugin -->
-Promptus v0.8.1 and Editio v0.7.0 are released, published, installed through Codex, and smoke-tested from their installed caches.
+<!-- kb:now-through event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling -->
+Promptus v0.8.2 remains in pull request 43. The final portability repair passes the complete local release gate and awaits refreshed macOS and Windows CI.
 
-- Promptus v0.8.1 ships the five Psi-derived correctness repairs; 45 superseded Psi dependency failures become archival warnings while 72 non-superseded failures remain red.
-- Editio v0.7.0 ships reusable venue contracts plus sourced NMI and NeurIPS adapters without project-specific paper policy.
-- Both local organon plugins are installed and enabled at their released versions; reload running sessions to discover new skill text.
+- The benchmark smoke creates its disposable index precondition on clean checkouts and proves the dry run leaves search.json byte-identical.
+- The installed-action regression asserts the runnable contract and internal argv consistency, then executes the command against the intended project without requiring OS-specific path spelling.
+- Strict health verifies 22/22 current artifacts and the complete repository gate passes all 337 tests.
+- Both adapter manifests remain at 0.8.2 and the release-note gate is ready.
+- The RTX 5090 remains reserved; no GPU context or inference has been started.
 
 ## Open frontier
 
-- Dogfood the releases in Psi, MoT, Probatio, and active papers; improve Organon only from reproduced project failures.
-- In Psi, distinguish or repair the 72 remaining non-superseded artifact failures before broadening lifecycle semantics.
-- Keep three health lights, run cards, impact tracing, frontier-aware retrieval, and a distillation queue as problem-led backlog; keep SQLite derived-only and deferred until a measured threshold.
+- Commit and push the final portability repair to pull request 43.
+- Require all five protected-main checks, including macOS and Windows, to turn green.
+- Merge, tag promptus-v0.8.2, and verify the GitHub release.
+- Refresh and validate the local Codex Promptus plugin from the released source.
 
 ## Next actions
 
-1. Resume the next real project with installed Promptus Session Doctor and record any concrete failure.
-2. Adopt Editio v0.7.0 in the next active paper and verify its venue-specific workspace before changing generated files.
-3. Reload Codex sessions as needed; no further release work is open.
+1. Commit and push the final test-contract repair.
+2. Merge only after the refreshed matrix passes.
+3. Tag and verify the published release.
+4. Reinstall locally, record the final receipt, and leave main clean.
 
 ## <<< RESUME HERE >>>
 
-Resume from released Organon by dogfooding the installed plugins; there is no active release candidate.
+Resume at committing and pushing the fully locally validated portability repair.
 
 <!-- now:end -->
 
@@ -785,5 +789,137 @@ Editio v0.7.0 is publicly released. PR #41 passed the conventional-title, hygien
 Codex updated editio@organon through the supported plugin command to cache version 0.7.0 without direct cache edits. The installed tree matches the released editio source apart from Codex-generated command adapters. The installed Doctor verifies the official NeurIPS 2026 style and completed checklist, checks draft/blind/publish content-page and PDF-size budgets, and reports the scaffold v0.7.0 smoke workspace healthy. Promptus 0.8.1 and Editio 0.7.0 are both installed and enabled; running sessions may require reload to discover the new skill text.
 Related: [[editio-general-venue-contracts-and-neurips-adapter]]
 ↳ supersedes event-20260823T134031Z-prepare-the-editio-v070-release-commit
+
+### [2026-08-23 10:27:34] RESULT/VALIDATED — Prepare the bounded semantic-retrieval benchmark
+<!-- kb:id event-20260823T142734Z-prepare-the-bounded-semantic-retrieval-benchmark -->
+<!-- kb:artifact harness|benchmarks/promptus-retrieval.ts|ad7e507f86f746e98924b8028a476b57c1dd86c419ab8748b6df8003e2b86f23 -->
+<!-- kb:artifact tests|benchmarks/promptus-retrieval.test.ts|1bcc4da92415ff9b58c6705f7322b4f6bc8b4af2e49224f515785ea43bcf81ff -->
+<!-- kb:artifact cases|benchmarks/retrieval-cases.json|eb9c4986a03acf509cfcfcc9815c7d6d60850e134aace1a087e284d0a101dcc9 -->
+<!-- kb:artifact workflow|benchmarks/README.md|a6760cd58292686e3d634538959c3fbdecbd3153223f306d6af8245d233fd3cc -->
+Prepared a benchmark-only OpenRouter adapter outside the shipped Promptus plugin. It compares the existing status-aware lexical ranking with LiquidAI dense ranking and reciprocal-rank-fused hybrid ranking over the same authoritative units; applies explicit query/document prefixes; chunks short-context passages; caches responses only under the disposable .promptus/cache tree; and requires --allow-remote before sending text. The public Organon seed has 9 paraphrased dogfood cases. Its network-free baseline over 262 live units is Recall@5 0.778, Recall@10 0.778, MRR 0.499, with 370 planned embedding inputs in at most 12 batches. Missing-key and dry-run paths write no cache. Focused tests pass 5/5; the complete repository gate passes 326 tests and 1,673 assertions. This validates the experiment harness, not the usefulness of embeddings; that remains OPEN until the remote comparison runs.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]] · [[header-beats-vector]]
+
+### [2026-08-23 10:39:57] MISTAKE/VALIDATED — Character-bounded Liquid passages exceeded its token limit
+<!-- kb:id event-20260823T143957Z-character-bounded-liquid-passages-exceeded-its-token-limit -->
+The first authorized remote trial used only public Organon units. OpenRouter successfully embedded 192 of 372 planned LiquidAI inputs, then rejected a passage reported as 554 tokens against the model's 512-token maximum. This falsifies the harness assumption that a 1,400-character ceiling safely bounds model tokens. The completed vectors remain only in the disposable gitignored benchmark cache. No Psi, MoT, Probatio, or other unpublished project material was sent. The failure does not bear on embedding usefulness because dense and hybrid rankings were not produced.
+↳ challenges event-20260823T142734Z-prepare-the-bounded-semantic-retrieval-benchmark
+
+### [2026-08-23 10:43:53] FIX/VALIDATED — Validate public Nemotron retrieval and keep private stores local
+<!-- kb:id event-20260823T144353Z-validate-public-nemotron-retrieval-and-keep-private-stores-local -->
+<!-- kb:artifact harness|benchmarks/promptus-retrieval.ts|6f3132b346d52217152d8084ab60ec569f77f85c732d78543b40118f0a4fa9ad -->
+<!-- kb:artifact tests|benchmarks/promptus-retrieval.test.ts|22b05985c6963ea912155dffcca210e5daa97122fb98f135945f540344b108fd -->
+<!-- kb:artifact cases|benchmarks/retrieval-cases.json|eb9c4986a03acf509cfcfcc9815c7d6d60850e134aace1a087e284d0a101dcc9 -->
+<!-- kb:artifact workflow|benchmarks/README.md|f4942229adc9e20d9a2304e69682302409a47e6e4d3ef80a367ba49da7d38740 -->
+OpenRouter's live Zero Data Retention inventory contains neither nvidia/nemotron-3-embed-1b:free nor liquid/lfm-2.5-embedding-350m:free. Synthetic requests carrying provider.zdr=true and provider.data_collection=deny failed closed for both with HTTP 404, "No endpoints found matching your data policy." OpenRouter itself says prompts are not retained unless logging is opted into, but upstream endpoint policy still governs; therefore unpublished Psi, MoT, Probatio, and other private stores remain excluded from both free routes. Sources: https://openrouter.ai/docs/guides/features/zdr and https://openrouter.ai/api/v1/endpoints/zdr.
+
+The benchmark harness now has model-specific asymmetric prefixes, uses a UTF-8 byte ceiling instead of the disproved character-to-token assumption, distinguishes an explicit public/non-sensitive remote run from an enforced-ZDR run, and reports the failing batch. NVIDIA's model card specifies query: for queries and passage: for documents; Liquid specifies query: and document:. The complete repository suite passes 326 tests with 1,673 assertions.
+
+With operator authorization, the public Organon seed sent 373 inputs in 12 requests to NVIDIA Nemotron 3 Embed 1B. Over 264 live units and 9 pre-labelled paraphrase cases, lexical ranking scored Recall@5 0.778, Recall@10 0.778, MRR 0.499, inactive/untrusted@10 0.000; dense scored 1.000, 1.000, 0.833, 0.078; and reciprocal-rank fusion scored 0.889, 0.889, 0.747, 0.000. Dense retrieval recovered the lexical miss at rank 2. The simple hybrid removed lifecycle contamination but demoted that semantic-only target to rank 50. This is a positive signal for a larger pre-labelled local benchmark and a lifecycle-aware semantic candidate path, not evidence to change shipped Promptus or adopt remote embeddings for private work.
+↳ fixes event-20260823T142734Z-prepare-the-bounded-semantic-retrieval-benchmark
+↳ fixes event-20260823T143957Z-character-bounded-liquid-passages-exceeded-its-token-limit
+
+### [2026-08-23 10:52:38] MISTAKE/VALIDATED — Catch the source-note body pairing error before reindexing
+<!-- kb:id event-20260823T145238Z-catch-the-source-note-body-pairing-error-before-reindexing -->
+The first two-source distillation loop selected its stdin file by testing the source URL for a title word. That predicate was false for both records, so the OpenRouter title and source were incorrectly paired with the Nemotron model-card body. Direct inspection caught the mismatch before reindexing or using the unit as evidence. Correct by superseding the bad lit unit through the gate; do not edit its bytes in place.
+↳ challenges lit-20260823T145215Z-openrouter-free-embedding-routes-retain-and-train-on-prompts
+
+### [2026-08-23 10:54:31] DECISION/RESOLVED — Stage pinned Nemotron weights and defer GPU use to the queue
+<!-- kb:id event-20260823T145431Z-stage-pinned-nemotron-weights-and-defer-gpu-use-to-the-queue -->
+Selected the official `nvidia/Nemotron-3-Embed-8B-BF16` checkpoint as the strongest currently substantiated open retrieval model for the next local benchmark. Hugging Face revision `c44c20ab3f6b430336706847a6372de4b2eb3dbd` was downloaded into `/home/mohan/.cache/huggingface/hub/models--nvidia--Nemotron-3-Embed-8B-BF16/snapshots/c44c20ab3f6b430336706847a6372de4b2eb3dbd`. `hf cache verify` checked all 18 files with no missing or extra files. The snapshot occupies about 15 GB of cache storage.
+
+The RTX 5090 was not accessed. Sandboxed NVML reported the known operating-system block; Probatio's durable findings establish that actual GPU work requires explicit unsandboxed permission and that the projection can be intermittent. Per the operator, other projects have an active queue. The run is therefore staged, not started. Resume only after explicit GPU release, then add a local adapter and execute the frozen benchmark without sending private stores to any remote provider.
+Related: [[semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa]] · [[reserve-the-rtx-5090-for-the-active-project-queue]]
+↳ extends finding-20260823T145421Z-semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa
+↳ supports memory-20260823T145425Z-reserve-the-rtx-5090-for-the-active-project-queue
+
+### [2026-08-24 02:22:22] PLAN/OPEN — Prepare the v0.8.2 fail-closed bookkeeping candidate
+<!-- kb:id event-20260824T062222Z-prepare-the-v082-fail-closed-bookkeeping-candidate -->
+The operator accepted a single backward-compatible Promptus v0.8.2 candidate derived from reproduced dogfood failures. The bounded scope is: canonical collision-resistant quarantine names for long thinker round IDs with returned custody bindings; memory relation serialization with substrate-aware inverse lifecycle projection; strict doctor rejection of stale or internally failed health receipts; and a portable runnable post-write reindex action. Existing v0.8.1 research bodies and governed thinker artifacts must remain byte-stable, migration is unnecessary, and no commit, tag, publication, or installed-plugin update occurs before operator review.
+
+### [2026-08-24 02:45:55] RESULT/VALIDATED — Validate the v0.8.2 fail-closed bookkeeping candidate
+<!-- kb:id event-20260824T064555Z-validate-the-v082-fail-closed-bookkeeping-candidate -->
+Implemented the four reproduced v0.8.1 bookkeeping corrections as one backward-compatible, operator-unreleased candidate. Long thinker round IDs now use bounded digest-suffixed quarantine slugs and bind the exact structured result returned by `kb-ingest`; already-bound historical paths remain valid when custody hashes agree, and traversal/symlink targets fail closed. Memory envelopes now retain typed relations, substrate-aware lifecycle projection retires superseded memory without modifying its source body, and illegal inverse mappings refuse both writes and reindexing. Doctor now shares the authoritative store hash with `promptus-check`, reports `healthReceiptFresh` plus concrete issues, and makes strict diagnosis reject stale or internally failed receipts while leaving inherited graph/digest/extra-tree debt report-only. `kb-add` now returns a runnable installed-indexer action with the discovered root in human and JSON modes. The 103 focused contract tests pass, the complete repository test suite passes, plugin validation passes, and a v0.8.1 compatibility fixture proves governed thinker and historical memory source bytes remain unchanged across index/check/doctor. Release manifests remain at the installed release and the changelog entry remains Unreleased pending operator review.
+↳ supersedes event-20260824T062222Z-prepare-the-v082-fail-closed-bookkeeping-candidate
+
+### [2026-08-24 02:47:36] FIX/VALIDATED — Rebind thinker custody evidence to the fail-closed implementation
+<!-- kb:id event-20260824T064736Z-rebind-thinker-custody-evidence-to-the-fail-closed-implementatio -->
+<!-- kb:artifact cli|promptus/scripts/thinker-round.ts|9802bd4d3711cd4dcea0f9346adbd44292ec0a8ef4f6f18f03058b9b3b703538 -->
+<!-- kb:artifact ingest|promptus/scripts/kb-ingest.ts|3e24f40d726e2a4aa619ffa788531151bf6d0c4cc82ff9b29151de7cbca6b283 -->
+<!-- kb:artifact custody|promptus/scripts/lib/thinker.ts|d34c58eff57aa4cffa632f13ec9637f5f07f0bf802c5408f2204f9477eff8fca -->
+<!-- kb:artifact tests|promptus/scripts/test/thinker-round.test.ts|1a5ea928368ddaebb2459c69d3d8a5770730e41eb81896586996fcdcf84f90ec -->
+The long-round custody implementation and its regression fixture now replace the earlier thinker-round implementation evidence. The previous hashes are retained as archival history through lifecycle projection; these current hashes cover canonical slugging, structured ingestion binding, historical-path verification, and the long-ID/traversal/symlink/byte-manifest regressions.
+↳ fixes event-20260823T100957Z-make-thinker-fixture-pass-repository-hygiene-without-weakening-i
+↳ fixes finding-20260823T100938Z-stateless-thinker-rounds-require-independent-adjudication
+
+### [2026-08-24 02:56:56] FIX/OPEN — Promote Promptus v0.8.2 release metadata and archive the prior mutable receipt
+<!-- kb:id event-20260824T065656Z-promote-promptus-v082-release-metadata-and-archive-the-prior-mut -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+The complete release gate initially verified 22/24 current artifact dependencies because the v0.8.1 release receipt still owned mutable manifest paths after the intentional v0.8.2 version bump. The candidate manifests now agree at 0.8.2, the changelog has a dated non-empty section, and substantive commit 82613b3 preserves the correctness patch plus benchmark dogfood. This release-candidate event supersedes the old mutable-manifest receipt so its prior hashes remain visible as archival warnings while the new bytes are current evidence. Full repository and changelog gates must still pass before tagging.
+↳ supersedes event-20260823T133714Z-release-promptus-v081-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 02:58:50] RESULT/VALIDATED — Validate the Promptus v0.8.2 release tree
+<!-- kb:id event-20260824T065850Z-validate-the-promptus-v082-release-tree -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|ff40b06b9ce5a141646bc1bf9ec2b8994a731256ee602f570be63c8d2e4b4c7a -->
+The complete repository gate passed after the release-candidate lifecycle handoff: both adapters validated at 0.8.2, strict Promptus health verified 23/23 current artifact dependencies with 34/68 superseded historical dependencies reported only as archival warnings, and bun test passed all 337 tests with zero failures. The explicit changelog gate confirmed a non-empty 18-line 0.8.2 section. This validates the release tree for commit and tag; publication and local installation remain pending.
+↳ supersedes event-20260824T065656Z-promote-promptus-v082-release-metadata-and-archive-the-prior-mut
+
+### [2026-08-24 02:59:21] FIX/RESOLVED — Correct the Promptus v0.8.2 release-gate artifact digest
+<!-- kb:id event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+The preceding validation event accidentally bound package.json to an uncomputed digest. The authoritative sha256sum is 161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949. This correction supersedes the bad receipt without rewriting history and rebinds the exact 0.8.2 manifests, changelog, and release-gate command source. The earlier full gate result remains 337 tests passed with zero failures; strict artifact verification is rerun after this write.
+↳ supersedes event-20260824T065850Z-validate-the-promptus-v082-release-tree
+
+### [2026-08-24 03:05:44] FIX/OPEN — Repair Promptus v0.8.2 release tests exposed by cross-OS CI
+<!-- kb:id event-20260824T070544Z-repair-promptus-v082-release-tests-exposed-by-cross-os-ci -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+Pull request 43 CI run 32699762740 passed Linux validation but failed the macOS benchmark smoke because a clean checkout had no derived search cache, and failed Windows because the same temporary plugin path appeared once through an 8.3 alias and once expanded. The benchmark test now builds its disposable index precondition and proves the dry run leaves search.json byte-identical. The Windows assertion now compares real filesystem identity while retaining exact argv checks for the project root and flags. The 36 focused benchmark and robustness tests pass locally; full and cross-OS gates remain pending.
+↳ supersedes event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest
+
+### [2026-08-24 03:06:32] FIX/OPEN — Bind the cross-OS repair to release and benchmark evidence
+<!-- kb:id event-20260824T070632Z-bind-the-cross-os-repair-to-release-and-benchmark-evidence -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+The first cross-OS repair event superseded the active release receipt but omitted the independently active embedding-benchmark event that owned the prior benchmark-test bytes. Strict health therefore failed 25/26 current artifacts exactly as designed. This event adds both successor edges and retains the repaired test hashes plus the complete release metadata bindings. Full repository and cross-OS validation remain pending.
+↳ supersedes event-20260824T070544Z-repair-promptus-v082-release-tests-exposed-by-cross-os-ci
+↳ supersedes event-20260823T144353Z-validate-public-nemotron-retrieval-and-keep-private-stores-local
+
+### [2026-08-24 03:08:01] RESULT/VALIDATED — Validate the cross-OS Promptus release-test repair locally
+<!-- kb:id event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|9a1192e7740c6479f25e9b193f7b3cf1d92f0808bd654c6ec364459f567a1d09 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+After binding both lifecycle branches, strict Promptus health passed with 22/22 current artifact dependencies verified and 36/89 historical dependencies reported only as archival drift. The complete repository gate then passed adapter validation and all 337 tests with zero failures, including the clean-cache benchmark precondition and canonical Windows path assertion. This validates the repair locally; macOS and Windows CI on pull request 43 remain the external portability gate.
+↳ supersedes event-20260824T070632Z-bind-the-cross-os-repair-to-release-and-benchmark-evidence
+
+### [2026-08-24 03:11:55] FIX/OPEN — Assert the installed action contract instead of OS path spelling
+<!-- kb:id event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|db2fad504a997f9bab9a6c1dc1548850d125d84210027f33d5361a5124fe5a8f -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+Pull request 43 CI run 32700230675 confirmed the benchmark repair on both platforms. The remaining macOS and Windows failure was a test-only path-spelling assumption: macOS expands /var to /private/var, while Windows may retain an 8.3 alias even through realpathSync. The regression now checks the actual contract: argv selects the installed scripts/kb-index.ts, --root equals the returned cwd, the discovered project suffix is correct, and executing the quoted command rebuilds that project catalog. All 31 robustness tests pass locally; refreshed cross-OS CI remains pending.
+↳ supersedes event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally
 
 <!-- kb:append-point -->

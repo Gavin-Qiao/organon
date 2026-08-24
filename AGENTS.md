@@ -25,6 +25,9 @@ back against real use. Do not manufacture roadmap features merely because they s
 > the verbs; `grannie` is the one human read-port. Embedding-scale machinery stays deferred
 > (the invariant).
 
+The Promptus source working tree may carry an operator-unreleased correctness candidate; treat
+manifest/tag state as the release boundary and never update an installed cache before review.
+
 ## Cadence
 
 1. **Read `.promptus/TELOS.md` first.** It holds the north star and the invariant that never bends.

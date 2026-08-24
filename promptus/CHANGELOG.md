@@ -17,6 +17,27 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-08-24
+
+### Changed
+
+- **Return the authoritative post-write action.** `kb-add` now prints a shell-safe command for the
+  installed `kb-index` with the discovered project root, and exposes the same command plus argv in
+  `--json` output instead of pointing at a usually nonexistent project-local `scripts/` directory.
+
+### Fixed
+
+- **Make long thinker-round quarantine custody canonical.** Long valid round IDs now use a bounded
+  readable slug plus a digest of the complete ID, `kb-ingest quarantine` accepts only a safe target
+  basename and returns its exact custody binding, and historical bound paths remain valid without
+  renaming when their hashes agree.
+- **Round-trip memory relations and retire their targets correctly.** Memory envelopes now serialize
+  typed relations, while substrate-aware inverse lifecycle projection marks superseded memory
+  `retired`, preserves source bytes, and refuses illegal target statuses before a write or reindex.
+- **Reject stale or failed doctor health receipts.** Doctor now uses the same source-store hash as
+  `promptus-check`, compares source and live-unit counts, honors hard receipt failures, emits
+  `healthReceiptFresh`/`healthIssues`, and makes strict checks fail with a direct recovery action.
+
 ## [0.8.1] - 2026-08-23
 
 ### Changed
@@ -506,7 +527,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.1...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.2...HEAD
+[0.8.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.1...promptus-v0.8.2
 [0.8.1]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.0...promptus-v0.8.1
 [0.8.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.7.0...promptus-v0.8.0
 [0.7.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.6.2...promptus-v0.7.0

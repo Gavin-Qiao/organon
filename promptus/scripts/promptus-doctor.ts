@@ -23,7 +23,8 @@
  *            is inherited classification/link/orphan debt unratcheted?), and print a
  *            migration/upgrade plan WITHOUT touching anything. `--strict` exits
  *            non-zero when a layout migration or mechanical book-keeping upgrade is
- *            needed (so CI / a checkpoint can gate on it). Telos hygiene, digest lag,
+ *            needed, or when the authoritative health receipt is absent, stale, or failed
+ *            (so CI / a checkpoint can gate on it). Telos hygiene, digest lag,
  *            and extra trees are report-only: judgment moves them, so the doctor names
  *            them and never edits unit bodies.
  *   migrate / upgrade
@@ -59,6 +60,7 @@ import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { inspectThinkerExchange, type ThinkerExchangeReport } from "./lib/thinker.ts";
 import { ledgerHeads } from "./lib/units.ts";
+import { hashStore } from "./lib/store-hash.ts";
 
 const SELF_DIR = dirname(fileURLToPath(import.meta.url));
 const TEMPLATE_VOCAB = join(SELF_DIR, "..", "templates", "schema", "kb-vocab.json");
@@ -152,6 +154,9 @@ interface Diagnosis {
   thinkerExchange: ThinkerExchangeReport;
   staleDerived: string[];
   debt: DebtReport;
+  /** Whether health.json is bound to the current source bytes and carries no hard failure. */
+  healthReceiptFresh: boolean;
+  healthIssues: string[];
   /** layout migration off a pre-namespace store. */
   migrationNeeded: boolean;
   /** mechanical book-keeping on an already-namespaced store (vocab merge, gitignore,
@@ -323,7 +328,12 @@ function staleDerivedOf(root: string): string[] {
   return out;
 }
 
-function readDebt(root: string): DebtReport {
+function readDebt(
+  root: string,
+  currentStore: { hash: string; files: number },
+  catalogUnits: number | null,
+  thinkerExchange: ThinkerExchangeReport,
+): { debt: DebtReport; healthReceiptFresh: boolean; healthIssues: string[] } {
   const healthPath = join(root, CANON.cache, "health.json");
   const baselinePath = join(root, ".promptus", "schema", "health-baseline.json");
   let baselineDoc: { schema?: string; unclassified?: string[]; dangling?: string[]; orphans?: string[] } | null = null;
@@ -336,9 +346,12 @@ function readDebt(root: string): DebtReport {
     unclassified: 0, dangling: 0, orphans: 0, artifactFailures: 0, archivalArtifactWarnings: 0, nowFresh: null,
     baseline: hasB, newUnclassified: null, newDangling: null, newOrphans: null, unratcheted: false,
   };
-  if (!existsSync(healthPath)) return empty;
+  if (!existsSync(healthPath)) {
+    return { debt: empty, healthReceiptFresh: false, healthIssues: ["health.json is missing"] };
+  }
   let h: any = null;
-  try { h = JSON.parse(readFileSync(healthPath, "utf8")); } catch { return empty; }
+  try { h = JSON.parse(readFileSync(healthPath, "utf8")); }
+  catch { return { debt: empty, healthReceiptFresh: false, healthIssues: ["health.json is malformed"] }; }
   const unclassified = Array.isArray(h.unclassified) ? h.unclassified : [];
   const dangling = Array.isArray(h.dangling) ? h.dangling : [];
   const orphans = Array.isArray(h.orphans) ? h.orphans : [];
@@ -347,7 +360,7 @@ function readDebt(root: string): DebtReport {
   const orphanKeys = orphans.map((x: any) => String(x));
   const extra = (cur: string[], allowed: string[] | undefined) => cur.filter((item) => !(allowed ?? []).includes(item));
   const debtN = unclassified.length + dangling.length + orphans.length;
-  return {
+  const debt: DebtReport = {
     source: "health.json",
     checkedAt: typeof h.checkedAt === "string" ? h.checkedAt : null,
     units: typeof h.units === "number" ? h.units : null,
@@ -364,6 +377,34 @@ function readDebt(root: string): DebtReport {
     newOrphans: hasB ? extra(orphanKeys, baselineDoc?.orphans).length : null,
     unratcheted: !hasB && debtN > 0,
   };
+  const issues: string[] = [];
+  if (typeof h.storeHash !== "string") issues.push("receipt store hash is missing");
+  else if (h.storeHash !== currentStore.hash) {
+    issues.push(`store hash mismatch (receipt ${h.storeHash.slice(0, 12)}; current ${currentStore.hash.slice(0, 12)})`);
+  }
+  if (typeof h.sourceFiles !== "number") issues.push("receipt source-file count is missing");
+  else if (h.sourceFiles !== currentStore.files) {
+    issues.push(`source-file count mismatch (receipt ${h.sourceFiles}; current ${currentStore.files})`);
+  }
+  if (catalogUnits != null) {
+    if (typeof h.units !== "number") issues.push("receipt unit count is missing");
+    else if (h.units !== catalogUnits) issues.push(`unit count mismatch (health ${h.units}; catalog ${catalogUnits})`);
+  }
+  if (h.stale === true) issues.push("receipt reports stale source/index state");
+  if (h.indexFailed === true) issues.push("receipt reports index failure");
+  if (typeof h.indexError === "string" && h.indexError.trim()) issues.push(`receipt reports index error: ${h.indexError.split(/\r?\n/)[0]}`);
+  if (h.now?.fresh === false) issues.push("receipt reports NOW freshness failure");
+  if (Array.isArray(h.duplicateIds) && h.duplicateIds.length) issues.push(`receipt reports ${h.duplicateIds.length} duplicate id(s)`);
+  if (Array.isArray(h.unresolvedRelations) && h.unresolvedRelations.length) {
+    issues.push(`receipt reports ${h.unresolvedRelations.length} unresolved relation target(s)`);
+  }
+  if (Array.isArray(h.artifactFailures) && h.artifactFailures.length) {
+    issues.push(`receipt reports ${h.artifactFailures.length} current artifact failure(s)`);
+  }
+  const receiptThinkerInvalid = h.thinkerExchange?.present === true && h.thinkerExchange?.markerValid === true && h.thinkerExchange?.governed !== true;
+  const liveThinkerInvalid = thinkerExchange.present && thinkerExchange.markerValid && !thinkerExchange.governed;
+  if (receiptThinkerInvalid || liveThinkerInvalid) issues.push("receipt or live store reports damaged thinker custody");
+  return { debt, healthReceiptFresh: issues.length === 0, healthIssues: issues };
 }
 
 /** Push a bare store path under .promptus/ if it isn't already there. */
@@ -478,7 +519,9 @@ function diagnose(start: string, opts: { recordBaseline?: boolean } = {}): Diagn
   const thinkerExchange = inspectThinkerExchange(root);
   const extraTrees = extraTreesOf(root, thinkerExchange.markerValid ? new Set(["thinker"]) : new Set());
   const staleDerived = staleDerivedOf(root);
-  const debt = readDebt(root);
+  const currentStore = hashStore(root);
+  const health = readDebt(root, currentStore, catalogUnits, thinkerExchange);
+  const debt = health.debt;
 
   // A root-level twin of a namespaced store is a pre-migration leftover that can only
   // diverge (the gate writes .promptus/ alone); one real repo needed a 264-reference
@@ -627,7 +670,8 @@ function diagnose(start: string, opts: { recordBaseline?: boolean } = {}): Diagn
     && (!thinkerExchange.present || thinkerExchange.governed)
     && rootTwins.length === 0
     && debt.artifactFailures === 0
-    && !debt.unratcheted;
+    && !debt.unratcheted
+    && health.healthReceiptFresh;
 
   return {
     root, vocabPath: loc.vocabPath, vocabLocation: loc.location, vocabVersion: old?.version ?? null, targetVersion,
@@ -635,6 +679,7 @@ function diagnose(start: string, opts: { recordBaseline?: boolean } = {}): Diagn
     catalogLag, ledgerUnits, catalogUnits, rootTwins, digestLag,
     vocabBehind, vocabMissing: gap.missing, vocabExtras: gap.extras,
     extraTrees, thinkerExchange, staleDerived, debt,
+    healthReceiptFresh: health.healthReceiptFresh, healthIssues: health.healthIssues,
     migrationNeeded, bookkeepingNeeded, fullyHealthy, plan, notes,
   };
 }
@@ -735,6 +780,10 @@ function reportCheck(d: Diagnosis): void {
       console.log("  FLAG debt-baseline: inherited dangling/orphan/unclassified debt has no health-baseline.json — record with promptus-doctor upgrade --apply --record-baseline (or promptus-check --record-baseline)");
     }
   }
+  if (!d.healthReceiptFresh) {
+    console.log(`  FLAG health-receipt: ${d.healthIssues.slice(0, 6).join("; ")}${d.healthIssues.length > 6 ? "; …" : ""}`);
+    console.log("    run promptus-check to rebuild the authoritative health receipt before trusting this diagnosis");
+  }
   if (d.telosHygiene.length) {
     console.log(`  telos hygiene: ${d.telosHygiene.length} event-shaped line(s) — the Telos is direction, rewritten in place;`);
     console.log("    route events to the ledger (kb-add), the frontier to the NOW-header (kb-now), settled facts to memory:");
@@ -771,7 +820,7 @@ usage: promptus-doctor [check|migrate|upgrade] [--root <dir>] [--apply] [--stric
   migrate | upgrade  layout migration or current-layout book-keeping; dry-run unless --apply
   --apply            perform the plan; never edits unit bodies
   --record-baseline  with migrate/upgrade --apply, record inherited debt after reindex
-  --strict           non-zero when a layout migration or mechanical upgrade remains
+  --strict           non-zero when migration/book-keeping remains or health.json is stale/failed
   --json             machine-readable diagnosis (vocab write payloads omitted)
 A current-layout repo is not reported fully healthy while vocab is behind the
 template, the catalog lags, gitignore is broad, leftover derived files sit at
@@ -795,7 +844,7 @@ function main(argv: string[]): number {
     return 2;
   }
 
-  const strictFail = (d.migrationNeeded || d.bookkeepingNeeded) && has("strict");
+  const strictFail = (d.migrationNeeded || d.bookkeepingNeeded || !d.healthReceiptFresh) && has("strict");
   if (has("json")) { console.log(JSON.stringify(d, (k, v) => (k === "content" ? undefined : v), 2)); return strictFail ? 1 : 0; }
 
   if (cmd === "check") {

@@ -9,7 +9,7 @@
  *   2. Parse each unit's header/frontmatter (frontmatter.ts), [[links]], and typed relations.
  *   3. Rebuild CATALOG.md plus the bounded lexical search.json (both disposable).
  *   4. Rebuild graph.json — canonical [[link]] adjacency + typed relations (CiTO/PROV IRIs).
- *   5. Apply relation inverse_status (a `supersedes`/`fixes` target is marked SUPERSEDED in place).
+ *   5. Apply substrate-aware relation inverse status in the derived projection only.
  *   6. Lint + report: orphans (no resolved wikilink or typed relation) and unresolved links.
  *   7. Idempotent. With --strict, exit non-zero when lint finds problems (gates /checkpoint).
  */
@@ -22,7 +22,7 @@ import { extractLinks } from "./lib/links.ts";
 import { loadVocab, type Relation, type Vocab } from "./lib/vocab.ts";
 import { derivedDir, findProjectRoot } from "./lib/paths.ts";
 import { ledgerHeads } from "./lib/units.ts";
-import { slugify } from "./lib/ids.ts";
+import { createRelationResolver, inverseLifecycleStatus } from "./lib/relation-lifecycle.ts";
 import { buildSearchIndex, type SearchSourceDocument } from "./lib/search.ts";
 import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
 
@@ -197,28 +197,9 @@ export function main(argv: string[]): number {
   const liveUnits = units.filter((unit) => !unit.cold);
   const coldUnits = units.filter((unit) => unit.cold);
 
-  // relation inverse_status: a `supersedes`/`fixes` target is marked SUPERSEDED in place.
-  const byId = new Map(liveUnits.filter((u) => u.id).map((u) => [u.id!, u]));
-  const bySlug = new Map(liveUnits.filter((u) => u.slug).map((u) => [u.slug!, u]));
-  const byAlias = new Map<string, Unit[]>();
-  for (const unit of liveUnits) {
-    for (const alias of unit.aliases) byAlias.set(alias, [...(byAlias.get(alias) ?? []), unit]);
-  }
-  const ledgerByTitle = new Map<string, Unit[]>();
-  for (const u of liveUnits.filter((x) => x.substrate === "ledger")) {
-    const titleSlug = slugify(u.title);
-    ledgerByTitle.set(titleSlug, [...(ledgerByTitle.get(titleSlug) ?? []), u]);
-  }
-  const resolveTarget = (target: string): Unit | undefined => {
-    const direct = byId.get(target) ?? bySlug.get(target);
-    if (direct) return direct;
-    const aliasMatches = byAlias.get(target) ?? [];
-    if (aliasMatches.length === 1) return aliasMatches[0];
-    const legacy = /^event-\d{8}T\d{6}Z-(.+)$/.exec(target)?.[1];
-    if (!legacy) return undefined;
-    const matches = ledgerByTitle.get(legacy) ?? [];
-    return matches.length === 1 ? matches[0] : undefined;
-  };
+  // Relation lifecycle projection: page/log history becomes SUPERSEDED; memory becomes retired.
+  const resolver = createRelationResolver(liveUnits);
+  const resolveTarget = resolver.resolve;
   const nodes = new Set(liveUnits.filter((u) => u.slug).map((u) => u.slug!));
   const relationDegree: Record<string, number> = Object.fromEntries([...nodes].map((slug) => [slug, 0]));
   const relEdges: Array<{ from: string; type: string; to: string; rawTo?: string; resolved: boolean; cito?: string; prov?: string }> = [];
@@ -227,7 +208,8 @@ export function main(argv: string[]): number {
     for (const r of u.relations) {
       const spec = vocab.relations[r.type] ?? {};
       const target = resolveTarget(r.target);
-      if (spec.inverse_status && target) target.status = spec.inverse_status;
+      const inverseStatus = target ? inverseLifecycleStatus(vocab, r, target) : undefined;
+      if (inverseStatus && target) target.status = inverseStatus;
       if (target) {
         if (u.slug) relationDegree[u.slug] = (relationDegree[u.slug] ?? 0) + 1;
         if (target.slug) relationDegree[target.slug] = (relationDegree[target.slug] ?? 0) + 1;
@@ -278,7 +260,7 @@ export function main(argv: string[]): number {
         dangling.push({
           from: key,
           target: rawTarget,
-          reason: (byAlias.get(rawTarget)?.length ?? 0) > 1 ? "ambiguous-alias" : "unresolved",
+          reason: resolver.aliasCount(rawTarget) > 1 ? "ambiguous-alias" : "unresolved",
         });
       }
     }

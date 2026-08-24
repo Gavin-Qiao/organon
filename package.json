@@ -14,6 +14,7 @@
     "doctor": "bun promptus/scripts/promptus-doctor.ts",
     "ingest": "bun promptus/scripts/kb-ingest.ts",
     "export": "bun promptus/scripts/kb-export.ts",
+    "benchmark:retrieval": "bun benchmarks/promptus-retrieval.ts",
     "changelog:check": "bun promptus/scripts/changelog.ts check",
     "pr-title:check": "bun promptus/scripts/check-pr-title.ts",
     "check": "bun run validate && bun run health && bun test"

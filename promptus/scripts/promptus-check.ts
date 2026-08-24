@@ -1,14 +1,14 @@
 #!/usr/bin/env bun
 /** promptus-check.ts — authoritative whole-store integrity, freshness, and debt gate. */
 
-import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { checkArtifact, parseArtifactSpec } from "./lib/artifacts.ts";
 import { derivedDir, findProjectRoot, storePath } from "./lib/paths.ts";
 import { ledgerEntries } from "./lib/units.ts";
 import { loadVocab } from "./lib/vocab.ts";
 import { inspectThinkerExchange } from "./lib/thinker.ts";
+import { hashStore } from "./lib/store-hash.ts";
 import { main as rebuildIndex } from "./kb-index.ts";
 
 interface Card { substrate: string; status: string; title: string; path: string; id?: string }
@@ -44,34 +44,6 @@ The ratchet baseline is source-controlled .promptus/schema/health-baseline.json.
 function arg(argv: string[], name: string): string | undefined {
   const index = argv.indexOf("--" + name);
   return index >= 0 && argv[index + 1] && !argv[index + 1].startsWith("--") ? argv[index + 1] : undefined;
-}
-
-function filesUnder(dir: string): string[] {
-  if (!existsSync(dir)) return [];
-  const out: string[] = [];
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    if (entry.name === "cache" || entry.name === ".git") continue;
-    const path = join(dir, entry.name);
-    if (entry.isDirectory()) out.push(...filesUnder(path));
-    else if (entry.isFile()) out.push(path);
-  }
-  return out;
-}
-
-function hashStore(root: string): { hash: string; files: number } {
-  const base = join(root, ".promptus");
-  const paths = filesUnder(base).filter((path) => {
-    const rel = relative(base, path).replace(/\\/g, "/");
-    return rel !== "thinker/INDEX.md" && !/^thinker\/rounds\/[^/]+\/ROUND\.md$/.test(rel);
-  }).sort((left, right) => left.localeCompare(right));
-  const hash = createHash("sha256");
-  for (const path of paths) {
-    hash.update(relative(base, path).replace(/\\/g, "/"));
-    hash.update("\0");
-    hash.update(readFileSync(path));
-    hash.update("\0");
-  }
-  return { hash: hash.digest("hex"), files: paths.length };
 }
 
 function parseCatalog(text: string): Card[] {

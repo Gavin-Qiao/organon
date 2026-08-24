@@ -188,9 +188,23 @@ export function roundPaths(root: string, roundId: string): RoundPaths {
   };
 }
 
-export function quarantinePath(root: string, roundId: string): string {
+/**
+ * One quarantine basename for a governed round. Short v0.8.1 names remain byte-for-byte
+ * compatible; long names retain a readable prefix and bind the complete ID through a digest.
+ */
+export function thinkerQuarantineSlug(roundId: string): string {
   validateRoundId(roundId);
-  return join(root, ".promptus", "docs", "lit", `external-thinker-${roundId}-response.md`);
+  const legacy = `external-thinker-${roundId}-response`;
+  if (legacy.length <= 64) return legacy;
+  const digest = createHash("sha256").update(roundId).digest("hex").slice(0, 12);
+  const head = "external-thinker-";
+  const tail = `-response-${digest}`;
+  const readable = roundId.slice(0, 64 - head.length - tail.length).replace(/-+$/, "");
+  return `${head}${readable}${tail}`;
+}
+
+export function quarantinePath(root: string, roundId: string): string {
+  return join(root, ".promptus", "docs", "lit", `${thinkerQuarantineSlug(roundId)}.md`);
 }
 
 export function sha256Bytes(value: Uint8Array): string {
@@ -400,22 +414,28 @@ export function inspectRound(root: string, roundId: string): RoundSummary {
     if (intake.disposition === "QUARANTINED") {
       if (!intake.quarantine) issues.push("intake lacks quarantine binding");
       else {
-        const expectedQuarantine = quarantinePath(root, roundId);
-        if (intake.quarantine.path !== projectRelative(root, expectedQuarantine)) {
-          issues.push(`quarantine unit points to ${intake.quarantine.path}; expected ${projectRelative(root, expectedQuarantine)}`);
-        }
         const path = retainedPath(root, intake.quarantine.path, "quarantine unit", issues);
         if (!path) { /* path issue already recorded */ }
-        else if (!existsSync(path)) issues.push(`quarantine unit missing: ${intake.quarantine.path}`);
+        else if ((() => {
+          const lit = join(root, ".promptus", "docs", "lit");
+          const rel = relative(lit, path);
+          return rel.startsWith("..") || isAbsolute(rel);
+        })()) {
+          issues.push(`quarantine unit is outside .promptus/docs/lit/: ${intake.quarantine.path}`);
+        } else if (!existsSync(path)) issues.push(`quarantine unit missing: ${intake.quarantine.path}`);
         else {
-          const raw = readFileSync(path);
-          const { data } = parseFrontmatter(raw.toString("utf8"));
-          if (
-            data.id !== intake.quarantine.id || data.status !== "UNTRUSTED" ||
-            data.source !== intake.quarantine.source || data.content_sha256 !== intake.response.sha256 ||
-            sha256Bytes(raw) !== intake.quarantine.wrapper_sha256
-          ) {
-            issues.push(`quarantine binding drifted: ${intake.quarantine.path}`);
+          try {
+            const raw = readStable(path);
+            const { data } = parseFrontmatter(raw.toString("utf8"));
+            if (
+              data.id !== intake.quarantine.id || data.status !== "UNTRUSTED" ||
+              data.source !== intake.quarantine.source || data.content_sha256 !== intake.response.sha256 ||
+              sha256Bytes(raw) !== intake.quarantine.wrapper_sha256
+            ) {
+              issues.push(`quarantine binding drifted: ${intake.quarantine.path}`);
+            }
+          } catch (error) {
+            issues.push(`quarantine unit unreadable: ${error instanceof Error ? error.message : String(error)}`);
           }
         }
       }
