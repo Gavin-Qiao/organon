@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (Bind current thinker evidence and retain old hashes as archival)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,31 +27,32 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T064736Z-rebind-thinker-custody-evidence-to-the-fail-closed-implementatio -->
-The fail-closed Promptus bookkeeping candidate is implemented and validated but remains unreleased. Release manifests, tags, publication state, and the installed Codex plugin are unchanged pending operator review.
+<!-- kb:now-through event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest -->
+Promptus v0.8.2 is release-ready: the correctness and retrieval-dogfood work is committed as 82613b3, while validated release metadata and its Promptus receipts await the conventional release commit.
 
-- Long thinker rounds now have collision-resistant canonical quarantine names and exact returned custody bindings, while governed historical paths remain read-only compatible.
-- Memory relations round-trip and project substrate-legal lifecycle states without rewriting historical bodies.
-- Strict doctor binds health receipts to current source bytes/counts and rejects failed receipts with a direct recovery action.
-- `kb-add` now returns a runnable installed-plugin reindex action; the live dogfood write exercised that output successfully.
-- All focused contract tests, the complete repository test suite, plugin validation, and the v0.8.1 byte-manifest compatibility fixture pass.
-- The semantic retrieval/GPU frontier is unchanged: the Nemotron weights remain staged and the RTX 5090 remains reserved by the active project queue.
+- Both adapter manifests agree at 0.8.2 and the dated changelog section is non-empty.
+- The complete repository gate passed all 337 tests with zero failures; the explicit changelog gate passed.
+- A mistaken package.json artifact digest in the first validation receipt was preserved then superseded with the computed digest, exercising fail-closed correction without rewriting history.
+- Publication, GitHub release verification, and local Codex reinstallation remain pending.
+- The RTX 5090 remains reserved; no GPU context or inference has been started.
 
 ## Open frontier
 
-- Operator review of the unreleased Promptus correctness candidate and its release shape.
-- Wait for explicit operator release of the RTX 5090 before any unsandboxed GPU access.
-- Freeze a larger independently labelled retrieval query set before evaluating local dense integration.
+- Strictly verify the corrected current receipt.
+- Commit and publish promptus-v0.8.2, then verify the GitHub release workflow.
+- Refresh and validate the local Codex Promptus plugin from the released source.
+- Keep the embedding benchmark paused until the GPU queue is explicitly released.
 
 ## Next actions
 
-1. Review the candidate diff and acceptance evidence with the operator.
-2. Only if approved, perform the conventional Promptus patch release, then update the local Codex plugin from that release.
-3. Keep the embedding benchmark paused until the GPU queue is explicitly released.
+1. Reindex and run strict Promptus health on the corrected receipt.
+2. Commit the release metadata, push main, tag promptus-v0.8.2, and verify publication.
+3. Reinstall the local Codex plugin through the cache-safe update flow.
+4. Record the final release receipt and leave main clean.
 
 ## <<< RESUME HERE >>>
 
-Resume at operator review of the unreleased bookkeeping candidate. Do not commit, tag, publish, reinstall, or use the GPU without the corresponding explicit instruction.
+Resume at strict verification of the corrected Promptus v0.8.2 release receipt.
 
 <!-- now:end -->
 
@@ -849,5 +850,31 @@ Implemented the four reproduced v0.8.1 bookkeeping corrections as one backward-c
 The long-round custody implementation and its regression fixture now replace the earlier thinker-round implementation evidence. The previous hashes are retained as archival history through lifecycle projection; these current hashes cover canonical slugging, structured ingestion binding, historical-path verification, and the long-ID/traversal/symlink/byte-manifest regressions.
 ↳ fixes event-20260823T100957Z-make-thinker-fixture-pass-repository-hygiene-without-weakening-i
 ↳ fixes finding-20260823T100938Z-stateless-thinker-rounds-require-independent-adjudication
+
+### [2026-08-24 02:56:56] FIX/OPEN — Promote Promptus v0.8.2 release metadata and archive the prior mutable receipt
+<!-- kb:id event-20260824T065656Z-promote-promptus-v082-release-metadata-and-archive-the-prior-mut -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+The complete release gate initially verified 22/24 current artifact dependencies because the v0.8.1 release receipt still owned mutable manifest paths after the intentional v0.8.2 version bump. The candidate manifests now agree at 0.8.2, the changelog has a dated non-empty section, and substantive commit 82613b3 preserves the correctness patch plus benchmark dogfood. This release-candidate event supersedes the old mutable-manifest receipt so its prior hashes remain visible as archival warnings while the new bytes are current evidence. Full repository and changelog gates must still pass before tagging.
+↳ supersedes event-20260823T133714Z-release-promptus-v081-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 02:58:50] RESULT/VALIDATED — Validate the Promptus v0.8.2 release tree
+<!-- kb:id event-20260824T065850Z-validate-the-promptus-v082-release-tree -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|ff40b06b9ce5a141646bc1bf9ec2b8994a731256ee602f570be63c8d2e4b4c7a -->
+The complete repository gate passed after the release-candidate lifecycle handoff: both adapters validated at 0.8.2, strict Promptus health verified 23/23 current artifact dependencies with 34/68 superseded historical dependencies reported only as archival warnings, and bun test passed all 337 tests with zero failures. The explicit changelog gate confirmed a non-empty 18-line 0.8.2 section. This validates the release tree for commit and tag; publication and local installation remain pending.
+↳ supersedes event-20260824T065656Z-promote-promptus-v082-release-metadata-and-archive-the-prior-mut
+
+### [2026-08-24 02:59:21] FIX/RESOLVED — Correct the Promptus v0.8.2 release-gate artifact digest
+<!-- kb:id event-20260824T065920Z-correct-the-promptus-v082-release-gate-artifact-digest -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+The preceding validation event accidentally bound package.json to an uncomputed digest. The authoritative sha256sum is 161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949. This correction supersedes the bad receipt without rewriting history and rebinds the exact 0.8.2 manifests, changelog, and release-gate command source. The earlier full gate result remains 337 tests passed with zero failures; strict artifact verification is rerun after this write.
+↳ supersedes event-20260824T065850Z-validate-the-promptus-v082-release-tree
 
 <!-- kb:append-point -->
