@@ -27,29 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree -->
-Promptus v0.9.1 is a fully validated narrow correctness release candidate on the dedicated release branch.
+<!-- kb:now-through event-20260824T115718Z-release-promptus-v091-and-refresh-the-local-codex-plugin -->
+Promptus v0.9.1 is released, published, and locally active. Its narrow retired-artifact correction is complete.
 
-- Fix PR 48 merged to protected main at 48fb4bea860f9a740e5049c865e0381a854c52d1 after all five required checks passed.
-- Both Promptus manifests carry 0.9.1 and the dated changelog section passes the release-note gate.
-- The exact release tree passes marketplace validation, strict health with 25/25 current artifacts, and all 352 tests with 1,912 assertions.
-- No tag, GitHub release, or installed Codex cache has changed yet.
+- Fix PR 48 and release PR 49 passed Linux, macOS, Windows, hygiene, validator, and conventional-title checks.
+- Tag promptus-v0.9.1 points to 032b75e5fae3f00858191c36183e30a1aa8bba77; release workflow 32723949548 published successfully.
+- Codex installed exact official version 0.9.1; source/cache equivalence, installed strict health, and installed session readiness are verified.
+- A separate dependency-maintenance pass is now active; local Bun has moved from 1.3.14 to stable 1.4.0.
 
 ## Open frontier
 
-- Merge the release PR through protected CI and tag its exact merge commit.
-- Verify GitHub publication, then reinstall the official plugin and verify the cache.
-- Start a new Codex task and upgrade MoT schema v4 to v5.
+- Update GitHub Actions and pre-commit hook dependencies to their verified latest releases in a separate maintenance PR.
+- Start a genuinely new Codex task/session for MoT schema v4 to v5 and rerun MoT health there.
+- Prune only merged stale branches and worktrees after both tasks close.
 
 ## Next actions
 
-1. Commit and open the conventional release PR.
-2. Merge only after all required checks pass, then push promptus-v0.9.1.
-3. Verify publication, reinstall, and hand MoT to a new task.
+1. Land the dependency refresh through protected CI.
+2. Start the new Codex MoT task with the installed Promptus v0.9.1 cache.
+3. Record final receipts and clean merged branches/worktrees.
 
 ## <<< RESUME HERE >>>
 
-Resume at the release PR from event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree; publication remains pending.
+Promptus v0.9.1 is complete. Resume at the separate dependency-maintenance branch, then hand MoT to a new v0.9.1 session.
 
 <!-- now:end -->
 
@@ -1053,5 +1053,18 @@ Prepared the Promptus v0.9.1 release tree after the correctness fix landed on pr
 <!-- kb:artifact release-notes|promptus/CHANGELOG.md|ada333ecc757b40564097b8b96b2d2eb907fa25cae8a51f16960c025acdecd75 -->
 The exact 0.9.1 release candidate passed the complete local gate after the manifest and changelog bump: both marketplaces and adapters validated, strict health verified 25/25 current artifact dependencies with no duplicate IDs, unresolved relations, or unclassified units, and all 352 tests passed with 1,912 assertions. The explicit 0.9.1 changelog extraction gate also passed with a non-empty five-line section.
 ↳ supports event-20260824T114610Z-prepare-promptus-v091-release-candidate
+
+### [2026-08-24 07:57:18] RESULT/VALIDATED — Release Promptus v0.9.1 and refresh the local Codex plugin
+<!-- kb:id event-20260824T115718Z-release-promptus-v091-and-refresh-the-local-codex-plugin -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|51f880a08c7a1d53f5e50bdfe7f2e63c7750170ff726cf2b079cd6a70c3deecc -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|0ca1d27ec80d2e96763d01b653dcfd1f4caf03f48b4868e0d8a26418180e5487 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|ada333ecc757b40564097b8b96b2d2eb907fa25cae8a51f16960c025acdecd75 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|4eed5aaa9391a1fe294e38c5007b8369af933863e64d82c6eb647ade9a5e4695 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2c39e2c95a03f0494c75290d42ef2327f60e9e4c36eef14e6e3ec74ee5920d92 -->
+<!-- kb:artifact check-regressions|promptus/scripts/test/check.test.ts|1bcf48a8a83484e901671273525bf1f5b678912748068324cf47e78f16843c18 -->
+<!-- kb:artifact session-doctor-regressions|promptus/scripts/test/session-doctor.test.ts|841f30ec6ad9b010c0dd86c1beddd3820f646238f0f3e163f21741cde489e682 -->
+Promptus v0.9.1 is released, published, and locally active in Codex. Protected-main release PR 49 merged at 032b75e5fae3f00858191c36183e30a1aa8bba77 after all five required checks passed. Lightweight tag promptus-v0.9.1 points to that exact merge, and release workflow 32723949548 completed successfully in 32 seconds after independently validating the plugin, tests, store health, manifest/tag parity, and changelog extraction. The public release is https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.9.1 and is neither draft nor prerelease. Codex installed the official tree at /home/mohan/.codex/plugins/cache/organon/promptus/0.9.1; both cached manifests report 0.9.1 and the source matches the cache exactly apart from generated migrated command skills. The installed strict check exits zero with 28/28 current artifacts, and the installed read-only session doctor reports sessionReady true. A new Codex task is still the safe boundary for MoT schema migration.
+↳ supersedes event-20260824T114610Z-prepare-promptus-v091-release-candidate
+↳ supports event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree
 
 <!-- kb:append-point -->
