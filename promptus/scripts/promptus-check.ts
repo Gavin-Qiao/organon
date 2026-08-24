@@ -88,8 +88,10 @@ function nowFreshness(ledger: string) {
 }
 
 const danglingKey = (item: Dangling) => `${item.from}→${item.target}`;
-const isArchivalArtifactStatus = (status: string | undefined) =>
-  String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase() === "SUPERSEDED";
+const isArchivalArtifactStatus = (status: string | undefined) => {
+  const normalized = String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase();
+  return normalized === "SUPERSEDED" || normalized === "RETIRED";
+};
 
 function main(argv: string[]): number {
   if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }

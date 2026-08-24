@@ -156,3 +156,40 @@ test("superseded artifact drift warns while current artifact drift remains a har
   expect(health.archivalArtifactWarnings).toHaveLength(1);
   expect(health.healthy).toBe(false);
 });
+
+test("retired memory artifact drift warns while active memory drift remains a hard failure", () => {
+  const root = scaffold();
+  const badHash = "0".repeat(64);
+  mkdirSync(join(root, ".promptus", "memory"), { recursive: true });
+  writeFileSync(join(root, "memory-evidence.txt"), "changed memory evidence\n");
+  writeFileSync(join(root, ".promptus", "memory", "retired-evidence.md"), [
+    "---", "id: memory-retired-evidence", "name: retired-evidence", "type: project", "status: validated",
+    `artifacts: [evidence|memory-evidence.txt|${badHash}]`, "---", "# Retired evidence", "",
+  ].join("\n"));
+  writeFileSync(join(root, ".promptus", "memory", "replacement-evidence.md"), [
+    "---", "id: memory-replacement-evidence", "name: replacement-evidence", "type: project", "status: validated",
+    "relations: [supersedes:memory-retired-evidence]", "---", "# Replacement evidence", "",
+  ].join("\n"));
+
+  const archival = run(root);
+  expect(archival.status).toBe(0);
+  expect(archival.out).toContain("WARN archival artifact drift: 1");
+  let health = JSON.parse(readFileSync(join(root, ".promptus", "cache", "health.json"), "utf8"));
+  expect(health.artifactFailures).toHaveLength(0);
+  expect(health.archivalArtifactWarnings).toHaveLength(1);
+  expect(health.archivalArtifactWarnings[0].status).toBe("retired");
+  expect(health.healthy).toBe(true);
+
+  writeFileSync(join(root, ".promptus", "memory", "active-evidence.md"), [
+    "---", "id: memory-active-evidence", "name: active-evidence", "type: project", "status: validated",
+    `artifacts: [evidence|memory-evidence.txt|${badHash}]`, "---", "# Active evidence", "",
+  ].join("\n"));
+  const active = run(root);
+  expect(active.status).toBe(1);
+  expect(active.out).toContain("FAIL current artifact dependencies");
+  health = JSON.parse(readFileSync(join(root, ".promptus", "cache", "health.json"), "utf8"));
+  expect(health.artifactFailures).toHaveLength(1);
+  expect(health.artifactFailures[0].status).toBe("validated");
+  expect(health.archivalArtifactWarnings).toHaveLength(1);
+  expect(health.healthy).toBe(false);
+});

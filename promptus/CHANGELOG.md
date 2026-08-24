@@ -17,6 +17,12 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Fixed
+
+- **Treat retired memory artifact drift as archival.** Artifact mismatches owned by memory projected
+  to `retired` now remain visible as archival warnings without blocking an otherwise ready session;
+  the same mismatch on an active unit remains a hard failure.
+
 ## [0.9.0] - 2026-08-24
 
 ### Added

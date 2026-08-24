@@ -349,8 +349,10 @@ function outcomeCounts(values: Array<{ outcome?: string }>): Record<string, numb
   return counts;
 }
 
-const isArchivalArtifactStatus = (status: string | undefined) =>
-  String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase() === "SUPERSEDED";
+const isArchivalArtifactStatus = (status: string | undefined) => {
+  const normalized = String(status ?? "").replace(/^[★⚠↩]/, "").trim().toUpperCase();
+  return normalized === "SUPERSEDED" || normalized === "RETIRED";
+};
 
 function relationCounts(values: NonNullable<GraphDocument["relations"]>): Record<string, { resolved: number; unresolved: number }> {
   const counts: Record<string, { resolved: number; unresolved: number }> = {};
@@ -602,7 +604,7 @@ function main(argv: string[]): number {
   if (receiptNewDebt) addIssue(healthFresh ? "error" : "warning", "RATCHET_DEBT", `health receipt names ${receiptNewDebt} post-baseline classification/graph defect(s)${healthFresh ? "" : " (receipt is stale)"}`);
   if (cached.dangling || cached.orphans) addIssue("warning", "GRAPH_DEBT", `cached graph names ${cached.dangling} dangling link(s) and ${cached.orphans} orphan(s)${healthFresh ? "" : " (receipt is stale)"}`);
   if (cached.artifactFailures) addIssue(healthFresh ? "error" : "warning", "ARTIFACT_DEBT", `health receipt names ${cached.artifactFailures}/${cached.artifactChecks} failed artifact dependencies${healthFresh ? "" : " (receipt is stale)"}`);
-  if (cached.archivalArtifactWarnings) addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT", `health receipt names ${cached.archivalArtifactWarnings} failed artifact dependency record(s) owned by superseded units; active evidence remains unaffected${healthFresh ? "" : " (receipt is stale)"}`);
+  if (cached.archivalArtifactWarnings) addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT", `health receipt names ${cached.archivalArtifactWarnings} failed artifact dependency record(s) owned by superseded or retired units; active evidence remains unaffected${healthFresh ? "" : " (receipt is stale)"}`);
 
   const cachedGraph = {
     authoritative: healthFresh,
@@ -648,7 +650,7 @@ function main(argv: string[]): number {
     const archivalChanged = cachedArchivalKeys.size !== liveArchivalKeys.size
       || [...liveArchivalKeys].some((key) => !cachedArchivalKeys.has(key));
     if (archivalWarnings.length && (!healthFresh || archivalChanged)) {
-      addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT_NOW", `${archivalWarnings.length} superseded-unit artifact dependencies fail a live read-only check`);
+      addIssue("warning", "ARCHIVAL_ARTIFACT_DRIFT_NOW", `${archivalWarnings.length} superseded- or retired-unit artifact dependencies fail a live read-only check`);
     }
     if (!healthFresh && artifactChecks.length) addIssue("warning", "ARTIFACT_COVERAGE_STALE", "live artifact checks cover only dependencies in a stale graph cache");
   } else if (cachedGraph.artifactRecords) {

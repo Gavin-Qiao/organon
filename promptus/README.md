@@ -175,7 +175,7 @@ flowchart LR
   (graph health: dangling `[[handles]]` with a "did you mean?", plus units with neither a resolved
   wikilink nor a resolved typed relation),
   `scripts/promptus-check.ts --strict` (authoritative integrity, NOW, artifact, thinker-custody, and freshness gate;
-  active artifact failures are red while superseded-unit drift is an archival warning;
+  active artifact failures are red while superseded- or retired-unit drift is an archival warning;
   `--ratchet` enforces no new inherited debt), + `/promptus:checkpoint`. `promptus-doctor check
   --strict` independently binds `health.json` to the current source hash, source-file count, and
   live catalog count, and refuses stale or internally failed receipts with a direct
@@ -183,7 +183,7 @@ flowchart LR
 - **PREFLIGHT** → `scripts/promptus-session-doctor.ts` is the strictly read-only gate a session
   agent runs before trusting a long-running project's NOW or cache. It compares every live source
   unit with catalog/search and every archived unit with cold search, detects ambiguous identities and search keys, distinguishes stale
-  receipts from current evidence, separates current artifact failures from superseded archival
+  receipts from current evidence, separates current artifact failures from superseded or retired archival
   warnings, and diagnoses graph, alias, ratchet, artifact, and layout debt.
   It never reindexes, repairs, refreshes, or baselines.
 - **RETRIEVE** → two tiers. `scripts/kb-find.ts` ranks the lexical index, caps output at 20,
