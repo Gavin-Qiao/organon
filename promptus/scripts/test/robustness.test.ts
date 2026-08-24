@@ -9,9 +9,7 @@
  */
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
-import {
-  cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync,
-} from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -279,9 +277,9 @@ test("kb-add JSON action survives spaces in plugin/project paths and discovers a
   expect(added.status).toBe(0);
   const result = JSON.parse(added.stdout);
   expect(result.next_action.argv[0]).toBe("bun");
-  expect(realpathSync(result.next_action.argv[1])).toBe(realpathSync(join(plugin, "scripts", "kb-index.ts")));
-  expect(result.next_action.argv.slice(2)).toEqual(["--root", root.replace(/\\/g, "/")]);
-  expect(result.next_action.cwd).toBe(root.replace(/\\/g, "/"));
+  expect(result.next_action.argv[1].replace(/\\/g, "/")).toContain("/installed plugin files/scripts/kb-index.ts");
+  expect(result.next_action.argv.slice(2)).toEqual(["--root", result.next_action.cwd]);
+  expect(result.next_action.cwd.replace(/\\/g, "/").endsWith("/project files")).toBe(true);
   expect(result.next_action.command).toContain("installed plugin files");
   expect(result.next_action.command).toContain("project files");
   rmSync(join(root, ".promptus", "cache", "CATALOG.md"));

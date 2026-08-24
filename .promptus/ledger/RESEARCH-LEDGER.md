@@ -27,32 +27,32 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally -->
-Promptus v0.8.2 is in pull request 43. The cross-OS release-test repair is locally validated and awaits refreshed macOS and Windows CI.
+<!-- kb:now-through event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling -->
+Promptus v0.8.2 remains in pull request 43. The final portability repair passes the complete local release gate and awaits refreshed macOS and Windows CI.
 
-- The benchmark smoke now creates its disposable index precondition on clean checkouts and proves the dry run leaves search.json byte-identical.
-- The Windows installed-action regression compares canonical filesystem identity across equivalent 8.3 and expanded paths.
+- The benchmark smoke creates its disposable index precondition on clean checkouts and proves the dry run leaves search.json byte-identical.
+- The installed-action regression asserts the runnable contract and internal argv consistency, then executes the command against the intended project without requiring OS-specific path spelling.
 - Strict health verifies 22/22 current artifacts and the complete repository gate passes all 337 tests.
 - Both adapter manifests remain at 0.8.2 and the release-note gate is ready.
 - The RTX 5090 remains reserved; no GPU context or inference has been started.
 
 ## Open frontier
 
-- Commit and push the cross-OS repair to pull request 43.
-- Require every protected-main check, including macOS and Windows, to turn green.
+- Commit and push the final portability repair to pull request 43.
+- Require all five protected-main checks, including macOS and Windows, to turn green.
 - Merge, tag promptus-v0.8.2, and verify the GitHub release.
 - Refresh and validate the local Codex Promptus plugin from the released source.
 
 ## Next actions
 
-1. Commit and push the locally validated cross-OS repair.
+1. Commit and push the final test-contract repair.
 2. Merge only after the refreshed matrix passes.
 3. Tag and verify the published release.
 4. Reinstall locally, record the final receipt, and leave main clean.
 
 ## <<< RESUME HERE >>>
 
-Resume at committing and pushing the validated cross-OS repair to pull request 43.
+Resume at committing and pushing the fully locally validated portability repair.
 
 <!-- now:end -->
 
@@ -910,5 +910,16 @@ The first cross-OS repair event superseded the active release receipt but omitte
 <!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
 After binding both lifecycle branches, strict Promptus health passed with 22/22 current artifact dependencies verified and 36/89 historical dependencies reported only as archival drift. The complete repository gate then passed adapter validation and all 337 tests with zero failures, including the clean-cache benchmark precondition and canonical Windows path assertion. This validates the repair locally; macOS and Windows CI on pull request 43 remain the external portability gate.
 ↳ supersedes event-20260824T070632Z-bind-the-cross-os-repair-to-release-and-benchmark-evidence
+
+### [2026-08-24 03:11:55] FIX/OPEN — Assert the installed action contract instead of OS path spelling
+<!-- kb:id event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|db2fad504a997f9bab9a6c1dc1548850d125d84210027f33d5361a5124fe5a8f -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+Pull request 43 CI run 32700230675 confirmed the benchmark repair on both platforms. The remaining macOS and Windows failure was a test-only path-spelling assumption: macOS expands /var to /private/var, while Windows may retain an 8.3 alias even through realpathSync. The regression now checks the actual contract: argv selects the installed scripts/kb-index.ts, --root equals the returned cwd, the discovered project suffix is correct, and executing the quoted command rebuilds that project catalog. All 31 robustness tests pass locally; refreshed cross-OS CI remains pending.
+↳ supersedes event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally
 
 <!-- kb:append-point -->
