@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (Prepare Promptus v0.9.0 release candidate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24 (Record completed Promptus v0.9.0 release)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,29 +27,30 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T111940Z-prepare-promptus-090-release-candidate -->
-Promptus v0.9.0 is a prepared release candidate on the dedicated release branch. The feature is already on protected main.
+<!-- kb:now-through event-20260824T112636Z-release-promptus-v090-and-refresh-the-local-codex-plugin -->
+Promptus v0.9.0 is released, published, and locally active in Codex. The bounded trajectory-review release frontier is closed.
 
-- Feature PR 45 merged at ce36649 after all five protected checks passed, including the real Windows concurrency rerun.
-- Both adapter manifests carry exact version 0.9.0.
-- The dated changelog section contains the bounded trajectory-review feature and Windows lock correction; the release-note gate reports 17 non-empty lines.
-- Marketplace and plugin adapter validation passes.
+- Feature PR 45 and release PR 46 both passed Linux, macOS, Windows, hygiene, validator, and title checks before protected-main merge.
+- Tag promptus-v0.9.0 points to merge 9b4a095c54a2ad32ca84770f1a9ebfd5d8e2776d.
+- Release workflow 32721648398 validated and published the GitHub release successfully.
+- The local Codex cache contains exact official version 0.9.0; source and cache match apart from generated command adapters.
+- Installed doctor exits zero, session doctor reports READY, and the installed trajectory collector runs read-only.
 
 ## Open frontier
 
-- Run the complete local release gate on the exact release tree.
-- Land the release commit through its own protected-main PR.
-- Tag, publish, and install only after the release PR is green and merged.
+- Start a new Codex task when the newly installed Promptus v0.9.0 skills must be loaded.
+- Repair and reindex MoT only in its own authorized session before running trajectory review there.
+- Keep the separate historical P5/P6 maintenance items outside this completed feature release.
 
 ## Next actions
 
-1. Run bun run check and the explicit 0.9.0 changelog gate.
-2. Commit and open the conventional release PR.
-3. After green merge, push promptus-v0.9.0 and verify publication.
+1. Use bounded trajectory reviews at real project phase boundaries and dogfood concrete misses back into Organon.
+2. Resume the measured retrieval benchmark only from independently labelled real-project misses.
+3. Run any GPU embedding experiment only after explicit operator release of the RTX 5090 queue.
 
 ## <<< RESUME HERE >>>
 
-Resume at validating the exact Promptus v0.9.0 release tree; no tag or install exists yet.
+Promptus v0.9.0 is complete. Resume in a new task for installed-skill pickup or at ordinary dogfooding; no release action remains.
 
 <!-- now:end -->
 
@@ -990,6 +991,26 @@ Prepared the Promptus v0.9.0 release tree after the feature landed on protected 
 
 This is a release candidate only. No tag, GitHub release, publication, or installed Codex cache has been changed yet.
 ↳ supersedes event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45
+↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
+
+### [2026-08-24 07:26:36] RESULT/VALIDATED — Release Promptus v0.9.0 and refresh the local Codex plugin
+<!-- kb:id event-20260824T112636Z-release-promptus-v090-and-refresh-the-local-codex-plugin -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|ce66e6dc2f4f52e9f64a8513555827d296c4c1db222e75b2653fb612d385a1a8 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|057217860e42b54f53bb3b936e48dea6ad6176e7b7bfe1adc04a01bb4aabcfa9 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bcdf7e467b7b20537a99ac019c16f5338f46297dfca1a6dcb29a8e222d514b3c -->
+<!-- kb:artifact collector|promptus/scripts/promptus-trajectory-review.ts|002bbdb0811a9a92901f5d9713d248780f3ef31a6ec959e0dd4dd798f06526e5 -->
+<!-- kb:artifact skill|promptus/skills/trajectory-review/SKILL.md|6b904fa34e2b064a5d2c4195f6454bfc90264c532a72ed14e3e9649d47c58670 -->
+Promptus v0.9.0 is released, published, and locally active in Codex.
+
+- Protected-main release pull request 46 merged at 9b4a095c54a2ad32ca84770f1a9ebfd5d8e2776d after Linux, macOS, Windows, hygiene, validator, and title checks passed.
+- Lightweight tag promptus-v0.9.0 points to that exact merge.
+- Release workflow 32721648398 completed successfully in 29 seconds: plugin validation, tests, strict store health, manifest/tag parity, changelog extraction, and GitHub release publication all passed.
+- The public release is https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.9.0 and is neither draft nor prerelease.
+- Codex installed the official tree at /home/mohan/.codex/plugins/cache/organon/promptus/0.9.0. Both cached manifests report 0.9.0 and source matches the cache exactly apart from generated migrated command skills.
+- The installed strict doctor exits zero, the installed session doctor reports READY, and the installed trajectory collector reproduced the bounded release interval with no source or derived write.
+
+Promptus v0.9.0 is complete. A new Codex task is the safe boundary for loading its newly installed trajectory-review skill.
+↳ supersedes event-20260824T111940Z-prepare-promptus-090-release-candidate
 ↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
 
 <!-- kb:append-point -->
