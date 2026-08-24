@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (Record PR 45 Windows lock correction)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24 (Prepare Promptus v0.9.0 release candidate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,29 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45 -->
-Promptus v0.9.0 is in the protected-main release workflow. Feature PR 45 is open; its first matrix exposed and locally fixed a Windows-only store-lock alias.
+<!-- kb:now-through event-20260824T111940Z-prepare-promptus-090-release-candidate -->
+Promptus v0.9.0 is a prepared release candidate on the dedicated release branch. The feature is already on protected main.
 
-- The bounded trajectory-review feature remains fully implemented and validated.
-- Linux, macOS, hygiene, validator, and title checks passed on the first PR run.
-- Windows Bun returned EPERM for an existing exclusive lock file; the lock now retries Windows EPERM and EACCES as contention while keeping POSIX permission errors hard and preserving the timeout.
-- The targeted lock suite passes 2 tests with 37 assertions.
+- Feature PR 45 merged at ce36649 after all five protected checks passed, including the real Windows concurrency rerun.
+- Both adapter manifests carry exact version 0.9.0.
+- The dated changelog section contains the bounded trajectory-review feature and Windows lock correction; the release-note gate reports 17 non-empty lines.
+- Marketplace and plugin adapter validation passes.
 
 ## Open frontier
 
-- Push the Windows lock correction to PR 45 and require the complete rerun to pass before merge.
-- Cut release metadata only after the feature lands on protected main.
-- Tag, publish, and install only from a green release commit.
+- Run the complete local release gate on the exact release tree.
+- Land the release commit through its own protected-main PR.
+- Tag, publish, and install only after the release PR is green and merged.
 
 ## Next actions
 
-1. Run the complete local gate with the recorded correction.
-2. Amend PR 45 with the conventional fix commit and wait for all checks.
-3. Continue the v0.9.0 release workflow only after protected main is green.
+1. Run bun run check and the explicit 0.9.0 changelog gate.
+2. Commit and open the conventional release PR.
+3. After green merge, push promptus-v0.9.0 and verify publication.
 
 ## <<< RESUME HERE >>>
 
-Resume at validating and pushing the Windows lock compatibility correction to feature PR 45.
+Resume at validating the exact Promptus v0.9.0 release tree; no tag or install exists yet.
 
 <!-- now:end -->
 
@@ -969,5 +969,27 @@ Protected-main pull request 45 exposed a Windows-only store-lock compatibility f
 
 Evidence: GitHub Actions run 32720321466, Windows job 97410154194. The release remains blocked until the updated Windows matrix passes.
 ↳ fixes event-20260824T102850Z-implement-bounded-trajectory-reviews-for-long-running-research
+
+### [2026-08-24 07:19:40] RESULT/VALIDATED — Prepare Promptus 0.9.0 release candidate
+<!-- kb:id event-20260824T111940Z-prepare-promptus-090-release-candidate -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|ce66e6dc2f4f52e9f64a8513555827d296c4c1db222e75b2653fb612d385a1a8 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|057217860e42b54f53bb3b936e48dea6ad6176e7b7bfe1adc04a01bb4aabcfa9 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bcdf7e467b7b20537a99ac019c16f5338f46297dfca1a6dcb29a8e222d514b3c -->
+<!-- kb:artifact collector|promptus/scripts/promptus-trajectory-review.ts|002bbdb0811a9a92901f5d9713d248780f3ef31a6ec959e0dd4dd798f06526e5 -->
+<!-- kb:artifact skill|promptus/skills/trajectory-review/SKILL.md|6b904fa34e2b064a5d2c4195f6454bfc90264c532a72ed14e3e9649d47c58670 -->
+<!-- kb:artifact store-lock|promptus/scripts/lib/store-lock.ts|98eb4538c53b5c4ae34cedbcf0077cd56cf951ed25d91cac07e199537e00b389 -->
+<!-- kb:artifact concurrency-regression|promptus/scripts/test/concurrency.test.ts|5a6051f256cf7c61d943c8d9430504a533f1f0afabc5bb98a0323e3acbc88a44 -->
+<!-- kb:artifact trajectory-regressions|promptus/scripts/test/trajectory-review.test.ts|3e09d21ab12956a9b7253a2334ded7f62240a393fbd29c8eab2fb6d954d01b0c -->
+Prepared the Promptus v0.9.0 release tree after the feature landed on protected main.
+
+- Feature pull request 45 merged at ce36649 after Linux, macOS, Windows, hygiene, validator, and conventional-title checks passed.
+- The Windows rerun in Actions run 32721011964 exercised the real 24-process writer test and passed after the lock-alias correction.
+- Both Claude and Codex adapter manifests now carry exact version 0.9.0.
+- The changelog has a dated 0.9.0 section with Added and Fixed notes, a fresh empty Unreleased section, and updated compare links.
+- The release-note gate reports a non-empty 17-line 0.9.0 section and the marketplace validator reports exact adapter parity.
+
+This is a release candidate only. No tag, GitHub release, publication, or installed Codex cache has been changed yet.
+↳ supersedes event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45
+↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
 
 <!-- kb:append-point -->
