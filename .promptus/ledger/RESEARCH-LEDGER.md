@@ -27,32 +27,30 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling -->
-Promptus v0.8.2 remains in pull request 43. The final portability repair passes the complete local release gate and awaits refreshed macOS and Windows CI.
+<!-- kb:now-through event-20260824T071947Z-release-promptus-v082-and-refresh-the-local-codex-plugin -->
+Promptus v0.8.2 is released, published, and locally active in Codex. The correctness-release frontier is closed.
 
-- The benchmark smoke creates its disposable index precondition on clean checkouts and proves the dry run leaves search.json byte-identical.
-- The installed-action regression asserts the runnable contract and internal argv consistency, then executes the command against the intended project without requiring OS-specific path spelling.
-- Strict health verifies 22/22 current artifacts and the complete repository gate passes all 337 tests.
-- Both adapter manifests remain at 0.8.2 and the release-note gate is ready.
-- The RTX 5090 remains reserved; no GPU context or inference has been started.
+- Protected-main pull request 43 merged at cb504eec45d5363db03dfbd8de11f9aa2eb19d16 after all five Linux, macOS, Windows, hygiene, and title checks passed.
+- Tag promptus-v0.8.2 triggered release workflow 32700791934, which validated and published the GitHub release successfully.
+- The local Codex cache contains exact official version 0.8.2; source and cache match apart from generated command adapters, installed strict doctor exits zero, and installed session doctor reports READY.
+- The release audit itself produced durable cross-OS regressions for clean derived caches and alias path spelling.
+- The semantic-retrieval frontier is unchanged: embeddings remain experimental derived dogfood, and the RTX 5090 remains reserved.
 
 ## Open frontier
 
-- Commit and push the final portability repair to pull request 43.
-- Require all five protected-main checks, including macOS and Windows, to turn green.
-- Merge, tag promptus-v0.8.2, and verify the GitHub release.
-- Refresh and validate the local Codex Promptus plugin from the released source.
+- Start a new Codex task when the newly installed Promptus 0.8.2 skills must be loaded.
+- Freeze a larger independently labelled retrieval query set before evaluating local dense integration.
+- Wait for explicit operator release of the RTX 5090 before any unsandboxed GPU access.
 
 ## Next actions
 
-1. Commit and push the final test-contract repair.
-2. Merge only after the refreshed matrix passes.
-3. Tag and verify the published release.
-4. Reinstall locally, record the final receipt, and leave main clean.
+1. Use Promptus 0.8.2 normally in long-running projects and dogfood any new concrete failures back into Organon.
+2. Expand the retrieval benchmark only from real project misses with independently frozen labels.
+3. Run the local Nemotron experiment only after the operator says the GPU queue is free.
 
 ## <<< RESUME HERE >>>
 
-Resume at committing and pushing the fully locally validated portability repair.
+The Promptus v0.8.2 release is complete. Resume at ordinary dogfooding or the measured retrieval benchmark; no release action remains.
 
 <!-- now:end -->
 
@@ -921,5 +919,16 @@ After binding both lifecycle branches, strict Promptus health passed with 22/22 
 <!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
 Pull request 43 CI run 32700230675 confirmed the benchmark repair on both platforms. The remaining macOS and Windows failure was a test-only path-spelling assumption: macOS expands /var to /private/var, while Windows may retain an 8.3 alias even through realpathSync. The regression now checks the actual contract: argv selects the installed scripts/kb-index.ts, --root equals the returned cwd, the discovered project suffix is correct, and executing the quoted command rebuilds that project catalog. All 31 robustness tests pass locally; refreshed cross-OS CI remains pending.
 ↳ supersedes event-20260824T070801Z-validate-the-cross-os-promptus-release-test-repair-locally
+
+### [2026-08-24 03:19:47] RESULT/VALIDATED — Release Promptus v0.8.2 and refresh the local Codex plugin
+<!-- kb:id event-20260824T071947Z-release-promptus-v082-and-refresh-the-local-codex-plugin -->
+<!-- kb:artifact benchmark-regression|benchmarks/promptus-retrieval.test.ts|f989788a829b5c706cbea8fb96b703b840d7f318348af3e88733030aeca3f15a -->
+<!-- kb:artifact windows-regression|promptus/scripts/test/robustness.test.ts|db2fad504a997f9bab9a6c1dc1548850d125d84210027f33d5361a5124fe5a8f -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|6111255df71021525b7ecef55d88f118741bd6f7f02840a06b45bf37a90f8690 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|1100bf730d804b4d5afb50f31f82772d6af94b74c1f4355bcf934e699aec6cd0 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|bf5b40ad310cbeb71ceadefa99bffce68546d2ffdc82ab3dd761ad42a79174b3 -->
+<!-- kb:artifact release-gate|package.json|161c86225063658213ad87b66a23023d139f76be2d61457697a3372c441f9949 -->
+Pull request 43 merged to protected main at cb504eec45d5363db03dfbd8de11f9aa2eb19d16 after all five checks passed, including macOS and Windows. Tag promptus-v0.8.2 points to that merge; release workflow 32700791934 completed successfully and published https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.8.2. The official semver bump was used without a development cachebuster. codex plugin add promptus@organon installed /home/mohan/.codex/plugins/cache/organon/promptus/0.8.2; its shipped tree is byte-identical to source except generated migrated-command-skills. The installed strict doctor exited zero and the installed session doctor reported READY with no errors. Promptus v0.8.2 is released and locally active; a new Codex task is the safe boundary for loading its skills.
+↳ supersedes event-20260824T071155Z-assert-the-installed-action-contract-instead-of-os-path-spelling
 
 <!-- kb:append-point -->
