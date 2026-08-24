@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24 (maintenance complete)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,29 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner -->
-Promptus v0.9.1 is released and installed. A separate dependency refresh is locally validated and awaiting protected cross-platform CI.
+<!-- kb:now-through event-20260824T122400Z-prune-merged-maintenance-refs-and-verify-main-only-worktrees -->
+Promptus v0.9.1 is released, published, and installed locally. Its retired-artifact correction is now proven on MoT, and the GitHub/runtime dependency refresh is merged and green on every protected runner.
 
-- Every direct workflow action is pinned to an exact current release: checkout 7.0.1, setup-python 7.0.0, and setup-bun 2.2.0.
-- The stale pre-commit action wrapper is removed; CI installs exact pre-commit 4.6.2 and uses pre-commit-hooks 6.0.0.
-- All six hooks pass. Local Bun is stable 1.4.0, and the complete suite passes there: 352 tests, 1,912 assertions.
-- Promptus itself has no third-party package dependencies or lockfile.
+- Organon CI uses exact current releases: checkout 7.0.1, setup-python 7.0.0, setup-bun 2.2.0, pre-commit 4.6.2, and pre-commit-hooks 6.0.0.
+- PR 51 passed all five protected checks on Linux, macOS, and Windows without the previous Node 20 action warning. Local Bun is 1.4.0; Promptus has no third-party package dependencies or lockfile.
+- Fresh Codex session 01a033ac-5350-7a43-a4fc-5645c1ae52ba found MoT already live on schema v5. Current evidence passes 2,708/2,708; 107 superseded/retired failures are archival warnings and do not block readiness.
+- Organon and MoT are each main-only with one canonical worktree and no open PR. Four merged Organon remote-tracking refs were pruned; no user work was deleted.
 
 ## Open frontier
 
-- Prove the refreshed action runtimes and explicit pre-commit install on Linux, macOS, and Windows through the maintenance PR.
-- Start a genuinely new Codex task/session for MoT schema v4 to v5 and rerun MoT health there.
-- Prune only merged stale branches and worktrees after both tasks close.
+- No release, dependency, schema, branch, or worktree maintenance item remains open.
+- Resume problem-led dogfooding from Psi, MoT, Probatio, or Editio. Add the next Organon capability only in response to a reproduced project failure and measured need.
 
 ## Next actions
 
-1. Commit the wrapper correction and open the conventional dependency-maintenance PR.
-2. Merge only after every protected check passes without the Node 20 action warning.
-3. Start the new v0.9.1 MoT task, record final receipts, and clean merged branches/worktrees.
+1. Let the active research projects expose the next concrete continuity or writing failure.
+2. Reproduce and generalize that failure before changing Promptus or Editio.
+3. Keep embeddings or database machinery deferred until a benchmark demonstrates a real retrieval threshold.
 
 ## <<< RESUME HERE >>>
 
-Resume at protected CI for event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner.
+Resume from event-20260824T122400Z-prune-merged-maintenance-refs-and-verify-main-only-worktrees. The v0.9.1 release, dependency refresh, MoT validation, and maintenance cleanup are complete.
 
 <!-- now:end -->
 
@@ -1082,5 +1081,24 @@ Verified and prepared the dependency refresh against maintainers official latest
 <!-- kb:artifact pre-commit-config|.pre-commit-config.yaml|bf1f95c24537f1e4380a50359c33ba9fa46ed7cfc17a0dcd5f2a857f6dbcd69a -->
 The first dependency inventory correctly found pre-commit/action v3.0.1 to be its latest release, but inspecting that release exposed a hidden stale edge: the composite action installs an unpinned pre-commit and delegates caching to actions/cache v4. The CI workflow now removes that wrapper and directly installs exact pre-commit 4.6.2 before running all hooks. Every remaining direct uses dependency is an exact current release: checkout 7.0.1, setup-python 7.0.0, and setup-bun 2.2.0. Pre-commit-hooks remains 6.0.0. The corrected workflow passes YAML validation and all six local hooks; protected CI will validate the hosted Python installation path.
 ↳ fixes event-20260824T120203Z-validate-the-dependency-refresh-locally-under-bun-v140
+
+### [2026-08-24 08:22:37] RESULT/VALIDATED — Validate refreshed dependencies on protected hosted runners
+<!-- kb:id event-20260824T122237Z-validate-refreshed-dependencies-on-protected-hosted-runners -->
+<!-- kb:artifact ci-workflow|.github/workflows/ci.yml|5640e1f8bea3104b0256b08416a191c0f141205312e8d6d0b1542c354b84e495 -->
+<!-- kb:artifact release-workflow|.github/workflows/release.yml|1a1b4b0145efdd1b448ad354632291b2a5b868789a870e8d724afa6b1404361c -->
+<!-- kb:artifact pre-commit-config|.pre-commit-config.yaml|bf1f95c24537f1e4380a50359c33ba9fa46ed7cfc17a0dcd5f2a857f6dbcd69a -->
+Protected dependency PR 51 merged at 8a379338afc1425c7e7faca9680cb2dc09c7447c after all five required checks passed: conventional title, Linux test and validation, Windows tests, macOS tests, and pre-commit hygiene. Hosted run 32725231761 proved the exact action/runtime path across all supported runners without the prior Node 20 deprecation annotation. The released workflow set is actions/checkout 7.0.1, actions/setup-python 7.0.0, oven-sh/setup-bun 2.2.0, explicit pre-commit 4.6.2, and pre-commit-hooks 6.0.0. Local Bun remains stable 1.4.0; Promptus itself has no third-party package dependencies or lockfile.
+↳ supports event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner
+
+### [2026-08-24 08:22:52] RESULT/VALIDATED — Validate Promptus v0.9.1 against the current MoT v5 store
+<!-- kb:id event-20260824T122252Z-validate-promptus-v091-against-the-current-mot-v5-store -->
+A genuinely fresh Codex session (01a033ac-5350-7a43-a4fc-5645c1ae52ba) loaded the installed Promptus 0.9.1 tree and audited MoT without touching its large body of user-owned work. MoT entered the task with a live schema already at v5; the installed doctor reported v5 of v5 compatible, while Git HEAD still contains v3, so the requested v4-to-v5 source transition had already occurred outside this task. The dry-run staged zero source/schema changes and proposed only a disposable cache refresh. Applying that exact plan preserved all 2,489 Promptus Markdown files present across the migration boundary byte-for-byte. Standalone indexing and the strict gate both exited zero: 5,214 live units, 3,906 links, 2,064 typed relations, 2,708 of 2,708 current artifacts verified, no duplicate IDs, unresolved typed relations, unclassified units, or current artifact failures. The 107 failed dependencies owned by superseded or retired units are now archival warnings, proving the v0.9.1 correction on its originating long-running project. Inherited non-blocking debt remains 77 dangling links and 238 orphans. Concurrent Round AK files appeared during verification and were preserved untouched.
+↳ supports event-20260824T115718Z-release-promptus-v091-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 08:24:00] RESULT/VALIDATED — Prune merged maintenance refs and verify main-only worktrees
+<!-- kb:id event-20260824T122400Z-prune-merged-maintenance-refs-and-verify-main-only-worktrees -->
+After the dependency and MoT tasks closed, fresh remote audits found both repositories already main-only with one canonical worktree each and no open pull requests. Fetch-prune removed four stale Organon remote-tracking refs left by merged PRs 48 through 51: chore/update-action-dependencies, docs/promptus-v0.9.1-release-receipt, fix/promptus-retired-artifact-drift, and release/promptus-v0.9.1. MoT had no stale remote refs. Worktree prune dry-runs found nothing removable in either repository. No user-owned branch, worktree, or dirty MoT research file was deleted.
+↳ supports event-20260824T122237Z-validate-refreshed-dependencies-on-protected-hosted-runners
+↳ supports event-20260824T122252Z-validate-promptus-v091-against-the-current-mot-v5-store
 
 <!-- kb:append-point -->
