@@ -344,6 +344,37 @@ test("superseded artifact drift is an archival warning and does not block resume
   expect(report.issues.map((issue: { code: string }) => issue.code)).toContain("ARCHIVAL_ARTIFACT_DRIFT");
 });
 
+test("retired memory artifact drift is an archival warning and does not block resume", () => {
+  const root = scaffold();
+  const badHash = "0".repeat(64);
+  writeFileSync(join(root, "memory-evidence.txt"), "changed historical memory bytes\n");
+  const old = run("kb-add.ts", root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated",
+    "--title", "Retired memory evidence", "--artifact", `evidence|memory-evidence.txt|${badHash}`,
+  ], "historical memory result");
+  expect(old.status).toBe(0);
+  const oldId = /^id:\s*(\S+)$/m.exec(readFileSync(join(root, ".promptus", "memory", "retired-memory-evidence.md"), "utf8"))?.[1];
+  expect(oldId).toBeTruthy();
+  expect(run("kb-add.ts", root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated",
+    "--title", "Replacement memory evidence", "--supersedes", oldId!,
+  ], "current memory replacement").status).toBe(0);
+  expect(add(root, "Resume retired memory evidence").status).toBe(0);
+  expect(now(root).status).toBe(0);
+  expect(check(root).status).toBe(0);
+
+  const result = doctor(root, ["--json", "--artifacts"]);
+  expect(result.status).toBe(0);
+  const report = JSON.parse(result.stdout);
+  expect(report.sessionReady).toBe(true);
+  expect(report.healthReceipt.artifactFailures).toBe(0);
+  expect(report.healthReceipt.archivalArtifactWarnings).toBe(1);
+  expect(report.artifacts.failures).toBe(0);
+  expect(report.artifacts.archivalWarnings).toBe(1);
+  expect(report.artifacts.outcomes["hash-mismatch"]).toBe(1);
+  expect(report.issues.map((issue: { code: string }) => issue.code)).toContain("ARCHIVAL_ARTIFACT_DRIFT");
+});
+
 test("a live artifact recheck blocks resume when current evidence drifts after its receipt", () => {
   const root = scaffold();
   const artifact = join(root, "current-evidence.txt");

@@ -17,7 +17,7 @@ back against real use. Do not manufacture roadmap features merely because they s
 > `kb-graph` (`rank` / `lint` /
 > `suggest`), RETRIEVE `kb-find` → `kb-get`, read-only session preflight
 > `promptus-session-doctor`; the health gate keeps current artifact failures red while treating
-> superseded-unit drift as archival warnings; `promptus-trajectory-review` builds a bounded,
+> superseded- or retired-unit drift as archival warnings; `promptus-trajectory-review` builds a bounded,
 > read-only retrospective packet; skills `promptus`, `recall`, `grannie`, `telos`,
 > `research-ledger`, `thinker-round`, `trajectory-review`; and **`editio/`** — the writing toolchain: `/editio`, the `editio` +
 > `editio-structure` + `editio-latex` + `editio-figures` skills, the scaffold + renderer +

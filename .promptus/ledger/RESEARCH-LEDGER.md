@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (Record completed Promptus v0.9.0 release)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,30 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T112636Z-release-promptus-v090-and-refresh-the-local-codex-plugin -->
-Promptus v0.9.0 is released, published, and locally active in Codex. The bounded trajectory-review release frontier is closed.
+<!-- kb:now-through event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit -->
+Promptus v0.9.1 is a narrow correctness patch in progress. Source and tests now treat mismatched artifacts owned by memory projected to retired as archival warnings in both health gates; active-unit mismatches still fail hard.
 
-- Feature PR 45 and release PR 46 both passed Linux, macOS, Windows, hygiene, validator, and title checks before protected-main merge.
-- Tag promptus-v0.9.0 points to merge 9b4a095c54a2ad32ca84770f1a9ebfd5d8e2776d.
-- Release workflow 32721648398 validated and published the GitHub release successfully.
-- The local Codex cache contains exact official version 0.9.0; source and cache match apart from generated command adapters.
-- Installed doctor exits zero, session doctor reports READY, and the installed trajectory collector runs read-only.
+- The source fix touches only archival-status classification, its two user-facing contracts, focused documentation, and regressions.
+- The retired-memory and active-memory controls pass in the targeted check/session-doctor suites: 26 tests, 202 assertions.
+- The complete local gate passes: marketplace validation, strict health with 25/25 current artifacts, and 352 tests with 1,912 assertions.
+- The v0.9.0 release receipt is superseded by the validated fix event because its source hashes are intentionally historical.
 
 ## Open frontier
 
-- Start a new Codex task when the newly installed Promptus v0.9.0 skills must be loaded.
-- Repair and reindex MoT only in its own authorized session before running trajectory review there.
-- Keep the separate historical P5/P6 maintenance items outside this completed feature release.
+- Land the focused fix through protected main, then cut and publish v0.9.1.
+- Reinstall the official plugin and verify the new cache.
+- Start a new Codex task and upgrade MoT schema v4 to v5 there.
 
 ## Next actions
 
-1. Use bounded trajectory reviews at real project phase boundaries and dogfood concrete misses back into Organon.
-2. Resume the measured retrieval benchmark only from independently labelled real-project misses.
-3. Run any GPU embedding experiment only after explicit operator release of the RTX 5090 queue.
+1. Commit and open the conventional fix PR.
+2. Merge only after all protected checks pass, then prepare the release metadata PR.
+3. Tag promptus-v0.9.1, verify publication, reinstall, and hand MoT to a new task.
 
 ## <<< RESUME HERE >>>
 
-Promptus v0.9.0 is complete. Resume in a new task for installed-skill pickup or at ordinary dogfooding; no release action remains.
+Resume at the protected-main fix PR from event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit; keep v0.9.1 free of unrelated features.
 
 <!-- now:end -->
 
@@ -1012,5 +1011,26 @@ Promptus v0.9.0 is released, published, and locally active in Codex.
 Promptus v0.9.0 is complete. A new Codex task is the safe boundary for loading its newly installed trajectory-review skill.
 ↳ supersedes event-20260824T111940Z-prepare-promptus-090-release-candidate
 ↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
+
+### [2026-08-24 07:39:58] FIX/VALIDATED — Classify retired memory artifact drift as archival
+<!-- kb:id event-20260824T113958Z-classify-retired-memory-artifact-drift-as-archival -->
+<!-- kb:artifact agents-map|AGENTS.md|151cd498c19037a9a16954d10b2d9c589e2e981bcb4dba435516dcd4733322de -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|15266a25d9653a0980903aa32cc6dd2830c5b0cec06804916da80b7f45e4f611 -->
+<!-- kb:artifact readme|promptus/README.md|1bf58143f4c7fc3a432825cb133d09640a8b1566c05f4142dc760d2369e4f025 -->
+<!-- kb:artifact check-contract|promptus/commands/promptus-check.md|6723a61ecb3feef869fabcf68a131648e4138f26bd13f99f8710a05b3e9b52d4 -->
+<!-- kb:artifact session-doctor-contract|promptus/commands/promptus-session-doctor.md|72ff3b49c4784986c72c4d2e50a32ada371618876d81a22cdd843e2f46fa0ec6 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|4eed5aaa9391a1fe294e38c5007b8369af933863e64d82c6eb647ade9a5e4695 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2c39e2c95a03f0494c75290d42ef2327f60e9e4c36eef14e6e3ec74ee5920d92 -->
+<!-- kb:artifact check-regressions|promptus/scripts/test/check.test.ts|1bcf48a8a83484e901671273525bf1f5b678912748068324cf47e78f16843c18 -->
+<!-- kb:artifact session-doctor-regressions|promptus/scripts/test/session-doctor.test.ts|841f30ec6ad9b010c0dd86c1beddd3820f646238f0f3e163f21741cde489e682 -->
+Promptus now classifies artifact mismatches owned by memory projected to retired as archival warnings in both the authoritative health gate and the read-only session preflight. Active-unit mismatches remain hard failures. Two memory-specific regressions exercise the derived retired lifecycle, session readiness, and the active control; 26 targeted check/session-doctor tests pass with 202 assertions.
+↳ fixes event-20260824T112636Z-release-promptus-v090-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 07:41:52] RESULT/VALIDATED — Validate the retired-memory archival fix across the full repository
+<!-- kb:id event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit -->
+<!-- kb:artifact check-regressions|promptus/scripts/test/check.test.ts|1bcf48a8a83484e901671273525bf1f5b678912748068324cf47e78f16843c18 -->
+<!-- kb:artifact session-doctor-regressions|promptus/scripts/test/session-doctor.test.ts|841f30ec6ad9b010c0dd86c1beddd3820f646238f0f3e163f21741cde489e682 -->
+The complete local release gate passed on the focused source tree: marketplace and adapter validation succeeded, strict Promptus health verified 25/25 current artifact dependencies with zero duplicate IDs, unresolved relations, or unclassified units, and bun test passed all 352 tests with 1,912 assertions. The 82 historical hash mismatches remained explicit archival warnings.
+↳ supports event-20260824T113958Z-classify-retired-memory-artifact-drift-as-archival
 
 <!-- kb:append-point -->
