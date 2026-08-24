@@ -153,6 +153,11 @@ flowchart LR
   same-second ledger ID and anchor collisions receive deterministic suffixes rather than
   overwriting or making an event ambiguous.
   Explicit ledger `--links` are stored in Markdown and survive an authoritative reindex.
+  Memory relations use the same frontmatter contract as finding/literature pages; lifecycle
+  inversions are substrate-aware (`SUPERSEDED` for ledger/page history, `retired` for memory),
+  exist only in the derived projection, and fail closed if the vocabulary requests an illegal
+  target status. After a successful write, human output includes a runnable installed-plugin
+  `kb-index --root …` command; `--json` exposes the same operation as `next_action` for agents.
   `scripts/kb-amend.ts` is the matching
   gate for metadata transitions on an existing curated unit: it preserves the body, validates the
   requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
@@ -163,7 +168,10 @@ flowchart LR
   wikilink nor a resolved typed relation),
   `scripts/promptus-check.ts --strict` (authoritative integrity, NOW, artifact, thinker-custody, and freshness gate;
   active artifact failures are red while superseded-unit drift is an archival warning;
-  `--ratchet` enforces no new inherited debt), + `/promptus:checkpoint`.
+  `--ratchet` enforces no new inherited debt), + `/promptus:checkpoint`. `promptus-doctor check
+  --strict` independently binds `health.json` to the current source hash, source-file count, and
+  live catalog count, and refuses stale or internally failed receipts with a direct
+  `promptus-check` recovery instruction; inherited graph/digest/extra-tree debt stays report-only.
 - **PREFLIGHT** → `scripts/promptus-session-doctor.ts` is the strictly read-only gate a session
   agent runs before trusting a long-running project's NOW or cache. It compares every live source
   unit with catalog/search and every archived unit with cold search, detects ambiguous identities and search keys, distinguishes stale
@@ -221,6 +229,8 @@ wrong-round/prompt-echo/duplicate detection, and quarantine through `kb-ingest`.
 the intellectual work: construct the question, reconstruct the answer, try to break it, and write a
 normal `finding` linked by `derives-from` only for what survives. The raw answer never promotes
 itself, and a round grants no implementation, experiment, publication, commit, or release authority.
+Long valid round IDs receive bounded collision-resistant quarantine names, while already-bound
+historical paths remain authoritative when their response and wrapper hashes still agree.
 
 Use it for a proof, counterexample, exact bound, missing lemma, or similarly load-bearing theory
 question—not for brainstorming, code review, source research, or any task that needs the workspace.

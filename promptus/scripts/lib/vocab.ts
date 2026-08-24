@@ -36,6 +36,8 @@ export interface SubstrateSpec {
   policy: "strict" | "permissive";
   kinds: KindStatusSet;
   statuses: KindStatusSet;
+  /** Lifecycle states that may appear only in a derived catalog projection. */
+  derived_statuses?: string[];
   requires?: string[];
   /** for "file" placement that also maintains an index file (memory). */
   index?: string;
@@ -44,6 +46,8 @@ export interface SubstrateSpec {
 export interface RelationSpec {
   /** if set, kb-index sets the relation TARGET to this status (supersedes → SUPERSEDED). */
   inverse_status?: string;
+  /** Substrate-specific override for derived inverse lifecycle state (memory → retired). */
+  inverse_status_by_substrate?: Record<string, string>;
   cito?: string;
   prov?: string;
 }
@@ -90,7 +94,24 @@ export function loadVocab(root: string): Vocab {
     throw new Error(`vocab not found: ${p} — run /promptus-init to scaffold it`);
   }
   try {
-    return JSON.parse(text) as Vocab;
+    const vocab = JSON.parse(text) as Vocab;
+    // v0.8.1 stores carry only the generic SUPERSEDED mapping. Normalize that legacy
+    // vocabulary in memory so the patch needs no store migration; new templates state
+    // the memory override explicitly as data.
+    for (const spec of Object.values(vocab.relations ?? {})) {
+      const hasMemoryOverride = spec.inverse_status_by_substrate != null &&
+        Object.prototype.hasOwnProperty.call(spec.inverse_status_by_substrate, "memory");
+      if (spec.inverse_status !== "SUPERSEDED" || hasMemoryOverride) continue;
+      spec.inverse_status_by_substrate = { ...(spec.inverse_status_by_substrate ?? {}), memory: "retired" };
+    }
+    // Literature is a page substrate and v0.8.1 already projected SUPERSEDED onto it.
+    // Keep it derived-only: loading an old v4 store must not make kb-add accept that
+    // lifecycle projection as a source-authored epistemic status.
+    const lit = vocab.substrates?.lit;
+    if (lit && !(lit.derived_statuses ?? []).includes("SUPERSEDED")) {
+      lit.derived_statuses = [...(lit.derived_statuses ?? []), "SUPERSEDED"];
+    }
+    return vocab;
   } catch (e) {
     throw new Error(`malformed vocab ${p}: ${(e as Error).message}`);
   }

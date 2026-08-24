@@ -14,4 +14,6 @@
 
 - [Organon development is driven by real-project dogfooding](organon-development-is-driven-by-real-project-dogfooding.md) — Organon development is driven by real-project dogfooding
 
+- [Reserve the RTX 5090 for the active project queue](reserve-the-rtx-5090-for-the-active-project-queue.md) — Reserve the RTX 5090 for the active project queue
+
 <!-- kb:append-point -->

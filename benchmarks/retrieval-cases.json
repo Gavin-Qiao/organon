@@ -1,0 +1,61 @@
+{
+  "schema": "promptus.retrieval-benchmark.v1",
+  "name": "Organon semantic-recall seed",
+  "description": "Paraphrased questions drawn from real Organon dogfooding discussions. This small public-corpus seed is a smoke test, not release evidence.",
+  "cases": [
+    {
+      "query": "How do we prevent an outside theorist's polished answer from becoming authority?",
+      "relevant": [
+        "finding-20260823T100938Z-stateless-thinker-rounds-require-independent-adjudication"
+      ]
+    },
+    {
+      "query": "Why should stale failures from old evidence stop making today's research frontier look broken?",
+      "relevant": [
+        "finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"
+      ]
+    },
+    {
+      "query": "How can changing one experimental value force the surrounding prose verdict to be checked again?",
+      "relevant": [
+        "finding-20260707T025458Z-numbers-as-one-source-of-truth-bind-once-lock-value-plus-source"
+      ]
+    },
+    {
+      "query": "What is the friendly human doorway for asking this research memory what it knows?",
+      "relevant": [
+        "finding-20260710T012734Z-promptus-design-report"
+      ]
+    },
+    {
+      "query": "Can ordinary note links provide neighborhoods without running a graph database?",
+      "relevant": [
+        "finding-20260628T144203Z-markdown-is-the-graph"
+      ]
+    },
+    {
+      "query": "Which retrieval key is transparent and carries confidence labels?",
+      "relevant": [
+        "finding-20260628T144203Z-header-beats-vector"
+      ]
+    },
+    {
+      "query": "How are missing relationships suggested without machine learning?",
+      "relevant": [
+        "finding-20260629T205327Z-the-scriptable-graph-layer"
+      ]
+    },
+    {
+      "query": "Why shouldn't Claude and Codex each have their own copy of the business logic?",
+      "relevant": [
+        "finding-20260710T014245Z-one-portable-core-two-thin-host-adapters"
+      ]
+    },
+    {
+      "query": "How can the lab notebook accept unusual labels while curated claims reject them?",
+      "relevant": [
+        "finding-20260628T144203Z-the-gate"
+      ]
+    }
+  ]
+}

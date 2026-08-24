@@ -17,6 +17,25 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Changed
+
+- **Return the authoritative post-write action.** `kb-add` now prints a shell-safe command for the
+  installed `kb-index` with the discovered project root, and exposes the same command plus argv in
+  `--json` output instead of pointing at a usually nonexistent project-local `scripts/` directory.
+
+### Fixed
+
+- **Make long thinker-round quarantine custody canonical.** Long valid round IDs now use a bounded
+  readable slug plus a digest of the complete ID, `kb-ingest quarantine` accepts only a safe target
+  basename and returns its exact custody binding, and historical bound paths remain valid without
+  renaming when their hashes agree.
+- **Round-trip memory relations and retire their targets correctly.** Memory envelopes now serialize
+  typed relations, while substrate-aware inverse lifecycle projection marks superseded memory
+  `retired`, preserves source bytes, and refuses illegal target statuses before a write or reindex.
+- **Reject stale or failed doctor health receipts.** Doctor now uses the same source-store hash as
+  `promptus-check`, compares source and live-unit counts, honors hard receipt failures, emits
+  `healthReceiptFresh`/`healthIssues`, and makes strict checks fail with a direct recovery action.
+
 ## [0.8.1] - 2026-08-23
 
 ### Changed

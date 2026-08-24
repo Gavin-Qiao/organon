@@ -6,5 +6,8 @@
 node_modules/
 *.log
 
+# Local credentials — never commit API keys.
+.env.local
+
 # Warp terminal agent file — local-only, not part of the repo
 WARP.md

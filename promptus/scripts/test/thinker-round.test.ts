@@ -9,6 +9,7 @@ import {
   mkdtempSync,
   readFileSync,
   readdirSync,
+  renameSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -40,6 +41,25 @@ function scaffold(): string {
   writeFileSync(join(store, "memory", "MEMORY.md"), "# Memory\n\n<!-- kb:append-point -->\n");
   copyFileSync(VOCAB, join(store, "schema", "kb-vocab.json"));
   return root;
+}
+
+function sourceManifest(root: string): Record<string, string> {
+  const base = join(root, ".promptus");
+  const manifest: Record<string, string> = {};
+  const walk = (dir: string) => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const path = join(dir, entry.name);
+      const rel = path.slice(base.length + 1).replace(/\\/g, "/");
+      if (entry.isDirectory()) {
+        if (rel === "cache") continue;
+        walk(path);
+      } else if (entry.isFile() && rel !== "thinker/INDEX.md" && !/^thinker\/rounds\/[^/]+\/ROUND\.md$/.test(rel)) {
+        manifest[rel] = new Bun.CryptoHasher("sha256").update(readFileSync(path)).digest("hex");
+      }
+    }
+  };
+  walk(base);
+  return Object.fromEntries(Object.entries(manifest).sort(([left], [right]) => left.localeCompare(right)));
 }
 
 function run(script: string, root: string | null, args: string[], stdin = "") {
@@ -191,6 +211,112 @@ test("receive preserves exact bytes, records capture mode, and quarantines befor
   const report = JSON.parse(preflight.stdout);
   expect(report.thinkerExchange.governed).toBe(true);
   expect(report.extraTrees).toEqual([]);
+});
+
+test("long round IDs receive into distinct canonical wrappers with returned custody bindings", () => {
+  const root = scaffold();
+  const common = `long-round-${"a".repeat(44)}`;
+  const ids = [`${common}-one`, `${common}-two`];
+  const paths = new Set<string>();
+  for (const [index, id] of ids.entries()) {
+    draftAndPrepare(root, id, `Long quarantine ${index + 1}`);
+    const response = Buffer.from(`ROUND_ID: ${id}\n\nDistinct response ${index + 1}.\n`, "utf8");
+    const returned = join(root, `return-${index + 1}.md`);
+    writeFileSync(returned, response);
+    const received = thinker(root, ["receive", "--id", id, "--response", `return-${index + 1}.md`, "--capture", "attachment", "--apply"]);
+    expect(received.status).toBe(0);
+    const intake = JSON.parse(readFileSync(join(roundDir(root, id), "intake.json"), "utf8"));
+    paths.add(intake.quarantine.path);
+    expect(intake.round_id).toBe(id);
+    expect(intake.quarantine.source).toBe(`external-thinker:${id}`);
+    expect(intake.quarantine.content_sha256).toBe(new Bun.CryptoHasher("sha256").update(response).digest("hex"));
+    const wrapper = readFileSync(join(root, intake.quarantine.path));
+    expect(intake.quarantine.wrapper_sha256).toBe(new Bun.CryptoHasher("sha256").update(wrapper).digest("hex"));
+    expect(wrapper.subarray(wrapper.length - response.length).equals(response)).toBe(true);
+    const status = thinker(root, ["status", "--id", id, "--json"]);
+    expect(status.status).toBe(0);
+    expect(JSON.parse(status.stdout).status).toBe("RECEIVED_UNTRUSTED");
+  }
+  expect(paths.size).toBe(2);
+  for (const path of paths) {
+    expect(path).toMatch(/external-thinker-long-round-a+-response-[a-f0-9]{12}\.md$/);
+    expect(path.split("/").at(-1)!.replace(/\.md$/, "").length).toBeLessThanOrEqual(64);
+  }
+});
+
+test("status accepts an already-bound v0.8.1 quarantine path without renaming it", () => {
+  const root = scaffold();
+  const id = `historical-${"b".repeat(48)}`;
+  draftAndPrepare(root, id, "Historical long quarantine");
+  writeFileSync(join(root, "historical-return.md"), `ROUND_ID: ${id}\nHistorical response.\n`);
+  expect(thinker(root, ["receive", "--id", id, "--response", "historical-return.md", "--capture", "attachment", "--apply"]).status).toBe(0);
+  const intakePath = join(roundDir(root, id), "intake.json");
+  const intake = JSON.parse(readFileSync(intakePath, "utf8"));
+  const canonical = join(root, intake.quarantine.path);
+  const historicalSlug = `external-thinker-${id}-response`.slice(0, 64).replace(/-+$/, "");
+  const historicalRel = `.promptus/docs/lit/${historicalSlug}.md`;
+  const historical = join(root, historicalRel);
+  renameSync(canonical, historical);
+  intake.quarantine.path = historicalRel;
+  writeFileSync(intakePath, JSON.stringify(intake, null, 2) + "\n");
+
+  const status = thinker(root, ["status", "--id", id, "--json"]);
+  expect(status.status).toBe(0);
+  expect(JSON.parse(status.stdout).status).toBe("RECEIVED_UNTRUSTED");
+  expect(existsSync(historical)).toBe(true);
+  expect(existsSync(canonical)).toBe(false);
+});
+
+test("kb-ingest target slug rejects traversal and symlink destinations", () => {
+  const root = scaffold();
+  writeFileSync(join(root, "raw.md"), "ROUND_ID: slug-round\nresponse\n");
+  const traversal = run("kb-ingest.ts", root, [
+    "quarantine", "raw.md", "--source", "external-thinker:slug-round", "--target-slug", "../escape", "--apply",
+  ]);
+  expect(traversal.status).not.toBe(0);
+  expect(traversal.stderr).toContain("--target-slug");
+
+  const outside = join(root, "outside.md");
+  writeFileSync(outside, "do not overwrite\n");
+  const destination = join(root, ".promptus", "docs", "lit", "linked-destination.md");
+  symlinkSync(outside, destination);
+  const linked = run("kb-ingest.ts", root, [
+    "quarantine", "raw.md", "--source", "external-thinker:slug-round", "--target-slug", "linked-destination", "--apply",
+  ]);
+  expect(linked.status).not.toBe(0);
+  expect(linked.stderr).toContain("symlink destination refused");
+  expect(readFileSync(outside, "utf8")).toBe("do not overwrite\n");
+});
+
+test("a v0.8.1 governed round and historical memory open read-only with a byte-stable source manifest", () => {
+  const root = scaffold();
+  draftAndPrepare(root, "legacy-short", "Legacy governed round");
+  writeFileSync(join(root, "legacy-return.md"), "ROUND_ID: legacy-short\nLegacy exact bytes.\n");
+  expect(thinker(root, ["receive", "--id", "legacy-short", "--response", "legacy-return.md", "--capture", "attachment", "--apply"]).status).toBe(0);
+  expect(run("kb-add.ts", root, [
+    "--substrate", "memory", "--kind", "project", "--status", "validated", "--title", "Historical memory fact",
+  ], "This historical memory body must not change.").status).toBe(0);
+  writeFileSync(join(root, ".gitignore"), "/.promptus/cache/\n");
+
+  const vocabPath = join(root, ".promptus", "schema", "kb-vocab.json");
+  const oldVocab = JSON.parse(readFileSync(vocabPath, "utf8"));
+  delete oldVocab.substrates.lit.derived_statuses;
+  delete oldVocab.relations.supersedes.inverse_status_by_substrate;
+  delete oldVocab.relations.fixes.inverse_status_by_substrate;
+  writeFileSync(vocabPath, JSON.stringify(oldVocab, null, 2) + "\n");
+  expect(run("promptus-check.ts", root, []).status).toBe(0);
+  const beforeStatus = JSON.parse(thinker(root, ["status", "--id", "legacy-short", "--json"]).stdout);
+  const before = sourceManifest(root);
+
+  expect(run("kb-index.ts", root, []).status).toBe(0);
+  expect(run("promptus-check.ts", root, []).status).toBe(0);
+  const diagnosed = run("promptus-doctor.ts", root, ["check", "--strict", "--json"]);
+  expect(diagnosed.status).toBe(0);
+  expect(JSON.parse(diagnosed.stdout).healthReceiptFresh).toBe(true);
+  const afterStatus = JSON.parse(thinker(root, ["status", "--id", "legacy-short", "--json"]).stdout);
+  expect(afterStatus.quarantinePath).toBe(beforeStatus.quarantinePath);
+  expect(afterStatus.responseSha256).toBe(beforeStatus.responseSha256);
+  expect(sourceManifest(root)).toEqual(before);
 });
 
 test("wrong-round returns stop before quarantine while preserving the declared capture", () => {

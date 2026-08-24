@@ -9,7 +9,7 @@
  */
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -25,8 +25,7 @@ function mkTmp(prefix = "promptus-rob-"): string {
   return d;
 }
 
-function scaffold(prefix?: string): string {
-  const root = mkTmp(prefix);
+function scaffoldInto(root: string): string {
   const P = join(root, ".promptus");
   mkdirSync(join(P, "ledger"), { recursive: true });
   mkdirSync(join(P, "docs", "lit"), { recursive: true });
@@ -37,6 +36,10 @@ function scaffold(prefix?: string): string {
   writeFileSync(join(P, "memory", "MEMORY.md"), "# Memory — test\n\n<!-- kb:append-point -->\n");
   writeFileSync(join(P, "schema", "kb-vocab.json"), readFileSync(DEFAULT_VOCAB, "utf8"));
   return root;
+}
+
+function scaffold(prefix?: string): string {
+  return scaffoldInto(mkTmp(prefix));
 }
 
 /** run a script; `cwd` lets the path-resolution tests exercise relative roots. */
@@ -243,6 +246,46 @@ test("paths: no --root falls back to cwd", () => {
   expect(a.status).toBe(0);
   expect(run("kb-index.ts", [], { cwd: root }).status).toBe(0);
   expect(catalog(root)).toContain("cwd add");
+});
+
+test("kb-add prints a runnable installed-indexer command for a project with no local scripts", () => {
+  const root = scaffold();
+  expect(existsSync(join(root, "scripts"))).toBe(false);
+  const added = add(root, ["--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "Runnable follow-up"], "body");
+  expect(added.status).toBe(0);
+  const command = /run `([^`]+)` to rebuild authoritatively/.exec(added.stdout)?.[1];
+  expect(command).toBeTruthy();
+  rmSync(join(root, ".promptus", "cache", "CATALOG.md"));
+  const rebuilt = spawnSync(command!, { cwd: root, shell: true, encoding: "utf8" });
+  expect(rebuilt.status).toBe(0);
+  expect(catalog(root)).toContain("ledger:VALIDATED · Runnable follow-up");
+});
+
+test("kb-add JSON action survives spaces in plugin/project paths and discovers a nested cwd root", () => {
+  const container = mkTmp("promptus plugin space ");
+  const plugin = join(container, "installed plugin files");
+  const root = join(container, "project files");
+  mkdirSync(root, { recursive: true });
+  scaffoldInto(root);
+  cpSync(REPO, plugin, { recursive: true });
+  const nested = join(root, ".promptus", "docs");
+  const added = spawnSync(process.execPath, [
+    join(plugin, "scripts", "kb-add.ts"),
+    "--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED",
+    "--title", "Nested spaced action", "--json",
+  ], { cwd: nested, input: "body", encoding: "utf8" });
+  expect(added.status).toBe(0);
+  const result = JSON.parse(added.stdout);
+  expect(result.next_action.argv).toEqual([
+    "bun", join(plugin, "scripts", "kb-index.ts").replace(/\\/g, "/"), "--root", root.replace(/\\/g, "/"),
+  ]);
+  expect(result.next_action.cwd).toBe(root.replace(/\\/g, "/"));
+  expect(result.next_action.command).toContain("installed plugin files");
+  expect(result.next_action.command).toContain("project files");
+  rmSync(join(root, ".promptus", "cache", "CATALOG.md"));
+  const rebuilt = spawnSync(result.next_action.command, { cwd: nested, shell: true, encoding: "utf8" });
+  expect(rebuilt.status).toBe(0);
+  expect(catalog(root)).toContain("ledger:VALIDATED · Nested spaced action");
 });
 
 // ---- Corruption resilience / error paths ----

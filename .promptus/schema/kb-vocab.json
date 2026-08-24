@@ -34,6 +34,7 @@
       "policy": "strict",
       "kinds": { "core": ["PAPER", "NOTE", "QUOTE"], "extended": [] },
       "statuses": { "core": ["CITE", "BACKGROUND", "CONTESTED"], "extended": ["UNTRUSTED"] },
+      "derived_statuses": ["SUPERSEDED"],
       "requires": ["source"]
     },
     "memory": {
@@ -48,8 +49,8 @@
     }
   },
   "relations": {
-    "supersedes": { "inverse_status": "SUPERSEDED", "cito": "cito:corrects", "prov": "prov:wasRevisionOf" },
-    "fixes": { "inverse_status": "SUPERSEDED", "cito": "cito:corrects", "prov": "prov:wasRevisionOf" },
+    "supersedes": { "inverse_status": "SUPERSEDED", "inverse_status_by_substrate": { "memory": "retired" }, "cito": "cito:corrects", "prov": "prov:wasRevisionOf" },
+    "fixes": { "inverse_status": "SUPERSEDED", "inverse_status_by_substrate": { "memory": "retired" }, "cito": "cito:corrects", "prov": "prov:wasRevisionOf" },
     "refutes": { "cito": "cito:refutes" },
     "challenges": { "cito": "cito:disputes" },
     "supports": { "cito": "cito:supports" },
