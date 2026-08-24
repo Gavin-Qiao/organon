@@ -27,29 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit -->
-Promptus v0.9.1 is a narrow correctness patch in progress. Source and tests now treat mismatched artifacts owned by memory projected to retired as archival warnings in both health gates; active-unit mismatches still fail hard.
+<!-- kb:now-through event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree -->
+Promptus v0.9.1 is a fully validated narrow correctness release candidate on the dedicated release branch.
 
-- The source fix touches only archival-status classification, its two user-facing contracts, focused documentation, and regressions.
-- The retired-memory and active-memory controls pass in the targeted check/session-doctor suites: 26 tests, 202 assertions.
-- The complete local gate passes: marketplace validation, strict health with 25/25 current artifacts, and 352 tests with 1,912 assertions.
-- The v0.9.0 release receipt is superseded by the validated fix event because its source hashes are intentionally historical.
+- Fix PR 48 merged to protected main at 48fb4bea860f9a740e5049c865e0381a854c52d1 after all five required checks passed.
+- Both Promptus manifests carry 0.9.1 and the dated changelog section passes the release-note gate.
+- The exact release tree passes marketplace validation, strict health with 25/25 current artifacts, and all 352 tests with 1,912 assertions.
+- No tag, GitHub release, or installed Codex cache has changed yet.
 
 ## Open frontier
 
-- Land the focused fix through protected main, then cut and publish v0.9.1.
-- Reinstall the official plugin and verify the new cache.
-- Start a new Codex task and upgrade MoT schema v4 to v5 there.
+- Merge the release PR through protected CI and tag its exact merge commit.
+- Verify GitHub publication, then reinstall the official plugin and verify the cache.
+- Start a new Codex task and upgrade MoT schema v4 to v5.
 
 ## Next actions
 
-1. Commit and open the conventional fix PR.
-2. Merge only after all protected checks pass, then prepare the release metadata PR.
-3. Tag promptus-v0.9.1, verify publication, reinstall, and hand MoT to a new task.
+1. Commit and open the conventional release PR.
+2. Merge only after all required checks pass, then push promptus-v0.9.1.
+3. Verify publication, reinstall, and hand MoT to a new task.
 
 ## <<< RESUME HERE >>>
 
-Resume at the protected-main fix PR from event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit; keep v0.9.1 free of unrelated features.
+Resume at the release PR from event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree; publication remains pending.
 
 <!-- now:end -->
 
@@ -1032,5 +1032,26 @@ Promptus now classifies artifact mismatches owned by memory projected to retired
 <!-- kb:artifact session-doctor-regressions|promptus/scripts/test/session-doctor.test.ts|841f30ec6ad9b010c0dd86c1beddd3820f646238f0f3e163f21741cde489e682 -->
 The complete local release gate passed on the focused source tree: marketplace and adapter validation succeeded, strict Promptus health verified 25/25 current artifact dependencies with zero duplicate IDs, unresolved relations, or unclassified units, and bun test passed all 352 tests with 1,912 assertions. The 82 historical hash mismatches remained explicit archival warnings.
 ↳ supports event-20260824T113958Z-classify-retired-memory-artifact-drift-as-archival
+
+### [2026-08-24 07:46:10] RESULT/VALIDATED — Prepare Promptus v0.9.1 release candidate
+<!-- kb:id event-20260824T114610Z-prepare-promptus-v091-release-candidate -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|51f880a08c7a1d53f5e50bdfe7f2e63c7750170ff726cf2b079cd6a70c3deecc -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|0ca1d27ec80d2e96763d01b653dcfd1f4caf03f48b4868e0d8a26418180e5487 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|ada333ecc757b40564097b8b96b2d2eb907fa25cae8a51f16960c025acdecd75 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|4eed5aaa9391a1fe294e38c5007b8369af933863e64d82c6eb647ade9a5e4695 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2c39e2c95a03f0494c75290d42ef2327f60e9e4c36eef14e6e3ec74ee5920d92 -->
+<!-- kb:artifact check-regressions|promptus/scripts/test/check.test.ts|1bcf48a8a83484e901671273525bf1f5b678912748068324cf47e78f16843c18 -->
+<!-- kb:artifact session-doctor-regressions|promptus/scripts/test/session-doctor.test.ts|841f30ec6ad9b010c0dd86c1beddd3820f646238f0f3e163f21741cde489e682 -->
+Prepared the Promptus v0.9.1 release tree after the correctness fix landed on protected main. Fix PR 48 merged at 48fb4bea860f9a740e5049c865e0381a854c52d1 after Linux, macOS, Windows, hygiene, and conventional-title checks passed. Both adapter manifests now carry exact version 0.9.1, the changelog has a non-empty dated 0.9.1 section plus a fresh Unreleased section, and both the marketplace validator and release-note gate pass. This is a release candidate only; no tag, GitHub release, or installed cache has changed yet.
+↳ supersedes event-20260824T113958Z-classify-retired-memory-artifact-drift-as-archival
+↳ supports event-20260824T114152Z-validate-the-retired-memory-archival-fix-across-the-full-reposit
+
+### [2026-08-24 07:47:26] RESULT/VALIDATED — Validate the exact Promptus v0.9.1 release tree
+<!-- kb:id event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|51f880a08c7a1d53f5e50bdfe7f2e63c7750170ff726cf2b079cd6a70c3deecc -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|0ca1d27ec80d2e96763d01b653dcfd1f4caf03f48b4868e0d8a26418180e5487 -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|ada333ecc757b40564097b8b96b2d2eb907fa25cae8a51f16960c025acdecd75 -->
+The exact 0.9.1 release candidate passed the complete local gate after the manifest and changelog bump: both marketplaces and adapters validated, strict health verified 25/25 current artifact dependencies with no duplicate IDs, unresolved relations, or unclassified units, and all 352 tests passed with 1,912 assertions. The explicit 0.9.1 changelog extraction gate also passed with a non-empty five-line section.
+↳ supports event-20260824T114610Z-prepare-promptus-v091-release-candidate
 
 <!-- kb:append-point -->

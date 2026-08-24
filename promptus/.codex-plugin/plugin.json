@@ -1,6 +1,6 @@
 {
   "name": "promptus",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A file-based research knowledge system: gated Markdown truth, bounded lexical retrieval, provenance and artifact checks, debt-ratcheted health, and a plain-language human read port.",
   "author": {
     "name": "Mohan Qiao",
