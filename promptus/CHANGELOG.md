@@ -28,6 +28,13 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
   Trajectory review helps an agent reflect on recorded evidence; it does not determine research
   quality or choose project direction.
 
+### Fixed
+
+- **Retry Windows lock contention instead of rejecting concurrent writers.** Bun can report an
+  existing exclusive lock file as `EPERM` or `EACCES` on Windows rather than `EEXIST`; the store
+  lock now treats those Windows-only aliases as contention while preserving hard permission errors
+  on POSIX and the existing fail-closed timeout.
+
 ## [0.8.2] - 2026-08-24
 
 ### Changed

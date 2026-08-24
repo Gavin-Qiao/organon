@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (Finalize bounded trajectory-review candidate handoff)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-24 (Record PR 45 Windows lock correction)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,31 +27,29 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T102850Z-implement-bounded-trajectory-reviews-for-long-running-research -->
-The bounded trajectory-review candidate is implemented, fully validated, dogfooded in Organon, and recorded. It remains unreleased and is not installed.
+<!-- kb:now-through event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45 -->
+Promptus v0.9.0 is in the protected-main release workflow. Feature PR 45 is open; its first matrix exposed and locally fixed a Windows-only store-lock alias.
 
-- The deterministic collector inherits session-doctor fail-closed semantics, resolves exact project or stable-ID endeavour scope, produces bounded source-fingerprint packets, and never writes.
-- The agent skill retrieves every body used for a claim and keeps retrospective judgement separate from source status and project authority.
-- Explicit persistence uses immutable finding:REVIEW units with checked scope, boundaries, fingerprint, and same-scope predecessor.
-- Organon now dogfoods vocabulary v5; the doctor preserved custom terms and unit bodies.
-- The integrated gate passes: 349 tests, 0 failures, 1,882 assertions; strict health verifies 24 of 24 current artifacts.
-- A real Organon review selected exactly the two candidate units plus bounded causal context and performed no write.
+- The bounded trajectory-review feature remains fully implemented and validated.
+- Linux, macOS, hygiene, validator, and title checks passed on the first PR run.
+- Windows Bun returned EPERM for an existing exclusive lock file; the lock now retries Windows EPERM and EACCES as contention while keeping POSIX permission errors hard and preserving the timeout.
+- The targeted lock suite passes 2 tests with 37 assertions.
 
 ## Open frontier
 
-- Operator review of the candidate design and diff before any version, commit, release, or installation decision.
-- MoT remains untouched because its live Promptus preflight was stale; repair belongs to its own authorized session.
-- The separate historical P5/P6 maintenance items remain outside this feature patch.
+- Push the Windows lock correction to PR 45 and require the complete rerun to pass before merge.
+- Cut release metadata only after the feature lands on protected main.
+- Tag, publish, and install only from a green release commit.
 
 ## Next actions
 
-1. Review the implementation handoff and dirty-tree diff.
-2. If accepted, choose the release version and conventional release workflow explicitly.
-3. Repair and reindex MoT only in its own authorized session before running trajectory review there.
+1. Run the complete local gate with the recorded correction.
+2. Amend PR 45 with the conventional fix commit and wait for all checks.
+3. Continue the v0.9.0 release workflow only after protected main is green.
 
 ## <<< RESUME HERE >>>
 
-Resume at operator review of the locally validated bounded trajectory-review candidate. Do not release or install it implicitly.
+Resume at validating and pushing the Windows lock compatibility correction to feature PR 45.
 
 <!-- now:end -->
 
@@ -955,5 +953,21 @@ This is an unreleased local source candidate. No manifest, tag, GitHub release, 
 Related: [[bounded-trajectory-review-separates-deterministic-evidence-from]]
 ↳ supports finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from
 ↳ supersedes event-20260824T071947Z-release-promptus-v082-and-refresh-the-local-codex-plugin
+
+### [2026-08-24 07:11:20] FIX/VALIDATED — Retry Windows lock aliases exposed by Promptus PR 45
+<!-- kb:id event-20260824T111120Z-retry-windows-lock-aliases-exposed-by-promptus-pr-45 -->
+<!-- kb:artifact store-lock|promptus/scripts/lib/store-lock.ts|98eb4538c53b5c4ae34cedbcf0077cd56cf951ed25d91cac07e199537e00b389 -->
+<!-- kb:artifact regression|promptus/scripts/test/concurrency.test.ts|5a6051f256cf7c61d943c8d9430504a533f1f0afabc5bb98a0323e3acbc88a44 -->
+<!-- kb:artifact changelog|promptus/CHANGELOG.md|1a79fcbcc3f9d3e65c2431b6fd75cea924b9ca5e06ca2cc4fc8b12bcd83df733 -->
+Protected-main pull request 45 exposed a Windows-only store-lock compatibility failure before release.
+
+- Linux, macOS, hygiene, validator, and title checks passed.
+- Windows Bun 1.4.0 returned EPERM for three concurrent open-with-exclusive-create attempts on the existing store.lock path; the lock loop recognized only EEXIST, so those writers failed instead of waiting.
+- The smallest correction classifies EPERM and EACCES as contention only on win32. POSIX permission errors remain hard failures and the existing 30-second fail-closed timeout remains unchanged.
+- A deterministic mapping regression now covers EEXIST, Windows EPERM and EACCES, and POSIX EPERM; the 24-writer integration test still proves lossless unique writes.
+- Local targeted result: 2 tests passed, 0 failed, 37 assertions.
+
+Evidence: GitHub Actions run 32720321466, Windows job 97410154194. The release remains blocked until the updated Windows matrix passes.
+↳ fixes event-20260824T102850Z-implement-bounded-trajectory-reviews-for-long-running-research
 
 <!-- kb:append-point -->
