@@ -1,0 +1,407 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-25T12:56:57.365Z",
+  "profile": "mot-ext4-one-cpu",
+  "filesystem": "ext4",
+  "suite": "maintenance",
+  "cpuList": "0",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 39431385088
+  },
+  "sourceReceipt": {
+    "storeHash": "f5fd3eb927aa32c54607b7a3788ee7a5c4acbe156c6091ce8b20aa9069c9cd35",
+    "sourceFiles": 2600,
+    "units": 5340,
+    "artifactRecords": 3700
+  },
+  "plan": [
+    {
+      "name": "collect-units",
+      "repetitions": 2
+    },
+    {
+      "name": "hash-store",
+      "repetitions": 2
+    },
+    {
+      "name": "artifacts-current",
+      "repetitions": 1
+    },
+    {
+      "name": "artifacts-cached-root",
+      "repetitions": 1
+    },
+    {
+      "name": "artifacts-unique-path",
+      "repetitions": 1
+    },
+    {
+      "name": "index",
+      "repetitions": 2
+    },
+    {
+      "name": "check-no-index",
+      "repetitions": 1
+    },
+    {
+      "name": "check-full",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "collect-units",
+      "iteration": 1,
+      "elapsedSeconds": 0.14,
+      "userSeconds": 0.05,
+      "systemSeconds": 0.06,
+      "maxRssKiB": 80680,
+      "majorFaults": 0,
+      "minorFaults": 12782,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 335,
+      "involuntaryContextSwitches": 124,
+      "exitStatus": 0,
+      "stdoutBytes": 49,
+      "stdoutSha256": "db5b1880abc18fef421e51203b7d08cd961a5649b3748cd86906c5945796c7fc",
+      "details": {
+        "units": 5340,
+        "live": 5340,
+        "cold": 0
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "collect-units",
+      "iteration": 2,
+      "elapsedSeconds": 0.14,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.03,
+      "maxRssKiB": 81468,
+      "majorFaults": 0,
+      "minorFaults": 12935,
+      "fsInputs": 189,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 340,
+      "involuntaryContextSwitches": 143,
+      "exitStatus": 0,
+      "stdoutBytes": 49,
+      "stdoutSha256": "db5b1880abc18fef421e51203b7d08cd961a5649b3748cd86906c5945796c7fc",
+      "details": {
+        "units": 5340,
+        "live": 5340,
+        "cold": 0
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "hash-store",
+      "iteration": 1,
+      "elapsedSeconds": 0.09,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.04,
+      "maxRssKiB": 55484,
+      "majorFaults": 0,
+      "minorFaults": 6668,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 324,
+      "involuntaryContextSwitches": 81,
+      "exitStatus": 0,
+      "stdoutBytes": 98,
+      "stdoutSha256": "6002ac381f6a9db59b4744c1b00d8fb0a569af947ebfca08b0f57af2cb7bb4f9",
+      "details": {
+        "hash": "f5fd3eb927aa32c54607b7a3788ee7a5c4acbe156c6091ce8b20aa9069c9cd35",
+        "files": 2600
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "hash-store",
+      "iteration": 2,
+      "elapsedSeconds": 0.08,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.03,
+      "maxRssKiB": 55600,
+      "majorFaults": 0,
+      "minorFaults": 6682,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 324,
+      "involuntaryContextSwitches": 88,
+      "exitStatus": 0,
+      "stdoutBytes": 98,
+      "stdoutSha256": "6002ac381f6a9db59b4744c1b00d8fb0a569af947ebfca08b0f57af2cb7bb4f9",
+      "details": {
+        "hash": "f5fd3eb927aa32c54607b7a3788ee7a5c4acbe156c6091ce8b20aa9069c9cd35",
+        "files": 2600
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "artifacts-current",
+      "iteration": 1,
+      "elapsedSeconds": 0.76,
+      "userSeconds": 0.36,
+      "systemSeconds": 0.37,
+      "maxRssKiB": 354144,
+      "majorFaults": 0,
+      "minorFaults": 146643,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 321,
+      "involuntaryContextSwitches": 95,
+      "exitStatus": 0,
+      "stdoutBytes": 215,
+      "stdoutSha256": "9ada689b37f4a0a9ef3ff989244f400bc4c264ec0e2965272e50a45350bf1cab",
+      "details": {
+        "mode": "current",
+        "records": 3700,
+        "uniqueSpecs": 2611,
+        "uniquePaths": 2237,
+        "bytesRead": 711236961,
+        "outcomes": {
+          "ok": 3547,
+          "hash-mismatch": 151,
+          "not-file": 2
+        },
+        "failures": 153
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "artifacts-cached-root",
+      "iteration": 1,
+      "elapsedSeconds": 0.61,
+      "userSeconds": 0.31,
+      "systemSeconds": 0.27,
+      "maxRssKiB": 383496,
+      "majorFaults": 0,
+      "minorFaults": 115896,
+      "fsInputs": 189,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 331,
+      "involuntaryContextSwitches": 123,
+      "exitStatus": 0,
+      "stdoutBytes": 219,
+      "stdoutSha256": "71afc1ad5b2734fd476d76a6be17d2f6f1b91791d48492aad3340315c431b31c",
+      "details": {
+        "mode": "cached-root",
+        "records": 3700,
+        "uniqueSpecs": 2611,
+        "uniquePaths": 2237,
+        "bytesRead": 711236961,
+        "outcomes": {
+          "ok": 3547,
+          "hash-mismatch": 151,
+          "not-file": 2
+        },
+        "failures": 153
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "artifacts-unique-path",
+      "iteration": 1,
+      "elapsedSeconds": 0.47,
+      "userSeconds": 0.25,
+      "systemSeconds": 0.19,
+      "maxRssKiB": 348596,
+      "majorFaults": 0,
+      "minorFaults": 84738,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 332,
+      "involuntaryContextSwitches": 91,
+      "exitStatus": 0,
+      "stdoutBytes": 219,
+      "stdoutSha256": "176dcefd757a16bd5d1fb8e89062e04491fb608923b1ba80ba6699b5d3dd5faf",
+      "details": {
+        "mode": "unique-path",
+        "records": 3700,
+        "uniqueSpecs": 2611,
+        "uniquePaths": 2237,
+        "bytesRead": 552712736,
+        "outcomes": {
+          "ok": 3547,
+          "hash-mismatch": 151,
+          "not-file": 2
+        },
+        "failures": 153
+      }
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "index",
+      "iteration": 1,
+      "elapsedSeconds": 2.91,
+      "userSeconds": 2.38,
+      "systemSeconds": 0.49,
+      "maxRssKiB": 627376,
+      "majorFaults": 0,
+      "minorFaults": 254434,
+      "fsInputs": 130,
+      "fsOutputs": 136,
+      "voluntaryContextSwitches": 382,
+      "involuntaryContextSwitches": 448,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "index",
+      "iteration": 2,
+      "elapsedSeconds": 2.98,
+      "userSeconds": 2.52,
+      "systemSeconds": 0.43,
+      "maxRssKiB": 625100,
+      "majorFaults": 0,
+      "minorFaults": 229679,
+      "fsInputs": 129,
+      "fsOutputs": 120,
+      "voluntaryContextSwitches": 386,
+      "involuntaryContextSwitches": 334,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "check-no-index",
+      "iteration": 1,
+      "elapsedSeconds": 0.89,
+      "userSeconds": 0.47,
+      "systemSeconds": 0.39,
+      "maxRssKiB": 422124,
+      "majorFaults": 0,
+      "minorFaults": 166825,
+      "fsInputs": 162,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 363,
+      "involuntaryContextSwitches": 238,
+      "exitStatus": 0,
+      "stdoutBytes": 2571991,
+      "stdoutSha256": "5b27563480df36b607ac7da734b458209bc8ef659f68fcaca17b923127c3bd49"
+    },
+    {
+      "profile": "mot-ext4-one-cpu",
+      "filesystem": "ext4",
+      "operation": "check-full",
+      "iteration": 1,
+      "elapsedSeconds": 3.68,
+      "userSeconds": 2.79,
+      "systemSeconds": 0.87,
+      "maxRssKiB": 1003900,
+      "majorFaults": 0,
+      "minorFaults": 394320,
+      "fsInputs": 162,
+      "fsOutputs": 136,
+      "voluntaryContextSwitches": 472,
+      "involuntaryContextSwitches": 464,
+      "exitStatus": 0,
+      "stdoutBytes": 2571991,
+      "stdoutSha256": "5b27563480df36b607ac7da734b458209bc8ef659f68fcaca17b923127c3bd49"
+    }
+  ],
+  "summary": [
+    {
+      "operation": "collect-units",
+      "n": 2,
+      "medianSeconds": 0.14,
+      "minSeconds": 0.14,
+      "maxSeconds": 0.14,
+      "medianUserSeconds": 0.065,
+      "medianSystemSeconds": 0.045,
+      "maxRssMiB": 79.55859375
+    },
+    {
+      "operation": "hash-store",
+      "n": 2,
+      "medianSeconds": 0.08499999999999999,
+      "minSeconds": 0.08,
+      "maxSeconds": 0.09,
+      "medianUserSeconds": 0.02,
+      "medianSystemSeconds": 0.035,
+      "maxRssMiB": 54.296875
+    },
+    {
+      "operation": "artifacts-current",
+      "n": 1,
+      "medianSeconds": 0.76,
+      "minSeconds": 0.76,
+      "maxSeconds": 0.76,
+      "medianUserSeconds": 0.36,
+      "medianSystemSeconds": 0.37,
+      "maxRssMiB": 345.84375
+    },
+    {
+      "operation": "artifacts-cached-root",
+      "n": 1,
+      "medianSeconds": 0.61,
+      "minSeconds": 0.61,
+      "maxSeconds": 0.61,
+      "medianUserSeconds": 0.31,
+      "medianSystemSeconds": 0.27,
+      "maxRssMiB": 374.5078125
+    },
+    {
+      "operation": "artifacts-unique-path",
+      "n": 1,
+      "medianSeconds": 0.47,
+      "minSeconds": 0.47,
+      "maxSeconds": 0.47,
+      "medianUserSeconds": 0.25,
+      "medianSystemSeconds": 0.19,
+      "maxRssMiB": 340.42578125
+    },
+    {
+      "operation": "index",
+      "n": 2,
+      "medianSeconds": 2.9450000000000003,
+      "minSeconds": 2.91,
+      "maxSeconds": 2.98,
+      "medianUserSeconds": 2.45,
+      "medianSystemSeconds": 0.45999999999999996,
+      "maxRssMiB": 612.671875
+    },
+    {
+      "operation": "check-no-index",
+      "n": 1,
+      "medianSeconds": 0.89,
+      "minSeconds": 0.89,
+      "maxSeconds": 0.89,
+      "medianUserSeconds": 0.47,
+      "medianSystemSeconds": 0.39,
+      "maxRssMiB": 412.23046875
+    },
+    {
+      "operation": "check-full",
+      "n": 1,
+      "medianSeconds": 3.68,
+      "minSeconds": 3.68,
+      "maxSeconds": 3.68,
+      "medianUserSeconds": 2.79,
+      "medianSystemSeconds": 0.87,
+      "maxRssMiB": 980.37109375
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "schema": "promptus.retrieval-benchmark-result.v1",
+  "name": "Organon lifecycle-aware local semantic retrieval v2",
+  "completedAt": "2026-08-24T16:18:27Z",
+  "preregistration": {
+    "path": "benchmarks/retrieval-local-v2-preregistered.json",
+    "sha256": "59db899d25f7eefe4cab1d0e8e3ade9fcc6cc35712222f2dc1f2b6b299d849db"
+  },
+  "corpus": {
+    "root": ".",
+    "units": 298,
+    "documentChunks": 422,
+    "queries": 45,
+    "sourceFingerprint": "68b386773f8960d64f3ba4739b683cf845b48e981c63167abac9e9cf3777a43d",
+    "catalogHash": "a3fa955af510ce7052de5329137f946e0e10876d74808fc12c6e146887168c3c",
+    "suitePath": "benchmarks/retrieval-cases-v2.json",
+    "suiteSha256": "ad1d795e2da2d6999c45c35e4fe1c25ab33a8852825860f2cba2de0da78af2c3"
+  },
+  "model": {
+    "id": "nvidia/Nemotron-3-Embed-8B-BF16",
+    "revision": "c44c20ab3f6b430336706847a6372de4b2eb3dbd",
+    "dimensions": 4096,
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "localOnly": true
+  },
+  "execution": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "torch": "2.13.0+cu130",
+    "transformers": "5.2.0",
+    "sentenceTransformers": "5.4.1",
+    "embeddingInputs": 467,
+    "batchSize": 8,
+    "embeddingSeconds": 31.1,
+    "cacheReplayUncachedInputs": 0,
+    "cacheReplayMetricsIdentical": true
+  },
+  "cache": {
+    "path": ".promptus/cache/retrieval-benchmark/d23b33da62f0404b.json",
+    "bytes": 41163003,
+    "sha256": "6855152ba4e583e39f91978f4fb8148872bc8b7b1d26c433381117404119cb8c",
+    "disposable": true
+  },
+  "metrics": {
+    "lexical": {
+      "hitsAt5": 30,
+      "recallAt5": 0.6666666666666666,
+      "hitsAt10": 34,
+      "recallAt10": 0.7555555555555555,
+      "mrr": 0.5207256800720853,
+      "inactiveAt10Count": 3,
+      "top10Slots": 450,
+      "inactiveAt10": 0.006666666666666667
+    },
+    "dense": {
+      "hitsAt5": 39,
+      "recallAt5": 0.8666666666666667,
+      "hitsAt10": 44,
+      "recallAt10": 0.9777777777777777,
+      "mrr": 0.7028571428571428,
+      "inactiveAt10Count": 68,
+      "top10Slots": 450,
+      "inactiveAt10": 0.1511111111111111
+    },
+    "denseActive": {
+      "hitsAt5": 42,
+      "recallAt5": 0.9333333333333333,
+      "hitsAt10": 44,
+      "recallAt10": 0.9777777777777777,
+      "mrr": 0.745581098339719,
+      "inactiveAt10Count": 0,
+      "top10Slots": 450,
+      "inactiveAt10": 0
+    },
+    "symmetricHybrid": {
+      "hitsAt5": 38,
+      "recallAt5": 0.8444444444444444,
+      "hitsAt10": 42,
+      "recallAt10": 0.9333333333333333,
+      "mrr": 0.682565941206292,
+      "inactiveAt10Count": 16,
+      "top10Slots": 450,
+      "inactiveAt10": 0.035555555555555556
+    },
+    "preregisteredCandidateUnion": {
+      "hitsAt5": 38,
+      "recallAt5": 0.8444444444444444,
+      "hitsAt10": 43,
+      "recallAt10": 0.9555555555555556,
+      "mrr": 0.6121965688632355,
+      "inactiveAt10Count": 0,
+      "top10Slots": 450,
+      "inactiveAt10": 0
+    }
+  },
+  "firstRelevantRanks": {
+    "lexical": [65, 4, 2, 5, 15, 1, null, 4, 1, 36, 14, 13, 18, 1, 37, 17, 6, 1, 1, 1, 1, 3, 3, 5, 1, 7, 1, 7, 108, 2, 1, 3, 1, 10, 2, 14, 1, 1, 1, 1, 1, 1, 2, 1, 2],
+    "dense": [2, 7, 2, 4, 2, 1, 3, 1, 1, 3, 30, 1, 7, 6, 7, 1, 2, 1, 1, 1, 1, 4, 1, 1, 1, 6, 1, 2, 2, 2, 3, 3, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "denseActive": [1, 6, 2, 4, 2, 1, 3, 1, 1, 3, 29, 1, 6, 5, 5, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 5, 1, 2, 2, 1, 3, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    "symmetricHybrid": [13, 1, 2, 2, 5, 1, 48, 1, 1, 3, 9, 1, 6, 2, 9, 7, 1, 1, 1, 1, 1, 3, 1, 2, 1, 2, 1, 2, 19, 1, 2, 3, 1, 3, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1],
+    "preregisteredCandidateUnion": [2, 7, 2, 7, 4, 1, 6, 2, 1, 5, 12, 2, 11, 1, 9, 2, 2, 1, 1, 1, 1, 3, 2, 2, 1, 9, 1, 3, 4, 2, 1, 3, 1, 2, 2, 2, 1, 1, 1, 1, 1, 1, 2, 1, 2]
+  },
+  "pairedBootstrapAgainstLexical": {
+    "method": "100000 deterministic case-resampling iterations; percentile 95% interval",
+    "denseActive": {
+      "recallAt5Delta": 0.26666666666666666,
+      "recallAt5Ci95": [0.13333333333333333, 0.4222222222222222],
+      "recallAt5WinsLossesTies": [13, 1, 31],
+      "recallAt10Delta": 0.2222222222222222,
+      "recallAt10Ci95": [0.1111111111111111, 0.35555555555555557],
+      "recallAt10WinsLossesTies": [10, 0, 35],
+      "mrrDelta": 0.2248554182676337,
+      "mrrCi95": [0.10916405858934591, 0.3418517552639707],
+      "mrrWinsLossesTies": [22, 4, 19]
+    },
+    "preregisteredCandidateUnion": {
+      "recallAt5Delta": 0.17777777777777778,
+      "recallAt5Ci95": [0.044444444444444446, 0.3111111111111111],
+      "recallAt5WinsLossesTies": [10, 2, 33],
+      "recallAt10Delta": 0.2,
+      "recallAt10Ci95": [0.08888888888888889, 0.3111111111111111],
+      "recallAt10WinsLossesTies": [9, 0, 36],
+      "mrrDelta": 0.09147088879115023,
+      "mrrCi95": [0.0484929280354117, 0.13867218906434592],
+      "mrrWinsLossesTies": [17, 3, 25]
+    }
+  },
+  "decision": {
+    "preregisteredThresholdPassed": true,
+    "supports": "Continue developing a local, lifecycle-filtered semantic fallback or candidate generator.",
+    "doesNotSupport": "Replacing lexical retrieval, adding SQLite, shipping embeddings, or releasing Promptus from this benchmark alone."
+  },
+  "limitations": [
+    "The frozen suite covers one project and 45 hand-authored paraphrase questions over the current Organon corpus.",
+    "It does not measure exact identifiers, code fragments, error strings, end-to-end agent task success, index update cost, or smaller local models.",
+    "Psi, MoT, and Probatio were excluded because their read-only session doctors failed closed on concurrently advancing NOW or cache state; no stale snapshot was benchmarked."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "promptus.artifact-streaming-probe.v1",
+  "executedAt": "2026-08-25",
+  "project": "MoT",
+  "filesystem": "wsl-9p",
+  "method": "Hash every canonical artifact path once. Compare the existing whole-file read with a synchronous 1 MiB fixed-buffer stream; preserve path safety, SHA-256, owner fan-out, outcome order, and failure classification.",
+  "corpus": {
+    "artifactRecords": 3712,
+    "uniqueSpecs": 2621,
+    "uniquePaths": 2247,
+    "bytesReadPerTrial": 552759271
+  },
+  "readAll": {
+    "elapsedSeconds": 32.29,
+    "userSeconds": 0.47,
+    "systemSeconds": 3.46,
+    "maxRssKiB": 339176,
+    "fsInputs": 1087638,
+    "outcomes": {
+      "ok": 3559,
+      "hashMismatch": 151,
+      "notFile": 2
+    },
+    "outcomeDigest": "a6327b85b4c34480f078fa6603024306cb9c2ff858ac98268f115f6a54d4e2e0"
+  },
+  "streaming": {
+    "bufferBytes": 1048576,
+    "elapsedSeconds": 33.9,
+    "userSeconds": 1.6,
+    "systemSeconds": 5.13,
+    "maxRssKiB": 55300,
+    "fsInputs": 1087637,
+    "outcomes": {
+      "ok": 3559,
+      "hashMismatch": 151,
+      "notFile": 2
+    },
+    "outcomeDigest": "a6327b85b4c34480f078fa6603024306cb9c2ff858ac98268f115f6a54d4e2e0"
+  },
+  "comparison": {
+    "exactEquivalent": true,
+    "rssReductionPercent": 83.7,
+    "rssReductionFactor": 6.13,
+    "elapsedChangePercent": 4.99,
+    "interpretation": "Streaming is a memory-safety optimization, not a wall-time optimization on this profile. It preserves every outcome while trading about five percent more time for an 83.7 percent lower process peak RSS."
+  },
+  "limitations": [
+    "The two variants ran sequentially against a live read-only artifact set; operating-system cache state was not forcibly reset.",
+    "The probe isolates unique-path artifact verification. It does not estimate the peak RSS of the complete check pipeline, whose index phase also retains a large lexical posting structure.",
+    "No live source, artifact, cache, or installed plugin file was written."
+  ]
+}

@@ -1,0 +1,882 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Promptus maintenance performance at MoT scale",
+    "description": "A frozen-corpus diagnosis and hardware-agnostic work-conservation plan.",
+    "generatedAt": "2026-08-25T12:57:46.600Z",
+    "filters": [],
+    "cards": [
+      {
+        "id": "corpus_card",
+        "description": "Lifecycle-live Promptus units in the frozen MoT snapshot.",
+        "dataset": "headline",
+        "sourceId": "headline_sql",
+        "metrics": [
+          {
+            "label": "Live units",
+            "field": "units",
+            "format": "compact"
+          }
+        ]
+      },
+      {
+        "id": "thinker_gain_card",
+        "description": "Exact-equivalent single-pass binding gain across all measured storage profiles.",
+        "dataset": "headline",
+        "sourceId": "headline_sql",
+        "metrics": [
+          {
+            "label": "Thinker minimum gain (×)",
+            "field": "thinkerSpeedupMin",
+            "format": "number"
+          },
+          {
+            "label": "Maximum gain (×)",
+            "field": "thinkerSpeedupMax",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "artifact_gain_card",
+        "description": "Exact-equivalent unique-path hashing gain across all measured storage profiles.",
+        "dataset": "headline",
+        "sourceId": "headline_sql",
+        "metrics": [
+          {
+            "label": "Artifact minimum gain (×)",
+            "field": "artifactSpeedupMin",
+            "format": "number"
+          },
+          {
+            "label": "Maximum gain (×)",
+            "field": "artifactSpeedupMax",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "memory_card",
+        "description": "Peak resident memory during the native-ext4 full check.",
+        "dataset": "headline",
+        "sourceId": "headline_sql",
+        "metrics": [
+          {
+            "label": "Peak RSS (GiB)",
+            "field": "peakRssGiB",
+            "format": "number"
+          }
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "speedup_chart",
+        "title": "Storage sensitivity of the current pipeline",
+        "subtitle": "Diagnostic only: larger values mean repeated deterministic work is more expensive on WSL 9p than ext4.",
+        "type": "horizontalBar",
+        "dataset": "speedups",
+        "sourceId": "speedups_sql",
+        "valueFormat": "number",
+        "encodings": {
+          "x": {
+            "field": "operation",
+            "type": "nominal",
+            "label": "Operation"
+          },
+          "y": {
+            "field": "speedup",
+            "type": "quantitative",
+            "label": "Speedup",
+            "unit": "×"
+          },
+          "tooltip": [
+            {
+              "field": "windows9pSeconds",
+              "type": "quantitative",
+              "label": "WSL 9p",
+              "unit": "s",
+              "format": "number"
+            },
+            {
+              "field": "ext4Seconds",
+              "type": "quantitative",
+              "label": "ext4",
+              "unit": "s",
+              "format": "number"
+            },
+            {
+              "field": "tmpfsSeconds",
+              "type": "quantitative",
+              "label": "tmpfs",
+              "unit": "s",
+              "format": "number"
+            }
+          ]
+        }
+      },
+      {
+        "id": "diagnosis_chart",
+        "title": "Software optimization speedup across storage profiles",
+        "subtitle": "Both probes preserved the exact binding digest or complete verifier outcomes on every profile.",
+        "type": "bar",
+        "dataset": "software_gains",
+        "sourceId": "software_gains_sql",
+        "valueFormat": "number",
+        "encodings": {
+          "x": {
+            "field": "mechanism",
+            "type": "nominal",
+            "label": "Software mechanism"
+          },
+          "y": {
+            "field": "speedup",
+            "type": "quantitative",
+            "label": "Speedup",
+            "unit": "×"
+          },
+          "color": {
+            "field": "filesystem",
+            "type": "nominal",
+            "label": "Storage profile"
+          },
+          "tooltip": [
+            {
+              "field": "currentSeconds",
+              "type": "quantitative",
+              "label": "Current",
+              "unit": "s",
+              "format": "number"
+            },
+            {
+              "field": "candidateSeconds",
+              "type": "quantitative",
+              "label": "Candidate",
+              "unit": "s",
+              "format": "number"
+            },
+            {
+              "field": "exactEquivalent",
+              "type": "nominal",
+              "label": "Exact-equivalence check"
+            }
+          ]
+        }
+      }
+    ],
+    "tables": [
+      {
+        "id": "timing_table",
+        "title": "Exact wall-time comparison",
+        "subtitle": "Medians where repeated; one completed trial for expensive end-to-end operations.",
+        "dataset": "exact_times",
+        "sourceId": "exact_times_sql",
+        "defaultSort": {
+          "field": "windows9pSeconds",
+          "direction": "desc"
+        },
+        "columns": [
+          {
+            "field": "operation",
+            "label": "Operation",
+            "type": "text"
+          },
+          {
+            "field": "windows9pSeconds",
+            "label": "WSL 9p (s)",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "ext4Seconds",
+            "label": "ext4 (s)",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "tmpfsSeconds",
+            "label": "tmpfs (s)",
+            "type": "number",
+            "format": "number"
+          },
+          {
+            "field": "speedup",
+            "label": "9p/ext4 (×)",
+            "type": "number",
+            "format": "number"
+          }
+        ]
+      },
+      {
+        "id": "software_contract_table",
+        "title": "Work-conservation and correctness contract",
+        "subtitle": "The implementation target is less deterministic work on every machine, with no weaker health semantics.",
+        "dataset": "software_contract",
+        "sourceId": "software_contract_sql",
+        "columns": [
+          {
+            "field": "operation",
+            "label": "Operation",
+            "type": "text"
+          },
+          {
+            "field": "currentWaste",
+            "label": "Current repeated work",
+            "type": "text"
+          },
+          {
+            "field": "targetWork",
+            "label": "Target work",
+            "type": "text"
+          },
+          {
+            "field": "acceptance",
+            "label": "Correctness acceptance",
+            "type": "text"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      {
+        "id": "headline_sql",
+        "label": "Headline benchmark metrics",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      },
+      {
+        "id": "speedups_sql",
+        "label": "Cross-filesystem speedup rows",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      },
+      {
+        "id": "diagnosis_sql",
+        "label": "Exact-equivalence phase probes",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      },
+      {
+        "id": "software_gains_sql",
+        "label": "Exact-equivalent software gains across storage profiles",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      },
+      {
+        "id": "exact_times_sql",
+        "label": "Exact cross-hardware timing table",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      },
+      {
+        "id": "software_contract_sql",
+        "label": "Hardware-agnostic work-conservation contract",
+        "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json"
+      }
+    ],
+    "blocks": [
+      {
+        "id": "title",
+        "type": "markdown",
+        "body": "# Promptus maintenance performance at MoT scale"
+      },
+      {
+        "id": "technical_summary",
+        "type": "markdown",
+        "sourceId": "headline_sql",
+        "body": "## Technical summary\n\nThe storage comparison is a diagnostic amplifier, not the proposed remedy. On the same 5,338-unit corpus, the full gate ranged from **3.61 s on ext4 to 109.34 s on WSL 9p**, exposing how much Promptus pays for repeated opens and scans. Two software-only probes helped on **all** measured profiles while preserving exact outputs: single-pass thinker binding improved 3.17×–10.75×, and unique-path artifact hashing improved 1.35×–1.62×. The engineering target is therefore hardware-agnostic: read, parse, hash, and write each necessary object once per maintenance transaction."
+      },
+      {
+        "id": "metrics",
+        "type": "metric-strip",
+        "cardIds": [
+          "corpus_card",
+          "thinker_gain_card",
+          "artifact_gain_card",
+          "memory_card"
+        ]
+      },
+      {
+        "id": "key_findings",
+        "type": "markdown",
+        "body": "## Key findings\n\n- **Redundant deterministic work is the actionable defect.** The filesystem merely changes its price.\n- **Thinker bookkeeping is the first code hotspot.** One scan of 1,010 findings reproduced all 12 bindings and the exact digest; it was 10.75× faster on 9p and more than 3× faster even on ext4 and tmpfs.\n- **Artifact deduplication is exact and portable.** One hash per unique declared path preserved all 3,700 outcomes and improved every storage profile.\n- **The full pipeline rereads the same truth.** Indexing parses units, full check fingerprints them again, and thinker custody scans findings again. One immutable store snapshot should feed all consumers.\n- **More compute is not the present answer.** A one-CPU control matched the normal ext4 profile, and the GPU is outside this path."
+      },
+      {
+        "id": "diagnosis_visual",
+        "type": "chart",
+        "chartId": "diagnosis_chart"
+      },
+      {
+        "id": "where_time_goes",
+        "type": "markdown",
+        "body": "## Where the time goes\n\nThe current thinker inspector walks the findings tree separately for each adjudicated quarantined round. That repeated work closely accounts for an ordinary 29.44 s gated write and most of the 38.90 s index on 9p. The full gate then performs an index and a second broad verification pass. Artifact verification adds a separate path-and-content cost: 3,700 historical checks refer to 2,237 unique paths, causing 1.29× byte amplification before path-level deduplication."
+      },
+      {
+        "id": "speedup_visual",
+        "type": "chart",
+        "chartId": "speedup_chart"
+      },
+      {
+        "id": "timing_detail",
+        "type": "table",
+        "tableId": "timing_table"
+      },
+      {
+        "id": "scope",
+        "type": "markdown",
+        "sourceId": "headline_sql",
+        "body": "## Scope, data, and metrics\n\nThe primary comparison uses one byte-matched MoT snapshot: 5,338 live units in 2,600 source Markdown files, 2,977 ledger units, and 3,700 artifact records. Wall, user, system, peak RSS, page-fault, filesystem-I/O, and context-switch receipts were captured with GNU time. Headline comparisons use wall seconds; memory guidance uses peak RSS. The live project was read-only."
+      },
+      {
+        "id": "methodology",
+        "type": "markdown",
+        "body": "## Methodology\n\nThe harness first stages `.promptus` plus declared artifact dependencies, then verifies that source Markdown hashes and file counts match. All mutating write/index/check trials run only in the snapshot. Fast operations use two to five repetitions and report medians; expensive end-to-end operations use one completed trial. Candidate optimizations are counted only when their binding digest or complete verifier-outcome vector exactly matches current behavior."
+      },
+      {
+        "id": "limitations",
+        "type": "markdown",
+        "body": "## Limitations and robustness\n\nThe benchmark covers one WSL2 machine and one large corpus. Staging warms the working set, so these are active-session rather than cold-boot timings. Expensive 9p operations have one formal trial, although they agree with the operator's independent ~40 s write, ~38 s index, and ~102 s full-gate measurements. The one-CPU control contains two benchmark-only events. NFS, SMB, bare-metal Windows, macOS, low-RAM systems, and slower local disks still require direct validation."
+      },
+      {
+        "id": "engineering_design",
+        "type": "markdown",
+        "body": "## Engineering design\n\nBuild a work-conserving maintenance core with no platform branches. A single immutable `StoreSnapshot` should read each authoritative source once and simultaneously produce its digest, parsed units, relation resolver, graph inputs, search inputs, artifact ownership, and thinker binding map. Index and full check then consume that same snapshot rather than walking the store again. Governed writes should declare their dependency delta, so an unrelated ledger event never refreshes thinker surfaces. Artifact contents are hashed once per canonical path, batches share one lock and resolver, and derived files are replaced only when bytes change. A touched-files receipt is useful only when explicitly PARTIAL; the durable full gate remains exact."
+      },
+      {
+        "id": "software_contract",
+        "type": "table",
+        "tableId": "software_contract_table"
+      },
+      {
+        "id": "next_steps",
+        "type": "markdown",
+        "body": "## Recommended next steps\n\n1. Add work counters—source reads/parses, finding walks, artifact hashes/bytes, and derived rewrites—to the benchmark receipt.\n2. Implement the single-pass thinker context, dependency-aware refresh, and unchanged-output suppression with multi-round equivalence regressions.\n3. Introduce the immutable `StoreSnapshot` API and make index plus full check reuse it.\n4. Deduplicate authoritative artifact hashes by canonical real path.\n5. Add transactional batch writes, rerun all three storage profiles, and develop persistent incremental indexing only if this simpler pipeline still misses the agreed latency budget."
+      },
+      {
+        "id": "further_questions",
+        "type": "markdown",
+        "body": "## Further questions\n\n- What inner-loop latency budget should Promptus guarantee on native storage and on metadata-expensive mounts?\n- Can Psi and Probatio reproduce the same thinker/artifact proportions?\n- Which units are legitimately lifecycle-cold, and can their stable derived index be reused without automatic age-based archival?\n- Does a touched-files checkpoint provide enough assurance for ordinary batches while the full ratchet remains reserved for durable boundaries?"
+      }
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-25T12:57:46.600Z",
+    "status": "ready",
+    "datasets": {
+      "headline": [
+        {
+          "units": 5338,
+          "sourceFiles": 2600,
+          "ledgerUnits": 2977,
+          "artifactRecords": 3700,
+          "fullCheckSpeedup": 30.29,
+          "fullCheckWindowsSeconds": 109.34,
+          "fullCheckExt4Seconds": 3.61,
+          "noRelationWriteSpeedup": 128,
+          "noRelationWriteWindowsSeconds": 29.44,
+          "noRelationWriteExt4Seconds": 0.23,
+          "relationWriteSpeedup": 107.15,
+          "relationWriteWindowsSeconds": 35.36,
+          "relationWriteExt4Seconds": 0.33,
+          "indexSpeedup": 13.89,
+          "indexWindowsSeconds": 38.894999999999996,
+          "indexExt4Seconds": 2.8,
+          "thinkerSpeedupMin": 3.17,
+          "thinkerSpeedupMax": 10.75,
+          "artifactSpeedupMin": 1.35,
+          "artifactSpeedupMax": 1.62,
+          "peakRssGiB": 0.9
+        }
+      ],
+      "exact_times": [
+        {
+          "operation": "Full check including re-index",
+          "operationId": "check-full",
+          "windows9pSeconds": 109.34,
+          "ext4Seconds": 3.61,
+          "tmpfsSeconds": 3.68,
+          "speedup": 30.29,
+          "windows9pRssMiB": 846.9,
+          "ext4RssMiB": 923,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Whole-store check, no re-index",
+          "operationId": "check-no-index",
+          "windows9pSeconds": 71.31,
+          "ext4Seconds": 0.92,
+          "tmpfsSeconds": 0.95,
+          "speedup": 77.51,
+          "windows9pRssMiB": 393.4,
+          "ext4RssMiB": 428.4,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Session doctor",
+          "operationId": "session-doctor",
+          "windows9pSeconds": 57.66,
+          "ext4Seconds": 0.58,
+          "tmpfsSeconds": 0.52,
+          "speedup": 99.41,
+          "windows9pRssMiB": 379.9,
+          "ext4RssMiB": 406.3,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Artifact verification",
+          "operationId": "artifacts-current",
+          "windows9pSeconds": 42.11,
+          "ext4Seconds": 0.69,
+          "tmpfsSeconds": 0.84,
+          "speedup": 61.03,
+          "windows9pRssMiB": 329.1,
+          "ext4RssMiB": 333.1,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Index rebuild",
+          "operationId": "index",
+          "windows9pSeconds": 38.894999999999996,
+          "ext4Seconds": 2.8,
+          "tmpfsSeconds": 3.05,
+          "speedup": 13.89,
+          "windows9pRssMiB": 649,
+          "ext4RssMiB": 675.1,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2
+        },
+        {
+          "operation": "Gated write with relation",
+          "operationId": "kb-add-relation",
+          "windows9pSeconds": 35.36,
+          "ext4Seconds": 0.33,
+          "tmpfsSeconds": 0.34,
+          "speedup": 107.15,
+          "windows9pRssMiB": 122,
+          "ext4RssMiB": 131,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Gated write, no relation",
+          "operationId": "kb-add-no-relation",
+          "windows9pSeconds": 29.44,
+          "ext4Seconds": 0.23,
+          "tmpfsSeconds": 0.22,
+          "speedup": 128,
+          "windows9pRssMiB": 109.9,
+          "ext4RssMiB": 115.8,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1
+        },
+        {
+          "operation": "Store fingerprint",
+          "operationId": "hash-store",
+          "windows9pSeconds": 7.380000000000001,
+          "ext4Seconds": 0.115,
+          "tmpfsSeconds": 0.08499999999999999,
+          "speedup": 64.17,
+          "windows9pRssMiB": 52.7,
+          "ext4RssMiB": 58.4,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2
+        },
+        {
+          "operation": "Unit collection",
+          "operationId": "collect-units",
+          "windows9pSeconds": 7.215,
+          "ext4Seconds": 0.13,
+          "tmpfsSeconds": 0.13,
+          "speedup": 55.5,
+          "windows9pRssMiB": 76.3,
+          "ext4RssMiB": 80.9,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2
+        }
+      ],
+      "speedups": [
+        {
+          "operation": "Gated write, no relation",
+          "operationId": "kb-add-no-relation",
+          "windows9pSeconds": 29.44,
+          "ext4Seconds": 0.23,
+          "tmpfsSeconds": 0.22,
+          "speedup": 128,
+          "windows9pRssMiB": 109.9,
+          "ext4RssMiB": 115.8,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 1
+        },
+        {
+          "operation": "Gated write with relation",
+          "operationId": "kb-add-relation",
+          "windows9pSeconds": 35.36,
+          "ext4Seconds": 0.33,
+          "tmpfsSeconds": 0.34,
+          "speedup": 107.15,
+          "windows9pRssMiB": 122,
+          "ext4RssMiB": 131,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 2
+        },
+        {
+          "operation": "Session doctor",
+          "operationId": "session-doctor",
+          "windows9pSeconds": 57.66,
+          "ext4Seconds": 0.58,
+          "tmpfsSeconds": 0.52,
+          "speedup": 99.41,
+          "windows9pRssMiB": 379.9,
+          "ext4RssMiB": 406.3,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 3
+        },
+        {
+          "operation": "Whole-store check, no re-index",
+          "operationId": "check-no-index",
+          "windows9pSeconds": 71.31,
+          "ext4Seconds": 0.92,
+          "tmpfsSeconds": 0.95,
+          "speedup": 77.51,
+          "windows9pRssMiB": 393.4,
+          "ext4RssMiB": 428.4,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 4
+        },
+        {
+          "operation": "Store fingerprint",
+          "operationId": "hash-store",
+          "windows9pSeconds": 7.380000000000001,
+          "ext4Seconds": 0.115,
+          "tmpfsSeconds": 0.08499999999999999,
+          "speedup": 64.17,
+          "windows9pRssMiB": 52.7,
+          "ext4RssMiB": 58.4,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2,
+          "rank": 5
+        },
+        {
+          "operation": "Artifact verification",
+          "operationId": "artifacts-current",
+          "windows9pSeconds": 42.11,
+          "ext4Seconds": 0.69,
+          "tmpfsSeconds": 0.84,
+          "speedup": 61.03,
+          "windows9pRssMiB": 329.1,
+          "ext4RssMiB": 333.1,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 6
+        },
+        {
+          "operation": "Unit collection",
+          "operationId": "collect-units",
+          "windows9pSeconds": 7.215,
+          "ext4Seconds": 0.13,
+          "tmpfsSeconds": 0.13,
+          "speedup": 55.5,
+          "windows9pRssMiB": 76.3,
+          "ext4RssMiB": 80.9,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2,
+          "rank": 7
+        },
+        {
+          "operation": "Full check including re-index",
+          "operationId": "check-full",
+          "windows9pSeconds": 109.34,
+          "ext4Seconds": 3.61,
+          "tmpfsSeconds": 3.68,
+          "speedup": 30.29,
+          "windows9pRssMiB": 846.9,
+          "ext4RssMiB": 923,
+          "repetitionsWindows9p": 1,
+          "repetitionsExt4": 1,
+          "rank": 8
+        },
+        {
+          "operation": "Index rebuild",
+          "operationId": "index",
+          "windows9pSeconds": 38.894999999999996,
+          "ext4Seconds": 2.8,
+          "tmpfsSeconds": 3.05,
+          "speedup": 13.89,
+          "windows9pRssMiB": 649,
+          "ext4RssMiB": 675.1,
+          "repetitionsWindows9p": 2,
+          "repetitionsExt4": 2,
+          "rank": 9
+        }
+      ],
+      "diagnosis": [
+        {
+          "phase": "Artifact verification, current",
+          "seconds": 42.11,
+          "candidate": "current",
+          "exactEquivalent": "yes",
+          "bindings": null,
+          "artifactRecords": 3700
+        },
+        {
+          "phase": "Thinker inspection, current",
+          "seconds": 28.91,
+          "candidate": "current",
+          "exactEquivalent": "yes",
+          "bindings": 12,
+          "artifactRecords": null
+        },
+        {
+          "phase": "Artifact verification, unique path",
+          "seconds": 25.93,
+          "candidate": "unique-path prototype",
+          "exactEquivalent": "yes",
+          "bindings": null,
+          "artifactRecords": 3700
+        },
+        {
+          "phase": "Thinker binding scan, single pass",
+          "seconds": 2.69,
+          "candidate": "single-pass prototype",
+          "exactEquivalent": "yes",
+          "bindings": 12,
+          "artifactRecords": null
+        }
+      ],
+      "software_gains": [
+        {
+          "mechanism": "Single-pass thinker binding",
+          "mechanismId": "thinker-single-pass",
+          "filesystem": "ext4",
+          "currentSeconds": 0.2,
+          "candidateSeconds": 0.06,
+          "speedup": 3.33,
+          "exactEquivalent": "yes"
+        },
+        {
+          "mechanism": "Single-pass thinker binding",
+          "mechanismId": "thinker-single-pass",
+          "filesystem": "tmpfs",
+          "currentSeconds": 0.19,
+          "candidateSeconds": 0.06,
+          "speedup": 3.17,
+          "exactEquivalent": "yes"
+        },
+        {
+          "mechanism": "Single-pass thinker binding",
+          "mechanismId": "thinker-single-pass",
+          "filesystem": "wsl-9p",
+          "currentSeconds": 28.91,
+          "candidateSeconds": 2.69,
+          "speedup": 10.75,
+          "exactEquivalent": "yes"
+        },
+        {
+          "mechanism": "Unique-path artifact hashing",
+          "mechanismId": "artifact-unique-path",
+          "filesystem": "ext4",
+          "currentSeconds": 0.69,
+          "candidateSeconds": 0.51,
+          "speedup": 1.35,
+          "exactEquivalent": "yes"
+        },
+        {
+          "mechanism": "Unique-path artifact hashing",
+          "mechanismId": "artifact-unique-path",
+          "filesystem": "tmpfs",
+          "currentSeconds": 0.84,
+          "candidateSeconds": 0.55,
+          "speedup": 1.53,
+          "exactEquivalent": "yes"
+        },
+        {
+          "mechanism": "Unique-path artifact hashing",
+          "mechanismId": "artifact-unique-path",
+          "filesystem": "wsl-9p",
+          "currentSeconds": 42.11,
+          "candidateSeconds": 25.93,
+          "speedup": 1.62,
+          "exactEquivalent": "yes"
+        }
+      ],
+      "software_contract": [
+        {
+          "operation": "Ordinary governed write",
+          "currentWaste": "Refreshes all thinker rounds and repeatedly scans every finding even when a ledger event cannot affect thinker custody",
+          "targetWork": "One source mutation, one catalog delta, zero finding-tree scans unless a declared thinker dependency changed",
+          "acceptance": "Same unit bytes and ID; unrelated writes leave thinker derived bytes unchanged"
+        },
+        {
+          "operation": "Authoritative index",
+          "currentWaste": "Parses the store, then independently rescans findings for each thinker round",
+          "targetWork": "Read and parse every source file at most once; derive catalog, graph, search, source hash, and thinker bindings from one snapshot",
+          "acceptance": "All derived files are byte-for-byte equal to a clean reference rebuild"
+        },
+        {
+          "operation": "Authoritative full check",
+          "currentWaste": "Runs the index, fingerprints the store again, reinspects thinker custody, and rehashes repeated artifact paths",
+          "targetWork": "Reuse the index snapshot and hash each canonical artifact file once while checking every owning record",
+          "acceptance": "Identical hard failures, archival warnings, graph debt, source hash, and final readiness"
+        },
+        {
+          "operation": "Bounded batch write",
+          "currentWaste": "B writes repeat locks, relation collection, thinker refresh, and maintenance handoffs",
+          "targetWork": "One lock and resolver snapshot for B all-or-nothing mutations, followed by one dependency-aware refresh and one index receipt",
+          "acceptance": "Unique IDs, no lost events, rollback on any failed item, and full-rebuild convergence"
+        },
+        {
+          "operation": "Fast checkpoint",
+          "currentWaste": "A whole-store ratchet is the only strong receipt, so inner-loop bookkeeping pays global cost",
+          "targetWork": "Verify the transaction's touched sources, relations, and new artifacts only",
+          "acceptance": "Receipt is explicitly PARTIAL and cannot satisfy a full-gate requirement"
+        }
+      ]
+    },
+    "accessIssues": []
+  },
+  "sources": [
+    {
+      "id": "headline_sql",
+      "label": "Headline benchmark metrics",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM headline LIMIT 1",
+        "description": "Reads the reviewed frozen-corpus headline row loaded from the benchmark aggregate.",
+        "tables_used": [
+          "headline"
+        ],
+        "metric_definitions": [
+          "Speedup = WSL 9p median wall seconds / native ext4 median wall seconds",
+          "Peak RSS = maximum resident-set size observed by GNU time for the operation"
+        ]
+      }
+    },
+    {
+      "id": "speedups_sql",
+      "label": "Cross-filesystem speedup rows",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM speedups ORDER BY speedup DESC",
+        "description": "Returns reviewed operation-level WSL 9p, ext4, and tmpfs timings ordered by 9p-to-ext4 speedup.",
+        "tables_used": [
+          "speedups"
+        ],
+        "metric_definitions": [
+          "Speedup = WSL 9p median wall seconds / native ext4 median wall seconds"
+        ]
+      }
+    },
+    {
+      "id": "diagnosis_sql",
+      "label": "Exact-equivalence phase probes",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM diagnosis ORDER BY seconds DESC",
+        "description": "Returns current and exact-equivalent prototype phase timings on WSL 9p.",
+        "tables_used": [
+          "diagnosis"
+        ],
+        "metric_definitions": [
+          "Exact equivalence requires the same thinker binding digest or the same complete artifact outcome counts"
+        ]
+      }
+    },
+    {
+      "id": "software_gains_sql",
+      "label": "Exact-equivalent software gains across storage profiles",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM software_gains ORDER BY mechanism, filesystem",
+        "description": "Returns the two exact-equivalent software probes on WSL 9p, ext4, and tmpfs.",
+        "tables_used": [
+          "software_gains"
+        ],
+        "metric_definitions": [
+          "Speedup = current phase wall seconds / exact-equivalent candidate wall seconds"
+        ]
+      }
+    },
+    {
+      "id": "exact_times_sql",
+      "label": "Exact cross-hardware timing table",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM exact_times ORDER BY windows9pSeconds DESC",
+        "description": "Returns the reviewed wall-time comparison ordered by WSL 9p cost.",
+        "tables_used": [
+          "exact_times"
+        ],
+        "metric_definitions": [
+          "Wall seconds are medians where n > 1 and the completed trial where n = 1"
+        ]
+      }
+    },
+    {
+      "id": "software_contract_sql",
+      "label": "Hardware-agnostic work-conservation contract",
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "query": {
+        "engine": "bun:sqlite",
+        "language": "SQL",
+        "executed_at": "2026-08-25T12:57:46.600Z",
+        "filters": [
+          "Same 5,338-unit frozen MoT corpus for WSL 9p, ext4, and tmpfs headline comparisons",
+          "Fast operations report medians; expensive end-to-end operations report their single completed trial",
+          "No private unit bodies, prompts, labels, or artifact contents are included"
+        ],
+        "sql": "SELECT * FROM software_contract",
+        "description": "Returns the proposed operation-level work limits and exact correctness acceptance criteria.",
+        "tables_used": [
+          "software_contract"
+        ],
+        "metric_definitions": []
+      }
+    }
+  ]
+}

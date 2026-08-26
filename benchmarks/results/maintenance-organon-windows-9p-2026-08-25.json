@@ -1,0 +1,404 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-25T12:57:46.600Z",
+  "profile": "organon-windows-9p",
+  "filesystem": "wsl-9p",
+  "suite": "maintenance",
+  "cpuList": "inherited",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 39633817600
+  },
+  "sourceReceipt": {
+    "storeHash": "064c9061524b4c7f94f29f76f18bd45309c02367218bb2f256534cebdc50b237",
+    "sourceFiles": 99,
+    "units": 304,
+    "artifactRecords": 200
+  },
+  "plan": [
+    {
+      "name": "collect-units",
+      "repetitions": 2
+    },
+    {
+      "name": "hash-store",
+      "repetitions": 2
+    },
+    {
+      "name": "artifacts-current",
+      "repetitions": 1
+    },
+    {
+      "name": "artifacts-cached-root",
+      "repetitions": 1
+    },
+    {
+      "name": "artifacts-unique-path",
+      "repetitions": 1
+    },
+    {
+      "name": "index",
+      "repetitions": 2
+    },
+    {
+      "name": "check-no-index",
+      "repetitions": 1
+    },
+    {
+      "name": "check-full",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "collect-units",
+      "iteration": 1,
+      "elapsedSeconds": 0.35,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.05,
+      "maxRssKiB": 38632,
+      "majorFaults": 0,
+      "minorFaults": 3710,
+      "fsInputs": 965,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 2196,
+      "involuntaryContextSwitches": 0,
+      "exitStatus": 0,
+      "stdoutBytes": 47,
+      "stdoutSha256": "4cbce5c60b5abf156cbb29ee4b121a6f5bd9771d85c88d46512d2724ea4dd3c3",
+      "details": {
+        "units": 304,
+        "live": 304,
+        "cold": 0
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "collect-units",
+      "iteration": 2,
+      "elapsedSeconds": 0.33,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.04,
+      "maxRssKiB": 38880,
+      "majorFaults": 0,
+      "minorFaults": 3709,
+      "fsInputs": 966,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 2222,
+      "involuntaryContextSwitches": 7,
+      "exitStatus": 0,
+      "stdoutBytes": 47,
+      "stdoutSha256": "4cbce5c60b5abf156cbb29ee4b121a6f5bd9771d85c88d46512d2724ea4dd3c3",
+      "details": {
+        "units": 304,
+        "live": 304,
+        "cold": 0
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "hash-store",
+      "iteration": 1,
+      "elapsedSeconds": 0.32,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.03,
+      "maxRssKiB": 35996,
+      "majorFaults": 0,
+      "minorFaults": 3012,
+      "fsInputs": 980,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 2156,
+      "involuntaryContextSwitches": 1,
+      "exitStatus": 0,
+      "stdoutBytes": 96,
+      "stdoutSha256": "38164d464853a0506007416c0508e076668d9e467c64ce618efd2d99715aea48",
+      "details": {
+        "hash": "064c9061524b4c7f94f29f76f18bd45309c02367218bb2f256534cebdc50b237",
+        "files": 99
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "hash-store",
+      "iteration": 2,
+      "elapsedSeconds": 0.32,
+      "userSeconds": 0,
+      "systemSeconds": 0.05,
+      "maxRssKiB": 36136,
+      "majorFaults": 0,
+      "minorFaults": 3061,
+      "fsInputs": 981,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 2155,
+      "involuntaryContextSwitches": 3,
+      "exitStatus": 0,
+      "stdoutBytes": 96,
+      "stdoutSha256": "38164d464853a0506007416c0508e076668d9e467c64ce618efd2d99715aea48",
+      "details": {
+        "hash": "064c9061524b4c7f94f29f76f18bd45309c02367218bb2f256534cebdc50b237",
+        "files": 99
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "artifacts-current",
+      "iteration": 1,
+      "elapsedSeconds": 1.77,
+      "userSeconds": 0.03,
+      "systemSeconds": 0.18,
+      "maxRssKiB": 39064,
+      "majorFaults": 0,
+      "minorFaults": 4120,
+      "fsInputs": 5855,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 10995,
+      "involuntaryContextSwitches": 4,
+      "exitStatus": 0,
+      "stdoutBytes": 188,
+      "stdoutSha256": "55326581687044a96f397f962e27324afc30aac27df0ac5a8a877568e9d7179d",
+      "details": {
+        "mode": "current",
+        "records": 200,
+        "uniqueSpecs": 108,
+        "uniquePaths": 58,
+        "bytesRead": 2738291,
+        "outcomes": {
+          "ok": 98,
+          "hash-mismatch": 102
+        },
+        "failures": 102
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "artifacts-cached-root",
+      "iteration": 1,
+      "elapsedSeconds": 1.85,
+      "userSeconds": 0.03,
+      "systemSeconds": 0.19,
+      "maxRssKiB": 38584,
+      "majorFaults": 0,
+      "minorFaults": 4066,
+      "fsInputs": 5854,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 11001,
+      "involuntaryContextSwitches": 3,
+      "exitStatus": 0,
+      "stdoutBytes": 192,
+      "stdoutSha256": "0d6f7661f60b07a661ad69736a39a2e95b076f52ac8e5b6d4983871f62f512b8",
+      "details": {
+        "mode": "cached-root",
+        "records": 200,
+        "uniqueSpecs": 108,
+        "uniquePaths": 58,
+        "bytesRead": 2738291,
+        "outcomes": {
+          "ok": 98,
+          "hash-mismatch": 102
+        },
+        "failures": 102
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "artifacts-unique-path",
+      "iteration": 1,
+      "elapsedSeconds": 0.61,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.08,
+      "maxRssKiB": 37032,
+      "majorFaults": 0,
+      "minorFaults": 3400,
+      "fsInputs": 1969,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 3642,
+      "involuntaryContextSwitches": 7,
+      "exitStatus": 0,
+      "stdoutBytes": 191,
+      "stdoutSha256": "6e8a8e02f99912fd5b00b9d26d94443ced37089eb8ad3ca9fa08c5554b71c74d",
+      "details": {
+        "mode": "unique-path",
+        "records": 200,
+        "uniqueSpecs": 108,
+        "uniquePaths": 58,
+        "bytesRead": 749304,
+        "outcomes": {
+          "ok": 98,
+          "hash-mismatch": 102
+        },
+        "failures": 102
+      }
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "index",
+      "iteration": 1,
+      "elapsedSeconds": 0.46,
+      "userSeconds": 0.11,
+      "systemSeconds": 0.07,
+      "maxRssKiB": 73728,
+      "majorFaults": 0,
+      "minorFaults": 11013,
+      "fsInputs": 906,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 3402,
+      "involuntaryContextSwitches": 6,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "index",
+      "iteration": 2,
+      "elapsedSeconds": 0.44,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.08,
+      "maxRssKiB": 73528,
+      "majorFaults": 0,
+      "minorFaults": 11102,
+      "fsInputs": 906,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 3455,
+      "involuntaryContextSwitches": 12,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "check-no-index",
+      "iteration": 1,
+      "elapsedSeconds": 1.87,
+      "userSeconds": 0.06,
+      "systemSeconds": 0.18,
+      "maxRssKiB": 46440,
+      "majorFaults": 0,
+      "minorFaults": 4950,
+      "fsInputs": 8070,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 11139,
+      "involuntaryContextSwitches": 4,
+      "exitStatus": 0,
+      "stdoutBytes": 175369,
+      "stdoutSha256": "8815832bdfe48bd8f11d0942d4d8fbcd8e98d2bb26c02bfc6e2cfcd53cc0fc1b"
+    },
+    {
+      "profile": "organon-windows-9p",
+      "filesystem": "wsl-9p",
+      "operation": "check-full",
+      "iteration": 1,
+      "elapsedSeconds": 2.19,
+      "userSeconds": 0.13,
+      "systemSeconds": 0.26,
+      "maxRssKiB": 76176,
+      "majorFaults": 0,
+      "minorFaults": 11878,
+      "fsInputs": 8848,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 14066,
+      "involuntaryContextSwitches": 5,
+      "exitStatus": 0,
+      "stdoutBytes": 175369,
+      "stdoutSha256": "8815832bdfe48bd8f11d0942d4d8fbcd8e98d2bb26c02bfc6e2cfcd53cc0fc1b"
+    }
+  ],
+  "summary": [
+    {
+      "operation": "collect-units",
+      "n": 2,
+      "medianSeconds": 0.33999999999999997,
+      "minSeconds": 0.33,
+      "maxSeconds": 0.35,
+      "medianUserSeconds": 0.02,
+      "medianSystemSeconds": 0.045,
+      "maxRssMiB": 37.96875
+    },
+    {
+      "operation": "hash-store",
+      "n": 2,
+      "medianSeconds": 0.32,
+      "minSeconds": 0.32,
+      "maxSeconds": 0.32,
+      "medianUserSeconds": 0.01,
+      "medianSystemSeconds": 0.04,
+      "maxRssMiB": 35.2890625
+    },
+    {
+      "operation": "artifacts-current",
+      "n": 1,
+      "medianSeconds": 1.77,
+      "minSeconds": 1.77,
+      "maxSeconds": 1.77,
+      "medianUserSeconds": 0.03,
+      "medianSystemSeconds": 0.18,
+      "maxRssMiB": 38.1484375
+    },
+    {
+      "operation": "artifacts-cached-root",
+      "n": 1,
+      "medianSeconds": 1.85,
+      "minSeconds": 1.85,
+      "maxSeconds": 1.85,
+      "medianUserSeconds": 0.03,
+      "medianSystemSeconds": 0.19,
+      "maxRssMiB": 37.6796875
+    },
+    {
+      "operation": "artifacts-unique-path",
+      "n": 1,
+      "medianSeconds": 0.61,
+      "minSeconds": 0.61,
+      "maxSeconds": 0.61,
+      "medianUserSeconds": 0.02,
+      "medianSystemSeconds": 0.08,
+      "maxRssMiB": 36.1640625
+    },
+    {
+      "operation": "index",
+      "n": 2,
+      "medianSeconds": 0.45,
+      "minSeconds": 0.44,
+      "maxSeconds": 0.46,
+      "medianUserSeconds": 0.10500000000000001,
+      "medianSystemSeconds": 0.07500000000000001,
+      "maxRssMiB": 72
+    },
+    {
+      "operation": "check-no-index",
+      "n": 1,
+      "medianSeconds": 1.87,
+      "minSeconds": 1.87,
+      "maxSeconds": 1.87,
+      "medianUserSeconds": 0.06,
+      "medianSystemSeconds": 0.18,
+      "maxRssMiB": 45.3515625
+    },
+    {
+      "operation": "check-full",
+      "n": 1,
+      "medianSeconds": 2.19,
+      "minSeconds": 2.19,
+      "maxSeconds": 2.19,
+      "medianUserSeconds": 0.13,
+      "medianSystemSeconds": 0.26,
+      "maxRssMiB": 74.390625
+    }
+  ]
+}

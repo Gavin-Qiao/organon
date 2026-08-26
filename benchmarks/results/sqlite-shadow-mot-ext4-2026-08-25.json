@@ -1,0 +1,554 @@
+{
+  "schema": "promptus.sqlite-shadow-experiment.v1",
+  "executedAt": "2026-08-25T14:12:45.846Z",
+  "preregistrationSha256": "5038ad869a24956adfcf6d15b8e2795f1cfc53ffefbb6d12a17aba5b4d44ac4d",
+  "corpus": {
+    "project": "MoT",
+    "storeHash": "fe9c3bf76eb325febbf5efb38c36890a6baab6bf231b4b077b705df6dccddf13",
+    "sourceFiles": 2604,
+    "sourceBytes": 14676310,
+    "units": 5341,
+    "liveUnits": 5341,
+    "coldUnits": 0,
+    "canonicalLogicalDigest": "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b"
+  },
+  "environment": {
+    "bun": "1.4.0",
+    "sqlite": "3.53.2",
+    "sourceFilesystem": "ext2/ext3",
+    "scratchFilesystem": "ext2/ext3",
+    "duckdbCliAvailable": false
+  },
+  "current": {
+    "indexRuns": [
+      {
+        "elapsedSeconds": 2.96,
+        "userSeconds": 2.67,
+        "systemSeconds": 0.98,
+        "maxRssKiB": 660456,
+        "majorFaults": 0,
+        "minorFaults": 270922,
+        "fsInputs": 128,
+        "fsOutputs": 27448,
+        "exitStatus": 0,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "elapsedSeconds": 3.13,
+        "userSeconds": 2.85,
+        "systemSeconds": 0.92,
+        "maxRssKiB": 659476,
+        "majorFaults": 0,
+        "minorFaults": 270368,
+        "fsInputs": 128,
+        "fsOutputs": 11232,
+        "exitStatus": 0,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "elapsedSeconds": 3,
+        "userSeconds": 2.72,
+        "systemSeconds": 1,
+        "maxRssKiB": 629692,
+        "majorFaults": 0,
+        "minorFaults": 268184,
+        "fsInputs": 128,
+        "fsOutputs": 128,
+        "exitStatus": 0,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "indexTimingMs": {
+      "n": 3,
+      "medianMs": 3000,
+      "p95Ms": 3130,
+      "minMs": 2960,
+      "maxMs": 3130
+    },
+    "derivedCacheBytes": {
+      "CATALOG.md": 1675068,
+      "graph.json": 4010056,
+      "search.json": 13993241,
+      "total": 19678365
+    }
+  },
+  "sqlite": {
+    "builds": [
+      {
+        "process": {
+          "elapsedSeconds": 4.71,
+          "userSeconds": 4.25,
+          "systemSeconds": 1.38,
+          "maxRssKiB": 743560,
+          "majorFaults": 0,
+          "minorFaults": 290932,
+          "fsInputs": 259,
+          "fsOutputs": 116264,
+          "exitStatus": 0,
+          "stdoutBytes": 881,
+          "stdoutSha256": "6c8ebe4cb7ebd069935433d56c73561265b8dfb5d2c29f9cb46a477184ef4d01"
+        },
+        "build": {
+          "schema": "promptus.sqlite-shadow-build.v1",
+          "storeHash": "fe9c3bf76eb325febbf5efb38c36890a6baab6bf231b4b077b705df6dccddf13",
+          "sourceFiles": 2604,
+          "sourceBytes": 14676310,
+          "units": 5341,
+          "liveUnits": 5341,
+          "coldUnits": 0,
+          "documents": 5341,
+          "postings": 832130,
+          "aliases": 4,
+          "links": 4193,
+          "relations": 2346,
+          "artifacts": 3706,
+          "logicalDigest": "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b",
+          "manifestDigest": "a0dd841ad0863c234c3f790aedb8ae5e102a9e62cc2638bb820c16e8fc18ce05",
+          "searchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "currentSearchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "exactCurrentSearch": true,
+          "databaseBytes": 59310080,
+          "sqliteVersion": "3.53.2",
+          "timingsMs": {
+            "collect": 95.632,
+            "sourceManifestAndCanonicalHash": 77.775,
+            "exactSearchBuildAndComparison": 2698.102,
+            "sqliteLoadAndIntegrity": 1717.166,
+            "total": 4588.677
+          }
+        }
+      },
+      {
+        "process": {
+          "elapsedSeconds": 4.67,
+          "userSeconds": 4.29,
+          "systemSeconds": 1.24,
+          "maxRssKiB": 617592,
+          "majorFaults": 0,
+          "minorFaults": 305470,
+          "fsInputs": 256,
+          "fsOutputs": 116264,
+          "exitStatus": 0,
+          "stdoutBytes": 880,
+          "stdoutSha256": "4c2e026218a64a3d54f902bbaf01df5a5634d4eeb1e6e13143762723fded1b6b"
+        },
+        "build": {
+          "schema": "promptus.sqlite-shadow-build.v1",
+          "storeHash": "fe9c3bf76eb325febbf5efb38c36890a6baab6bf231b4b077b705df6dccddf13",
+          "sourceFiles": 2604,
+          "sourceBytes": 14676310,
+          "units": 5341,
+          "liveUnits": 5341,
+          "coldUnits": 0,
+          "documents": 5341,
+          "postings": 832130,
+          "aliases": 4,
+          "links": 4193,
+          "relations": 2346,
+          "artifacts": 3706,
+          "logicalDigest": "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b",
+          "manifestDigest": "a0dd841ad0863c234c3f790aedb8ae5e102a9e62cc2638bb820c16e8fc18ce05",
+          "searchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "currentSearchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "exactCurrentSearch": true,
+          "databaseBytes": 59310080,
+          "sqliteVersion": "3.53.2",
+          "timingsMs": {
+            "collect": 98.128,
+            "sourceManifestAndCanonicalHash": 78.923,
+            "exactSearchBuildAndComparison": 2709.191,
+            "sqliteLoadAndIntegrity": 1695.175,
+            "total": 4581.42
+          }
+        }
+      },
+      {
+        "process": {
+          "elapsedSeconds": 4.72,
+          "userSeconds": 4.22,
+          "systemSeconds": 1.37,
+          "maxRssKiB": 717660,
+          "majorFaults": 0,
+          "minorFaults": 305805,
+          "fsInputs": 257,
+          "fsOutputs": 116264,
+          "exitStatus": 0,
+          "stdoutBytes": 881,
+          "stdoutSha256": "a3f6246311b66827b093d1b3137c3a69639f121a0d0baf1c4b35febc6ff217ff"
+        },
+        "build": {
+          "schema": "promptus.sqlite-shadow-build.v1",
+          "storeHash": "fe9c3bf76eb325febbf5efb38c36890a6baab6bf231b4b077b705df6dccddf13",
+          "sourceFiles": 2604,
+          "sourceBytes": 14676310,
+          "units": 5341,
+          "liveUnits": 5341,
+          "coldUnits": 0,
+          "documents": 5341,
+          "postings": 832130,
+          "aliases": 4,
+          "links": 4193,
+          "relations": 2346,
+          "artifacts": 3706,
+          "logicalDigest": "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b",
+          "manifestDigest": "a0dd841ad0863c234c3f790aedb8ae5e102a9e62cc2638bb820c16e8fc18ce05",
+          "searchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "currentSearchDigest": "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+          "exactCurrentSearch": true,
+          "databaseBytes": 59310080,
+          "sqliteVersion": "3.53.2",
+          "timingsMs": {
+            "collect": 93.662,
+            "sourceManifestAndCanonicalHash": 82.958,
+            "exactSearchBuildAndComparison": 2564.137,
+            "sqliteLoadAndIntegrity": 1872.992,
+            "total": 4613.751
+          }
+        }
+      }
+    ],
+    "buildTimingMs": {
+      "n": 3,
+      "medianMs": 4710,
+      "p95Ms": 4720,
+      "minMs": 4670,
+      "maxMs": 4720
+    },
+    "databaseBytes": 59310080,
+    "sizeRatioVsCurrentIndexFiles": 3.014,
+    "cleanLogicalDigests": [
+      "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b",
+      "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b",
+      "10bb0ddd9b4a70e6584d5d27e5e2ffef2b043def2a2206274b36acc62338332b"
+    ],
+    "cleanSearchDigests": [
+      "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+      "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0",
+      "c66fad78853a7972fab20fdb928e54857b345fbf94283163741bde4a9de6b5c0"
+    ],
+    "query": {
+      "cases": 12,
+      "comparisons": [
+        {
+          "queryHash": "4534b518a8ceb87917a9c7d7453d1a69767396f91db1e845c3fb3d73b8bf5a53",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "e0b6c9e1b89bd5c78f54e744e5d2650eb11508d20b9396b6fb5954535285114f",
+          "sqliteDigest": "e0b6c9e1b89bd5c78f54e744e5d2650eb11508d20b9396b6fb5954535285114f",
+          "hits": 828,
+          "exact": true
+        },
+        {
+          "queryHash": "020f00f8931aeefffca4b6fb19492db56100f3adcb1237ad438f9a3d6062715d",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "34c316409130c7c4874fb5558783845a1744d2eafde43444f8cc7d9eaaf65992",
+          "sqliteDigest": "34c316409130c7c4874fb5558783845a1744d2eafde43444f8cc7d9eaaf65992",
+          "hits": 2838,
+          "exact": true
+        },
+        {
+          "queryHash": "fb85325dcc4f3b7a81a30d0df8b9cb9834194791704f324efb707cbb2b847bdf",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "6d7b444d0e85b64634430aaa0a7f390f10546628eaaf19949b61bd6d3b0c8f77",
+          "sqliteDigest": "6d7b444d0e85b64634430aaa0a7f390f10546628eaaf19949b61bd6d3b0c8f77",
+          "hits": 1022,
+          "exact": true
+        },
+        {
+          "queryHash": "ddf12a659934619aeeef1aa6beecb24e7d6b614832e95b16938d065285e51824",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "b813a591d29e486d6138633384c5229d2dfc9ecdd75f8a81227316d02eb57d79",
+          "sqliteDigest": "b813a591d29e486d6138633384c5229d2dfc9ecdd75f8a81227316d02eb57d79",
+          "hits": 280,
+          "exact": true
+        },
+        {
+          "queryHash": "48f1c539669f88559c9600809899cea3f9bacf819e02d075d45e4c56339542c6",
+          "optionsHash": "d0fdc09655bf2c2ad3b2fc0fe144f5ffacc9daf3b396e54832b963ad4b547ffb",
+          "jsonDigest": "b813a591d29e486d6138633384c5229d2dfc9ecdd75f8a81227316d02eb57d79",
+          "sqliteDigest": "b813a591d29e486d6138633384c5229d2dfc9ecdd75f8a81227316d02eb57d79",
+          "hits": 280,
+          "exact": true
+        },
+        {
+          "queryHash": "419a8efa3010f728c540638e7077635ac146da8257f129eb2a2eb8b0839ed0d2",
+          "optionsHash": "885834a6e3e5736af0ac0c276fdae52a6b6107842d113d97a2760db51e6ee654",
+          "jsonDigest": "ee3f2fbc21a5a6b48e06ab8b1b0cf4dbee5d595fdd0f91eae53976926e050001",
+          "sqliteDigest": "ee3f2fbc21a5a6b48e06ab8b1b0cf4dbee5d595fdd0f91eae53976926e050001",
+          "hits": 780,
+          "exact": true
+        },
+        {
+          "queryHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "60f91fafda6e33eb82214dd291a354a13081d398a0bd14d13657ba4d90d89ffd",
+          "sqliteDigest": "60f91fafda6e33eb82214dd291a354a13081d398a0bd14d13657ba4d90d89ffd",
+          "hits": 5341,
+          "exact": true
+        },
+        {
+          "queryHash": "ee8250fb76e094b34b471f13a73dbbe51d1ae142e9df59d7c0d31ec20f0a0a8e",
+          "optionsHash": "11ea951594d8f5a9d3e932c9c54effd40600adb0f9fb872368c8ec0f0f17678e",
+          "jsonDigest": "e18a6b039de61257f8d33247f63784ba06ac2f2a18cb04b3516faa9eb23a81e9",
+          "sqliteDigest": "e18a6b039de61257f8d33247f63784ba06ac2f2a18cb04b3516faa9eb23a81e9",
+          "hits": 482,
+          "exact": true
+        },
+        {
+          "queryHash": "f6a214f7a5fcda0c2cee9660b7fc29f5649e3c68aad48e20e950137c98913a68",
+          "optionsHash": "53455d61d34e7b3173c27e74678b1b4418d2626c718daaa3bc861d73a4299aab",
+          "jsonDigest": "07c0a3c5236a86370be617dac71e125b6391484c836ae2ec7f4d11283dfa45d7",
+          "sqliteDigest": "07c0a3c5236a86370be617dac71e125b6391484c836ae2ec7f4d11283dfa45d7",
+          "hits": 60,
+          "exact": true
+        },
+        {
+          "queryHash": "e0ba5577251b116f40abf48add8f2e2e9233d9d5e34b563f392b7666538f7f3f",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "5b5dfad1865b115073efb697cc5e5f2e85b809609248d9938aa186f7034786e5",
+          "sqliteDigest": "5b5dfad1865b115073efb697cc5e5f2e85b809609248d9938aa186f7034786e5",
+          "hits": 1,
+          "exact": true
+        },
+        {
+          "queryHash": "bf73866cad169e609e1609550ab6a5c90e3681a94b3f7bb1dabf18e1063c813b",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "9a225a83857e331cad9d52d836780f17578177d019eaf9aa73e10a733f01c060",
+          "sqliteDigest": "9a225a83857e331cad9d52d836780f17578177d019eaf9aa73e10a733f01c060",
+          "hits": 6,
+          "exact": true
+        },
+        {
+          "queryHash": "b22fc17025ed5264144f218d9156aaa6f935b534d9a7025f9285985f07bf6bbb",
+          "optionsHash": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "jsonDigest": "76d1742b0d37753a7832e40abeacc50682846ca0c1622fc007c5f7abe0a834f4",
+          "sqliteDigest": "76d1742b0d37753a7832e40abeacc50682846ca0c1622fc007c5f7abe0a834f4",
+          "hits": 1,
+          "exact": true
+        }
+      ],
+      "suiteDigest": "a9c548d8885a55c00c1177d4e4684d9bf6d55382e0ca0bb6934e23c1853d17bf",
+      "exact": true,
+      "timing": {
+        "persistentJsonSuite": {
+          "n": 20,
+          "medianMs": 327.075,
+          "p95Ms": 349.208,
+          "minMs": 304.887,
+          "maxMs": 360.333
+        },
+        "persistentSqliteSuite": {
+          "n": 20,
+          "medianMs": 438.32,
+          "p95Ms": 500.124,
+          "minMs": 415.101,
+          "maxMs": 507.194
+        },
+        "freshJsonSuite": {
+          "n": 10,
+          "medianMs": 392.125,
+          "p95Ms": 491.046,
+          "minMs": 379.186,
+          "maxMs": 491.046
+        },
+        "freshSqliteSuite": {
+          "n": 10,
+          "medianMs": 454.307,
+          "p95Ms": 501.736,
+          "minMs": 432.822,
+          "maxMs": 501.736
+        },
+        "freshJsonOneQuery": {
+          "n": 60,
+          "medianMs": 71.837,
+          "p95Ms": 175.436,
+          "minMs": 54.507,
+          "maxMs": 200.99
+        },
+        "freshSqliteOneQuery": {
+          "n": 60,
+          "medianMs": 9.726,
+          "p95Ms": 155.841,
+          "minMs": 6.828,
+          "maxMs": 182.922
+        }
+      },
+      "freshConnectionSpeedupVsJsonParse": 7.39
+    },
+    "structuredQueries": {
+      "active-unit-count": {
+        "value": 4858,
+        "timing": {
+          "n": 200,
+          "medianMs": 0.294,
+          "p95Ms": 0.323,
+          "minMs": 0.283,
+          "maxMs": 1.174
+        }
+      },
+      "unique-artifact-path-count": {
+        "value": 2235,
+        "timing": {
+          "n": 200,
+          "medianMs": 0.137,
+          "p95Ms": 0.186,
+          "minMs": 0.134,
+          "maxMs": 0.291
+        }
+      },
+      "resolved-relation-count": {
+        "value": 2346,
+        "timing": {
+          "n": 200,
+          "medianMs": 0.021,
+          "p95Ms": 0.03,
+          "minMs": 0.021,
+          "maxMs": 0.058
+        }
+      },
+      "distillation-candidate-count": {
+        "value": 136,
+        "timing": {
+          "n": 200,
+          "medianMs": 0.01,
+          "p95Ms": 0.013,
+          "minMs": 0.01,
+          "maxMs": 0.409
+        }
+      }
+    }
+  },
+  "mutations": {
+    "oneWrite": {
+      "writes": 1,
+      "governedWriteTotalMs": 276.961,
+      "governedWriteMedianMs": 276.961,
+      "currentFullIndex": {
+        "elapsedSeconds": 2.75,
+        "userSeconds": 2.48,
+        "systemSeconds": 0.94,
+        "maxRssKiB": 653816,
+        "majorFaults": 0,
+        "minorFaults": 247759,
+        "fsInputs": 128,
+        "fsOutputs": 3384,
+        "exitStatus": 0,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "canonicalLogicalDigest": "ad2ff7b573312b48a3dc3f711e09b7eb623e94e4631e271cd34e12eead8ef0c5",
+      "writerKnownDelta": {
+        "elapsedMs": 72.828,
+        "changedUnits": 2,
+        "newUnits": 1,
+        "postings": 168,
+        "logicalDigest": "ad2ff7b573312b48a3dc3f711e09b7eb623e94e4631e271cd34e12eead8ef0c5",
+        "exactLogicalDigest": true,
+        "exactQuerySuite": true,
+        "querySuiteDigest": "5f84e0c18ad1c71261be18c22c4e4fc5818ea1948b7a7a58e6939bb768552c1b",
+        "speedupVsFullIndex": 37.76
+      },
+      "changedLedgerRefresh": {
+        "elapsedMs": 2973.612,
+        "parseMs": 17.43,
+        "replacedUnits": 2979,
+        "postings": 420881,
+        "logicalDigest": "ad2ff7b573312b48a3dc3f711e09b7eb623e94e4631e271cd34e12eead8ef0c5",
+        "exactLogicalDigest": true,
+        "exactQuerySuite": true,
+        "querySuiteDigest": "5f84e0c18ad1c71261be18c22c4e4fc5818ea1948b7a7a58e6939bb768552c1b",
+        "speedupVsFullIndex": 0.92
+      }
+    },
+    "tenWrites": {
+      "writes": 10,
+      "governedWriteTotalMs": 2620.491,
+      "governedWriteMedianMs": 259.76,
+      "currentFullIndex": {
+        "elapsedSeconds": 3.09,
+        "userSeconds": 2.86,
+        "systemSeconds": 0.87,
+        "maxRssKiB": 644844,
+        "majorFaults": 0,
+        "minorFaults": 244982,
+        "fsInputs": 128,
+        "fsOutputs": 3408,
+        "exitStatus": 0,
+        "stdoutBytes": 0,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "canonicalLogicalDigest": "9c017641a9a9d259f9ec90ec7e092434ae4b751647414432816a5212cedc29ec",
+      "writerKnownDelta": {
+        "elapsedMs": 67.705,
+        "changedUnits": 11,
+        "newUnits": 10,
+        "postings": 461,
+        "logicalDigest": "9c017641a9a9d259f9ec90ec7e092434ae4b751647414432816a5212cedc29ec",
+        "exactLogicalDigest": true,
+        "exactQuerySuite": true,
+        "querySuiteDigest": "bdaa8cfd5e8e64f32a2971c7c18d92fbf9403d02d9130334b7fbc588818fe07f",
+        "speedupVsFullIndex": 45.64
+      },
+      "changedLedgerRefresh": {
+        "elapsedMs": 2987.915,
+        "parseMs": 15.863,
+        "replacedUnits": 2988,
+        "postings": 421174,
+        "logicalDigest": "9c017641a9a9d259f9ec90ec7e092434ae4b751647414432816a5212cedc29ec",
+        "exactLogicalDigest": true,
+        "exactQuerySuite": true,
+        "querySuiteDigest": "bdaa8cfd5e8e64f32a2971c7c18d92fbf9403d02d9130334b7fbc588818fe07f",
+        "speedupVsFullIndex": 1.03
+      }
+    }
+  },
+  "staleCache": {
+    "baseline": {
+      "statFresh": true,
+      "contentFresh": true
+    },
+    "outOfBandEdit": {
+      "generationReceiptChanged": false,
+      "generationReceiptCheckMs": 0.011,
+      "statManifestDetected": true,
+      "statManifestCheckMs": 15.371,
+      "contentManifestDetected": true,
+      "contentManifestCheckMs": 32.373,
+      "contentBytesRead": 14676346,
+      "canonicalStoreHashDetected": true,
+      "canonicalStoreHashCheckMs": 28.204
+    }
+  },
+  "correctness": {
+    "currentSearchExactOnEveryCleanBuild": true,
+    "cleanLogicalDigestExact": true,
+    "deleteAndRebuildLogicalDigestExact": true,
+    "deleteAndRebuildSearchDigestExact": true,
+    "querySuiteExact": true,
+    "oneWriteKnownDeltaExact": true,
+    "tenWriteKnownDeltaExact": true,
+    "oneWriteFileRefreshExact": true,
+    "tenWriteFileRefreshExact": true,
+    "outOfBandEditDetectedExactly": true,
+    "sourceUnchanged": true
+  },
+  "preregisteredThresholds": {
+    "everyCorrectnessInvariant": true,
+    "oneWriteKnownDeltaAtLeast5x": true,
+    "tenWriteKnownDeltaAtLeast5x": true,
+    "freshSqliteNoSlowerThanFreshJson": true,
+    "failClosedOutOfBandStrategyIdentified": true
+  },
+  "decision": {
+    "pass": true,
+    "meaning": "The evidence supports a narrow disposable-SQLite development branch; it does not authorize adoption, release, or authority transfer from Markdown."
+  },
+  "limitations": [
+    "The storage profile is native ext4; earlier maintenance experiments already measured the same corpus class on WSL 9p and tmpfs.",
+    "The append-only ledger delta uses governed no-relation writes. Status-changing relations require dependency-aware invalidation before a production implementation.",
+    "A generation receipt is fast for governed writers but cannot detect an out-of-band edit. Exact content verification remains part of authoritative doctor/check paths.",
+    "SQLite FTS5 and DuckDB were not benchmarked because replacing the current ranking or adding an analytics engine would change the question and workload contract."
+  ]
+}

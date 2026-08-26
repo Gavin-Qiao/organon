@@ -1,0 +1,345 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-26T08:11:42.289Z",
+  "profile": "no-sqlite-candidate-final-ext4",
+  "filesystem": "ext4",
+  "suite": "hotpath",
+  "cpuList": "inherited",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 21477847040
+  },
+  "sourceReceipt": {
+    "storeHash": "dcd769e6f209b55a720335371174602ff978f7d9cd019e9d9a7fcbb832e801ba",
+    "sourceFiles": 2630,
+    "units": 5357,
+    "artifactRecords": 3730
+  },
+  "plan": [
+    {
+      "name": "session-doctor",
+      "repetitions": 1
+    },
+    {
+      "name": "index",
+      "repetitions": 2
+    },
+    {
+      "name": "check-no-index",
+      "repetitions": 1
+    },
+    {
+      "name": "check-full",
+      "repetitions": 1
+    },
+    {
+      "name": "kb-add-no-relation",
+      "repetitions": 1
+    },
+    {
+      "name": "kb-add-relation-dry-run",
+      "repetitions": 2
+    },
+    {
+      "name": "kb-add-relation",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "session-doctor",
+      "iteration": 1,
+      "elapsedSeconds": 0.35,
+      "userSeconds": 0.19,
+      "systemSeconds": 0.19,
+      "maxRssKiB": 305108,
+      "majorFaults": 0,
+      "minorFaults": 69250,
+      "fsInputs": 251,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1525,
+      "involuntaryContextSwitches": 11,
+      "exitStatus": 0,
+      "stdoutBytes": 33654,
+      "stdoutSha256": "6e37a28548cf47f148de03f2cbdec5021b59ccf75f29a11ca5218aba113248c3",
+      "details": {
+        "sessionReady": true,
+        "timingMs": {
+          "fingerprint": 39.2,
+          "artifacts": 0,
+          "total": 276.3
+        },
+        "scale": {
+          "sourceFiles": 2630,
+          "sourceBytes": 14911534,
+          "ledgerBytes": 4477269,
+          "ledgerUnits": 2986,
+          "liveSourceUnits": 5357,
+          "coldSourceUnits": 0,
+          "catalogUnits": 5357,
+          "searchDocuments": 5357,
+          "liveSearchDocuments": 5357,
+          "coldSearchDocuments": 0
+        },
+        "rssBytes": 311775232
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "index",
+      "iteration": 1,
+      "elapsedSeconds": 1.02,
+      "userSeconds": 0.88,
+      "systemSeconds": 0.37,
+      "maxRssKiB": 421028,
+      "majorFaults": 0,
+      "minorFaults": 116437,
+      "fsInputs": 145,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 3442,
+      "involuntaryContextSwitches": 56,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "index",
+      "iteration": 2,
+      "elapsedSeconds": 1.02,
+      "userSeconds": 0.92,
+      "systemSeconds": 0.33,
+      "maxRssKiB": 424092,
+      "majorFaults": 0,
+      "minorFaults": 116200,
+      "fsInputs": 145,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 2965,
+      "involuntaryContextSwitches": 40,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "check-no-index",
+      "iteration": 1,
+      "elapsedSeconds": 0.82,
+      "userSeconds": 0.75,
+      "systemSeconds": 0.74,
+      "maxRssKiB": 141672,
+      "majorFaults": 0,
+      "minorFaults": 31706,
+      "fsInputs": 180,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 19822,
+      "involuntaryContextSwitches": 35,
+      "exitStatus": 0,
+      "stdoutBytes": 2595523,
+      "stdoutSha256": "d29144f606923ce4f84b221a643b133090c3ce54a67aa09cd7863e62ad7a3bf2"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "check-full",
+      "iteration": 1,
+      "elapsedSeconds": 1.72,
+      "userSeconds": 1.62,
+      "systemSeconds": 0.87,
+      "maxRssKiB": 441804,
+      "majorFaults": 0,
+      "minorFaults": 135798,
+      "fsInputs": 180,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 18416,
+      "involuntaryContextSwitches": 35,
+      "exitStatus": 0,
+      "stdoutBytes": 2595523,
+      "stdoutSha256": "d29144f606923ce4f84b221a643b133090c3ce54a67aa09cd7863e62ad7a3bf2"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "kb-add-no-relation",
+      "iteration": 1,
+      "elapsedSeconds": 0.07,
+      "userSeconds": 0.02,
+      "systemSeconds": 0.04,
+      "maxRssKiB": 82944,
+      "majorFaults": 0,
+      "minorFaults": 13350,
+      "fsInputs": 224,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 615,
+      "involuntaryContextSwitches": 14,
+      "exitStatus": 0,
+      "stdoutBytes": 826,
+      "stdoutSha256": "a12c7e327b9bad92ba04e26e90ec6db5826b668cf51ed060dd02d4a936e6a558",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "substrate": "ledger",
+        "status": "VALIDATED"
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "kb-add-relation-dry-run",
+      "iteration": 1,
+      "elapsedSeconds": 0.16,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.08,
+      "maxRssKiB": 107204,
+      "majorFaults": 0,
+      "minorFaults": 20715,
+      "fsInputs": 223,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1307,
+      "involuntaryContextSwitches": 39,
+      "exitStatus": 0,
+      "stdoutBytes": 493,
+      "stdoutSha256": "43eb1d5cbf62f11ffee2b37b0ef995b61ba9eeed9fee2a71939bb5bed67910a9",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "dry_run": true,
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md",
+        "id": "event-20260826T081141Z-maintenance-benchmark-no-sqlite-candidate-final-ext4-relation-dr",
+        "catalog_card": "ledger:VALIDATED · Maintenance benchmark no-sqlite-candidate-final-ext4 relation dry 1 · .promptus/ledger/RESEARCH-LEDGER.md#2026-08-26T04:11:41.001 · id:event-20260826T081141Z-maintenance-benchmark-no-sqlite-candidate-final-ext4-relation-dr",
+        "next_action": null
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "kb-add-relation-dry-run",
+      "iteration": 2,
+      "elapsedSeconds": 0.16,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.11,
+      "maxRssKiB": 110828,
+      "majorFaults": 0,
+      "minorFaults": 20404,
+      "fsInputs": 223,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1343,
+      "involuntaryContextSwitches": 6,
+      "exitStatus": 0,
+      "stdoutBytes": 489,
+      "stdoutSha256": "1265388078120c82e77ee272d16fe82f1d0adbf9dd543f0c8ed0763a30e8c64a",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "dry_run": true,
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md",
+        "id": "event-20260826T081142Z-maintenance-benchmark-no-sqlite-candidate-final-ext4-relation-dr",
+        "catalog_card": "ledger:VALIDATED · Maintenance benchmark no-sqlite-candidate-final-ext4 relation dry 2 · .promptus/ledger/RESEARCH-LEDGER.md#2026-08-26T04:11:42 · id:event-20260826T081142Z-maintenance-benchmark-no-sqlite-candidate-final-ext4-relation-dr",
+        "next_action": null
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-ext4",
+      "filesystem": "ext4",
+      "operation": "kb-add-relation",
+      "iteration": 1,
+      "elapsedSeconds": 0.16,
+      "userSeconds": 0.08,
+      "systemSeconds": 0.12,
+      "maxRssKiB": 129104,
+      "majorFaults": 0,
+      "minorFaults": 25695,
+      "fsInputs": 223,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1448,
+      "involuntaryContextSwitches": 8,
+      "exitStatus": 0,
+      "stdoutBytes": 822,
+      "stdoutSha256": "12cab6d2ace212a7ffb15c1bb8ce327a5b289188d1b251a5c2db9620a55364c9",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "substrate": "ledger",
+        "status": "VALIDATED"
+      }
+    }
+  ],
+  "summary": [
+    {
+      "operation": "session-doctor",
+      "n": 1,
+      "medianSeconds": 0.35,
+      "minSeconds": 0.35,
+      "maxSeconds": 0.35,
+      "medianUserSeconds": 0.19,
+      "medianSystemSeconds": 0.19,
+      "maxRssMiB": 297.95703125
+    },
+    {
+      "operation": "index",
+      "n": 2,
+      "medianSeconds": 1.02,
+      "minSeconds": 1.02,
+      "maxSeconds": 1.02,
+      "medianUserSeconds": 0.9,
+      "medianSystemSeconds": 0.35,
+      "maxRssMiB": 414.15234375
+    },
+    {
+      "operation": "check-no-index",
+      "n": 1,
+      "medianSeconds": 0.82,
+      "minSeconds": 0.82,
+      "maxSeconds": 0.82,
+      "medianUserSeconds": 0.75,
+      "medianSystemSeconds": 0.74,
+      "maxRssMiB": 138.3515625
+    },
+    {
+      "operation": "check-full",
+      "n": 1,
+      "medianSeconds": 1.72,
+      "minSeconds": 1.72,
+      "maxSeconds": 1.72,
+      "medianUserSeconds": 1.62,
+      "medianSystemSeconds": 0.87,
+      "maxRssMiB": 431.44921875
+    },
+    {
+      "operation": "kb-add-no-relation",
+      "n": 1,
+      "medianSeconds": 0.07,
+      "minSeconds": 0.07,
+      "maxSeconds": 0.07,
+      "medianUserSeconds": 0.02,
+      "medianSystemSeconds": 0.04,
+      "maxRssMiB": 81
+    },
+    {
+      "operation": "kb-add-relation-dry-run",
+      "n": 2,
+      "medianSeconds": 0.16,
+      "minSeconds": 0.16,
+      "maxSeconds": 0.16,
+      "medianUserSeconds": 0.09,
+      "medianSystemSeconds": 0.095,
+      "maxRssMiB": 108.23046875
+    },
+    {
+      "operation": "kb-add-relation",
+      "n": 1,
+      "medianSeconds": 0.16,
+      "minSeconds": 0.16,
+      "maxSeconds": 0.16,
+      "medianUserSeconds": 0.08,
+      "medianSystemSeconds": 0.12,
+      "maxRssMiB": 126.078125
+    }
+  ]
+}

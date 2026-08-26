@@ -1,0 +1,345 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-26T08:08:53.017Z",
+  "profile": "no-sqlite-candidate-final-wsl",
+  "filesystem": "wsl-9p",
+  "suite": "hotpath",
+  "cpuList": "inherited",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 22329917440
+  },
+  "sourceReceipt": {
+    "storeHash": "dcd769e6f209b55a720335371174602ff978f7d9cd019e9d9a7fcbb832e801ba",
+    "sourceFiles": 2630,
+    "units": 5357,
+    "artifactRecords": 3730
+  },
+  "plan": [
+    {
+      "name": "session-doctor",
+      "repetitions": 1
+    },
+    {
+      "name": "index",
+      "repetitions": 2
+    },
+    {
+      "name": "check-no-index",
+      "repetitions": 1
+    },
+    {
+      "name": "check-full",
+      "repetitions": 1
+    },
+    {
+      "name": "kb-add-no-relation",
+      "repetitions": 1
+    },
+    {
+      "name": "kb-add-relation-dry-run",
+      "repetitions": 2
+    },
+    {
+      "name": "kb-add-relation",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "session-doctor",
+      "iteration": 1,
+      "elapsedSeconds": 15.46,
+      "userSeconds": 0.44,
+      "systemSeconds": 1.63,
+      "maxRssKiB": 305012,
+      "majorFaults": 0,
+      "minorFaults": 72158,
+      "fsInputs": 76091,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 87111,
+      "involuntaryContextSwitches": 28,
+      "exitStatus": 0,
+      "stdoutBytes": 33661,
+      "stdoutSha256": "df46dada8f5960825c65c35cc23ba6874c10532982bac65e358c5b54fedbfd21",
+      "details": {
+        "sessionReady": true,
+        "timingMs": {
+          "fingerprint": 13288.2,
+          "artifacts": 0,
+          "total": 15395.8
+        },
+        "scale": {
+          "sourceFiles": 2630,
+          "sourceBytes": 14911534,
+          "ledgerBytes": 4477269,
+          "ledgerUnits": 2986,
+          "liveSourceUnits": 5357,
+          "coldSourceUnits": 0,
+          "catalogUnits": 5357,
+          "searchDocuments": 5357,
+          "liveSearchDocuments": 5357,
+          "coldSearchDocuments": 0
+        },
+        "rssBytes": 311676928
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "index",
+      "iteration": 1,
+      "elapsedSeconds": 12.73,
+      "userSeconds": 1.3,
+      "systemSeconds": 1.42,
+      "maxRssKiB": 405952,
+      "majorFaults": 0,
+      "minorFaults": 109397,
+      "fsInputs": 67993,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 69337,
+      "involuntaryContextSwitches": 98,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "index",
+      "iteration": 2,
+      "elapsedSeconds": 14.22,
+      "userSeconds": 1.33,
+      "systemSeconds": 1.63,
+      "maxRssKiB": 404580,
+      "majorFaults": 0,
+      "minorFaults": 107523,
+      "fsInputs": 67993,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 79889,
+      "involuntaryContextSwitches": 192,
+      "exitStatus": 0,
+      "stdoutBytes": 0,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "check-no-index",
+      "iteration": 1,
+      "elapsedSeconds": 38.52,
+      "userSeconds": 1.42,
+      "systemSeconds": 4.45,
+      "maxRssKiB": 127072,
+      "majorFaults": 0,
+      "minorFaults": 128989,
+      "fsInputs": 1151896,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 227234,
+      "involuntaryContextSwitches": 540,
+      "exitStatus": 0,
+      "stdoutBytes": 2595568,
+      "stdoutSha256": "404ac2bd9ac1bc9d1831f0c819b8eec74553c75540f0cc71d07bcd5d5b2a57f8"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "check-full",
+      "iteration": 1,
+      "elapsedSeconds": 35.7,
+      "userSeconds": 2.42,
+      "systemSeconds": 4.1,
+      "maxRssKiB": 438388,
+      "majorFaults": 0,
+      "minorFaults": 214920,
+      "fsInputs": 1184479,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 203689,
+      "involuntaryContextSwitches": 467,
+      "exitStatus": 0,
+      "stdoutBytes": 2595568,
+      "stdoutSha256": "404ac2bd9ac1bc9d1831f0c819b8eec74553c75540f0cc71d07bcd5d5b2a57f8"
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "kb-add-no-relation",
+      "iteration": 1,
+      "elapsedSeconds": 0.21,
+      "userSeconds": 0.03,
+      "systemSeconds": 0.05,
+      "maxRssKiB": 80524,
+      "majorFaults": 0,
+      "minorFaults": 15017,
+      "fsInputs": 12257,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1255,
+      "involuntaryContextSwitches": 13,
+      "exitStatus": 0,
+      "stdoutBytes": 959,
+      "stdoutSha256": "8cddda96eed4fadfd2c37c27125b8fc0fccd20e7ea2ee644557fb7ccd68fdf5c",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "substrate": "ledger",
+        "status": "VALIDATED"
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "kb-add-relation-dry-run",
+      "iteration": 1,
+      "elapsedSeconds": 7.49,
+      "userSeconds": 0.29,
+      "systemSeconds": 0.8,
+      "maxRssKiB": 107928,
+      "majorFaults": 0,
+      "minorFaults": 20140,
+      "fsInputs": 29139,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 40534,
+      "involuntaryContextSwitches": 44,
+      "exitStatus": 0,
+      "stdoutBytes": 488,
+      "stdoutSha256": "13a12eb6a7e12f8cda118c205f7c6b287f6cbc563069d5f69412e41679cfcd61",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "dry_run": true,
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md",
+        "id": "event-20260826T080838Z-maintenance-benchmark-no-sqlite-candidate-final-wsl-relation-dry",
+        "catalog_card": "ledger:VALIDATED · Maintenance benchmark no-sqlite-candidate-final-wsl relation dry 1 · .promptus/ledger/RESEARCH-LEDGER.md#2026-08-26T04:08:38 · id:event-20260826T080838Z-maintenance-benchmark-no-sqlite-candidate-final-wsl-relation-dry",
+        "next_action": null
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "kb-add-relation-dry-run",
+      "iteration": 2,
+      "elapsedSeconds": 7.37,
+      "userSeconds": 0.3,
+      "systemSeconds": 0.76,
+      "maxRssKiB": 107812,
+      "majorFaults": 0,
+      "minorFaults": 20170,
+      "fsInputs": 29140,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 40482,
+      "involuntaryContextSwitches": 34,
+      "exitStatus": 0,
+      "stdoutBytes": 488,
+      "stdoutSha256": "3edd97283d70316e7c4bab52519023a2ab520a7f9162eb79f7ae3e90140f859e",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "dry_run": true,
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md",
+        "id": "event-20260826T080845Z-maintenance-benchmark-no-sqlite-candidate-final-wsl-relation-dry",
+        "catalog_card": "ledger:VALIDATED · Maintenance benchmark no-sqlite-candidate-final-wsl relation dry 2 · .promptus/ledger/RESEARCH-LEDGER.md#2026-08-26T04:08:45 · id:event-20260826T080845Z-maintenance-benchmark-no-sqlite-candidate-final-wsl-relation-dry",
+        "next_action": null
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "kb-add-relation",
+      "iteration": 1,
+      "elapsedSeconds": 7.55,
+      "userSeconds": 0.26,
+      "systemSeconds": 0.84,
+      "maxRssKiB": 127408,
+      "majorFaults": 0,
+      "minorFaults": 26457,
+      "fsInputs": 32420,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 40987,
+      "involuntaryContextSwitches": 17,
+      "exitStatus": 0,
+      "stdoutBytes": 955,
+      "stdoutSha256": "677d0553ad357bc15e922fa4574d0f34bb49647342f40df8bee06222f4f3cad3",
+      "details": {
+        "schema": "promptus.kb-add.v1",
+        "substrate": "ledger",
+        "status": "VALIDATED"
+      }
+    }
+  ],
+  "summary": [
+    {
+      "operation": "session-doctor",
+      "n": 1,
+      "medianSeconds": 15.46,
+      "minSeconds": 15.46,
+      "maxSeconds": 15.46,
+      "medianUserSeconds": 0.44,
+      "medianSystemSeconds": 1.63,
+      "maxRssMiB": 297.86328125
+    },
+    {
+      "operation": "index",
+      "n": 2,
+      "medianSeconds": 13.475000000000001,
+      "minSeconds": 12.73,
+      "maxSeconds": 14.22,
+      "medianUserSeconds": 1.315,
+      "medianSystemSeconds": 1.525,
+      "maxRssMiB": 396.4375
+    },
+    {
+      "operation": "check-no-index",
+      "n": 1,
+      "medianSeconds": 38.52,
+      "minSeconds": 38.52,
+      "maxSeconds": 38.52,
+      "medianUserSeconds": 1.42,
+      "medianSystemSeconds": 4.45,
+      "maxRssMiB": 124.09375
+    },
+    {
+      "operation": "check-full",
+      "n": 1,
+      "medianSeconds": 35.7,
+      "minSeconds": 35.7,
+      "maxSeconds": 35.7,
+      "medianUserSeconds": 2.42,
+      "medianSystemSeconds": 4.1,
+      "maxRssMiB": 428.11328125
+    },
+    {
+      "operation": "kb-add-no-relation",
+      "n": 1,
+      "medianSeconds": 0.21,
+      "minSeconds": 0.21,
+      "maxSeconds": 0.21,
+      "medianUserSeconds": 0.03,
+      "medianSystemSeconds": 0.05,
+      "maxRssMiB": 78.63671875
+    },
+    {
+      "operation": "kb-add-relation-dry-run",
+      "n": 2,
+      "medianSeconds": 7.43,
+      "minSeconds": 7.37,
+      "maxSeconds": 7.49,
+      "medianUserSeconds": 0.295,
+      "medianSystemSeconds": 0.78,
+      "maxRssMiB": 105.3984375
+    },
+    {
+      "operation": "kb-add-relation",
+      "n": 1,
+      "medianSeconds": 7.55,
+      "minSeconds": 7.55,
+      "maxSeconds": 7.55,
+      "medianUserSeconds": 0.26,
+      "medianSystemSeconds": 0.84,
+      "maxRssMiB": 124.421875
+    }
+  ]
+}

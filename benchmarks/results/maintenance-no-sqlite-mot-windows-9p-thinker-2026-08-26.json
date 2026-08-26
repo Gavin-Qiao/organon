@@ -1,0 +1,148 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-26T08:17:31.710Z",
+  "profile": "no-sqlite-candidate-thinker-final-wsl",
+  "filesystem": "wsl-9p",
+  "suite": "thinker",
+  "cpuList": "inherited",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 22239465472
+  },
+  "sourceReceipt": {
+    "storeHash": "dcd769e6f209b55a720335371174602ff978f7d9cd019e9d9a7fcbb832e801ba",
+    "sourceFiles": 2630,
+    "units": 5357,
+    "artifactRecords": 3730
+  },
+  "plan": [
+    {
+      "name": "thinker-inspect",
+      "repetitions": 1
+    },
+    {
+      "name": "thinker-single-pass",
+      "repetitions": 1
+    },
+    {
+      "name": "thinker-refresh",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "no-sqlite-candidate-thinker-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "thinker-inspect",
+      "iteration": 1,
+      "elapsedSeconds": 4.26,
+      "userSeconds": 0.1,
+      "systemSeconds": 0.47,
+      "maxRssKiB": 58556,
+      "majorFaults": 0,
+      "minorFaults": 7791,
+      "fsInputs": 9238,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 25232,
+      "involuntaryContextSwitches": 7,
+      "exitStatus": 0,
+      "stdoutBytes": 230,
+      "stdoutSha256": "3a6685b368de4d7aabaa901785d7ec1c709745ec653efa31ec76cbe476cf4795",
+      "details": {
+        "rounds": 17,
+        "issues": 0,
+        "findingFilesScanned": 1015,
+        "statuses": {
+          "PREPARED": 2,
+          "ADJUDICATED": 15
+        },
+        "bindings": 16,
+        "bindingHash": "42818e686fd3c515eff643acbadcbb07a4a849d78d82104714022f879f4cbfb9"
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-thinker-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "thinker-single-pass",
+      "iteration": 1,
+      "elapsedSeconds": 2.88,
+      "userSeconds": 0.07,
+      "systemSeconds": 0.33,
+      "maxRssKiB": 50608,
+      "majorFaults": 0,
+      "minorFaults": 6345,
+      "fsInputs": 6313,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 16664,
+      "involuntaryContextSwitches": 9,
+      "exitStatus": 0,
+      "stdoutBytes": 167,
+      "stdoutSha256": "7cff736d8c496dc23114c32cac67c7478244070b1f424adffba19e479d2b6064",
+      "details": {
+        "roundsWithQuarantine": 15,
+        "findingFilesScanned": 1015,
+        "bindings": 16,
+        "bindingHash": "42818e686fd3c515eff643acbadcbb07a4a849d78d82104714022f879f4cbfb9"
+      }
+    },
+    {
+      "profile": "no-sqlite-candidate-thinker-final-wsl",
+      "filesystem": "wsl-9p",
+      "operation": "thinker-refresh",
+      "iteration": 1,
+      "elapsedSeconds": 4.39,
+      "userSeconds": 0.12,
+      "systemSeconds": 0.45,
+      "maxRssKiB": 58476,
+      "majorFaults": 0,
+      "minorFaults": 7788,
+      "fsInputs": 9264,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 26258,
+      "involuntaryContextSwitches": 4,
+      "exitStatus": 0,
+      "stdoutBytes": 24,
+      "stdoutSha256": "7ceec1482d95990b608cc942557efca5caf0167c890e52fb4f254c369fac713f",
+      "details": {
+        "refreshed": true
+      }
+    }
+  ],
+  "summary": [
+    {
+      "operation": "thinker-inspect",
+      "n": 1,
+      "medianSeconds": 4.26,
+      "minSeconds": 4.26,
+      "maxSeconds": 4.26,
+      "medianUserSeconds": 0.1,
+      "medianSystemSeconds": 0.47,
+      "maxRssMiB": 57.18359375
+    },
+    {
+      "operation": "thinker-single-pass",
+      "n": 1,
+      "medianSeconds": 2.88,
+      "minSeconds": 2.88,
+      "maxSeconds": 2.88,
+      "medianUserSeconds": 0.07,
+      "medianSystemSeconds": 0.33,
+      "maxRssMiB": 49.421875
+    },
+    {
+      "operation": "thinker-refresh",
+      "n": 1,
+      "medianSeconds": 4.39,
+      "minSeconds": 4.39,
+      "maxSeconds": 4.39,
+      "medianUserSeconds": 0.12,
+      "medianSystemSeconds": 0.45,
+      "maxRssMiB": 57.10546875
+    }
+  ]
+}

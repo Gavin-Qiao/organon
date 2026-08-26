@@ -15,6 +15,10 @@
     "ingest": "bun promptus/scripts/kb-ingest.ts",
     "export": "bun promptus/scripts/kb-export.ts",
     "benchmark:retrieval": "bun benchmarks/promptus-retrieval.ts",
+    "benchmark:maintenance": "bun benchmarks/promptus-maintenance.ts",
+    "benchmark:maintenance:report": "bun benchmarks/promptus-maintenance-report.ts",
+    "benchmark:maintenance:candidate-report": "bun benchmarks/promptus-maintenance-candidate-report.ts",
+    "benchmark:sqlite": "bun benchmarks/promptus-sqlite.ts",
     "changelog:check": "bun promptus/scripts/changelog.ts check",
     "pr-title:check": "bun promptus/scripts/check-pr-title.ts",
     "check": "bun run validate && bun run health && bun test"
