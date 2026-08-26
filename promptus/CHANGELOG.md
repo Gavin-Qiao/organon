@@ -17,6 +17,8 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-08-26
+
 ### Changed
 
 - **Conserve exact maintenance work at large stores.** Indexing, checks, and session preflight now
@@ -569,7 +571,8 @@ Hardening found by dogfooding before release:
   `skills/humanizer` Part I remains under its upstream MIT license (© 2025 Siqi Chen), retained
   in `LICENSE-humanizer`; see `NOTICE` for provenance.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.9.1...HEAD
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.9.2...HEAD
+[0.9.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.9.1...promptus-v0.9.2
 [0.9.1]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.9.0...promptus-v0.9.1
 [0.9.0]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.2...promptus-v0.9.0
 [0.8.2]: https://github.com/Gavin-Qiao/organon/compare/promptus-v0.8.1...promptus-v0.8.2
