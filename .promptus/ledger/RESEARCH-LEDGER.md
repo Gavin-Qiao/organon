@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-26 (v0.9.2 Windows CI gate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-26 (v0.9.2 release tree)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,31 +27,31 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement -->
-Promptus v0.9.1 remains the released and locally installed version. The operator approved releasing and installing the exact no-SQLite maintenance candidate as patch v0.9.2. Implementation PR 53 is open on `perf/promptus-exact-maintenance`; no manifest, tag, GitHub release, or installed cache has changed yet.
+<!-- kb:now-through event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree -->
+Promptus v0.9.1 remains the released and locally installed version. The operator approved patch v0.9.2. Implementation PR 53 merged to protected main at 231b8e4 and post-merge CI run 32952350003 passed Linux, macOS, Windows, and hygiene. The dedicated 0.9.2 release tree is now prepared on `chore/promptus-v0.9.2`; no tag, GitHub release, or installed 0.9.2 cache exists yet.
 
-- The source candidate reuses source bytes and one thinker scan, verifies each canonical artifact once with bounded-memory hashing, skips unaffected thinker refresh, suppresses identical derived writes, and removes lexical posting allocation churn.
+- Exact work conservation reuses source bytes and one thinker scan, verifies each canonical artifact once with bounded-memory hashing, skips unaffected thinker refresh, suppresses identical derived writes, and removes lexical posting allocation churn.
 - MoT stress-mount measurements improved session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds. Native ext4 improved too.
-- Exact graph, lexical, artifact-owner, thinker, health, and readiness semantics were preserved. The local repository passed 364 tests with 1,990 assertions, plugin validation, strict health, session preflight, and the pinned hygiene sweep.
-- PR 53 passed Linux, macOS, title, and hygiene CI. Windows exposed a real benchmark-only handle leak: prepared SQLite statements survived the default non-throwing close and locked the temporary database during rename.
-- The branch now explicitly finalizes owned statements, uses auto-finalized one-shot operations, and closes fail-fast before replacement. The exact local SQLite regression passes; the portability fix remains conjectured until the rerun is green.
+- Windows CI independently validated the benchmark handle fix that explicitly finalizes prepared SQLite statements before atomic replacement. The earlier portability conjecture is superseded.
+- Both adapter manifests report 0.9.2; the dated 0.9.2 changelog section and compare links pass the release gate. Local plugin validation, 364 tests with 1,990 assertions, and all hygiene hooks pass.
+- Current release custody binds the exact source, tests, benchmarks, public receipt, documentation, manifests, and release notes intended for the tag.
 
 ## Open frontier
 
-- Push the Windows handle-ownership fix and require all five PR checks to pass before merging to protected main.
-- Cut a separate `chore(release)` PR that promotes the Unreleased notes to 0.9.2 and bumps both adapter manifests exactly.
-- Tag `promptus-v0.9.2`, verify the tag-triggered publication workflow and public release, then install `promptus@organon` and compare the installed tree with source.
-- Relation resolution remains the measured runtime residual. Batch writing, partial health, and SQLite adoption remain deferred.
+- Run authoritative strict health with the new release custody, commit the exact release tree, and open the conventional protected-main release PR.
+- Require all release-PR checks, merge, then tag `promptus-v0.9.2` at that exact merge.
+- Verify the tag-triggered publication workflow and public release, install `promptus@organon`, and compare the installed tree with source.
+- Relation resolution remains the measured residual. Batch writing, partial health, and SQLite adoption remain deferred.
 
 ## Next actions
 
-1. Commit and push the benchmark handle fix, then let Windows CI validate or refute it.
-2. Merge PR 53 only after all required checks pass; complete the release PR and tag workflow.
+1. Complete strict health and commit `chore(release): cut promptus v0.9.2`.
+2. Merge the release PR only after all required checks pass; push and verify the exact tag.
 3. Reinstall from Organon, verify version and bytes, record the release receipt, and tell the operator to start a new Codex task.
 
 ## <<< RESUME HERE >>>
 
-Resume from event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. Release v0.9.2 is authorized and in progress; Windows CI is the active gate.
+Resume from event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. The exact 0.9.2 release tree is prepared and validated locally; publication is the active gate.
 
 <!-- now:end -->
 
@@ -1247,5 +1247,38 @@ The benchmark candidate now finalizes every owned long-lived statement, uses aut
 
 Related: [[sqlite-is-justified-only-as-a-writer-aware-disposable-projection]] · [[promptus-maintenance-should-conserve-deterministic-work-across-h]]
 ↳ relates-to finding-20260825T141629Z-sqlite-is-justified-only-as-a-writer-aware-disposable-projection
+
+### [2026-08-26 05:24:23] RESULT/VALIDATED — Validate the exact Promptus v0.9.2 release tree
+<!-- kb:id event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|82e52290baad21cd2b3926077c0c23c7f3e46f2760e143559a8ad002b1fd58ed -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|33424df801896a957c05769250cc41f3f45bd098399b86701e55d040f0a598d5 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|f9aa99cd1e72d8dbdfa7704b57205e4518b2f606a57b12ab5886d90eefcb368b -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|895310667610aaa9395341eba65d0c4bb92febd449f487026bec9c7ec002102f -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+Implementation PR 53 merged to protected main at 231b8e4be559ae0a4f5985e69b3b51b263889c7a after all five required checks passed. The post-merge main run 32952350003 also passed Linux validation and health, macOS, Windows, and hygiene. Windows therefore independently validated the prepared-statement ownership fix: the SQLite shadow benchmark now closes its temporary database before atomic replacement instead of relying on POSIX rename behavior. This supersedes the pending cross-platform conjecture.
+
+The dedicated release tree now carries exact version 0.9.2 in both adapter manifests, a non-empty dated 0.9.2 changelog section, a fresh empty Unreleased section, and updated compare links. Local plugin validation passed, the changelog release gate passed, the pinned hygiene sweep passed, and 364 tests with 1,990 assertions passed. The bound source, regression, benchmark, receipt, documentation, manifest, and release-note bytes below are the candidate that may be tagged; Markdown authority and every Promptus contract remain unchanged.
+
+This event carries current mutable-source custody forward from the unreleased candidate snapshot. No tag, GitHub release, or installed 0.9.2 cache exists yet. See [[exact-work-conservation-restores-cadence-without-sqlite]].
+↳ supersedes event-20260826T090525Z-normalize-artifact-regression-and-carry-candidate-custody
+↳ supersedes event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement
+↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
 
 <!-- kb:append-point -->

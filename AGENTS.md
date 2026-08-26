@@ -26,11 +26,10 @@ back against real use. Do not manufacture roadmap features merely because they s
 > the verbs; `grannie` is the one human read-port. Embedding-scale machinery stays deferred
 > (the invariant).
 
-The source tree may also carry an operator-unreleased Promptus performance candidate. It conserves
-exact work without SQLite: already-read Markdown bytes and thinker custody are reused, artifact
-paths are verified once, unrelated writes skip unaffected thinker projections, and identical
-derived bytes are not rewritten. Benchmarks and equivalence receipts live under `benchmarks/`;
-manifest/tag state remains the release boundary.
+Promptus maintenance conserves exact work without SQLite: already-read Markdown bytes and thinker
+custody are reused, artifact paths are verified once, unrelated writes skip unaffected thinker
+projections, and identical derived bytes are not rewritten. Cross-filesystem benchmarks and exact
+equivalence receipts live under `benchmarks/`.
 
 The Promptus source working tree may carry an operator-unreleased correctness candidate; treat
 manifest/tag state as the release boundary and never update an installed cache before review.
