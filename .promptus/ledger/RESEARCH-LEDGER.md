@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-26 (v0.9.2 release in progress)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-26 (v0.9.2 Windows CI gate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,31 +27,31 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260826T090525Z-normalize-artifact-regression-and-carry-candidate-custody -->
-Promptus v0.9.1 remains the released and locally installed version. The operator approved releasing and installing the exact no-SQLite maintenance candidate as patch v0.9.2; the protected-main workflow is now in progress on `perf/promptus-exact-maintenance`.
+<!-- kb:now-through event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement -->
+Promptus v0.9.1 remains the released and locally installed version. The operator approved releasing and installing the exact no-SQLite maintenance candidate as patch v0.9.2. Implementation PR 53 is open on `perf/promptus-exact-maintenance`; no manifest, tag, GitHub release, or installed cache has changed yet.
 
 - The source candidate reuses source bytes and one thinker scan, verifies each canonical artifact once with bounded-memory hashing, skips unaffected thinker refresh, suppresses identical derived writes, and removes lexical posting allocation churn.
 - MoT stress-mount measurements improved session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds. Native ext4 improved too.
-- Exact graph, lexical, artifact-owner, thinker, health, and readiness semantics were preserved. The repository passed 364 tests with 1,990 assertions, plugin validation, strict health, session preflight, and the pinned hygiene sweep.
-- Public benchmark evidence has landed in a local conventional commit. The runtime performance commit is being finalized. No manifest, tag, GitHub release, or installed cache has changed yet.
-- A hygiene-only EOF normalization was carried through the artifact gate; current candidate custody now binds the normalized regression bytes.
+- Exact graph, lexical, artifact-owner, thinker, health, and readiness semantics were preserved. The local repository passed 364 tests with 1,990 assertions, plugin validation, strict health, session preflight, and the pinned hygiene sweep.
+- PR 53 passed Linux, macOS, title, and hygiene CI. Windows exposed a real benchmark-only handle leak: prepared SQLite statements survived the default non-throwing close and locked the temporary database during rename.
+- The branch now explicitly finalizes owned statements, uses auto-finalized one-shot operations, and closes fail-fast before replacement. The exact local SQLite regression passes; the portability fix remains conjectured until the rerun is green.
 
 ## Open frontier
 
-- Push the implementation branch, open the conventional performance PR, wait for all required Linux, Windows, macOS, title, and hygiene checks, and merge to protected main.
+- Push the Windows handle-ownership fix and require all five PR checks to pass before merging to protected main.
 - Cut a separate `chore(release)` PR that promotes the Unreleased notes to 0.9.2 and bumps both adapter manifests exactly.
 - Tag `promptus-v0.9.2`, verify the tag-triggered publication workflow and public release, then install `promptus@organon` and compare the installed tree with source.
-- Relation resolution remains the measured residual. Batch writing, partial health, and SQLite adoption remain deferred.
+- Relation resolution remains the measured runtime residual. Batch writing, partial health, and SQLite adoption remain deferred.
 
 ## Next actions
 
-1. Commit the runtime candidate with current Promptus custody and rerun the complete local gates.
-2. Complete the two protected-main PRs and tag-driven release workflow.
-3. Reinstall from the Organon marketplace, verify version and bytes, record the release receipt, and tell the operator to start a new Codex task.
+1. Commit and push the benchmark handle fix, then let Windows CI validate or refute it.
+2. Merge PR 53 only after all required checks pass; complete the release PR and tag workflow.
+3. Reinstall from Organon, verify version and bytes, record the release receipt, and tell the operator to start a new Codex task.
 
 ## <<< RESUME HERE >>>
 
-Resume from finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite and event-20260826T090525Z-normalize-artifact-regression-and-carry-candidate-custody. Release v0.9.2 is authorized and in progress; no tag or install exists yet.
+Resume from event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. Release v0.9.2 is authorized and in progress; Windows CI is the active gate.
 
 <!-- now:end -->
 
@@ -1236,5 +1236,16 @@ The release hygiene audit removed one surplus blank line at the end of the new a
 No contract, benchmark receipt, manifest, tag, release, or installed plugin changed. See [[exact-work-conservation-restores-cadence-without-sqlite]].
 ↳ supersedes event-20260826T082752Z-carry-forward-exact-no-sqlite-candidate-custody
 ↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-26 05:14:58] FIX/CONJECTURED — Close SQLite shadow statements before atomic replacement
+<!-- kb:id event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+Implementation PR 53 passed Linux, macOS, title, and hygiene CI but the new SQLite shadow regression failed on Windows with EBUSY while renaming the completed temporary database. The database had been closed with Bun's default non-throwing mode while explicitly prepared statements were still live; Windows retained the file handle, whereas POSIX allowed the rename and hid the ownership defect.
+
+The benchmark candidate now finalizes every owned long-lived statement, uses auto-finalized one-shot database operations or connection-cached queries for ephemeral work, and closes with pending-query errors enabled before atomic replacement or cleanup. The exact local rebuild and writer-known delta regression passes. Windows CI must still confirm the portability claim before this fix is considered settled or the PR merges.
+
+Related: [[sqlite-is-justified-only-as-a-writer-aware-disposable-projection]] · [[promptus-maintenance-should-conserve-deterministic-work-across-h]]
+↳ relates-to finding-20260825T141629Z-sqlite-is-justified-only-as-a-writer-aware-disposable-projection
 
 <!-- kb:append-point -->

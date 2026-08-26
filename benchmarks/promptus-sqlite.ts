@@ -445,6 +445,10 @@ function insertStatements(db: Database) {
   };
 }
 
+function finalizeStatements(statements: InsertStatements): void {
+  for (const statement of Object.values(statements)) statement.finalize();
+}
+
 function insertUnitFacts(
   statements: InsertStatements,
   unit: Unit,
@@ -499,7 +503,7 @@ function insertSearchIndex(
     docIdByKey?: Map<string, number>;
   } = {},
 ): number {
-  const existingMaximum = Number((db.prepare("SELECT COALESCE(MAX(doc_id), 0) AS value FROM documents").get() as { value: number }).value);
+  const existingMaximum = Number((db.query("SELECT COALESCE(MAX(doc_id), 0) AS value FROM documents").get() as { value: number }).value);
   const retainedMaximum = options.docIdByKey?.size ? Math.max(...options.docIdByKey.values()) : 0;
   let nextDocId = Math.max(existingMaximum, retainedMaximum) + 1;
   const docIdByKey = new Map<string, number>();
@@ -537,22 +541,22 @@ function insertSearchIndex(
 }
 
 function metaSet(db: Database, key: string, value: string | number): void {
-  db.prepare("INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)").run(key, String(value));
+  db.run("INSERT OR REPLACE INTO meta(key, value) VALUES (?, ?)", [key, String(value)]);
 }
 
 function metaGet(db: Database, key: string): string {
-  const row = db.prepare("SELECT value FROM meta WHERE key = ?").get(key) as { value?: string } | null;
+  const row = db.query("SELECT value FROM meta WHERE key = ?").get(key) as { value?: string } | null;
   if (!row?.value) throw new Error(`SQLite shadow cache is missing meta.${key}`);
   return row.value;
 }
 
 export function databaseLogicalDigest(db: Database): string {
-  const rows = db.prepare("SELECT unit_key AS key, record_json AS record FROM units ORDER BY unit_key").all() as Array<{ key: string; record: string }>;
+  const rows = db.query("SELECT unit_key AS key, record_json AS record FROM units ORDER BY unit_key").all() as Array<{ key: string; record: string }>;
   return digestRecordJson(rows);
 }
 
 function databaseManifestDigest(db: Database): string {
-  const states = db.prepare("SELECT path, bytes, mtime_ns AS mtimeNs, sha256 FROM source_files ORDER BY path").all() as SourceFileState[];
+  const states = db.query("SELECT path, bytes, mtime_ns AS mtimeNs, sha256 FROM source_files ORDER BY path").all() as SourceFileState[];
   return sourceManifestDigest(states);
 }
 
@@ -593,66 +597,72 @@ export function buildShadowDatabase(rootInput: string, dbInput: string, replace 
 
   const sqliteStarted = performance.now();
   const db = new Database(tempPath, { create: true, strict: true });
+  let statements: InsertStatements | null = null;
   let postingCount = 0;
   let aliasCount = 0;
   let linkCount = 0;
   let relationCount = 0;
   let artifactCount = 0;
+  let sqliteVersion = "";
+  let logicalDigest = "";
   try {
-    db.exec("PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA temp_store=MEMORY; PRAGMA foreign_keys=OFF;");
-    createSchema(db);
-    const statements = insertStatements(db);
-    const resolver = createRelationResolver(units.filter((unit) => !unit.cold));
-    const transaction = db.transaction(() => {
-      for (const state of sourceStates) statements.source.run(state.path, state.bytes, state.mtimeNs, state.sha256);
-      for (const unit of units) {
-        const counts = insertUnitFacts(statements, unit, resolver);
-        aliasCount += counts.aliases;
-        linkCount += counts.links;
-        relationCount += counts.relations;
-        artifactCount += counts.artifacts;
-      }
-      postingCount = insertSearchIndex(db, statements, derivedSearch);
-      const totalLength = derivedSearch.documents.reduce((sum, document) => sum + document.length, 0);
-      const logicalDigest = logicalUnitDigest(units);
-      const metadata: Record<string, string | number> = {
-        schema: "promptus.sqlite-shadow.v1",
-        canonical_store_hash: canonicalStore.hash,
-        source_file_count: sourceStates.length,
-        manifest_digest: manifestDigest,
-        logical_digest: logicalDigest,
-        search_digest: derivedSearchDigest,
-        catalog_hash: currentCatalogHash,
-        document_count: derivedSearch.documents.length,
-        total_length: totalLength,
-        average_length: derivedSearch.averageLength,
-        generation: 0,
-      };
-      for (const [key, value] of Object.entries(metadata)) statements.meta.run(key, String(value));
-    });
-    transaction();
-    db.exec(`
-      CREATE INDEX units_source_path ON units(source_path);
-      CREATE INDEX units_lifecycle ON units(cold, status, substrate);
-      CREATE INDEX documents_lifecycle ON documents(cold, status, substrate);
-      CREATE INDEX documents_ordinal ON documents(ordinal);
-      CREATE INDEX postings_document ON postings(doc_id);
-      CREATE INDEX links_target ON links(target);
-      CREATE INDEX links_resolved ON links(resolved_key);
-      CREATE INDEX relations_target ON relations(target);
-      CREATE INDEX relations_resolved ON relations(resolved_key);
-      CREATE INDEX artifacts_path ON artifacts(path);
-    `);
-    const integrity = db.prepare("PRAGMA integrity_check").get() as { integrity_check?: string };
-    if (integrity.integrity_check !== "ok") throw new Error(`SQLite integrity_check: ${stableJson(integrity)}`);
+    try {
+      db.exec("PRAGMA journal_mode=OFF; PRAGMA synchronous=OFF; PRAGMA temp_store=MEMORY; PRAGMA foreign_keys=OFF;");
+      createSchema(db);
+      statements = insertStatements(db);
+      const resolver = createRelationResolver(units.filter((unit) => !unit.cold));
+      const transaction = db.transaction(() => {
+        for (const state of sourceStates) statements!.source.run(state.path, state.bytes, state.mtimeNs, state.sha256);
+        for (const unit of units) {
+          const counts = insertUnitFacts(statements!, unit, resolver);
+          aliasCount += counts.aliases;
+          linkCount += counts.links;
+          relationCount += counts.relations;
+          artifactCount += counts.artifacts;
+        }
+        postingCount = insertSearchIndex(db, statements!, derivedSearch);
+        const totalLength = derivedSearch.documents.reduce((sum, document) => sum + document.length, 0);
+        const digest = logicalUnitDigest(units);
+        const metadata: Record<string, string | number> = {
+          schema: "promptus.sqlite-shadow.v1",
+          canonical_store_hash: canonicalStore.hash,
+          source_file_count: sourceStates.length,
+          manifest_digest: manifestDigest,
+          logical_digest: digest,
+          search_digest: derivedSearchDigest,
+          catalog_hash: currentCatalogHash,
+          document_count: derivedSearch.documents.length,
+          total_length: totalLength,
+          average_length: derivedSearch.averageLength,
+          generation: 0,
+        };
+        for (const [key, value] of Object.entries(metadata)) statements!.meta.run(key, String(value));
+      });
+      transaction();
+      db.exec(`
+        CREATE INDEX units_source_path ON units(source_path);
+        CREATE INDEX units_lifecycle ON units(cold, status, substrate);
+        CREATE INDEX documents_lifecycle ON documents(cold, status, substrate);
+        CREATE INDEX documents_ordinal ON documents(ordinal);
+        CREATE INDEX postings_document ON postings(doc_id);
+        CREATE INDEX links_target ON links(target);
+        CREATE INDEX links_resolved ON links(resolved_key);
+        CREATE INDEX relations_target ON relations(target);
+        CREATE INDEX relations_resolved ON relations(resolved_key);
+        CREATE INDEX artifacts_path ON artifacts(path);
+      `);
+      const integrity = db.query("PRAGMA integrity_check").get() as { integrity_check?: string };
+      if (integrity.integrity_check !== "ok") throw new Error(`SQLite integrity_check: ${stableJson(integrity)}`);
+      sqliteVersion = (db.query("SELECT sqlite_version() AS version").get() as { version: string }).version;
+      logicalDigest = metaGet(db, "logical_digest");
+    } finally {
+      if (statements) finalizeStatements(statements);
+      db.close(true);
+    }
   } catch (error) {
-    db.close();
     if (existsSync(tempPath)) unlinkSync(tempPath);
     throw error;
   }
-  const sqliteVersion = (db.prepare("SELECT sqlite_version() AS version").get() as { version: string }).version;
-  const logicalDigest = metaGet(db, "logical_digest");
-  db.close();
   renameSync(tempPath, dbPath);
   const databaseBytes = statSync(dbPath).size;
 
@@ -701,7 +711,7 @@ export class SqliteSearcher {
   constructor(root: string, path: string) {
     this.root = root;
     this.db = new Database(path, { readonly: true, strict: true });
-    const rows = this.db.prepare(`SELECT
+    const rows = this.db.query(`SELECT
       doc_id AS docId, document_key AS key, substrate, status, title, path, stable_id AS id,
       links_json AS linksJson, cold, length
       FROM documents ORDER BY ordinal`).all() as Array<{
@@ -752,7 +762,8 @@ export class SqliteSearcher {
   }
 
   close(): void {
-    this.db.close();
+    this.postings.finalize();
+    this.db.close(true);
   }
 }
 
@@ -962,10 +973,12 @@ function singleSourceState(root: string, sourcePath: string): SourceFileState {
 
 function updateDatabaseMetadata(db: Database, sourceState?: SourceFileState): void {
   if (sourceState) {
-    db.prepare("INSERT OR REPLACE INTO source_files(path, bytes, mtime_ns, sha256) VALUES (?, ?, ?, ?)")
-      .run(sourceState.path, sourceState.bytes, sourceState.mtimeNs, sourceState.sha256);
+    db.run(
+      "INSERT OR REPLACE INTO source_files(path, bytes, mtime_ns, sha256) VALUES (?, ?, ?, ?)",
+      [sourceState.path, sourceState.bytes, sourceState.mtimeNs, sourceState.sha256],
+    );
   }
-  const totals = db.prepare("SELECT COUNT(*) AS count, COALESCE(SUM(length), 0) AS total FROM documents").get() as { count: number; total: number };
+  const totals = db.query("SELECT COUNT(*) AS count, COALESCE(SUM(length), 0) AS total FROM documents").get() as { count: number; total: number };
   metaSet(db, "document_count", totals.count);
   metaSet(db, "total_length", totals.total);
   metaSet(db, "average_length", totals.count ? totals.total / totals.count : 1);
@@ -985,7 +998,11 @@ function deleteUnitKeys(db: Database, keys: string[]): void {
     db.prepare("DELETE FROM artifacts WHERE owner_key = ?"),
     db.prepare("DELETE FROM units WHERE unit_key = ?"),
   ];
-  for (const key of keys) for (const statement of statements) statement.run(key);
+  try {
+    for (const key of keys) for (const statement of statements) statement.run(key);
+  } finally {
+    for (const statement of statements) statement.finalize();
+  }
 }
 
 function insertUnitBatch(
@@ -995,9 +1012,13 @@ function insertUnitBatch(
   docIdByKey?: Map<string, number>,
 ): { postings: number } {
   const statements = insertStatements(db);
-  for (const unit of units) insertUnitFacts(statements, unit);
-  const localIndex = buildSearchIndex(searchSources(units), "incremental");
-  return { postings: insertSearchIndex(db, statements, localIndex, { ordinalByKey, docIdByKey }) };
+  try {
+    for (const unit of units) insertUnitFacts(statements, unit);
+    const localIndex = buildSearchIndex(searchSources(units), "incremental");
+    return { postings: insertSearchIndex(db, statements, localIndex, { ordinalByKey, docIdByKey }) };
+  } finally {
+    finalizeStatements(statements);
+  }
 }
 
 export function applyKnownDelta(
@@ -1011,9 +1032,8 @@ export function applyKnownDelta(
   db.exec("PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA foreign_keys=OFF;");
   let postings = 0;
   try {
-    const existingRows = changedUnits.map((unit) => db.prepare(
-      "SELECT doc_id AS docId, ordinal FROM documents WHERE document_key = ?",
-    ).get(unitKey(unit)) as { docId: number; ordinal: number } | null);
+    const existing = db.query("SELECT doc_id AS docId, ordinal FROM documents WHERE document_key = ?");
+    const existingRows = changedUnits.map((unit) => existing.get(unitKey(unit)) as { docId: number; ordinal: number } | null);
     const existingByKey = new Map<string, { docId: number; ordinal: number }>();
     changedUnits.forEach((unit, index) => {
       const row = existingRows[index];
@@ -1032,7 +1052,7 @@ export function applyKnownDelta(
       if (ordinal !== undefined) ordinalByKey.set(key, ordinal);
     }
     const transaction = db.transaction(() => {
-      if (newCount && boundary >= 0) db.prepare("UPDATE documents SET ordinal = ordinal + ? WHERE ordinal > ?").run(newCount, boundary);
+      if (newCount && boundary >= 0) db.run("UPDATE documents SET ordinal = ordinal + ? WHERE ordinal > ?", [newCount, boundary]);
       deleteUnitKeys(db, [...existingByKey.keys()]);
       postings = insertUnitBatch(db, changedUnits, ordinalByKey, docIdByKey).postings;
       updateDatabaseMetadata(db, singleSourceState(root, sourcePathOf(changedUnits[0])));
@@ -1046,7 +1066,7 @@ export function applyKnownDelta(
       logicalDigest: databaseLogicalDigest(db),
     };
   } finally {
-    db.close();
+    db.close(true);
   }
 }
 
@@ -1079,7 +1099,7 @@ export function applyChangedLedger(dbPath: string, root: string, ledgerPath: str
 } {
   const db = new Database(dbPath, { strict: true });
   db.exec("PRAGMA journal_mode=DELETE; PRAGMA synchronous=FULL; PRAGMA foreign_keys=OFF;");
-  const oldStatusRows = db.prepare(`SELECT
+  const oldStatusRows = db.query(`SELECT
     u.unit_key AS unitKey, u.status, d.doc_id AS docId, d.ordinal
     FROM units u JOIN documents d ON d.document_key = u.unit_key
     WHERE u.source_path = ? ORDER BY d.ordinal`).all(ledgerPath) as Array<{ unitKey: string; status: string; docId: number; ordinal: number }>;
@@ -1103,7 +1123,7 @@ export function applyChangedLedger(dbPath: string, root: string, ledgerPath: str
     const delta = ledgerUnits.length - oldStatusRows.length;
     const transaction = db.transaction(() => {
       deleteUnitKeys(db, [...oldStatuses.keys()]);
-      if (delta) db.prepare("UPDATE documents SET ordinal = ordinal + ? WHERE ordinal >= ?").run(delta, oldStatusRows.length);
+      if (delta) db.run("UPDATE documents SET ordinal = ordinal + ? WHERE ordinal >= ?", [delta, oldStatusRows.length]);
       postings = insertUnitBatch(db, ledgerUnits, ordinals, retainedDocIds).postings;
       updateDatabaseMetadata(db, singleSourceState(root, ledgerPath));
     });
@@ -1116,7 +1136,7 @@ export function applyChangedLedger(dbPath: string, root: string, ledgerPath: str
       logicalDigest: databaseLogicalDigest(db),
     };
   } finally {
-    db.close();
+    db.close(true);
   }
 }
 
@@ -1146,11 +1166,11 @@ function governedWrites(root: string, count: number): { elapsedMs: number[]; ids
 function changedUnitsAgainstDatabase(dbPath: string, units: Unit[]): Unit[] {
   const db = new Database(dbPath, { readonly: true, strict: true });
   try {
-    const rows = db.prepare("SELECT unit_key AS unitKey, record_json AS recordJson FROM units").all() as Array<{ unitKey: string; recordJson: string }>;
+    const rows = db.query("SELECT unit_key AS unitKey, record_json AS recordJson FROM units").all() as Array<{ unitKey: string; recordJson: string }>;
     const records = new Map(rows.map((row) => [row.unitKey, row.recordJson]));
     return units.filter((unit) => records.get(unitKey(unit)) !== stableJson(canonicalUnitRecord(unit)));
   } finally {
-    db.close();
+    db.close(true);
   }
 }
 
@@ -1223,7 +1243,7 @@ function mutationScenario(baseRoot: string, baseDb: string, count: number, scrat
 
 function statManifestCheck(root: string, db: Database): { fresh: boolean; checked: number; elapsedMs: number } {
   const started = performance.now();
-  const expectedRows = db.prepare("SELECT path, bytes, mtime_ns AS mtimeNs FROM source_files ORDER BY path").all() as Array<{ path: string; bytes: number; mtimeNs: string }>;
+  const expectedRows = db.query("SELECT path, bytes, mtime_ns AS mtimeNs FROM source_files ORDER BY path").all() as Array<{ path: string; bytes: number; mtimeNs: string }>;
   const actualPaths = authoritativeSourcePaths(root);
   if (actualPaths.length !== expectedRows.length) return { fresh: false, checked: actualPaths.length, elapsedMs: round(performance.now() - started) };
   let fresh = true;
@@ -1239,7 +1259,7 @@ function statManifestCheck(root: string, db: Database): { fresh: boolean; checke
 
 function contentManifestCheck(root: string, db: Database): { fresh: boolean; checked: number; bytes: number; elapsedMs: number } {
   const started = performance.now();
-  const expectedRows = db.prepare("SELECT path, bytes, sha256 FROM source_files ORDER BY path").all() as Array<{ path: string; bytes: number; sha256: string }>;
+  const expectedRows = db.query("SELECT path, bytes, sha256 FROM source_files ORDER BY path").all() as Array<{ path: string; bytes: number; sha256: string }>;
   const actualPaths = authoritativeSourcePaths(root);
   if (actualPaths.length !== expectedRows.length) return { fresh: false, checked: actualPaths.length, bytes: 0, elapsedMs: round(performance.now() - started) };
   let fresh = true;
@@ -1295,7 +1315,7 @@ function staleCacheScenario(baseRoot: string, scratchRoot: string): Record<strin
         },
       };
     } finally {
-      db.close();
+      db.close(true);
     }
   } finally {
     safeTemporaryCleanup(staleRoot, scratchRoot);
@@ -1313,7 +1333,7 @@ function databaseAnalyticProbe(dbPath: string): Record<string, unknown> {
     ];
     const result: Record<string, unknown> = {};
     for (const [name, sql] of operations) {
-      const statement = db.prepare(sql);
+      const statement = db.query(sql);
       statement.get();
       const values: number[] = [];
       let value = 0;
@@ -1326,7 +1346,7 @@ function databaseAnalyticProbe(dbPath: string): Record<string, unknown> {
     }
     return result;
   } finally {
-    db.close();
+    db.close(true);
   }
 }
 
