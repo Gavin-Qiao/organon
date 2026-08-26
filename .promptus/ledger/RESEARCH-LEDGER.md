@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-26 (v0.9.2 release tree)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-26 (Close the v0.9.2 release and install gate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,31 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree -->
-Promptus v0.9.1 remains the released and locally installed version. The operator approved patch v0.9.2. Implementation PR 53 merged to protected main at 231b8e4 and post-merge CI run 32952350003 passed Linux, macOS, Windows, and hygiene. The dedicated 0.9.2 release tree is now prepared on `chore/promptus-v0.9.2`; no tag, GitHub release, or installed 0.9.2 cache exists yet.
+<!-- kb:now-through event-20260826T093705Z-release-promptus-v092-and-refresh-the-local-codex-plugin -->
+Promptus v0.9.2 is released and locally installed. Release PR 54 merged to protected main at 52da18da43758ec0472e3f895358baeec1ed41aa; protected-main CI run 32953444082 and tag-triggered release workflow 32953630241 both passed. The public tag and release resolve to that exact commit, and the official Codex cache is /home/mohan/.codex/plugins/cache/organon/promptus/0.9.2.
 
-- Exact work conservation reuses source bytes and one thinker scan, verifies each canonical artifact once with bounded-memory hashing, skips unaffected thinker refresh, suppresses identical derived writes, and removes lexical posting allocation churn.
-- MoT stress-mount measurements improved session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds. Native ext4 improved too.
-- Windows CI independently validated the benchmark handle fix that explicitly finalizes prepared SQLite statements before atomic replacement. The earlier portability conjecture is superseded.
-- Both adapter manifests report 0.9.2; the dated 0.9.2 changelog section and compare links pass the release gate. Local plugin validation, 364 tests with 1,990 assertions, and all hygiene hooks pass.
-- Current release custody binds the exact source, tests, benchmarks, public receipt, documentation, manifests, and release notes intended for the tag.
+- Exact work conservation preserves Markdown truth and exact gate semantics while reducing MoT stress-mount session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds.
+- Both installed manifests report 0.9.2; source and cache are byte-identical apart from generated command-skill adapters.
+- The installed strict gate verifies 54 of 54 current artifacts, and installed session preflight is READY with zero errors.
 
 ## Open frontier
 
-- Run authoritative strict health with the new release custody, commit the exact release tree, and open the conventional protected-main release PR.
-- Require all release-PR checks, merge, then tag `promptus-v0.9.2` at that exact merge.
-- Verify the tag-triggered publication workflow and public release, install `promptus@organon`, and compare the installed tree with source.
-- Relation resolution remains the measured residual. Batch writing, partial health, and SQLite adoption remain deferred.
+- Relation resolution remains the measured maintenance residual.
+- Batch writing, touched-files-only health, and SQLite adoption remain deferred until their own measured thresholds justify them.
+- A new Codex task must be started before expecting the current task to load the v0.9.2 skill bundle.
 
 ## Next actions
 
-1. Complete strict health and commit `chore(release): cut promptus v0.9.2`.
-2. Merge the release PR only after all required checks pass; push and verify the exact tag.
-3. Reinstall from Organon, verify version and bytes, record the release receipt, and tell the operator to start a new Codex task.
+1. Start a fresh Codex task to load the installed Promptus v0.9.2 plugin.
+2. Continue measuring relation-heavy writes across representative hardware before selecting the next software-level optimization.
+3. Keep SQLite deferred while exact Markdown work conservation provides adequate cadence.
 
 ## <<< RESUME HERE >>>
 
-Resume from event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. The exact 0.9.2 release tree is prepared and validated locally; publication is the active gate.
+Resume from event-20260826T093705Z-release-promptus-v092-and-refresh-the-local-codex-plugin and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. Promptus v0.9.2 is published, installed, and verified; relation resolution is the next measured optimization frontier.
 
 <!-- now:end -->
 
@@ -1279,6 +1276,12 @@ The dedicated release tree now carries exact version 0.9.2 in both adapter manif
 This event carries current mutable-source custody forward from the unreleased candidate snapshot. No tag, GitHub release, or installed 0.9.2 cache exists yet. See [[exact-work-conservation-restores-cadence-without-sqlite]].
 ↳ supersedes event-20260826T090525Z-normalize-artifact-regression-and-carry-candidate-custody
 ↳ supersedes event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement
+↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-26 05:37:05] RESULT/VALIDATED — Release Promptus v0.9.2 and refresh the local Codex plugin
+<!-- kb:id event-20260826T093705Z-release-promptus-v092-and-refresh-the-local-codex-plugin -->
+Promptus v0.9.2 was released through protected main after release PR 54 merged at exact commit 52da18da43758ec0472e3f895358baeec1ed41aa. Protected-main CI run 32953444082 passed Linux, macOS, Windows, validation, and hygiene. The lightweight tag promptus-v0.9.2 resolves to that exact commit; release workflow 32953630241 passed tests, strict health, tag-manifest parity, note extraction, and publication, producing the public non-draft, non-prerelease release at https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.9.2. The official install command codex plugin add promptus@organon installed /home/mohan/.codex/plugins/cache/organon/promptus/0.9.2. Both installed adapter manifests report 0.9.2, and the installed plugin tree is byte-identical to source apart from Codex-generated migrated command skills. The installed strict gate verified 54 of 54 current artifacts across 318 units and 103 source files, and the installed session doctor reported READY with zero errors. A new Codex task is required to load the newly installed skill bundle.
+↳ supports event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree
 ↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
 
 <!-- kb:append-point -->
