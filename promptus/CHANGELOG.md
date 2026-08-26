@@ -17,6 +17,20 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Changed
+
+- **Conserve exact maintenance work at large stores.** Indexing, checks, and session preflight now
+  reuse already-read Markdown bytes and one thinker-custody scan; artifact verification resolves
+  each declared path once, streams each canonical file through SHA-256 once, and fans the exact
+  result back to every owner; unrelated writes skip thinker refresh; and identical derived bytes
+  are left untouched.
+
+### Fixed
+
+- **Append lexical postings without repeatedly copying their arrays.** Large indexes now build
+  postings in place, preserving the exact lexical projection while avoiding quadratic allocation
+  churn.
+
 ## [0.9.1] - 2026-08-24
 
 ### Fixed

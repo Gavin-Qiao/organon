@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, realpathSync, statSync } from "node:fs";
+import { closeSync, existsSync, openSync, readSync, realpathSync, statSync } from "node:fs";
 import { isAbsolute, resolve, sep } from "node:path";
 
 export interface ArtifactSpec {
@@ -30,16 +30,68 @@ export type ArtifactCheck = ArtifactSpec & {
   actualSha256?: string;
 };
 
-export function checkArtifact(root: string, spec: ArtifactSpec): ArtifactCheck {
+/** Exact SHA-256 with bounded resident memory. */
+export function hashArtifactFile(path: string, bufferBytes = 1024 * 1024): string {
+  const descriptor = openSync(path, "r");
+  const buffer = Buffer.allocUnsafe(bufferBytes);
+  const hash = createHash("sha256");
+  try {
+    while (true) {
+      const bytes = readSync(descriptor, buffer, 0, buffer.byteLength, null);
+      if (!bytes) break;
+      hash.update(buffer.subarray(0, bytes));
+    }
+  } finally {
+    closeSync(descriptor);
+  }
+  return hash.digest("hex");
+}
+
+/**
+ * Verify every owner while resolving each declared path and hashing each
+ * canonical regular file at most once. Result order matches input order.
+ */
+export function checkArtifacts(root: string, specs: ArtifactSpec[]): ArtifactCheck[] {
   const project = realpathSync(resolve(root));
-  const file = resolve(root, spec.path);
-  if (!existsSync(file)) return { ...spec, ok: false, outcome: "missing" };
-  const realFile = realpathSync(file);
-  if (realFile !== project && !realFile.startsWith(project + sep)) return { ...spec, ok: false, outcome: "outside-root" };
-  if (!statSync(realFile).isFile()) return { ...spec, ok: false, outcome: "not-file" };
-  if (!spec.sha256) return { ...spec, ok: true, outcome: "ok" };
-  const actualSha256 = createHash("sha256").update(readFileSync(realFile)).digest("hex");
-  return actualSha256 === spec.sha256
-    ? { ...spec, actualSha256, ok: true, outcome: "ok" }
-    : { ...spec, actualSha256, ok: false, outcome: "hash-mismatch" };
+  const results = new Array<ArtifactCheck>(specs.length);
+  const resolvedByPath = new Map<string, { outcome: "missing" | "not-file" | "outside-root" } | { realFile: string }>();
+  const groups = new Map<string, number[]>();
+
+  for (const [index, spec] of specs.entries()) {
+    let resolved = resolvedByPath.get(spec.path);
+    if (!resolved) {
+      const file = resolve(root, spec.path);
+      if (!existsSync(file)) resolved = { outcome: "missing" };
+      else {
+        const realFile = realpathSync(file);
+        if (realFile !== project && !realFile.startsWith(project + sep)) resolved = { outcome: "outside-root" };
+        else if (!statSync(realFile).isFile()) resolved = { outcome: "not-file" };
+        else resolved = { realFile };
+      }
+      resolvedByPath.set(spec.path, resolved);
+    }
+    if ("outcome" in resolved) {
+      results[index] = { ...spec, ok: false, outcome: resolved.outcome };
+      continue;
+    }
+    const group = groups.get(resolved.realFile);
+    if (group) group.push(index);
+    else groups.set(resolved.realFile, [index]);
+  }
+
+  for (const [realFile, indices] of groups) {
+    const needsHash = indices.some((index) => Boolean(specs[index].sha256));
+    const actualSha256 = needsHash ? hashArtifactFile(realFile) : undefined;
+    for (const index of indices) {
+      const spec = specs[index];
+      if (!spec.sha256) results[index] = { ...spec, ok: true, outcome: "ok" };
+      else if (spec.sha256 === actualSha256) results[index] = { ...spec, actualSha256, ok: true, outcome: "ok" };
+      else results[index] = { ...spec, actualSha256, ok: false, outcome: "hash-mismatch" };
+    }
+  }
+  return results;
+}
+
+export function checkArtifact(root: string, spec: ArtifactSpec): ArtifactCheck {
+  return checkArtifacts(root, [spec])[0];
 }

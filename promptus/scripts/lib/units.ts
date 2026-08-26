@@ -52,15 +52,18 @@ export function ledgerHeads(text: string): Head[] {
 }
 
 const entryCache = new Map<string, Entry[]>();
-export function ledgerEntries(file: string): Entry[] {
-  if (entryCache.has(file)) return entryCache.get(file)!;
-  const text = readCached(file);
+export function ledgerEntriesFromText(text: string): Entry[] {
   const heads = ledgerHeads(text);
-  const entries = heads.map((h, i) => ({
+  return heads.map((h, i) => ({
     anchor: h.anchor,
     title: h.title,
     text: text.slice(h.idx, i + 1 < heads.length ? heads[i + 1].idx : undefined).trimEnd(),
   }));
+}
+
+export function ledgerEntries(file: string): Entry[] {
+  if (entryCache.has(file)) return entryCache.get(file)!;
+  const entries = ledgerEntriesFromText(readCached(file));
   entryCache.set(file, entries);
   return entries;
 }

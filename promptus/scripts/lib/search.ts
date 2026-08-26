@@ -125,7 +125,9 @@ export function buildSearchIndex(
         title.get(term) ?? 0,
         path.get(term) ?? 0,
       ];
-      postings.set(term, [...(postings.get(term) ?? []), posting]);
+      const existing = postings.get(term);
+      if (existing) existing.push(posting);
+      else postings.set(term, [posting]);
     }
   });
 

@@ -10,9 +10,9 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-import { checkArtifact, parseArtifactSpec } from "./lib/artifacts.ts";
+import { checkArtifacts, parseArtifactSpec, type ArtifactSpec } from "./lib/artifacts.ts";
 import { derivedDir, findProjectRoot, storePath } from "./lib/paths.ts";
-import { ledgerEntries, type Entry } from "./lib/units.ts";
+import { ledgerEntriesFromText, type Entry } from "./lib/units.ts";
 import { loadVocab, type Vocab } from "./lib/vocab.ts";
 import { inspectThinkerExchange } from "./lib/thinker.ts";
 import { SEARCH_INDEX_SCHEMA } from "./lib/search.ts";
@@ -86,7 +86,7 @@ function filesUnder(dir: string, skipCache = false): string[] {
   return files;
 }
 
-function sourceFingerprint(root: string): {
+function sourceFingerprint(root: string, sourceBytes?: Map<string, Buffer>): {
   hash: string;
   files: number;
   bytes: number;
@@ -102,6 +102,7 @@ function sourceFingerprint(root: string): {
   let newest: { path: string; mtimeMs: number } | null = null;
   for (const path of paths) {
     const body = readFileSync(path);
+    sourceBytes?.set(path, body);
     const mtimeMs = statSync(path).mtimeMs;
     bytes += body.byteLength;
     if (!newest || mtimeMs > newest.mtimeMs) newest = { path: fwd(relative(root, path)), mtimeMs };
@@ -415,15 +416,16 @@ function main(argv: string[]): number {
   const issues: Issue[] = [];
   const addIssue = (severity: Severity, code: string, message: string) => issues.push({ severity, code, message });
   const fingerprintStarted = performance.now();
-  const source = sourceFingerprint(root);
+  const sourceBytes = new Map<string, Buffer>();
+  const source = sourceFingerprint(root, sourceBytes);
   const fingerprintMs = Math.round((performance.now() - fingerprintStarted) * 10) / 10;
 
   const telosPath = join(root, ".promptus", "TELOS.md");
   const ledgerPath = storePath(root, vocab, "ledger");
-  const telos = readFileSync(telosPath, "utf8").replace(/\r\n/g, "\n");
-  const ledger = readFileSync(ledgerPath, "utf8").replace(/\r\n/g, "\n");
-  const entries = ledgerEntries(ledgerPath);
-  const sourceUnits = collectUnits(root, vocab);
+  const telos = (sourceBytes.get(telosPath)?.toString("utf8") ?? readFileSync(telosPath, "utf8")).replace(/\r\n/g, "\n");
+  const ledger = (sourceBytes.get(ledgerPath)?.toString("utf8") ?? readFileSync(ledgerPath, "utf8")).replace(/\r\n/g, "\n");
+  const entries = ledgerEntriesFromText(ledger);
+  const sourceUnits = collectUnits(root, vocab, sourceBytes);
   const liveSourceUnits = sourceUnits.filter((unit) => !unit.cold).map(sourceUnit);
   const coldSourceUnits = sourceUnits.filter((unit) => unit.cold).map(sourceUnit);
   const sentinelPattern = new RegExp(`^${vocab.sentinel.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*$`, "gm");
@@ -516,7 +518,7 @@ function main(argv: string[]): number {
 
   const schema = vocabCompatibility(vocab, template);
   if (!schema.compatible) addIssue("warning", "VOCAB_COMPATIBILITY_GAP", `missing current template terms: ${schema.missing.slice(0, 8).join(", ")}`);
-  const thinkerExchange = inspectThinkerExchange(root);
+  const thinkerExchange = inspectThinkerExchange(root, sourceBytes);
   const thinkerReady = !thinkerExchange.present || !thinkerExchange.markerValid || thinkerExchange.governed;
   if (thinkerExchange.present && thinkerExchange.markerValid && !thinkerExchange.governed) {
     addIssue("error", "THINKER_EXCHANGE_INVALID", `${thinkerExchange.issues.length} thinker custody issue(s): ${thinkerExchange.issues.slice(0, 3).join("; ")}`);
@@ -631,13 +633,24 @@ function main(argv: string[]): number {
   const artifactStarted = performance.now();
   let artifactChecks: Array<{ from: string; spec: string; status?: string; ok: boolean; outcome: string }> = [];
   if (deepArtifacts) {
-    artifactChecks = (graph.artifacts ?? []).map((record) => {
-      try {
-        const checked = checkArtifact(root, parseArtifactSpec(record.spec));
-        return { from: record.from, spec: record.spec, status: record.status, ok: checked.ok, outcome: checked.outcome };
-      } catch (error) {
-        return { from: record.from, spec: record.spec, status: record.status, ok: false, outcome: `invalid-spec: ${error instanceof Error ? error.message : String(error)}` };
-      }
+    const records = graph.artifacts ?? [];
+    const parsed: Array<{ index: number; spec: ArtifactSpec }> = [];
+    const invalid = new Map<number, string>();
+    for (const [index, record] of records.entries()) {
+      try { parsed.push({ index, spec: parseArtifactSpec(record.spec) }); }
+      catch (error) { invalid.set(index, `invalid-spec: ${error instanceof Error ? error.message : String(error)}`); }
+    }
+    const verified = checkArtifacts(root, parsed.map((item) => item.spec));
+    const verifiedByRecord = new Map(parsed.map((item, index) => [item.index, verified[index]]));
+    artifactChecks = records.map((record, index) => {
+      const checked = verifiedByRecord.get(index);
+      return {
+        from: record.from,
+        spec: record.spec,
+        status: record.status,
+        ok: checked?.ok ?? false,
+        outcome: invalid.get(index) ?? checked?.outcome ?? "invalid-spec",
+      };
     });
     const failures = artifactChecks.filter((check) => !check.ok && !isArchivalArtifactStatus(check.status));
     const archivalWarnings = artifactChecks.filter((check) => !check.ok && isArchivalArtifactStatus(check.status));

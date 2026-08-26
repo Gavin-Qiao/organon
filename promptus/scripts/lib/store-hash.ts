@@ -20,7 +20,7 @@ function filesUnder(dir: string): string[] {
  * Hash source files in stable relative-path order. Derived thinker read surfaces are
  * excluded exactly like `.promptus/cache/`: their authoritative inputs are already hashed.
  */
-export function hashStore(root: string): { hash: string; files: number } {
+export function hashStore(root: string, sourceBytes?: ReadonlyMap<string, Uint8Array>): { hash: string; files: number } {
   const base = join(root, ".promptus");
   const paths = filesUnder(base).filter((path) => {
     const rel = relative(base, path).replace(/\\/g, "/");
@@ -30,7 +30,7 @@ export function hashStore(root: string): { hash: string; files: number } {
   for (const path of paths) {
     hash.update(relative(base, path).replace(/\\/g, "/"));
     hash.update("\0");
-    hash.update(readFileSync(path));
+    hash.update(sourceBytes?.get(path) ?? readFileSync(path));
     hash.update("\0");
   }
   return { hash: hash.digest("hex"), files: paths.length };
