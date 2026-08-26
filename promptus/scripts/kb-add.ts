@@ -132,6 +132,11 @@ function catalogLine(sub: string, status: string, title: string, relPath: string
   return `${sub}:${status} · ${title} · ${relPath}${tail}`;
 }
 
+/** Only a new finding with a derives-from edge can change thinker adjudication. */
+function affectsThinkerReadSurfaces(substrate: string, relations: Relation[]): boolean {
+  return substrate === "finding" && relations.some((relation) => relation.type === "derives-from");
+}
+
 /** Keep the derived catalog fresh on every write; kb-index rebuilds it authoritatively. */
 function appendCatalog(root: string, line: string): string {
   const dir = derivedDir(root);
@@ -325,7 +330,10 @@ function main(argv: string[]): number {
       const prepared = prepare();
       for (const [path, content] of prepared.writes) atomicStoreWrite(root, path, content);
       const catalog = appendCatalog(root, prepared.catLine);
-      if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
+      if (
+        affectsThinkerReadSurfaces(unit.substrate, relations) &&
+        existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)
+      ) refreshThinkerReadSurfaces(root);
       return { ...prepared, catalog };
     });
   } catch (error) {

@@ -1,0 +1,74 @@
+{
+  "schema": "promptus.sqlite-shadow-preregistration.v1",
+  "frozen_at": "2026-08-25",
+  "question": "Can a disposable SQLite projection preserve Promptus's current logical behavior while removing enough repeated derived-cache work to justify a production development branch?",
+  "non_goals": [
+    "SQLite does not become authoritative; Markdown remains the only source of truth.",
+    "The experiment does not change or release shipped Promptus code.",
+    "The experiment does not replace the existing lexical ranking with FTS5 or another ranking function.",
+    "The experiment does not treat an O(1) cache-generation receipt as proof against out-of-band Markdown edits."
+  ],
+  "corpus": {
+    "project": "MoT",
+    "snapshot_store_sha256": "fe9c3bf76eb325febbf5efb38c36890a6baab6bf231b4b077b705df6dccddf13",
+    "source_files": 2604,
+    "live_units": 5341,
+    "capture_rule": "Accept a snapshot only when source-before, source-after, and copied-store canonical hashes match."
+  },
+  "profiles": [
+    {
+      "name": "native-ext4-shadow",
+      "purpose": "Isolate software work from the already-measured WSL 9p metadata penalty."
+    }
+  ],
+  "implementations": {
+    "current": "CATALOG.md + graph.json + exact bounded lexical search.json rebuilt by kb-index",
+    "candidate": "One disposable SQLite file containing normalized units, graph facts, exact lexical postings, and a content-hashed source manifest",
+    "sqlite_durability": "Clean builds use a temporary database and atomic rename. Incremental trials use an explicit transaction. No WAL assumption is permitted."
+  },
+  "scenarios": [
+    "clean current index rebuild",
+    "clean SQLite build from Markdown",
+    "persistent-process exact lexical query suite",
+    "fresh JSON parse versus fresh SQLite connection",
+    "one governed ledger write",
+    "ten governed ledger writes",
+    "writer-known row delta",
+    "changed-file ledger reparse and replacement",
+    "out-of-band Markdown edit",
+    "database deletion and clean rebuild"
+  ],
+  "primary_invariants": [
+    "The source store hash is unchanged by all non-scenario trials.",
+    "SQLite and the current search index return the same ordered keys and bit-stable scores for every query case.",
+    "The database's canonical logical digest equals a fresh Markdown projection after one and ten writes.",
+    "Deleting and rebuilding the database reproduces the same canonical logical digest and query digests.",
+    "An out-of-band Markdown edit is detected by exact content verification and is never represented as authoritative freshness by the experiment."
+  ],
+  "query_suite": {
+    "selection": "A fixed mix of generic Promptus terms, required/all/status/history filters, and deterministic title-derived phrase cases. Private query text is omitted from the public receipt; query hashes and result digests are retained.",
+    "equivalence": "All ordered result keys must match and floating-point scores must have identical IEEE-754 string representations."
+  },
+  "measurements": [
+    "wall time",
+    "CPU time",
+    "maximum resident set size",
+    "filesystem input/output counters",
+    "database and current derived-cache bytes",
+    "source files read or statted",
+    "units and postings replaced",
+    "logical and query equivalence digests",
+    "cold-open and warm-query latency",
+    "stale-cache detection behavior"
+  ],
+  "decision_rule": {
+    "required": [
+      "Every correctness invariant passes.",
+      "Writer-known one-write and ten-write SQLite transactions are at least 5x faster than a full current re-index on the same snapshot.",
+      "Fresh-connection SQLite retrieval is no slower than fresh JSON parse plus the same exact ranking.",
+      "The result identifies a fail-closed strategy for out-of-band Markdown changes without calling SQLite authoritative."
+    ],
+    "interpretation": "Passing supports a narrow derived-cache development branch, not adoption or release. Failing any correctness invariant rejects the candidate regardless of speed."
+  },
+  "privacy": "The snapshot and database remain in temporary local storage. The committed receipt contains aggregate timings, counts, and hashes only; it contains no MoT unit bodies, titles, paths, query text, or retrieval results."
+}

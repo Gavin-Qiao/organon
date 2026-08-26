@@ -10,7 +10,7 @@
 
 import { createHash } from "node:crypto";
 import {
-  existsSync, mkdirSync, readFileSync, renameSync, writeFileSync,
+  existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { parseFrontmatter } from "../promptus/scripts/lib/frontmatter.ts";
@@ -38,6 +38,9 @@ function modelProfile(model: string): ModelProfile {
   if (model.startsWith("nvidia/nemotron-3-embed-1b")) {
     return { queryPrefix: "query: ", documentPrefix: "passage: ", maxBytes: DEFAULT_MAX_BYTES };
   }
+  if (model.startsWith("nvidia/Nemotron-3-Embed-8B") || model.startsWith("nvidia/nemotron-3-embed-8b")) {
+    return { queryPrefix: "query: ", documentPrefix: "passage: ", maxBytes: DEFAULT_MAX_BYTES };
+  }
   if (model.startsWith("liquid/lfm-2.5-embedding-350m")) {
     // A byte ceiling is conservative for the provider's 512-token route and
     // avoids repeating the first trial's 554-token rejection.
@@ -55,6 +58,7 @@ interface BenchmarkSuite {
   schema: typeof BENCHMARK_SCHEMA;
   name: string;
   description?: string;
+  requireActiveTargets?: boolean;
   cases: RetrievalCase[];
 }
 
@@ -97,6 +101,9 @@ interface Options {
   documentPrefix: string;
   dryRun: boolean;
   remotePolicy: "none" | "public" | "zdr";
+  localModel?: string;
+  python: string;
+  dimensions: number;
   refresh: boolean;
 }
 
@@ -104,17 +111,19 @@ const HELP = `promptus-retrieval — benchmark lexical vs dense vs hybrid retrie
 usage:
   bun benchmarks/promptus-retrieval.ts [--dry-run | --allow-public-remote | --require-zdr]
       [--root <dir>] [--cases <json>] [--model <id>]
+      [--local-model <checkpoint>] [--python <path>] [--dimensions <n>]
       [--batch-size <n>] [--max-bytes <n>] [--refresh]
 
 safety:
   --dry-run             inspect cases, lexical metrics, chunks, and planned calls; no network or writes
   --allow-public-remote assert the corpus is public/non-sensitive; its provider may retain or train
   --require-zdr         send only through an endpoint OpenRouter marks Zero Data Retention
+  --local-model <path>  run the model locally; no text or vectors leave this machine
   --refresh             ignore cached vectors and request them again
 
 credentials:
   OPENROUTER_API_KEY is read from the environment. From this repo root, Bun also
-  loads the gitignored .env.local file automatically.`;
+  loads the gitignored .env.local file automatically. Local mode needs no key.`;
 
 function sha256(value: string): string {
   return createHash("sha256").update(value).digest("hex");
@@ -143,15 +152,21 @@ function parseArgs(argv: string[]): Options | "help" {
     values.set(arg, next);
     i++;
   }
-  const known = new Set(["--root", "--cases", "--model", "--batch-size", "--max-bytes"]);
+  const known = new Set([
+    "--root", "--cases", "--model", "--local-model", "--python", "--dimensions",
+    "--batch-size", "--max-bytes",
+  ]);
   for (const key of values.keys()) if (!known.has(key)) throw new Error(`unknown flag: ${key}`);
   const root = findProjectRoot(values.get("--root") ?? process.cwd());
   const casesArg = values.get("--cases") ?? join(import.meta.dir, "retrieval-cases.json");
-  const model = values.get("--model") ?? DEFAULT_MODEL;
+  const localModel = values.get("--local-model");
+  const model = values.get("--model")
+    ?? (localModel ? "nvidia/Nemotron-3-Embed-8B-BF16" : DEFAULT_MODEL);
   const profile = modelProfile(model);
   const publicRemote = switches.has("--allow-public-remote");
   const requireZdr = switches.has("--require-zdr");
   if (publicRemote && requireZdr) throw new Error("choose one remote policy, not both");
+  if (localModel && (publicRemote || requireZdr)) throw new Error("local mode cannot be combined with a remote policy");
   return {
     root,
     cases: isAbsolute(casesArg) ? casesArg : resolve(process.cwd(), casesArg),
@@ -163,6 +178,10 @@ function parseArgs(argv: string[]): Options | "help" {
     documentPrefix: profile.documentPrefix,
     dryRun: switches.has("--dry-run"),
     remotePolicy: publicRemote ? "public" : requireZdr ? "zdr" : "none",
+    localModel: localModel ? resolve(localModel) : undefined,
+    python: resolve(values.get("--python")
+      ?? join(derivedDir(root), "retrieval-benchmark", "venv", "bin", "python")),
+    dimensions: finitePositive(values.get("--dimensions"), 4_096, "--dimensions"),
     refresh: switches.has("--refresh"),
   };
 }
@@ -281,12 +300,48 @@ export function reciprocalRankFusion(rankings: string[][], constant = 60): strin
     .map(([key]) => key);
 }
 
-function resolveRelevant(cases: RetrievalCase[], documents: SearchDocument[]): Array<Set<string>> {
+/**
+ * Fixed, lifecycle-aware candidate policy registered before the local benchmark:
+ * reserve five top-10 slots for each retriever by alternating active lexical and
+ * active dense candidates, then append the active reciprocal-rank-fused tail.
+ */
+export function lifecycleAwareCandidateUnion(
+  lexical: string[],
+  dense: string[],
+  documents: Map<string, Pick<SearchDocument, "status">>,
+  perRoute = 5,
+): string[] {
+  const active = (ranking: string[]) => ranking.filter((key) =>
+    !INACTIVE.has((documents.get(key)?.status ?? "").toUpperCase()));
+  const lexicalActive = active(lexical);
+  const denseActive = active(dense);
+  const prefix: string[] = [];
+  for (let index = 0; index < perRoute; index++) {
+    for (const ranking of [lexicalActive, denseActive]) {
+      const key = ranking[index];
+      if (key && !prefix.includes(key)) prefix.push(key);
+    }
+  }
+  const seen = new Set(prefix);
+  const tail = reciprocalRankFusion([lexicalActive, denseActive]).filter((key) => !seen.has(key));
+  return [...prefix, ...tail];
+}
+
+function resolveRelevant(
+  cases: RetrievalCase[],
+  documents: SearchDocument[],
+  requireActiveTargets = false,
+): Array<Set<string>> {
   return cases.map((item, caseIndex) => new Set(item.relevant.map((target) => {
     const matches = documents.filter((document) =>
       document.key === target || document.id === target || document.path === target || document.title === target);
     if (matches.length !== 1) {
       throw new Error(`case ${caseIndex + 1} target ${JSON.stringify(target)} resolved to ${matches.length} units`);
+    }
+    if (requireActiveTargets && INACTIVE.has(matches[0].status.toUpperCase())) {
+      throw new Error(
+        `case ${caseIndex + 1} target ${JSON.stringify(target)} is lifecycle-inactive (${matches[0].status})`,
+      );
     }
     return matches[0].key;
   })));
@@ -416,13 +471,116 @@ async function fillEmbeddings(
   return { vectors, requested: missing.length, requests };
 }
 
+interface LocalEmbeddingResponse {
+  schema: "promptus.local-embedding-response.v1";
+  model: string;
+  dimensions: number;
+  runtime: {
+    device: string;
+    gpu?: string;
+    torch: string;
+    transformers: string;
+    sentenceTransformers: string;
+    elapsedSeconds: number;
+  };
+  items: Array<{ key: string; vector: number[] }>;
+}
+
+function localCacheIdentity(options: Options): string {
+  return `local:${options.model}:${options.localModel}:${options.dimensions}`;
+}
+
+async function fillLocalEmbeddings(
+  items: EmbedItem[],
+  options: Options,
+  cachePath: string,
+): Promise<{
+  vectors: Map<string, number[]>;
+  requested: number;
+  requests: number;
+  runtime?: LocalEmbeddingResponse["runtime"];
+}> {
+  if (!options.localModel || !existsSync(options.localModel)) {
+    throw new Error(`local model checkpoint is missing: ${options.localModel ?? "(unset)"}`);
+  }
+  if (!existsSync(options.python)) throw new Error(`local Python is missing: ${options.python}`);
+  const identity = localCacheIdentity(options);
+  const cache = loadCache(cachePath, identity);
+  const vectors = new Map<string, number[]>();
+  const missing: EmbedItem[] = [];
+  for (const item of items) {
+    const hash = sha256(`${identity}\n${item.text}`);
+    const cached = options.refresh ? undefined : cache.entries[item.key];
+    if (cached?.hash === hash && cached.vector.length === options.dimensions) vectors.set(item.key, cached.vector);
+    else missing.push(item);
+  }
+  if (!missing.length) return { vectors, requested: 0, requests: 0 };
+
+  const temporaryDir = join(dirname(cachePath), "tmp");
+  mkdirSync(temporaryDir, { recursive: true });
+  const nonce = `${process.pid}-${Date.now()}`;
+  const requestPath = join(temporaryDir, `request-${nonce}.json`);
+  const responsePath = join(temporaryDir, `response-${nonce}.json`);
+  writeFileSync(requestPath, `${JSON.stringify({
+    schema: "promptus.local-embedding-request.v1",
+    model: options.model,
+    items: missing,
+  })}\n`, { mode: 0o600 });
+
+  try {
+    const helper = join(import.meta.dir, "local-embed.py");
+    const child = Bun.spawn([
+      options.python, helper,
+      "--model", options.localModel,
+      "--input", requestPath,
+      "--output", responsePath,
+      "--batch-size", String(options.batchSize),
+      "--dimensions", String(options.dimensions),
+    ], {
+      cwd: options.root,
+      env: {
+        ...process.env,
+        HF_HUB_OFFLINE: "1",
+        TRANSFORMERS_OFFLINE: "1",
+        TOKENIZERS_PARALLELISM: "false",
+      },
+      stdout: "inherit",
+      stderr: "inherit",
+    });
+    const exitCode = await child.exited;
+    if (exitCode !== 0) throw new Error(`local embedding helper exited ${exitCode}`);
+    const response = JSON.parse(readFileSync(responsePath, "utf8")) as LocalEmbeddingResponse;
+    if (response.schema !== "promptus.local-embedding-response.v1"
+      || response.model !== options.model
+      || response.dimensions !== options.dimensions
+      || response.items.length !== missing.length) {
+      throw new Error("local embedding helper returned an incompatible response");
+    }
+    const byKey = new Map(response.items.map((item) => [item.key, item.vector]));
+    for (const item of missing) {
+      const vector = byKey.get(item.key);
+      if (!vector || vector.length !== options.dimensions || vector.some((value) => !Number.isFinite(value))) {
+        throw new Error(`local embedding helper returned an invalid vector: ${item.key}`);
+      }
+      const hash = sha256(`${identity}\n${item.text}`);
+      cache.entries[item.key] = { hash, vector };
+      vectors.set(item.key, vector);
+    }
+    saveCache(cachePath, cache);
+    return { vectors, requested: missing.length, requests: 1, runtime: response.runtime };
+  } finally {
+    rmSync(requestPath, { force: true });
+    rmSync(responsePath, { force: true });
+  }
+}
+
 function formatMetric(value: number): string {
   return value.toFixed(3);
 }
 
 function printMetrics(label: string, metrics: Metrics): void {
   console.log(
-    `${label.padEnd(8)} R@5 ${formatMetric(metrics.recallAt5)} · R@10 ${formatMetric(metrics.recallAt10)}`
+    `${label.padEnd(13)} R@5 ${formatMetric(metrics.recallAt5)} · R@10 ${formatMetric(metrics.recallAt10)}`
     + ` · MRR ${formatMetric(metrics.mrr)} · inactive/untrusted@10 ${formatMetric(metrics.inactiveAt10)}`,
   );
 }
@@ -435,15 +593,18 @@ export async function main(argv: string[]): Promise<number> {
     if (options.dryRun && options.remotePolicy !== "none") {
       throw new Error("choose either --dry-run or a remote policy, not both");
     }
-    if (!options.dryRun && options.remotePolicy === "none") {
-      throw new Error("remote calls are disabled; pass --allow-public-remote or --require-zdr explicitly");
+    if (options.dryRun && options.localModel) {
+      throw new Error("omit --local-model for a dry-run; use --model to inspect its profile");
+    }
+    if (!options.dryRun && options.remotePolicy === "none" && !options.localModel) {
+      throw new Error("choose local inference or pass --allow-public-remote/--require-zdr explicitly");
     }
 
     const suite = loadSuite(options.cases);
     const index = loadFreshIndex(options.root);
     const documents = index.documents.filter((document) => !document.cold);
     const documentByKey = new Map(documents.map((document) => [document.key, document]));
-    const relevant = resolveRelevant(suite.cases, documents);
+    const relevant = resolveRelevant(suite.cases, documents, suite.requireActiveTargets ?? false);
     const textOf = (document: SearchDocument) => unitText(options.root, document.path, document.title);
     const lexicalRankings = suite.cases.map((item) =>
       searchIndex(index, item.query, {}, textOf).map((hit) => hit.document.key));
@@ -461,7 +622,8 @@ export async function main(argv: string[]): Promise<number> {
     console.log(`root     ${options.root}`);
     console.log(`corpus   ${documents.length} live units · ${chunks.length} document chunks · ${suite.cases.length} queries`);
     console.log(`model    ${options.model}`);
-    console.log(`policy   ${options.remotePolicy === "none" ? "dry-run" : options.remotePolicy}`);
+    const policy = options.dryRun ? "dry-run" : options.localModel ? "local-only" : options.remotePolicy;
+    console.log(`policy   ${policy}`);
     printMetrics("lexical", lexicalMetrics);
 
     if (options.dryRun) {
@@ -470,16 +632,21 @@ export async function main(argv: string[]): Promise<number> {
       return 0;
     }
 
-    const cacheName = `${sha256(options.model).slice(0, 16)}.json`;
+    const cacheIdentity = options.localModel ? localCacheIdentity(options) : options.model;
+    const cacheName = `${sha256(cacheIdentity).slice(0, 16)}.json`;
     const cachePath = join(derivedDir(options.root), "retrieval-benchmark", cacheName);
-    const embedded = await fillEmbeddings([...chunks, ...queryItems], options, cachePath);
+    const embedded = options.localModel
+      ? await fillLocalEmbeddings([...chunks, ...queryItems], options, cachePath)
+      : await fillEmbeddings([...chunks, ...queryItems], options, cachePath);
     const chunksByDocument = new Map<string, string[]>();
     for (const document of documents) {
       chunksByDocument.set(document.key, chunks.filter((chunk) => chunk.key.startsWith(`document:${document.key}:`)).map((chunk) => chunk.key));
     }
 
     const denseRankings: string[][] = [];
+    const denseActiveRankings: string[][] = [];
     const hybridRankings: string[][] = [];
+    const candidateRankings: string[][] = [];
     suite.cases.forEach((item, caseIndex) => {
       const queryVector = embedded.vectors.get(queryItems[caseIndex].key);
       if (!queryVector) throw new Error(`missing query embedding for case ${caseIndex + 1}`);
@@ -494,21 +661,43 @@ export async function main(argv: string[]): Promise<number> {
       dense.sort((left, right) => right.score - left.score || left.key.localeCompare(right.key));
       const denseKeys = dense.map((item) => item.key);
       denseRankings.push(denseKeys);
+      denseActiveRankings.push(denseKeys.filter((key) =>
+        !INACTIVE.has((documentByKey.get(key)?.status ?? "").toUpperCase())));
       hybridRankings.push(reciprocalRankFusion([lexicalRankings[caseIndex], denseKeys]));
+      candidateRankings.push(lifecycleAwareCandidateUnion(
+        lexicalRankings[caseIndex], denseKeys, documentByKey,
+      ));
     });
 
     const denseMetrics = evaluateRankings(denseRankings, relevant, documentByKey);
+    const denseActiveMetrics = evaluateRankings(denseActiveRankings, relevant, documentByKey);
     const hybridMetrics = evaluateRankings(hybridRankings, relevant, documentByKey);
+    const candidateMetrics = evaluateRankings(candidateRankings, relevant, documentByKey);
     printMetrics("dense", denseMetrics);
+    printMetrics("dense-active", denseActiveMetrics);
     printMetrics("hybrid", hybridMetrics);
-    console.log(`api      ${embedded.requested} uncached input(s) across ${embedded.requests} request(s)`);
+    printMetrics("candidate", candidateMetrics);
+    console.log(`embed    ${embedded.requested} uncached input(s) across ${embedded.requests} run/request(s)`);
+    if (embedded.runtime) {
+      console.log(
+        `runtime  ${embedded.runtime.gpu ?? embedded.runtime.device} · torch ${embedded.runtime.torch}`
+        + ` · transformers ${embedded.runtime.transformers} · sentence-transformers ${embedded.runtime.sentenceTransformers}`
+        + ` · ${embedded.runtime.elapsedSeconds.toFixed(1)}s`,
+      );
+    }
     console.log(`cache    ${cachePath}`);
     console.log("");
     suite.cases.forEach((item, index) => {
       const lexical = firstRelevantRank(lexicalRankings[index], relevant[index]);
       const dense = firstRelevantRank(denseRankings[index], relevant[index]);
+      const denseActive = firstRelevantRank(denseActiveRankings[index], relevant[index]);
       const hybrid = firstRelevantRank(hybridRankings[index], relevant[index]);
-      console.log(`${index + 1}. lexical ${lexical ?? "—"} · dense ${dense ?? "—"} · hybrid ${hybrid ?? "—"} — ${item.query}`);
+      const candidate = firstRelevantRank(candidateRankings[index], relevant[index]);
+      console.log(
+        `${index + 1}. lexical ${lexical ?? "—"} · dense ${dense ?? "—"}`
+        + ` · dense-active ${denseActive ?? "—"} · hybrid ${hybrid ?? "—"}`
+        + ` · candidate ${candidate ?? "—"} — ${item.query}`,
+      );
     });
     return 0;
   } catch (error) {

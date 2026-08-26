@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-24 (maintenance complete)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-26 (v0.9.2 Windows CI gate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,28 +27,31 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260824T122400Z-prune-merged-maintenance-refs-and-verify-main-only-worktrees -->
-Promptus v0.9.1 is released, published, and installed locally. Its retired-artifact correction is now proven on MoT, and the GitHub/runtime dependency refresh is merged and green on every protected runner.
+<!-- kb:now-through event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement -->
+Promptus v0.9.1 remains the released and locally installed version. The operator approved releasing and installing the exact no-SQLite maintenance candidate as patch v0.9.2. Implementation PR 53 is open on `perf/promptus-exact-maintenance`; no manifest, tag, GitHub release, or installed cache has changed yet.
 
-- Organon CI uses exact current releases: checkout 7.0.1, setup-python 7.0.0, setup-bun 2.2.0, pre-commit 4.6.2, and pre-commit-hooks 6.0.0.
-- PR 51 passed all five protected checks on Linux, macOS, and Windows without the previous Node 20 action warning. Local Bun is 1.4.0; Promptus has no third-party package dependencies or lockfile.
-- Fresh Codex session 01a033ac-5350-7a43-a4fc-5645c1ae52ba found MoT already live on schema v5. Current evidence passes 2,708/2,708; 107 superseded/retired failures are archival warnings and do not block readiness.
-- Organon and MoT are each main-only with one canonical worktree and no open PR. Four merged Organon remote-tracking refs were pruned; no user work was deleted.
+- The source candidate reuses source bytes and one thinker scan, verifies each canonical artifact once with bounded-memory hashing, skips unaffected thinker refresh, suppresses identical derived writes, and removes lexical posting allocation churn.
+- MoT stress-mount measurements improved session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds. Native ext4 improved too.
+- Exact graph, lexical, artifact-owner, thinker, health, and readiness semantics were preserved. The local repository passed 364 tests with 1,990 assertions, plugin validation, strict health, session preflight, and the pinned hygiene sweep.
+- PR 53 passed Linux, macOS, title, and hygiene CI. Windows exposed a real benchmark-only handle leak: prepared SQLite statements survived the default non-throwing close and locked the temporary database during rename.
+- The branch now explicitly finalizes owned statements, uses auto-finalized one-shot operations, and closes fail-fast before replacement. The exact local SQLite regression passes; the portability fix remains conjectured until the rerun is green.
 
 ## Open frontier
 
-- No release, dependency, schema, branch, or worktree maintenance item remains open.
-- Resume problem-led dogfooding from Psi, MoT, Probatio, or Editio. Add the next Organon capability only in response to a reproduced project failure and measured need.
+- Push the Windows handle-ownership fix and require all five PR checks to pass before merging to protected main.
+- Cut a separate `chore(release)` PR that promotes the Unreleased notes to 0.9.2 and bumps both adapter manifests exactly.
+- Tag `promptus-v0.9.2`, verify the tag-triggered publication workflow and public release, then install `promptus@organon` and compare the installed tree with source.
+- Relation resolution remains the measured runtime residual. Batch writing, partial health, and SQLite adoption remain deferred.
 
 ## Next actions
 
-1. Let the active research projects expose the next concrete continuity or writing failure.
-2. Reproduce and generalize that failure before changing Promptus or Editio.
-3. Keep embeddings or database machinery deferred until a benchmark demonstrates a real retrieval threshold.
+1. Commit and push the benchmark handle fix, then let Windows CI validate or refute it.
+2. Merge PR 53 only after all required checks pass; complete the release PR and tag workflow.
+3. Reinstall from Organon, verify version and bytes, record the release receipt, and tell the operator to start a new Codex task.
 
 ## <<< RESUME HERE >>>
 
-Resume from event-20260824T122400Z-prune-merged-maintenance-refs-and-verify-main-only-worktrees. The v0.9.1 release, dependency refresh, MoT validation, and maintenance cleanup are complete.
+Resume from event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. Release v0.9.2 is authorized and in progress; Windows CI is the active gate.
 
 <!-- now:end -->
 
@@ -1100,5 +1103,149 @@ A genuinely fresh Codex session (01a033ac-5350-7a43-a4fc-5645c1ae52ba) loaded th
 After the dependency and MoT tasks closed, fresh remote audits found both repositories already main-only with one canonical worktree each and no open pull requests. Fetch-prune removed four stale Organon remote-tracking refs left by merged PRs 48 through 51: chore/update-action-dependencies, docs/promptus-v0.9.1-release-receipt, fix/promptus-retired-artifact-drift, and release/promptus-v0.9.1. MoT had no stale remote refs. Worktree prune dry-runs found nothing removable in either repository. No user-owned branch, worktree, or dirty MoT research file was deleted.
 ↳ supports event-20260824T122237Z-validate-refreshed-dependencies-on-protected-hosted-runners
 ↳ supports event-20260824T122252Z-validate-promptus-v091-against-the-current-mot-v5-store
+
+### [2026-08-24 12:24:49] RESULT/VALIDATED — Local Nemotron 8B benchmark crosses the semantic-retrieval threshold
+<!-- kb:id event-20260824T162449Z-local-nemotron-8b-benchmark-crosses-the-semantic-retrieval-thres -->
+<!-- kb:artifact result|benchmarks/results/retrieval-local-v2-2026-08-24.json|8379f8283f3872ae02f38a587dcceb200be947b6f63846ad5dd347bddbb64c65 -->
+<!-- kb:artifact preregistration|benchmarks/retrieval-local-v2-preregistered.json|59db899d25f7eefe4cab1d0e8e3ade9fcc6cc35712222f2dc1f2b6b299d849db -->
+<!-- kb:artifact labelled-cases|benchmarks/retrieval-cases-v2.json|ad1d795e2da2d6999c45c35e4fe1c25ab33a8852825860f2cba2de0da78af2c3 -->
+The preregistered local semantic-retrieval benchmark ran on the released RTX 5090 against Organon's authoritative store: 298 units, 422 document chunks, and 45 frozen paraphrase cases. NVIDIA Nemotron 3 Embed 8B BF16 encoded 467 inputs locally at 4,096 dimensions in 31.1 seconds; a cache-only replay requested zero new embeddings and reproduced every metric.
+
+Lexical retrieval scored Recall@5 0.667, Recall@10 0.756, and MRR 0.521. Raw dense retrieval scored 0.867, 0.978, and 0.703 but placed 68 inactive or untrusted units in 450 top-ten slots. Filtering lifecycle-inactive units raised dense Recall@5 to 0.933 and MRR to 0.746 while retaining Recall@10 0.978 with zero contamination. The preregistered mixed candidate policy scored 0.844, 0.956, and 0.612 with zero contamination. Against lexical ranking, filtered dense won 13 cases and lost one at top five, and won ten with no losses at top ten.
+
+The preregistered threshold is met for further development of a local semantic fallback or candidate generator. It is not a release decision and does not justify replacing lexical retrieval or adding SQLite. The suite covers one project and does not measure exact identifiers, code fragments, error strings, or end-to-end agent task success. Psi, MoT, and Probatio were excluded because their read-only session doctors found concurrently advancing NOW or cache state; no stale snapshot was benchmarked.
+Related: [[semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa]] · [[nemotron-3-embed-8b-is-the-july-2026-open-retrieval-leader]]
+
+### [2026-08-24 13:13:15] RESULT/VALIDATED — Cross-project challenge supports a mixed semantic candidate route
+<!-- kb:id event-20260824T171315Z-cross-project-challenge-supports-a-mixed-semantic-candidate-rout -->
+<!-- kb:artifact aggregate-result|benchmarks/results/retrieval-cross-project-v1-2026-08-24.json|94ccff2410998974cdc14d4ff8cb2e6251a74608925edc41cf83c6d975156627 -->
+Two independently authored lexical-challenge suites were frozen before dense inference against isolated, byte-matched snapshots of Psi and MoT. Each suite contained 20 lifecycle-active targets beyond lexical rank 10 plus 10 top-ten lexical controls. The private question text, labels, source snapshots, ranks, and vectors remained under `/tmp`; only a public-safe aggregate receipt entered Organon. The preregistration hash was `82ae46a32d3edf6072c7788da54daaa79c2f1065d9fae4757694126b5d3a38c1`.
+
+Lifecycle-filtered Nemotron 3 Embed 8B rescued 15/20 lexical misses in each project. It retained 10/10 Psi controls but only 8/10 MoT controls, so the preregistered cross-project dense-replacement rule failed. The already preregistered mixed candidate policy rescued 13/20 Psi and 12/20 MoT misses while retaining 10/10 and 9/10 controls respectively, with zero lifecycle-inactive top-ten exposure in both projects. Raw dense retrieval placed 107 inactive or untrusted units in 600 top-ten slots.
+
+Therefore semantic retrieval generalizes as a candidate source, not as a replacement for lexical retrieval. A production experiment should keep lexical participation, filter lifecycle state before presentation, and choose fusion policy on a fresh untouched holdout. The cold path is not suitable for unattended session startup: 20,064 inputs took 964.5 GPU-seconds and the two JSON caches totalled 1.65 GiB. This motivates a compact disposable vector format if development continues, not a database as source of truth. No release or shipped behavior is authorized. Psi's result is retrieval-only because its live NOW and health receipt were stale at capture; MoT was session-doctor READY.
+Related: [[local-lifecycle-filtered-embeddings-materially-improve-paraphras]] · [[header-beats-vector]]
+
+### [2026-08-25 08:20:42] DECISION/RESOLVED — Move global maintenance off the active research loop at five-thousand-unit scale
+<!-- kb:id event-20260825T122042Z-move-global-maintenance-off-the-active-research-loop-at-five-tho -->
+Mohan supplied fresh maintenance timings from a 42 MB Promptus store containing 5,338 live units across 2,614 files, with thousands of artifact checks: current-state status 0.05 seconds, knowledge retrieval 0.23 seconds, a typical gated write about 40 seconds, re-index about 38 seconds, and a whole-store ratchet check about 102 seconds. A fully governed checkpoint containing several writes now takes roughly five minutes. These are operator-reported measurements rather than an independently reproduced Organon run, and no raw timing receipt accompanied them. The observed research consequence is nonetheless direct: synchronous global maintenance interrupts concentration and discourages timely recording, while status and retrieval remain excellent.
+
+Effective immediately in long-running research stores, record load-bearing results, decisions, and failed routes rather than every micro-observation; batch related records at the end of a bounded stage; re-index once per batch; reserve the full ratchet check for handoff, compaction, branch closure, or release; and use fast status and retrieval paths during active mathematical work. This changes cadence, not the integrity invariant: Markdown remains authoritative, writes remain gated, and full verification remains mandatory at durable boundaries.
+
+The next problem-led Promptus patch should investigate incremental indexing, transactional batch kb-add, cached artifact verification, a touched-files-only fast checkpoint, timing telemetry, and why all 5,338 units remain live with none cold. These are measured priorities for profiling and design, not shipped behavior or release authorization. This extends [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]: transactional correctness was already earned at Psi scale; maintenance latency has now separately crossed the machinery threshold. [[header-beats-vector]] remains consistent with the fast retrieval result.
+Related: [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]] · [[header-beats-vector]]
+↳ extends finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m
+
+### [2026-08-25 09:21:08] RESULT/VALIDATED — Cross-filesystem profiling identifies hardware-agnostic work-conservation targets
+<!-- kb:id event-20260825T132108Z-cross-filesystem-profiling-identifies-hardware-agnostic-work-con -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json|3aecfc71e47e0a1873cffa8d4485f8c24f590ec25abae0828d7618f02924fe6f -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-maintenance.ts|96d65510d0690c32e1b992495169d612cd5e53bc12cd58e73d42d5c85daa5074 -->
+<!-- kb:artifact report-compiler|benchmarks/promptus-maintenance-report.ts|26ee188e6a7d795671447b3ac9877a2fe5971df51695ad66aa03384d48833f39 -->
+<!-- kb:artifact portable-report|benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.html|e69d134b09ba8367fecb81d9b7be11e73939ab6f5126c5bd8ae6870cab8a59ba -->
+A frozen 5,338-unit MoT snapshot was profiled on WSL 9p, native ext4, and tmpfs using isolated byte-matched copies. The filesystem contrast exposed repeated deterministic work rather than a hardware-specific remedy. Exact-equivalent software probes improved every profile: single-pass thinker binding preserved 12 bindings and their digest while improving 10.75x on 9p, 3.33x on ext4, and 3.17x on tmpfs; one hash per unique declared artifact path preserved all 3,700 outcomes while improving 1.62x, 1.35x, and 1.53x. One-CPU ext4 tracked the normal profile, so CPU and GPU throughput are not the current constraint. The public-safe aggregate and portable report retain exact raw-receipt hashes, methodology, controls, limitations, and the proposed scan-once work-conservation contract. No shipped Promptus code or release state changed.
+↳ extends finding-20260825T122106Z-five-thousand-unit-stores-require-a-two-speed-maintenance-cadenc
+
+### [2026-08-25 10:15:51] EXP/VALIDATED — SQLite shadow benchmark crosses the writer-aware derived-cache threshold
+<!-- kb:id event-20260825T141551Z-sqlite-shadow-benchmark-crosses-the-writer-aware-derived-cache-t -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/sqlite-shadow-mot-ext4-2026-08-25.json|e6536a92ce896110bf75e6b8922aa2d338303fe630d6efce3920cefbcd422134 -->
+A preregistered shadow-cache experiment on a stable 5,341-unit, 2,604-file MoT snapshot passed every correctness and decision gate without changing shipped Promptus. Three clean rebuilds reproduced the current exact lexical search digest and canonical logical digest; deletion and rebuild converged. A writer-aware SQLite transaction updated the new ledger unit plus the former tail boundary in 72.83 ms for one write and updated eleven units in 67.71 ms for ten writes, 37.76x and 45.64x faster than full 2.75 s and 3.09 s re-indexes. Blind changed-ledger replacement touched about 421,000 postings and took about 2.98 s, proving that the gain comes from dependency-aware deltas rather than the database alone. Fresh one-query access improved from 71.84 ms for JSON parse plus exact rank to 9.73 ms for SQLite open plus the same exact rank; a persistent twelve-query suite favored in-memory JSON, 327.08 ms versus 438.32 ms. Clean SQLite build was slower, 4.71 s versus 3.00 s, and the 59.31 MB database was 3.01x the 19.68 MB current index files. An out-of-band Markdown edit was invisible to the 0.011 ms generation receipt but detected by stat and exact-content scans; authoritative doctor/check must therefore retain exact verification. The receipt is public-safe and contains hashes, counts, timings, and aggregate digests only. No production adoption, release, manifest, tag, or installed plugin change is authorized by this result.
+Related: [[promptus-maintenance-should-conserve-deterministic-work-across-h]] · [[psi-scale-calls-for-transactional-semantics-before-new-storage-m]]
+↳ supports finding-20260825T132149Z-promptus-maintenance-should-conserve-deterministic-work-across-h
+
+### [2026-08-25 10:20:45] EXP/VALIDATED — Streaming artifact hashing removes the whole-file memory spike exactly
+<!-- kb:id event-20260825T142045Z-streaming-artifact-hashing-removes-the-whole-file-memory-spike-e -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/artifact-streaming-mot-windows-9p-2026-08-25.json|50814941ce26e5296826ab1153a2facad352b663a314e3e1f0a3840815f45dbf -->
+A bounded-memory artifact verification probe compared the existing whole-file SHA-256 read with a synchronous 1 MiB buffer after canonical-path deduplication on the current read-only MoT artifact set. Both variants read 552,759,271 bytes over 2,247 unique paths, produced the exact same ordered outcome digest for 3,712 owner records, and classified 3,559 OK, 151 hash mismatches, and 2 non-files. Whole-file reading took 32.29 seconds with 339,176 KiB peak RSS; streaming took 33.90 seconds with 55,300 KiB peak RSS. Streaming therefore reduced peak memory 83.7 percent, or 6.13x, at a 4.99 percent wall-time cost on WSL 9p. This is a memory-safety optimization rather than a speed optimization; unique-path deduplication remains the elapsed-time patch. The trials were sequential and operating-system cache state was not forcibly reset. No live source, artifact, cache, or installed plugin file was written.
+Related: [[promptus-maintenance-should-conserve-deterministic-work-across-h]]
+↳ supports finding-20260825T132149Z-promptus-maintenance-should-conserve-deterministic-work-across-h
+
+### [2026-08-25 10:24:06] RESULT/VALIDATED — Carry forward maintenance custody after adding exact streaming hashes
+<!-- kb:id event-20260825T142406Z-carry-forward-maintenance-custody-after-adding-exact-streaming-h -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-maintenance.ts|d6a23041ef4862497fa6baeb236a8cb067625d087d0917a15fb1932e77625d30 -->
+<!-- kb:artifact regression|benchmarks/promptus-maintenance.test.ts|00f6d6a01b19702b93f274af7d7afe686d8bc0026cf42f2586d8917f5e994905 -->
+<!-- kb:artifact cross-hardware-receipt|benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json|3aecfc71e47e0a1873cffa8d4485f8c24f590ec25abae0828d7618f02924fe6f -->
+<!-- kb:artifact streaming-receipt|benchmarks/results/artifact-streaming-mot-windows-9p-2026-08-25.json|50814941ce26e5296826ab1153a2facad352b663a314e3e1f0a3840815f45dbf -->
+The maintenance benchmark harness now adds an exact fixed-buffer artifact-hash mode and a regression proving byte-equivalent SHA-256 across chunk boundaries. This changes the harness bytes pinned by the earlier cross-filesystem custody event but does not change its sealed aggregate receipt, frozen corpus, timings, or conclusions. This event supersedes that custody unit, carries forward the unchanged cross-hardware receipt, and binds the current expanded harness, its regression, and the new streaming receipt. The earlier harness mismatch should therefore become an archival warning while the current evidence remains fully verified.
+Related: [[promptus-maintenance-should-conserve-deterministic-work-across-h]] · [[artifact-hashing-should-deduplicate-for-time-and-stream-for-memo]]
+↳ supersedes event-20260825T132108Z-cross-filesystem-profiling-identifies-hardware-agnostic-work-con
+
+### [2026-08-26 03:41:37] DECISION/VALIDATED — Approve the no-SQLite performance tranche
+<!-- kb:id event-20260826T074137Z-approve-the-no-sqlite-performance-tranche -->
+Operator approved implementing and benchmarking the database-independent performance tranche before any SQLite adoption. Preserve Markdown authority and exact health semantics; start with single-pass and dependency-aware thinker custody, shared deterministic work, unique-path streaming artifact verification, unchanged-output suppression, and governed batching. Do not commit, tag, release, or reinstall until operator review.
+↳ extends finding-20260825T132149Z-promptus-maintenance-should-conserve-deterministic-work-across-h
+
+### [2026-08-26 04:24:15] RESULT/VALIDATED — No-SQLite candidate passes exact equivalence and full validation
+<!-- kb:id event-20260826T082415Z-no-sqlite-candidate-passes-exact-equivalence-and-full-validation -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+Implemented the operator-approved database-independent performance tranche in the Organon source and benchmarked it on current MoT snapshots over WSL 9p and native ext4. The public aggregate binds the frozen corpus, raw receipts, baseline comparison, exactness checks, timings, memory peaks, limitations, and deferral decisions. The final repository verification passed 364 tests with 1,990 assertions; plugin validation passed. No manifest, tag, installed plugin, release, or commit changed. Private benchmark snapshots are to be removed after custody is complete.
+
+The candidate keeps all Promptus functions and trust boundaries: Markdown remains authoritative, checks remain exact and fail closed, lexical results and graph semantics are preserved, and derived files remain disposable. Ordinary writes are now sub-second even on the stress mount; the remaining relation-resolution traversal is recorded rather than hidden. See [[exact-work-conservation-restores-cadence-without-sqlite]].
+↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-26 04:27:52] RESULT/VALIDATED — Carry forward exact no-SQLite candidate custody
+<!-- kb:id event-20260826T082752Z-carry-forward-exact-no-sqlite-candidate-custody -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|82e52290baad21cd2b3926077c0c23c7f3e46f2760e143559a8ad002b1fd58ed -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|4b0e9962176e0cbb4c387d7cc1f338453d756944f8e5bbd26891d5f2dc625fb7 -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|33424df801896a957c05769250cc41f3f45bd098399b86701e55d040f0a598d5 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|45bbe1b0e9f9e11dd81213f2964338347c5beccee5ecd1c515940bfe1ca5ae8a -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+The final strict gate after implementing the no-SQLite candidate failed exactly as designed because seven active artifact records still bound the pre-candidate thinker, checker, session doctor, changelog, and maintenance harness bytes. The candidate receipt itself verified. This event carries mutable-source custody forward to the actual reviewed candidate bytes and supersedes the four older custody snapshots so their mismatches remain visible as archival warnings rather than false current claims.
+
+Supersession here archives artifact snapshots; it does not undo the historical fact that Promptus v0.9.1 was validated, released, and installed. That remains the released version. Current custody now covers the writer dependency gate, shared index/check/preflight path, source and unit hashing, artifact streaming and canonical deduplication, thinker scan, lexical builder, focused regressions, maintenance harness, candidate compiler, public receipt, changelog, and package command surface. The repository suite passed 364 tests with 1,990 assertions and plugin validation before this custody write. No commit, tag, release, manifest, or installed plugin changed.
+
+See [[exact-work-conservation-restores-cadence-without-sqlite]].
+↳ supersedes event-20260824T064736Z-rebind-thinker-custody-evidence-to-the-fail-closed-implementatio
+↳ supersedes event-20260824T114726Z-validate-the-exact-promptus-v091-release-tree
+↳ supersedes event-20260824T115718Z-release-promptus-v091-and-refresh-the-local-codex-plugin
+↳ supersedes event-20260825T142406Z-carry-forward-maintenance-custody-after-adding-exact-streaming-h
+↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-26 05:05:25] FIX/VALIDATED — Normalize artifact regression and carry candidate custody
+<!-- kb:id event-20260826T090525Z-normalize-artifact-regression-and-carry-candidate-custody -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|82e52290baad21cd2b3926077c0c23c7f3e46f2760e143559a8ad002b1fd58ed -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|33424df801896a957c05769250cc41f3f45bd098399b86701e55d040f0a598d5 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|45bbe1b0e9f9e11dd81213f2964338347c5beccee5ecd1c515940bfe1ca5ae8a -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+The release hygiene audit removed one surplus blank line at the end of the new artifact regression. Test behavior and every implementation byte are unchanged, but the current custody event correctly became red because it pinned the pre-normalization test hash. This event supersedes that candidate custody snapshot and carries every current binding forward with the normalized regression hash.
+
+No contract, benchmark receipt, manifest, tag, release, or installed plugin changed. See [[exact-work-conservation-restores-cadence-without-sqlite]].
+↳ supersedes event-20260826T082752Z-carry-forward-exact-no-sqlite-candidate-custody
+↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-26 05:14:58] FIX/CONJECTURED — Close SQLite shadow statements before atomic replacement
+<!-- kb:id event-20260826T091458Z-close-sqlite-shadow-statements-before-atomic-replacement -->
+<!-- kb:artifact benchmark-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+Implementation PR 53 passed Linux, macOS, title, and hygiene CI but the new SQLite shadow regression failed on Windows with EBUSY while renaming the completed temporary database. The database had been closed with Bun's default non-throwing mode while explicitly prepared statements were still live; Windows retained the file handle, whereas POSIX allowed the rename and hid the ownership defect.
+
+The benchmark candidate now finalizes every owned long-lived statement, uses auto-finalized one-shot database operations or connection-cached queries for ephemeral work, and closes with pending-query errors enabled before atomic replacement or cleanup. The exact local rebuild and writer-known delta regression passes. Windows CI must still confirm the portability claim before this fix is considered settled or the PR merges.
+
+Related: [[sqlite-is-justified-only-as-a-writer-aware-disposable-projection]] · [[promptus-maintenance-should-conserve-deterministic-work-across-h]]
+↳ relates-to finding-20260825T141629Z-sqlite-is-justified-only-as-a-writer-aware-disposable-projection
 
 <!-- kb:append-point -->

@@ -1,0 +1,142 @@
+{
+  "schema": "promptus.cross-project-retrieval-result.v1",
+  "name": "Psi and MoT local semantic-retrieval challenge",
+  "completedAt": "2026-08-24",
+  "publicSafe": true,
+  "privateInputs": "Question text, target labels, source snapshots, per-query ranks, and vectors remain local under /tmp and are not included here.",
+  "preregistration": {
+    "sha256": "82ae46a32d3edf6072c7788da54daaa79c2f1065d9fae4757694126b5d3a38c1",
+    "denseDecisionRule": "Per project, lifecycle-filtered dense must rescue at least 10/20 lexical misses at top ten, retain at least 9/10 lexical controls at top ten, and expose zero lifecycle-inactive units.",
+    "crossProjectRule": "Both projects must pass the dense decision rule.",
+    "denseResult": "failed: Psi passed, MoT retained only 8/10 controls",
+    "secondaryCandidateResult": "passed in both projects under the same numerical trade-off"
+  },
+  "caseAuthoring": {
+    "independentReviewers": 2,
+    "model": "gpt-5.6-luna",
+    "reasoningEffort": "max",
+    "denseResultsSeenBeforeFreeze": false,
+    "selectionPerProject": {
+      "lexicalMissesAboveRank10": 20,
+      "lexicalControlsAtRanks1Through10": 10
+    }
+  },
+  "model": {
+    "id": "nvidia/Nemotron-3-Embed-8B-BF16",
+    "revision": "c44c20ab3f6b430336706847a6372de4b2eb3dbd",
+    "dimensions": 4096,
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "batchSize": 8,
+    "localOnly": true,
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "torch": "2.13.0+cu130",
+    "transformers": "5.2.0",
+    "sentenceTransformers": "5.4.1"
+  },
+  "projects": {
+    "psi": {
+      "snapshot": {
+        "storeHash": "ad1044c419135abbfff5ab7d10cb7a250fa691500269ed6d7fae20c13b852131",
+        "catalogHash": "1c5fd4973783ffa591725a46fac0148e716397f38e22f1123134c5a12c13a38a",
+        "units": 5592,
+        "documentChunks": 10690,
+        "caseSha256": "fe427f7c31d75299e40daf6a58d50848d32ac5e4c35e1a4db11ea8272d428eaa",
+        "scope": "retrieval-only snapshot; live NOW and health receipt were stale"
+      },
+      "execution": {
+        "embeddingInputs": 10720,
+        "embeddingSeconds": 483.4,
+        "cacheBytes": 944947192,
+        "cacheSha256": "b7fdd74229d67f4c679b6d0980bcc25da95f9a53094472e72ef4ad5365bcef33",
+        "cacheReplayUncachedInputs": 0,
+        "cacheReplayMetricsIdentical": true
+      },
+      "metrics": {
+        "lexical": {"recallAt5": 0.3333333333333333, "recallAt10": 0.3333333333333333, "mrr": 0.25043942337935565, "inactiveAt10Count": 2},
+        "dense": {"recallAt5": 0.7333333333333333, "recallAt10": 0.8, "mrr": 0.626631103753726, "inactiveAt10Count": 50},
+        "denseActive": {"recallAt5": 0.7666666666666667, "recallAt10": 0.8333333333333334, "mrr": 0.6417782166630093, "inactiveAt10Count": 0},
+        "symmetricHybrid": {"recallAt5": 0.6666666666666666, "recallAt10": 0.7333333333333333, "mrr": 0.5109995311882793, "inactiveAt10Count": 11},
+        "candidate": {"recallAt5": 0.7, "recallAt10": 0.7666666666666667, "mrr": 0.41411666157654853, "inactiveAt10Count": 0}
+      },
+      "tradeoff": {
+        "denseActive": {"missRescuesAt10": 15, "controlsRetainedAt10": 10, "passes": true},
+        "candidate": {"missRescuesAt10": 13, "controlsRetainedAt10": 10, "passes": true}
+      }
+    },
+    "mot": {
+      "snapshot": {
+        "storeHash": "2554c4072414d6e5eb810ba9a8a59de231895e0221629ebb09dd425d6648ad61",
+        "catalogHash": "c23103036dd0f15775ba0079777c146cc5d3cbba7c8fbca56aa885a220db7f81",
+        "units": 5238,
+        "documentChunks": 9314,
+        "caseSha256": "50cc465747507595fc0bed76de56916687f07bc6eefaf38ecc141ae92760c4cb",
+        "scope": "live session doctor READY at preregistration; benchmark still used an isolated snapshot"
+      },
+      "execution": {
+        "embeddingInputs": 9344,
+        "embeddingSeconds": 481.1,
+        "cacheBytes": 823546916,
+        "cacheSha256": "56329b806fb6d41f7cea0d3dd6c6a298b49fab08e79323655d929d52e82a3af0",
+        "cacheReplayUncachedInputs": 0,
+        "cacheReplayMetricsIdentical": true
+      },
+      "metrics": {
+        "lexical": {"recallAt5": 0.3, "recallAt10": 0.3333333333333333, "mrr": 0.1933185865858478, "inactiveAt10Count": 0},
+        "dense": {"recallAt5": 0.6, "recallAt10": 0.7, "mrr": 0.4597766469928857, "inactiveAt10Count": 57},
+        "denseActive": {"recallAt5": 0.6, "recallAt10": 0.7666666666666667, "mrr": 0.48887771579962247, "inactiveAt10Count": 0},
+        "symmetricHybrid": {"recallAt5": 0.5, "recallAt10": 0.8, "mrr": 0.3858797865662273, "inactiveAt10Count": 2},
+        "candidate": {"recallAt5": 0.5333333333333333, "recallAt10": 0.7, "mrr": 0.31453043236525374, "inactiveAt10Count": 0}
+      },
+      "tradeoff": {
+        "denseActive": {"missRescuesAt10": 15, "controlsRetainedAt10": 8, "passes": false},
+        "candidate": {"missRescuesAt10": 12, "controlsRetainedAt10": 9, "passes": true}
+      }
+    }
+  },
+  "aggregate": {
+    "cases": 60,
+    "lexicalMisses": 40,
+    "lexicalControls": 20,
+    "embeddingInputs": 20064,
+    "embeddingSeconds": 964.5,
+    "cacheBytes": 1768494108,
+    "metrics": {
+      "lexical": {"recallAt5": 0.31666666666666665, "recallAt10": 0.3333333333333333, "mrr": 0.22187900498260172, "inactiveAt10Count": 2},
+      "dense": {"recallAt5": 0.6666666666666666, "recallAt10": 0.75, "mrr": 0.5432038753733058, "inactiveAt10Count": 107},
+      "denseActive": {"recallAt5": 0.6833333333333333, "recallAt10": 0.8, "mrr": 0.5653279662313159, "inactiveAt10Count": 0},
+      "symmetricHybrid": {"recallAt5": 0.5833333333333334, "recallAt10": 0.7666666666666667, "mrr": 0.4484396588772533, "inactiveAt10Count": 13},
+      "candidate": {"recallAt5": 0.6166666666666667, "recallAt10": 0.7333333333333333, "mrr": 0.36432354697090114, "inactiveAt10Count": 0}
+    },
+    "denseActiveTradeoff": {
+      "missRescuesAt10": 30,
+      "missRescueRate": 0.75,
+      "missRescueWilson95": [0.5980603857923197, 0.858128813609037],
+      "controlsRetainedAt10": 18,
+      "controlRetentionRate": 0.9,
+      "controlRetentionWilson95": [0.6989663547715128, 0.9721335187862319]
+    },
+    "candidateTradeoff": {
+      "missRescuesAt10": 25,
+      "missRescueRate": 0.625,
+      "missRescueWilson95": [0.47032439137301096, 0.7577702083276673],
+      "controlsRetainedAt10": 19,
+      "controlRetentionRate": 0.95,
+      "controlRetentionWilson95": [0.763868806553258, 0.9911185511992047]
+    }
+  },
+  "conclusion": {
+    "semanticValueGeneralizes": true,
+    "rawDenseIsAdmissible": false,
+    "denseReplacementIsSupported": false,
+    "mixedLifecycleFilteredCandidateRouteIsSupportedForFurtherPrototyping": true,
+    "reason": "Semantic retrieval rescued many known lexical misses in both long-running stores, but pure dense lost two MoT lexical controls. The pre-registered mixed route passed the rescue, retention, and lifecycle-hygiene thresholds in both projects.",
+    "releaseAuthorized": false
+  },
+  "limitations": [
+    "The challenge suites deliberately oversample known lexical misses and therefore do not estimate the prevalence of semantic queries in ordinary use.",
+    "The candidate policy was pre-registered on Organon, but choosing among candidate fusion variants still requires a fresh untouched holdout.",
+    "The 8B cold path took about eight minutes per project and JSON vector caches totalled 1.65 GiB; this is evidence against an unattended per-session cold start and against JSON as a production vector format.",
+    "Psi's result is retrieval-only because its live NOW and health receipt were stale at capture."
+  ]
+}

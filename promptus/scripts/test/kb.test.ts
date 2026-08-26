@@ -7,7 +7,8 @@
 import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
 import {
-  copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync,
+  copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync,
+  writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -268,6 +269,18 @@ test("kb-index rebuilds CATALOG.md + graph.json idempotently", () => {
   index(root);
   expect(catalog(root)).toBe(c1);
   expect(existsSync(join(root, ".promptus", "cache", "graph.json"))).toBe(true);
+});
+
+test("kb-index leaves byte-identical derived projections untouched", () => {
+  const root = scaffold();
+  add(root, ["--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED", "--title", "Stable projection"], "same bytes");
+  expect(index(root).status).toBe(0);
+  const old = new Date("2001-02-03T04:05:06.000Z");
+  const paths = ["CATALOG.md", "graph.json", "search.json"].map((name) => join(root, ".promptus", "cache", name));
+  for (const path of paths) utimesSync(path, old, old);
+
+  expect(index(root).status).toBe(0);
+  for (const path of paths) expect(statSync(path).mtimeMs).toBe(old.getTime());
 });
 
 test("kb-index flags a deliberately broken [[link]] and a true orphan", () => {

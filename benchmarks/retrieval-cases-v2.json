@@ -1,0 +1,191 @@
+{
+  "schema": "promptus.retrieval-benchmark.v1",
+  "name": "Organon lifecycle-aware semantic recall v2",
+  "description": "Forty-five paraphrased questions frozen before local inference. Labels are current, lifecycle-active Organon units drawn from real dogfooding decisions, failures, and cited prior art.",
+  "requireActiveTargets": true,
+  "cases": [
+    {
+      "query": "How do we stop an outside theorist's polished answer from quietly becoming project authority?",
+      "relevant": ["Implement governed external thinker rounds"]
+    },
+    {
+      "query": "Why should stale failures from old evidence stop making today's research frontier look broken?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "How can changing one experimental value force the surrounding prose verdict to be checked again?",
+      "relevant": ["finding-20260707T025458Z-numbers-as-one-source-of-truth-bind-once-lock-value-plus-source"]
+    },
+    {
+      "query": "What is the friendly human doorway for asking this research memory what it knows?",
+      "relevant": ["finding-20260710T012734Z-promptus-design-report"]
+    },
+    {
+      "query": "Can ordinary note links provide neighborhoods without running a graph database?",
+      "relevant": ["finding-20260628T144203Z-markdown-is-the-graph"]
+    },
+    {
+      "query": "Which retrieval key is transparent and carries confidence labels?",
+      "relevant": ["finding-20260628T144203Z-header-beats-vector"]
+    },
+    {
+      "query": "How are missing relationships suggested without machine learning?",
+      "relevant": ["finding-20260629T205327Z-the-scriptable-graph-layer"]
+    },
+    {
+      "query": "Why should Claude and Codex share mechanics instead of maintaining separate implementations?",
+      "relevant": ["finding-20260710T014245Z-one-portable-core-two-thin-host-adapters"]
+    },
+    {
+      "query": "How can the lab notebook accept unusual labels while curated claims reject them?",
+      "relevant": ["finding-20260628T144203Z-the-gate"]
+    },
+    {
+      "query": "What prevents two agents appending at once from losing an event or minting the same identifier?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "Why must ledger headings inside fenced examples be parsed by the same routine everywhere?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "What contract prevents links accepted by the writer from disappearing after a rebuild?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "Why should a resolved typed relation stop a note being called isolated?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "Which real project proved that retired hashes can be warnings while every live dependency remains green?",
+      "relevant": ["Validate Promptus v0.9.1 against the current MoT v5 store"]
+    },
+    {
+      "query": "What read-only guard refuses to resume when the handoff or retrieval receipt is stale?",
+      "relevant": ["Validate the v0.8.2 fail-closed bookkeeping candidate"]
+    },
+    {
+      "query": "Why is the mutable resume header written by its own bounded gate rather than appended as an event?",
+      "relevant": ["kb-now is a separate gated script, not a kb-add mode"]
+    },
+    {
+      "query": "How can we ask whether a long research route is narrowing without assigning it a progress score?",
+      "relevant": ["finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from"]
+    },
+    {
+      "query": "Why may a retrospective select evidence but never reopen work or change scientific authority automatically?",
+      "relevant": ["finding-20260824T102821Z-bounded-trajectory-review-separates-deterministic-evidence-from"]
+    },
+    {
+      "query": "What did the first semantic trial reveal about paraphrase recall and stale-note contamination?",
+      "relevant": ["finding-20260823T145421Z-semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa"]
+    },
+    {
+      "query": "Why did symmetric rank fusion bury the one answer found only by meaning?",
+      "relevant": ["finding-20260823T145421Z-semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa"]
+    },
+    {
+      "query": "May unpublished Psi or MoT notes be sent through either free OpenRouter embedding route?",
+      "relevant": ["lit-20260823T145243Z-openrouter-provider-policy-excludes-private-stores-from-free-emb"]
+    },
+    {
+      "query": "Which open checkpoint was selected for the strongest private local retrieval comparison?",
+      "relevant": ["lit-20260823T145216Z-nemotron-3-embed-8b-is-the-july-2026-open-retrieval-leader"]
+    },
+    {
+      "query": "If semantic vectors help, why do they remain disposable rather than replacing the notes?",
+      "relevant": [
+        "finding-20260823T145421Z-semantic-retrieval-improves-recall-but-needs-local-lifecycle-awa",
+        "finding-20260628T144203Z-header-beats-vector"
+      ]
+    },
+    {
+      "query": "What measured failure would justify adding SQLite without making it the source of truth?",
+      "relevant": ["finding-20260823T131136Z-psi-scale-calls-for-transactional-semantics-before-new-storage-m"]
+    },
+    {
+      "query": "How can an old project move into the namespaced layout without rewriting its knowledge units?",
+      "relevant": ["finding-20260629T012549Z-promptus-doctor-version-aware-migration-to-the-promptus-namespac"]
+    },
+    {
+      "query": "How does the paper tool stay general while encoding a conference's particular submission contract?",
+      "relevant": ["finding-20260823T125216Z-editio-general-venue-contracts-and-neurips-adapter"]
+    },
+    {
+      "query": "Why are column widths learned from probe compilations instead of copied from prose documentation?",
+      "relevant": ["finding-20260707T025530Z-venue-truth-is-measured-not-quoted-probe-compiles-for-widths-liv"]
+    },
+    {
+      "query": "What figure discipline makes a panel readable at its final journal slot rather than only on a large canvas?",
+      "relevant": ["finding-20260707T025530Z-figure-craft-canon-digested-claim-first-captions-one-palette-bor"]
+    },
+    {
+      "query": "How should a load-bearing result appear in prose, tables, and captions without being copied by hand?",
+      "relevant": ["finding-20260707T025458Z-numbers-as-one-source-of-truth-bind-once-lock-value-plus-source"]
+    },
+    {
+      "query": "What makes claim confidence a property recorded at write time rather than a guess during retrieval?",
+      "relevant": ["finding-20260630T015109Z-write-time-calibration-design"]
+    },
+    {
+      "query": "Why are real project workarounds treated as the unwritten specification for Organon?",
+      "relevant": ["finding-20260707T025549Z-dogfood-and-mine-same-day-fix-loops-and-agent-team-ledger-mining"]
+    },
+    {
+      "query": "What development loop turns a concrete Psi or Probatio failure into a reusable same-day repair?",
+      "relevant": ["finding-20260707T025549Z-dogfood-and-mine-same-day-fix-loops-and-agent-team-ledger-mining"]
+    },
+    {
+      "query": "Why do Promptus and Editio get separate version tags even though they share one repository?",
+      "relevant": ["Per-plugin release tags: promptus-v* and editio-v* from the one organon monorepo"]
+    },
+    {
+      "query": "Why can reinstalling an unchanged plugin version leave Codex looking at an older tree?",
+      "relevant": ["editio cache froze pre-spine - the version string is the install cache key; 0.1.0 covered two trees"]
+    },
+    {
+      "query": "What can go wrong if a merged base branch is deleted before dependent pull requests are retargeted?",
+      "relevant": ["delete-branch cascade-closes stacked PRs; safe merge protocol for release chains"]
+    },
+    {
+      "query": "What is the safe sequence for adopting Promptus in a repository with existing research records?",
+      "relevant": ["finding-20260710T012734Z-adoption-migrating-a-project-to-promptus"]
+    },
+    {
+      "query": "Which existing open knowledge format is closest to the storage substrate, and what discipline remains ours?",
+      "relevant": ["finding-20260630T063520Z-okf-vs-promptus-a-near-twin-substrate-we-keep-the-discipline-lay"]
+    },
+    {
+      "query": "Which prior memory system models facts and episodes on a time-aware graph?",
+      "relevant": ["lit-20260630T004121Z-graphiti-temporal-agent-memory"]
+    },
+    {
+      "query": "What nearest-neighbour idea helps suppress hubs when suggesting latent links?",
+      "relevant": ["lit-20260630T004121Z-hubness-and-reciprocal-nearest-neighbours"]
+    },
+    {
+      "query": "What 2026 evidence says exact lexical lookup can beat dense retrieval for agent code and precise corpora?",
+      "relevant": ["lit-20260630T004121Z-lexical-retrieval-beats-dense-2026"]
+    },
+    {
+      "query": "Which theoretical result says one vector cannot perfectly answer every multi-fact retrieval query?",
+      "relevant": ["lit-20260630T004121Z-limit-single-vector-retrieval-bound"]
+    },
+    {
+      "query": "Which local-first Markdown tool already derives a SQLite index and exposes it through MCP?",
+      "relevant": ["lit-20260630T004121Z-basic-memory"]
+    },
+    {
+      "query": "Which compact entailment checker can audit whether generated claims are grounded in supplied evidence?",
+      "relevant": ["lit-20260630T014955Z-minicheck-grounding-entailment"]
+    },
+    {
+      "query": "Which official conference package fixes the class file and paper-mode contract for the 2026 main track?",
+      "relevant": ["lit-20260823T123855Z-neurips-2026-official-author-kit-contract"]
+    },
+    {
+      "query": "Which venue requires a mandatory checklist after the references and before supplementary material?",
+      "relevant": ["lit-20260823T123847Z-neurips-mandatory-checklist-and-back-matter-order"]
+    }
+  ]
+}

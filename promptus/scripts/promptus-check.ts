@@ -3,13 +3,13 @@
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
-import { checkArtifact, parseArtifactSpec } from "./lib/artifacts.ts";
+import { checkArtifacts, parseArtifactSpec, type ArtifactSpec } from "./lib/artifacts.ts";
 import { derivedDir, findProjectRoot, storePath } from "./lib/paths.ts";
 import { ledgerEntries } from "./lib/units.ts";
 import { loadVocab } from "./lib/vocab.ts";
 import { inspectThinkerExchange } from "./lib/thinker.ts";
 import { hashStore } from "./lib/store-hash.ts";
-import { main as rebuildIndex } from "./kb-index.ts";
+import { buildIndex, type IndexBuildResult } from "./kb-index.ts";
 
 interface Card { substrate: string; status: string; title: string; path: string; id?: string }
 interface Dangling { from: string; target: string; reason?: string }
@@ -114,12 +114,16 @@ function main(argv: string[]): number {
 
   let indexFailed = false;
   let indexError = "";
+  let indexResult: IndexBuildResult | null = null;
   if (!noIndex) {
-    try { indexFailed = rebuildIndex(["--root", root, "--quiet"]) !== 0; }
+    try {
+      indexResult = buildIndex(["--root", root, "--quiet", "--source-hash"]);
+      indexFailed = indexResult.exitCode !== 0;
+    }
     catch (error) { indexFailed = true; indexError = error instanceof Error ? error.message : String(error); }
   }
 
-  let source = hashStore(root);
+  let source = indexResult?.source ?? hashStore(root);
   const previous = readJSON(healthPath);
   const stale = noIndex && (!previous || previous.storeHash !== source.hash);
   const cards = existsSync(catalogPath) ? parseCatalog(readFileSync(catalogPath, "utf8")) : [];
@@ -139,10 +143,27 @@ function main(argv: string[]): number {
     (graph.inDeg?.[node] ?? 0) === 0 && (out[node] ?? []).length === 0 && (graph.relationDegree?.[node] ?? 0) === 0,
   );
 
-  const artifactChecks = (graph.artifacts ?? []).map((record) => {
-    try { return { from: record.from, spec: record.spec, status: record.status, ...checkArtifact(root, parseArtifactSpec(record.spec)) }; }
-    catch (error) { return { from: record.from, spec: record.spec, status: record.status, ok: false, outcome: "invalid-spec", error: error instanceof Error ? error.message : String(error) }; }
-  });
+  const artifactRecords = graph.artifacts ?? [];
+  const parsedArtifacts: Array<{ index: number; spec: ArtifactSpec }> = [];
+  const invalidArtifacts = new Map<number, { ok: false; outcome: "invalid-spec"; error: string }>();
+  for (const [index, record] of artifactRecords.entries()) {
+    try { parsedArtifacts.push({ index, spec: parseArtifactSpec(record.spec) }); }
+    catch (error) {
+      invalidArtifacts.set(index, {
+        ok: false,
+        outcome: "invalid-spec",
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+  const verifiedArtifacts = checkArtifacts(root, parsedArtifacts.map((item) => item.spec));
+  const verifiedByRecord = new Map(parsedArtifacts.map((item, index) => [item.index, verifiedArtifacts[index]]));
+  const artifactChecks = artifactRecords.map((record, index) => ({
+    from: record.from,
+    spec: record.spec,
+    status: record.status,
+    ...(invalidArtifacts.get(index) ?? verifiedByRecord.get(index)!),
+  }));
   const currentArtifactChecks = artifactChecks.filter((check) => !isArchivalArtifactStatus(check.status));
   const archivalArtifactChecks = artifactChecks.filter((check) => isArchivalArtifactStatus(check.status));
   const artifactFailures = currentArtifactChecks.filter((check) => !check.ok);
@@ -151,7 +172,9 @@ function main(argv: string[]): number {
   const vocab = loadVocab(root);
   const ledger = storePath(root, vocab, "ledger");
   const now = nowFreshness(ledger);
-  const thinkerExchange = inspectThinkerExchange(root);
+  // A full check can reuse the exact post-refresh custody report returned by the
+  // index it just ran. --no-index still inspects the live exchange independently.
+  const thinkerExchange = indexResult?.thinkerExchange ?? inspectThinkerExchange(root);
   const thinkerInvalid = thinkerExchange.present && thinkerExchange.markerValid && !thinkerExchange.governed;
 
   const currentDebt = {

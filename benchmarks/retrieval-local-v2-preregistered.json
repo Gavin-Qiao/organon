@@ -1,0 +1,54 @@
+{
+  "schema": "promptus.retrieval-benchmark-preregistration.v1",
+  "purpose": "Measure whether local semantic retrieval improves real paraphrase recall without violating Promptus lifecycle hygiene.",
+  "corpus": {
+    "root": ".",
+    "units": 298,
+    "documentChunks": 422,
+    "sourceFingerprint": "68b386773f8960d64f3ba4739b683cf845b48e981c63167abac9e9cf3777a43d",
+    "catalogHash": "a3fa955af510ce7052de5329137f946e0e10876d74808fc12c6e146887168c3c"
+  },
+  "suite": {
+    "path": "benchmarks/retrieval-cases-v2.json",
+    "sha256": "ad1d795e2da2d6999c45c35e4fe1c25ab33a8852825860f2cba2de0da78af2c3",
+    "cases": 45,
+    "requireActiveTargets": true
+  },
+  "artifacts": {
+    "harnessSha256": "658fe685f14160c080f6bd37c807607a241eb6b3a2312c27008b8a4ff76e06a6",
+    "testSha256": "c9191bcf9706270ee923352a3de17602bcdde2a25262abcbfdf5722dfb8c4639",
+    "helperSha256": "88e3cdb36c1e1385e8dc8f178a98bb41f967227abe1b7fa58f17f0ca34cd8325",
+    "requirementsSha256": "bceb1bda6c4210694573724eca102883b93eb35bdcf2064c4f4cdf3ecc034191",
+    "readmeSha256": "03e9791e95491764cf5ed027127985b3fdd1cdc87a9b596dafbf929b7d4ad326"
+  },
+  "baseline": {
+    "recallAt5": 0.667,
+    "recallAt10": 0.756,
+    "mrr": 0.521,
+    "inactiveOrUntrustedAt10": 0.007
+  },
+  "model": {
+    "id": "nvidia/Nemotron-3-Embed-8B-BF16",
+    "revision": "c44c20ab3f6b430336706847a6372de4b2eb3dbd",
+    "dimensions": 4096,
+    "dtype": "bfloat16",
+    "attention": "sdpa",
+    "batchSize": 8,
+    "localOnly": true
+  },
+  "runtime": {
+    "python": "3.12.13",
+    "torch": "2.13.0+cu130",
+    "transformers": "5.2.0",
+    "sentenceTransformers": "5.4.1",
+    "gpu": "NVIDIA GeForce RTX 5090"
+  },
+  "policies": [
+    "current status-aware lexical ranking",
+    "raw dense cosine ranking",
+    "dense ranking after lifecycle-inactive filtering",
+    "symmetric reciprocal-rank fusion with constant 60",
+    "pre-registered candidate union: alternate five active lexical and five active dense candidates, then append the active reciprocal-rank-fused tail"
+  ],
+  "decisionRule": "Treat the run as evidence for further development only if a semantic route improves recall or MRR without increasing lifecycle-inactive exposure. Do not ship embeddings from this benchmark alone."
+}

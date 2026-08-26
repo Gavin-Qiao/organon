@@ -3,7 +3,8 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
-  cosineSimilarity, documentChunks, evaluateRankings, reciprocalRankFusion,
+  cosineSimilarity, documentChunks, evaluateRankings, lifecycleAwareCandidateUnion,
+  reciprocalRankFusion,
 } from "./promptus-retrieval.ts";
 
 test("cosineSimilarity ranks aligned vectors above orthogonal vectors", () => {
@@ -27,6 +28,24 @@ test("reciprocalRankFusion rewards agreement while retaining semantic-only candi
   const fused = reciprocalRankFusion([["a", "b"], ["b", "c"]], 1);
   expect(fused[0]).toBe("b");
   expect(fused).toContain("c");
+});
+
+test("lifecycle-aware candidate union reserves semantic slots and excludes inactive units", () => {
+  const documents = new Map([
+    ["lexical-1", { status: "VALIDATED" }],
+    ["lexical-2", { status: "VALIDATED" }],
+    ["dense-1", { status: "VALIDATED" }],
+    ["dense-2", { status: "VALIDATED" }],
+    ["stale", { status: "SUPERSEDED" }],
+  ]);
+  const ranking = lifecycleAwareCandidateUnion(
+    ["lexical-1", "stale", "lexical-2"],
+    ["dense-1", "stale", "dense-2"],
+    documents,
+    2,
+  );
+  expect(ranking.slice(0, 4)).toEqual(["lexical-1", "dense-1", "lexical-2", "dense-2"]);
+  expect(ranking).not.toContain("stale");
 });
 
 test("evaluateRankings reports recall, reciprocal rank, and lifecycle contamination", () => {

@@ -112,6 +112,7 @@ export interface ThinkerExchangeReport {
   governed: boolean;
   markerValid: boolean;
   indexCurrent: boolean;
+  findingFilesScanned: number;
   rounds: RoundSummary[];
   issues: string[];
 }
@@ -283,11 +284,13 @@ export function writeJsonExclusive(path: string, value: unknown): void {
   writeExclusive(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
-export function writeAtomic(path: string, content: string): void {
+export function writeAtomic(path: string, content: string): boolean {
+  if (textEquals(path, content)) return false;
   mkdirSync(dirname(path), { recursive: true });
   const temporary = `${path}.tmp-${process.pid}-${Date.now()}`;
   writeFileSync(temporary, content, { flag: "wx" });
   renameSync(temporary, path);
+  return true;
 }
 
 function h1(path: string, fallback: string): string {
@@ -352,8 +355,57 @@ function findingFiles(dir: string, top = true): string[] {
   return out;
 }
 
-function derivedFindings(root: string, quarantineId: string | undefined): FindingBinding[] {
+interface FindingLookup {
+  find(quarantineId: string): FindingBinding[];
+  filesScanned(): number;
+}
+
+/**
+ * Build adjudication bindings once, then answer every round from that map.
+ * The former round-at-a-time implementation walked and parsed the complete
+ * finding tree once per adjudicated round.
+ */
+function findingLookup(root: string, sourceBytes?: ReadonlyMap<string, Uint8Array>): FindingLookup {
+  let indexed: Map<string, FindingBinding[]> | null = null;
+  let scanned = 0;
+  const build = (): Map<string, FindingBinding[]> => {
+    if (indexed) return indexed;
+    indexed = new Map<string, FindingBinding[]>();
+    const docs = join(root, ".promptus", "docs");
+    if (!existsSync(docs)) return indexed;
+    const files = findingFiles(docs);
+    scanned = files.length;
+    for (const path of files) {
+      const cached = sourceBytes?.get(path);
+      const raw = cached ? Buffer.from(cached) : readFileSync(path);
+      const { data } = parseFrontmatter(raw.toString("utf8"));
+      if (data.substrate !== "finding" || typeof data.id !== "string" || typeof data.status !== "string") continue;
+      const relations = Array.isArray(data.relations) ? data.relations : typeof data.relations === "string" ? [data.relations] : [];
+      const binding: FindingBinding = {
+        path: projectRelative(root, path),
+        id: data.id,
+        status: data.status,
+        sha256: sha256Bytes(raw),
+      };
+      for (const relation of relations) {
+        if (typeof relation !== "string" || !relation.startsWith("derives-from:")) continue;
+        const quarantineId = relation.slice("derives-from:".length);
+        if (!quarantineId) continue;
+        indexed.set(quarantineId, [...(indexed.get(quarantineId) ?? []), binding]);
+      }
+    }
+    for (const bindings of indexed.values()) bindings.sort((a, b) => a.path.localeCompare(b.path));
+    return indexed;
+  };
+  return {
+    find: (quarantineId: string) => [...(build().get(quarantineId) ?? [])],
+    filesScanned: () => scanned,
+  };
+}
+
+function derivedFindings(root: string, quarantineId: string | undefined, lookup?: FindingLookup): FindingBinding[] {
   if (!quarantineId) return [];
+  if (lookup) return lookup.find(quarantineId);
   const docs = join(root, ".promptus", "docs");
   if (!existsSync(docs)) return [];
   const out: FindingBinding[] = [];
@@ -368,7 +420,7 @@ function derivedFindings(root: string, quarantineId: string | undefined): Findin
   return out.sort((a, b) => a.path.localeCompare(b.path));
 }
 
-export function inspectRound(root: string, roundId: string): RoundSummary {
+export function inspectRound(root: string, roundId: string, lookup?: FindingLookup): RoundSummary {
   const paths = roundPaths(root, roundId);
   const issues: string[] = [];
   const roundValue = readJson<unknown>(paths.receipt);
@@ -441,7 +493,7 @@ export function inspectRound(root: string, roundId: string): RoundSummary {
       }
     }
   }
-  const findings = derivedFindings(root, intake?.quarantine?.id);
+  const findings = derivedFindings(root, intake?.quarantine?.id, lookup);
   let status: RoundStatus = "DRAFT";
   if (round) status = "PREPARED";
   if (existsSync(paths.response) && !intake) status = "CAPTURE_INCOMPLETE";
@@ -494,14 +546,19 @@ export function renderExchangeIndex(rounds: RoundSummary[]): string {
   return `${lines.join("\n")}\n`;
 }
 
-export function inspectThinkerExchange(root: string): ThinkerExchangeReport {
+function readThinkerExchange(
+  root: string,
+  refresh: boolean,
+  sourceBytes?: ReadonlyMap<string, Uint8Array>,
+): ThinkerExchangeReport {
   const exchange = join(root, THINKER_DIR);
-  if (!existsSync(exchange)) return { present: false, governed: false, markerValid: false, indexCurrent: false, rounds: [], issues: [] };
+  if (!existsSync(exchange)) return { present: false, governed: false, markerValid: false, indexCurrent: false, findingFilesScanned: 0, rounds: [], issues: [] };
   const markerValid = hasThinkerMarker(root);
   const issues: string[] = [];
   if (!markerValid) issues.push("missing governed-exchange marker in .promptus/thinker/PROTOCOL.md");
   const roundsDir = join(exchange, "rounds");
   const rounds: RoundSummary[] = [];
+  const lookup = findingLookup(root, sourceBytes);
   if (!existsSync(roundsDir)) issues.push("missing .promptus/thinker/rounds/");
   else {
     for (const entry of readdirSync(roundsDir, { withFileTypes: true })) {
@@ -509,30 +566,45 @@ export function inspectThinkerExchange(root: string): ThinkerExchangeReport {
         issues.push(`unexpected round entry: ${entry.name}`);
         continue;
       }
-      const summary = inspectRound(root, entry.name);
+      const summary = inspectRound(root, entry.name, lookup);
       rounds.push(summary);
       for (const issue of summary.issues) issues.push(`${entry.name}: ${issue}`);
       const readme = roundPaths(root, entry.name).readme;
-      if (!textEquals(readme, renderRoundReadme(summary))) {
+      const rendered = renderRoundReadme(summary);
+      if (refresh) writeAtomic(readme, rendered);
+      if (!textEquals(readme, rendered)) {
         issues.push(`derived ${projectRelative(root, readme)} is absent or stale`);
       }
     }
   }
   const index = join(exchange, "INDEX.md");
-  const indexCurrent = textEquals(index, renderExchangeIndex(rounds));
+  const renderedIndex = renderExchangeIndex(rounds);
+  if (refresh) writeAtomic(index, renderedIndex);
+  const indexCurrent = textEquals(index, renderedIndex);
   if (!indexCurrent) issues.push("derived .promptus/thinker/INDEX.md is absent or stale");
-  return { present: true, governed: markerValid && issues.length === 0, markerValid, indexCurrent, rounds, issues };
+  return {
+    present: true,
+    governed: markerValid && issues.length === 0,
+    markerValid,
+    indexCurrent,
+    findingFilesScanned: lookup.filesScanned(),
+    rounds,
+    issues,
+  };
 }
 
-export function refreshThinkerReadSurfaces(root: string): void {
+export function inspectThinkerExchange(
+  root: string,
+  sourceBytes?: ReadonlyMap<string, Uint8Array>,
+): ThinkerExchangeReport {
+  return readThinkerExchange(root, false, sourceBytes);
+}
+
+export function refreshThinkerReadSurfaces(
+  root: string,
+  sourceBytes?: ReadonlyMap<string, Uint8Array>,
+): ThinkerExchangeReport {
   const roundsDir = join(root, THINKER_DIR, "rounds");
   mkdirSync(roundsDir, { recursive: true });
-  const rounds: RoundSummary[] = [];
-  for (const entry of readdirSync(roundsDir, { withFileTypes: true })) {
-    if (!entry.isDirectory() || !ROUND_ID.test(entry.name)) continue;
-    const summary = inspectRound(root, entry.name);
-    rounds.push(summary);
-    writeAtomic(roundPaths(root, entry.name).readme, renderRoundReadme(summary));
-  }
-  writeAtomic(join(root, THINKER_DIR, "INDEX.md"), renderExchangeIndex(rounds));
+  return readThinkerExchange(root, true, sourceBytes);
 }

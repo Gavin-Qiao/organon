@@ -15,7 +15,7 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import { parseFrontmatter } from "./lib/frontmatter.ts";
 import { extractLinks } from "./lib/links.ts";
@@ -24,7 +24,15 @@ import { derivedDir, findProjectRoot } from "./lib/paths.ts";
 import { ledgerHeads } from "./lib/units.ts";
 import { createRelationResolver, inverseLifecycleStatus } from "./lib/relation-lifecycle.ts";
 import { buildSearchIndex, type SearchSourceDocument } from "./lib/search.ts";
-import { THINKER_DIR, hasThinkerMarker, refreshThinkerReadSurfaces } from "./lib/thinker.ts";
+import { hashStore } from "./lib/store-hash.ts";
+import { atomicStoreWrite } from "./lib/store-lock.ts";
+import {
+  THINKER_DIR,
+  hasThinkerMarker,
+  inspectThinkerExchange,
+  refreshThinkerReadSurfaces,
+  type ThinkerExchangeReport,
+} from "./lib/thinker.ts";
 
 export interface Unit {
   substrate: string;
@@ -78,9 +86,17 @@ function archivedMdFiles(dir: string): string[] {
   return out;
 }
 
-function parseLedgerFile(root: string, file: string, cold = false): Unit[] {
+function sourceBytes(file: string, cache?: Map<string, Buffer>): Buffer {
+  const cached = cache?.get(file);
+  if (cached) return cached;
+  const raw = readFileSync(file);
+  cache?.set(file, raw);
+  return raw;
+}
+
+function parseLedgerFile(root: string, file: string, cold = false, cache?: Map<string, Buffer>): Unit[] {
   if (!existsSync(file)) return [];
-  const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+  const text = sourceBytes(file, cache).toString("utf8").replace(/\r\n/g, "\n");
   const heads = ledgerHeads(text); // shared, fence-aware — kb-index and kb-get slice on the same heads
   return heads.map((h, i) => {
     const body = text.slice(h.idx, i + 1 < heads.length ? heads[i + 1].idx : undefined);
@@ -108,8 +124,8 @@ function parseLedgerFile(root: string, file: string, cold = false): Unit[] {
   });
 }
 
-function parsePage(root: string, substrate: string, file: string, cold = false): Unit {
-  const text = readFileSync(file, "utf8").replace(/\r\n/g, "\n");
+function parsePage(root: string, substrate: string, file: string, cold = false, cache?: Map<string, Buffer>): Unit {
+  const text = sourceBytes(file, cache).toString("utf8").replace(/\r\n/g, "\n");
   const { data, body } = parseFrontmatter(text);
   const slug = file.replace(/\\/g, "/").split("/").pop()!.replace(/\.md$/, "");
   const h1 = /^#\s+(.+)$/m.exec(body);
@@ -133,7 +149,7 @@ function parsePage(root: string, substrate: string, file: string, cold = false):
 }
 
 /** Read the Markdown truth into units without deriving or writing any cache files. */
-export function collectUnits(root: string, vocab: Vocab): Unit[] {
+export function collectUnits(root: string, vocab: Vocab, cache?: Map<string, Buffer>): Unit[] {
   const units: Unit[] = [];
   const norm = (p: string) => p.replace(/\\/g, "/");
   // File stores can nest (lit = docs/lit lives inside finding = docs). Each file belongs to its
@@ -154,10 +170,10 @@ export function collectUnits(root: string, vocab: Vocab): Unit[] {
   for (const sub of Object.values(vocab.substrates)) {
     if (sub.envelope !== "log") continue;
     const liveFile = join(root, sub.store);
-    units.push(...parseLedgerFile(root, liveFile));
+    units.push(...parseLedgerFile(root, liveFile, false, cache));
     const archive = join(dirname(liveFile), "archive");
     if (existsSync(archive)) {
-      for (const file of mdFiles(archive)) units.push(...parseLedgerFile(root, file, true));
+      for (const file of mdFiles(archive)) units.push(...parseLedgerFile(root, file, true, cache));
     }
   }
 
@@ -169,7 +185,7 @@ export function collectUnits(root: string, vocab: Vocab): Unit[] {
       const own = owner(norm(dirname(nf)));
       if (!own || own.name !== st.name) continue; // a nested, more-specific store owns this file
       seen.add(nf);
-      units.push(parsePage(root, st.name, nf));
+      units.push(parsePage(root, st.name, nf, false, cache));
     }
   }
   // Page-store archives also remain retrievable, but only through kb-find --history. A custom
@@ -181,19 +197,38 @@ export function collectUnits(root: string, vocab: Vocab): Unit[] {
       const own = owner(norm(dirname(nf)));
       if (!own || own.name !== st.name) continue;
       seen.add(nf);
-      units.push(parsePage(root, st.name, nf, true));
+      units.push(parsePage(root, st.name, nf, true, cache));
     }
   }
   return units;
 }
 
-export function main(argv: string[]): number {
+export interface IndexBuildResult {
+  exitCode: number;
+  root: string;
+  liveUnits: number;
+  coldUnits: number;
+  source: { hash: string; files: number } | null;
+  derivedWrites: number;
+  thinkerExchange: ThinkerExchangeReport;
+}
+
+function writeDerivedIfChanged(root: string, path: string, content: string): boolean {
+  if (existsSync(path) && readFileSync(path, "utf8") === content) return false;
+  atomicStoreWrite(root, path, content);
+  return true;
+}
+
+/** Rebuild the disposable projections and return reusable custody evidence. */
+export function buildIndex(argv: string[]): IndexBuildResult {
   const quiet = argv.includes("--quiet");
   const log = (message: string) => { if (!quiet) console.log(message); };
   const ri = argv.indexOf("--root");
   const root = findProjectRoot(ri >= 0 ? argv[ri + 1] : process.cwd());
   const vocab = loadVocab(root);
-  const units = collectUnits(root, vocab);
+  const cache = argv.includes("--source-hash") ? new Map<string, Buffer>() : undefined;
+  const units = collectUnits(root, vocab, cache);
+  const source = cache ? hashStore(root, cache) : null;
   const liveUnits = units.filter((unit) => !unit.cold);
   const coldUnits = units.filter((unit) => unit.cold);
 
@@ -283,11 +318,10 @@ export function main(argv: string[]): number {
   const dir = derivedDir(root);
   mkdirSync(dir, { recursive: true });
   const catalog = `# Promptus card-catalog (DERIVED — rebuilt by kb-index; safe to delete)\n\n> ${liveUnits.length} live units · ${coldUnits.length} cold-history units · read this first; load only the bodies you need.\n\n${lines.join("\n")}\n`;
-  writeFileSync(join(dir, "CATALOG.md"), catalog);
-  writeFileSync(
-    join(dir, "graph.json"),
-    `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relationDegree, relations: relEdges, dangling, external, artifacts }, null, 2)}\n`,
-  );
+  let derivedWrites = 0;
+  if (writeDerivedIfChanged(root, join(dir, "CATALOG.md"), catalog)) derivedWrites++;
+  const graph = `${JSON.stringify({ nodes: [...nodes], out, unitOut, inDeg, relationDegree, relations: relEdges, dangling, external, artifacts }, null, 2)}\n`;
+  if (writeDerivedIfChanged(root, join(dir, "graph.json"), graph)) derivedWrites++;
   const catalogHash = createHash("sha256").update(catalog).digest("hex");
   const searchSources: SearchSourceDocument[] = units.map((unit) => ({
     substrate: unit.substrate,
@@ -299,8 +333,11 @@ export function main(argv: string[]): number {
     links: unit.links,
     cold: unit.cold,
   }));
-  writeFileSync(join(dir, "search.json"), `${JSON.stringify(buildSearchIndex(searchSources, catalogHash))}\n`);
-  if (existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)) refreshThinkerReadSurfaces(root);
+  const search = `${JSON.stringify(buildSearchIndex(searchSources, catalogHash))}\n`;
+  if (writeDerivedIfChanged(root, join(dir, "search.json"), search)) derivedWrites++;
+  const thinkerExchange = existsSync(join(root, THINKER_DIR)) && hasThinkerMarker(root)
+    ? refreshThinkerReadSurfaces(root, cache)
+    : inspectThinkerExchange(root, cache);
 
   const linkEdges = Object.values(out).reduce((s, a) => s + a.length, 0);
   log(`kb-index: ${liveUnits.length} live + ${coldUnits.length} cold units · ${linkEdges} links · ${relEdges.length} relations → .promptus/cache/CATALOG.md + graph.json + search.json`);
@@ -313,7 +350,19 @@ export function main(argv: string[]): number {
     for (const o of orphans.slice(0, 25)) log(`    ${o}`);
   }
   if (dangling.length + orphans.length === 0) log("  clean.");
-  return argv.includes("--strict") && dangling.length + orphans.length > 0 ? 1 : 0;
+  return {
+    exitCode: argv.includes("--strict") && dangling.length + orphans.length > 0 ? 1 : 0,
+    root,
+    liveUnits: liveUnits.length,
+    coldUnits: coldUnits.length,
+    source,
+    derivedWrites,
+    thinkerExchange,
+  };
+}
+
+export function main(argv: string[]): number {
+  return buildIndex(argv).exitCode;
 }
 
 if (import.meta.main) process.exit(main(process.argv.slice(2)));

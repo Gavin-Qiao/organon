@@ -1,0 +1,239 @@
+{
+  "schema": "promptus.maintenance-no-sqlite-candidate.v1",
+  "generatedAt": "2026-08-26T08:17:31.710Z",
+  "benchmarkDate": "2026-08-26",
+  "question": "How much of the measured Promptus maintenance bottleneck can exact, database-independent work conservation remove?",
+  "frozenCorpus": {
+    "storeHash": "dcd769e6f209b55a720335371174602ff978f7d9cd019e9d9a7fcbb832e801ba",
+    "sourceFiles": 2630,
+    "units": 5357,
+    "artifactRecords": 3730
+  },
+  "baselineCorpus": {
+    "storeHash": "146237380edb90f19ae574794b7f51af6b3e3fdd6d7dde6c5ca056e64dbd081b",
+    "sourceFiles": 2600,
+    "units": 5338,
+    "artifactRecords": 3700,
+    "sourceBytes": 14619175,
+    "ledgerBytes": 4463157,
+    "ledgerUnits": 2977,
+    "liveUnits": 5338,
+    "coldUnits": 0,
+    "uniqueArtifactSpecs": 2611,
+    "uniqueArtifactPaths": 2237
+  },
+  "corpusDelta": {
+    "units": 19,
+    "sourceFiles": 30,
+    "artifactRecords": 30
+  },
+  "measurements": [
+    {
+      "operation": "session-doctor",
+      "baseline": {
+        "windows9pSeconds": 57.66,
+        "ext4Seconds": 0.58,
+        "windows9pRssMiB": 379.9,
+        "ext4RssMiB": 406.3
+      },
+      "candidate": {
+        "windows9pSeconds": 15.46,
+        "ext4Seconds": 0.35,
+        "windows9pRssMiB": 297.9,
+        "ext4RssMiB": 298
+      },
+      "improvement": {
+        "windows9pSpeedup": 3.73,
+        "ext4Speedup": 1.66,
+        "windows9pRssReduction": 0.2159,
+        "ext4RssReduction": 0.2667
+      }
+    },
+    {
+      "operation": "index",
+      "baseline": {
+        "windows9pSeconds": 38.894999999999996,
+        "ext4Seconds": 2.8,
+        "windows9pRssMiB": 649,
+        "ext4RssMiB": 675.1
+      },
+      "candidate": {
+        "windows9pSeconds": 13.475000000000001,
+        "ext4Seconds": 1.02,
+        "windows9pRssMiB": 396.4,
+        "ext4RssMiB": 414.2
+      },
+      "improvement": {
+        "windows9pSpeedup": 2.89,
+        "ext4Speedup": 2.75,
+        "windows9pRssReduction": 0.3892,
+        "ext4RssReduction": 0.3865
+      }
+    },
+    {
+      "operation": "check-no-index",
+      "baseline": {
+        "windows9pSeconds": 71.31,
+        "ext4Seconds": 0.92,
+        "windows9pRssMiB": 393.4,
+        "ext4RssMiB": 428.4
+      },
+      "candidate": {
+        "windows9pSeconds": 38.52,
+        "ext4Seconds": 0.82,
+        "windows9pRssMiB": 124.1,
+        "ext4RssMiB": 138.4
+      },
+      "improvement": {
+        "windows9pSpeedup": 1.85,
+        "ext4Speedup": 1.12,
+        "windows9pRssReduction": 0.6846,
+        "ext4RssReduction": 0.6771
+      }
+    },
+    {
+      "operation": "check-full",
+      "baseline": {
+        "windows9pSeconds": 109.34,
+        "ext4Seconds": 3.61,
+        "windows9pRssMiB": 846.9,
+        "ext4RssMiB": 923
+      },
+      "candidate": {
+        "windows9pSeconds": 35.7,
+        "ext4Seconds": 1.72,
+        "windows9pRssMiB": 428.1,
+        "ext4RssMiB": 431.4
+      },
+      "improvement": {
+        "windows9pSpeedup": 3.06,
+        "ext4Speedup": 2.1,
+        "windows9pRssReduction": 0.4945,
+        "ext4RssReduction": 0.5326
+      }
+    },
+    {
+      "operation": "kb-add-no-relation",
+      "baseline": {
+        "windows9pSeconds": 29.44,
+        "ext4Seconds": 0.23,
+        "windows9pRssMiB": 109.9,
+        "ext4RssMiB": 115.8
+      },
+      "candidate": {
+        "windows9pSeconds": 0.21,
+        "ext4Seconds": 0.07,
+        "windows9pRssMiB": 78.6,
+        "ext4RssMiB": 81
+      },
+      "improvement": {
+        "windows9pSpeedup": 140.19,
+        "ext4Speedup": 3.29,
+        "windows9pRssReduction": 0.2845,
+        "ext4RssReduction": 0.3005
+      }
+    },
+    {
+      "operation": "kb-add-relation-dry-run",
+      "baseline": {
+        "windows9pSeconds": 6.605,
+        "ext4Seconds": 0.16,
+        "windows9pRssMiB": 97.6,
+        "ext4RssMiB": 101.6
+      },
+      "candidate": {
+        "windows9pSeconds": 7.43,
+        "ext4Seconds": 0.16,
+        "windows9pRssMiB": 105.4,
+        "ext4RssMiB": 108.2
+      },
+      "improvement": {
+        "windows9pSpeedup": 0.89,
+        "ext4Speedup": 1,
+        "windows9pRssReduction": -0.0799,
+        "ext4RssReduction": -0.0653
+      }
+    },
+    {
+      "operation": "kb-add-relation",
+      "baseline": {
+        "windows9pSeconds": 35.36,
+        "ext4Seconds": 0.33,
+        "windows9pRssMiB": 122,
+        "ext4RssMiB": 131
+      },
+      "candidate": {
+        "windows9pSeconds": 7.55,
+        "ext4Seconds": 0.16,
+        "windows9pRssMiB": 124.4,
+        "ext4RssMiB": 126.1
+      },
+      "improvement": {
+        "windows9pSpeedup": 4.68,
+        "ext4Speedup": 2.06,
+        "windows9pRssReduction": -0.0199,
+        "ext4RssReduction": 0.0376
+      }
+    }
+  ],
+  "thinker": {
+    "productionInspectSeconds": 4.26,
+    "baselineInspectSeconds": 28.91,
+    "speedup": 6.79,
+    "findingFilesScanned": 1015,
+    "bindings": 16,
+    "bindingHash": "42818e686fd3c515eff643acbadcbb07a4a849d78d82104714022f879f4cbfb9"
+  },
+  "exactness": {
+    "sourceStoreHash": "dcd769e6f209b55a720335371174602ff978f7d9cd019e9d9a7fcbb832e801ba",
+    "windowsSameFilesystem": {
+      "catalogBytes": true,
+      "graphBytes": true,
+      "searchBytes": true,
+      "healthSemantics": true
+    },
+    "ext4Control": {
+      "catalogBytes": true,
+      "graphSemantics": true,
+      "searchSemantics": true,
+      "healthSemantics": true,
+      "note": "Raw graph/search JSON order follows filesystem enumeration; canonical graph, retrieval postings, scores, and health outcomes are exact."
+    }
+  },
+  "rawReceipts": [
+    {
+      "path": "benchmarks/results/maintenance-cross-hardware-v1-2026-08-25.json",
+      "sha256": "3aecfc71e47e0a1873cffa8d4485f8c24f590ec25abae0828d7618f02924fe6f"
+    },
+    {
+      "path": "benchmarks/results/maintenance-no-sqlite-mot-windows-9p-2026-08-26.json",
+      "sha256": "d078144d3ff1fc645383f01bdfa5fe983acdc7ad9a43eb99334192db2f489da0"
+    },
+    {
+      "path": "benchmarks/results/maintenance-no-sqlite-mot-ext4-2026-08-26.json",
+      "sha256": "625d9b40500b7163fe550210951919dbda6b4da95fa3c79e6356c06d4f83b95f"
+    },
+    {
+      "path": "benchmarks/results/maintenance-no-sqlite-mot-windows-9p-thinker-2026-08-26.json",
+      "sha256": "d143fff854510208aea056c613188922123d0e2d241210d8805b5439ccafdd7d"
+    }
+  ],
+  "observed": [
+    "Ordinary WSL 9p writes fell from 29.44 seconds to 0.21 seconds because unrelated mutations no longer refresh thinker custody.",
+    "The authoritative WSL 9p full gate fell from 109.34 seconds to 35.70 seconds while preserving all health outcomes.",
+    "The ext4 full gate also improved from 3.61 seconds to 1.72 seconds, rejecting a storage-specific tradeoff.",
+    "Index peak RSS fell from 649.0 MiB to 396.4 MiB on WSL 9p and from 675.1 MiB to 414.2 MiB on ext4."
+  ],
+  "decision": {
+    "noSqlitePatchJustified": true,
+    "batchWriterDeferred": "Ordinary writes are now 0.21 s on the stress mount; batch only if repeated relation-bearing writes remain a measured checkpoint bottleneck.",
+    "partialCheckpointDeferred": "The exact full gate now meets the modeled 30-40 s stress-mount budget without adding a second health class.",
+    "sqliteAdoptionDeferred": "No database is required to restore cadence; retain the separate SQLite shadow evidence for a future incremental-projection decision."
+  },
+  "limitations": [
+    "Expensive WSL operations have one end-to-end candidate trial; index has two repetitions.",
+    "The candidate corpus is 19 units, 30 source files, and 30 artifact records larger than the prior-day baseline.",
+    "Relation-bearing writes still require an exact source resolver traversal and took 7.55 seconds on WSL 9p.",
+    "Raw derived JSON array/object order is not canonical across copied filesystems, although canonical graph, lexical, and health semantics matched exactly."
+  ]
+}

@@ -163,6 +163,8 @@ flowchart LR
   exist only in the derived projection, and fail closed if the vocabulary requests an illegal
   target status. After a successful write, human output includes a runnable installed-plugin
   `kb-index --root …` command; `--json` exposes the same operation as `next_action` for agents.
+  A write refreshes governed thinker summaries only when a new finding can change adjudication;
+  unrelated ledger and memory events leave those derived bytes untouched.
   `scripts/kb-amend.ts` is the matching
   gate for metadata transitions on an existing curated unit: it preserves the body, validates the
   requested state, and mints a missing stable ID. `kb-export` emits the relation graph as CiTO/PROV-O JSON-LD.
@@ -180,6 +182,10 @@ flowchart LR
   --strict` independently binds `health.json` to the current source hash, source-file count, and
   live catalog count, and refuses stale or internally failed receipts with a direct
   `promptus-check` recovery instruction; inherited graph/digest/extra-tree debt stays report-only.
+  Maintenance conserves work without transferring authority to a database: one source-byte view
+  is reused across exact hashing and projection, one finding scan serves thinker custody, each
+  canonical artifact is streamed and hashed once for all of its owners, and unchanged derived
+  bytes are not rewritten.
 - **PREFLIGHT** → `scripts/promptus-session-doctor.ts` is the strictly read-only gate a session
   agent runs before trusting a long-running project's NOW or cache. It compares every live source
   unit with catalog/search and every archived unit with cold search, detects ambiguous identities and search keys, distinguishes stale

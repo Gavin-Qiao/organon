@@ -11,7 +11,9 @@ import {
   readdirSync,
   renameSync,
   rmSync,
+  statSync,
   symlinkSync,
+  utimesSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -367,6 +369,54 @@ test("a normal derives-from finding is the adjudication; raw evidence stays untr
   expect(status.stdout).toContain("Strict bound is refuted by equality".toLowerCase().replaceAll(" ", "-"));
   expect(readFileSync(join(root, ".promptus", "thinker", "INDEX.md"), "utf8")).toContain("ADJUDICATED");
   expect(readFileSync(join(root, intake.quarantine.path), "utf8")).toContain("status: UNTRUSTED");
+});
+
+test("exchange inspection scans the finding tree once for multiple adjudicated rounds", () => {
+  const root = scaffold();
+  for (const id of ["first-proof", "second-proof"]) {
+    draftAndPrepare(root, id, `Question for ${id}`);
+    writeFileSync(join(root, `${id}.md`), `ROUND_ID: ${id}\nReturned conjecture.\n`);
+    expect(thinker(root, ["receive", "--id", id, "--response", `${id}.md`, "--capture", "attachment", "--apply"]).status).toBe(0);
+    const intake = JSON.parse(readFileSync(join(roundDir(root, id), "intake.json"), "utf8"));
+    writeFileSync(join(root, ".promptus", "docs", `${id}-finding.md`), [
+      "---",
+      `id: finding-${id}`,
+      "substrate: finding",
+      "kind: RESULT",
+      "status: VALIDATED",
+      `relations: [derives-from:${intake.quarantine.id}]`,
+      "---",
+      `# Finding for ${id}`,
+      "",
+    ].join("\n"));
+  }
+  const checked = run("promptus-check.ts", root, ["--json"]);
+  expect(checked.status).toBe(0);
+  const report = JSON.parse(checked.stdout);
+  expect(report.thinkerExchange.findingFilesScanned).toBe(2);
+  expect(report.thinkerExchange.rounds.map((round: any) => round.status)).toEqual(["ADJUDICATED", "ADJUDICATED"]);
+});
+
+test("unrelated writes do not repair or rewrite thinker read surfaces", () => {
+  const root = scaffold();
+  draftAndPrepare(root, "stable-cache");
+  const index = join(root, ".promptus", "thinker", "INDEX.md");
+  writeFileSync(index, "deliberately stale derived bytes\n");
+  const added = run("kb-add.ts", root, [
+    "--substrate", "ledger", "--kind", "RESULT", "--status", "VALIDATED", "--title", "Unrelated observation",
+  ], "This ledger event cannot affect thinker adjudication.");
+  expect(added.status).toBe(0);
+  expect(readFileSync(index, "utf8")).toBe("deliberately stale derived bytes\n");
+  expect(run("kb-index.ts", root, []).status).toBe(0);
+  expect(readFileSync(index, "utf8")).toContain("External thinker rounds");
+
+  const readme = join(roundDir(root, "stable-cache"), "ROUND.md");
+  const old = new Date("2001-01-01T00:00:00.000Z");
+  utimesSync(index, old, old);
+  utimesSync(readme, old, old);
+  expect(run("kb-index.ts", root, []).status).toBe(0);
+  expect(statSync(index).mtimeMs).toBe(old.getTime());
+  expect(statSync(readme).mtimeMs).toBe(old.getTime());
 });
 
 test("response retention refuses symlinks and status does not rewrite evidence", () => {

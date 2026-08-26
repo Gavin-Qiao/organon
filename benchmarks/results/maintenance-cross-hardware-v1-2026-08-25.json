@@ -1,0 +1,647 @@
+{
+  "schema": "promptus.maintenance-cross-hardware.v1",
+  "generatedAt": "2026-08-25T12:57:46.600Z",
+  "benchmarkDate": "2026-08-25",
+  "question": "Where does Promptus maintenance time go at MoT scale, and which hardware-agnostic software changes reduce work without weakening its integrity contract?",
+  "frozenCorpus": {
+    "storeHash": "146237380edb90f19ae574794b7f51af6b3e3fdd6d7dde6c5ca056e64dbd081b",
+    "sourceFiles": 2600,
+    "units": 5338,
+    "artifactRecords": 3700,
+    "sourceBytes": 14619175,
+    "ledgerBytes": 4463157,
+    "ledgerUnits": 2977,
+    "liveUnits": 5338,
+    "coldUnits": 0,
+    "uniqueArtifactSpecs": 2611,
+    "uniqueArtifactPaths": 2237
+  },
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 39436210176,
+    "runtime": "WSL2",
+    "storageProfiles": [
+      {
+        "id": "windows9p",
+        "label": "Windows-mounted WSL path",
+        "filesystem": "9p/v9fs"
+      },
+      {
+        "id": "ext4",
+        "label": "WSL native Linux filesystem",
+        "filesystem": "ext4"
+      },
+      {
+        "id": "tmpfs",
+        "label": "Memory-backed control",
+        "filesystem": "tmpfs"
+      }
+    ]
+  },
+  "measurements": {
+    "crossHardware": [
+      {
+        "operation": "status",
+        "label": "Current-state status",
+        "windows9pSeconds": 0.08,
+        "ext4Seconds": 0.04,
+        "tmpfsSeconds": 0.04,
+        "windows9pToExt4Speedup": 2,
+        "ext4ToTmpfsRatio": 1,
+        "repetitions": {
+          "windows9p": 5,
+          "ext4": 5,
+          "tmpfs": 5
+        },
+        "peakRssMiB": {
+          "windows9p": 37.8,
+          "ext4": 37.7,
+          "tmpfs": 38.4
+        }
+      },
+      {
+        "operation": "retrieval",
+        "label": "Knowledge retrieval",
+        "windows9pSeconds": 0.25,
+        "ext4Seconds": 0.17,
+        "tmpfsSeconds": 0.17,
+        "windows9pToExt4Speedup": 1.47,
+        "ext4ToTmpfsRatio": 1,
+        "repetitions": {
+          "windows9p": 5,
+          "ext4": 5,
+          "tmpfs": 5
+        },
+        "peakRssMiB": {
+          "windows9p": 168,
+          "ext4": 168.6,
+          "tmpfs": 168.1
+        }
+      },
+      {
+        "operation": "session-doctor",
+        "label": "Session doctor",
+        "windows9pSeconds": 57.66,
+        "ext4Seconds": 0.58,
+        "tmpfsSeconds": 0.52,
+        "windows9pToExt4Speedup": 99.41,
+        "ext4ToTmpfsRatio": 1.12,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 379.9,
+          "ext4": 406.3,
+          "tmpfs": 407.7
+        }
+      },
+      {
+        "operation": "collect-units",
+        "label": "Unit collection",
+        "windows9pSeconds": 7.215,
+        "ext4Seconds": 0.13,
+        "tmpfsSeconds": 0.13,
+        "windows9pToExt4Speedup": 55.5,
+        "ext4ToTmpfsRatio": 1,
+        "repetitions": {
+          "windows9p": 2,
+          "ext4": 2,
+          "tmpfs": 2
+        },
+        "peakRssMiB": {
+          "windows9p": 76.3,
+          "ext4": 80.9,
+          "tmpfs": 80.8
+        }
+      },
+      {
+        "operation": "hash-store",
+        "label": "Store fingerprint",
+        "windows9pSeconds": 7.380000000000001,
+        "ext4Seconds": 0.115,
+        "tmpfsSeconds": 0.08499999999999999,
+        "windows9pToExt4Speedup": 64.17,
+        "ext4ToTmpfsRatio": 1.35,
+        "repetitions": {
+          "windows9p": 2,
+          "ext4": 2,
+          "tmpfs": 2
+        },
+        "peakRssMiB": {
+          "windows9p": 52.7,
+          "ext4": 58.4,
+          "tmpfs": 60.5
+        }
+      },
+      {
+        "operation": "artifacts-current",
+        "label": "Artifact verification",
+        "windows9pSeconds": 42.11,
+        "ext4Seconds": 0.69,
+        "tmpfsSeconds": 0.84,
+        "windows9pToExt4Speedup": 61.03,
+        "ext4ToTmpfsRatio": 0.82,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 329.1,
+          "ext4": 333.1,
+          "tmpfs": 335
+        }
+      },
+      {
+        "operation": "artifacts-cached-root",
+        "label": "Artifact verification, cached root",
+        "windows9pSeconds": 42.6,
+        "ext4Seconds": 0.71,
+        "tmpfsSeconds": 0.8,
+        "windows9pToExt4Speedup": 60,
+        "ext4ToTmpfsRatio": 0.89,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 329.1,
+          "ext4": 334.4,
+          "tmpfs": 333.1
+        }
+      },
+      {
+        "operation": "artifacts-unique-path",
+        "label": "Artifact verification, unique path",
+        "windows9pSeconds": 25.93,
+        "ext4Seconds": 0.51,
+        "tmpfsSeconds": 0.55,
+        "windows9pToExt4Speedup": 50.84,
+        "ext4ToTmpfsRatio": 0.93,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 331.1,
+          "ext4": 344.9,
+          "tmpfs": 341.2
+        }
+      },
+      {
+        "operation": "index",
+        "label": "Index rebuild",
+        "windows9pSeconds": 38.894999999999996,
+        "ext4Seconds": 2.8,
+        "tmpfsSeconds": 3.05,
+        "windows9pToExt4Speedup": 13.89,
+        "ext4ToTmpfsRatio": 0.92,
+        "repetitions": {
+          "windows9p": 2,
+          "ext4": 2,
+          "tmpfs": 2
+        },
+        "peakRssMiB": {
+          "windows9p": 649,
+          "ext4": 675.1,
+          "tmpfs": 671.2
+        }
+      },
+      {
+        "operation": "check-no-index",
+        "label": "Whole-store check, no re-index",
+        "windows9pSeconds": 71.31,
+        "ext4Seconds": 0.92,
+        "tmpfsSeconds": 0.95,
+        "windows9pToExt4Speedup": 77.51,
+        "ext4ToTmpfsRatio": 0.97,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 393.4,
+          "ext4": 428.4,
+          "tmpfs": 451.8
+        }
+      },
+      {
+        "operation": "check-full",
+        "label": "Full check including re-index",
+        "windows9pSeconds": 109.34,
+        "ext4Seconds": 3.61,
+        "tmpfsSeconds": 3.68,
+        "windows9pToExt4Speedup": 30.29,
+        "ext4ToTmpfsRatio": 0.98,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 846.9,
+          "ext4": 923,
+          "tmpfs": 903
+        }
+      },
+      {
+        "operation": "kb-add-no-relation",
+        "label": "Gated write, no relation",
+        "windows9pSeconds": 29.44,
+        "ext4Seconds": 0.23,
+        "tmpfsSeconds": 0.22,
+        "windows9pToExt4Speedup": 128,
+        "ext4ToTmpfsRatio": 1.05,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 109.9,
+          "ext4": 115.8,
+          "tmpfs": 122.9
+        }
+      },
+      {
+        "operation": "kb-add-relation-dry-run",
+        "label": "Relation dry run",
+        "windows9pSeconds": 6.605,
+        "ext4Seconds": 0.16,
+        "tmpfsSeconds": 0.15,
+        "windows9pToExt4Speedup": 41.28,
+        "ext4ToTmpfsRatio": 1.07,
+        "repetitions": {
+          "windows9p": 2,
+          "ext4": 2,
+          "tmpfs": 2
+        },
+        "peakRssMiB": {
+          "windows9p": 97.6,
+          "ext4": 101.6,
+          "tmpfs": 102.3
+        }
+      },
+      {
+        "operation": "kb-add-relation",
+        "label": "Gated write with relation",
+        "windows9pSeconds": 35.36,
+        "ext4Seconds": 0.33,
+        "tmpfsSeconds": 0.34,
+        "windows9pToExt4Speedup": 107.15,
+        "ext4ToTmpfsRatio": 0.97,
+        "repetitions": {
+          "windows9p": 1,
+          "ext4": 1,
+          "tmpfs": 1
+        },
+        "peakRssMiB": {
+          "windows9p": 122,
+          "ext4": 131,
+          "tmpfs": 133.7
+        }
+      }
+    ]
+  },
+  "diagnostics": {
+    "sessionDoctorWindows9p": {
+      "wallSeconds": 57.66,
+      "internalTimingMs": {
+        "fingerprint": 14238.4,
+        "artifacts": 0,
+        "total": 57585.8
+      }
+    },
+    "thinker": {
+      "currentInspectSeconds": 28.91,
+      "currentRefreshSeconds": 29.67,
+      "singlePassSeconds": 2.69,
+      "singlePassSpeedup": 10.75,
+      "findingFilesScanned": 1010,
+      "rounds": 13,
+      "adjudicatedRounds": 11,
+      "preparedRounds": 2,
+      "bindings": 12,
+      "bindingHash": "3439ee551385f79cc1aa79a5981bc9da76d5a0f5d18ef61d7ac5ddd4fe096c36",
+      "profiles": [
+        {
+          "filesystem": "wsl-9p",
+          "currentSeconds": 28.91,
+          "candidateSeconds": 2.69,
+          "speedup": 10.75,
+          "exactEquivalent": true
+        },
+        {
+          "filesystem": "ext4",
+          "currentSeconds": 0.2,
+          "candidateSeconds": 0.06,
+          "speedup": 3.33,
+          "exactEquivalent": true
+        },
+        {
+          "filesystem": "tmpfs",
+          "currentSeconds": 0.19,
+          "candidateSeconds": 0.06,
+          "speedup": 3.17,
+          "exactEquivalent": true
+        }
+      ],
+      "exactEquivalent": true
+    },
+    "artifacts": {
+      "records": 3700,
+      "uniqueSpecs": 2611,
+      "uniquePaths": 2237,
+      "currentSeconds": 42.11,
+      "cachedRootSeconds": 42.6,
+      "uniquePathSeconds": 25.93,
+      "currentBytesRead": 711236961,
+      "uniquePathBytesRead": 552712736,
+      "byteReductionRate": 0.2229,
+      "wallTimeReductionRate": 0.3842,
+      "outcomes": {
+        "ok": 3547,
+        "hash-mismatch": 151,
+        "not-file": 2
+      },
+      "profiles": [
+        {
+          "filesystem": "wsl-9p",
+          "currentSeconds": 42.11,
+          "candidateSeconds": 25.93,
+          "speedup": 1.62,
+          "exactEquivalent": true
+        },
+        {
+          "filesystem": "ext4",
+          "currentSeconds": 0.69,
+          "candidateSeconds": 0.51,
+          "speedup": 1.35,
+          "exactEquivalent": true
+        },
+        {
+          "filesystem": "tmpfs",
+          "currentSeconds": 0.84,
+          "candidateSeconds": 0.55,
+          "speedup": 1.53,
+          "exactEquivalent": true
+        }
+      ],
+      "exactEquivalent": true
+    }
+  },
+  "controls": {
+    "oneCpuExt4": {
+      "caveat": "The disposable snapshot contained two benchmark-only ledger events by this control; unit count was 5,340 rather than 5,338.",
+      "rows": [
+        {
+          "operation": "collect-units",
+          "oneCpuSeconds": 0.14,
+          "inheritedCpuSeconds": 0.13,
+          "oneCpuToInheritedRatio": 1.08
+        },
+        {
+          "operation": "hash-store",
+          "oneCpuSeconds": 0.08499999999999999,
+          "inheritedCpuSeconds": 0.115,
+          "oneCpuToInheritedRatio": 0.74
+        },
+        {
+          "operation": "artifacts-current",
+          "oneCpuSeconds": 0.76,
+          "inheritedCpuSeconds": 0.69,
+          "oneCpuToInheritedRatio": 1.1
+        },
+        {
+          "operation": "artifacts-cached-root",
+          "oneCpuSeconds": 0.61,
+          "inheritedCpuSeconds": 0.71,
+          "oneCpuToInheritedRatio": 0.86
+        },
+        {
+          "operation": "artifacts-unique-path",
+          "oneCpuSeconds": 0.47,
+          "inheritedCpuSeconds": 0.51,
+          "oneCpuToInheritedRatio": 0.92
+        },
+        {
+          "operation": "index",
+          "oneCpuSeconds": 2.9450000000000003,
+          "inheritedCpuSeconds": 2.8,
+          "oneCpuToInheritedRatio": 1.05
+        },
+        {
+          "operation": "check-no-index",
+          "oneCpuSeconds": 0.89,
+          "inheritedCpuSeconds": 0.92,
+          "oneCpuToInheritedRatio": 0.97
+        },
+        {
+          "operation": "check-full",
+          "oneCpuSeconds": 3.68,
+          "inheritedCpuSeconds": 3.61,
+          "oneCpuToInheritedRatio": 1.02
+        }
+      ]
+    },
+    "smallStoreWindows9p": {
+      "corpus": {
+        "storeHash": "064c9061524b4c7f94f29f76f18bd45309c02367218bb2f256534cebdc50b237",
+        "sourceFiles": 99,
+        "units": 304,
+        "artifactRecords": 200
+      },
+      "rows": [
+        {
+          "operation": "collect-units",
+          "seconds": 0.33999999999999997
+        },
+        {
+          "operation": "hash-store",
+          "seconds": 0.32
+        },
+        {
+          "operation": "artifacts-current",
+          "seconds": 1.77
+        },
+        {
+          "operation": "artifacts-cached-root",
+          "seconds": 1.85
+        },
+        {
+          "operation": "artifacts-unique-path",
+          "seconds": 0.61
+        },
+        {
+          "operation": "index",
+          "seconds": 0.45
+        },
+        {
+          "operation": "check-no-index",
+          "seconds": 1.87
+        },
+        {
+          "operation": "check-full",
+          "seconds": 2.19
+        }
+      ]
+    }
+  },
+  "conclusions": {
+    "observed": [
+      "The same full gate took 109.34 seconds on WSL 9p and 3.61 seconds on ext4; this storage contrast exposes metadata-heavy redundant traversal rather than defining a storage-specific solution.",
+      "A one-CPU ext4 control tracked the inherited-CPU ext4 timings, so the current hot path is not CPU-throughput limited.",
+      "Single-pass thinker binding preserved the exact binding count and digest and was faster on every profile: 10.75× on WSL 9p, 3.33× on ext4, and 3.17× on tmpfs.",
+      "Hashing each unique declared artifact path once preserved every verifier outcome and was faster on every profile: 1.62× on WSL 9p, 1.35× on ext4, and 1.53× on tmpfs."
+    ],
+    "inferred": [
+      "The first optimization objective should be fewer source opens, parses, hashes, and derived writes per operation; elapsed time is the validation measure, not the architecture.",
+      "A full maintenance command should construct one immutable store snapshot and reuse it for source hashing, indexing, thinker custody, graph checks, and health reporting instead of rescanning between phases.",
+      "Global incremental indexing is a later step: exact single-pass traversal, dependency-aware refresh, path-deduplicated hashing, and batching are simpler and already supported by measured evidence.",
+      "GPU acceleration is irrelevant to this maintenance path; additional CPU cores will matter only after an explicitly bounded parallel phase exists."
+    ]
+  },
+  "engineeringSequence": [
+    {
+      "priority": 1,
+      "change": "Create one thinker exchange context: scan findings once, map quarantine IDs to bindings, reuse it for every round, refresh only when thinker inputs or findings change, and avoid rewriting identical derived files.",
+      "correctnessBoundary": "Every round status, issue, binding, digest, ROUND.md, and INDEX.md must match the current implementation byte-for-byte."
+    },
+    {
+      "priority": 2,
+      "change": "Refactor full maintenance around one immutable StoreSnapshot that reads and parses each source file once and feeds source hashing, catalog, graph, search, thinker custody, and health checks.",
+      "correctnessBoundary": "The snapshot is built under the store lock or proves its source generation stayed stable; derived outputs and health results must equal a clean full rebuild."
+    },
+    {
+      "priority": 3,
+      "change": "Deduplicate artifact content hashing by normalized real path while comparing the one digest against every historical artifact record that references it.",
+      "correctnessBoundary": "The authoritative full gate remains exact; no stat-only cache may stand in for content hashing."
+    },
+    {
+      "priority": 4,
+      "change": "Add transactional batch kb-add so one lock, relation-resolution snapshot, dependency-aware refresh, and index serve a bounded set of writes.",
+      "correctnessBoundary": "All-or-nothing source mutation, unique IDs, and a single authoritative post-batch receipt."
+    },
+    {
+      "priority": 5,
+      "change": "Add a clearly PARTIAL touched-files checkpoint and a writer-produced change receipt; develop a persistent incremental index only if the earlier work still misses the latency budget.",
+      "correctnessBoundary": "A partial receipt can never masquerade as whole-store health; full rebuilds must converge byte-for-byte."
+    }
+  ],
+  "workConservationTargets": [
+    {
+      "operation": "Ordinary governed write",
+      "currentWaste": "Refreshes all thinker rounds and repeatedly scans every finding even when a ledger event cannot affect thinker custody",
+      "targetWork": "One source mutation, one catalog delta, zero finding-tree scans unless a declared thinker dependency changed",
+      "acceptance": "Same unit bytes and ID; unrelated writes leave thinker derived bytes unchanged"
+    },
+    {
+      "operation": "Authoritative index",
+      "currentWaste": "Parses the store, then independently rescans findings for each thinker round",
+      "targetWork": "Read and parse every source file at most once; derive catalog, graph, search, source hash, and thinker bindings from one snapshot",
+      "acceptance": "All derived files are byte-for-byte equal to a clean reference rebuild"
+    },
+    {
+      "operation": "Authoritative full check",
+      "currentWaste": "Runs the index, fingerprints the store again, reinspects thinker custody, and rehashes repeated artifact paths",
+      "targetWork": "Reuse the index snapshot and hash each canonical artifact file once while checking every owning record",
+      "acceptance": "Identical hard failures, archival warnings, graph debt, source hash, and final readiness"
+    },
+    {
+      "operation": "Bounded batch write",
+      "currentWaste": "B writes repeat locks, relation collection, thinker refresh, and maintenance handoffs",
+      "targetWork": "One lock and resolver snapshot for B all-or-nothing mutations, followed by one dependency-aware refresh and one index receipt",
+      "acceptance": "Unique IDs, no lost events, rollback on any failed item, and full-rebuild convergence"
+    },
+    {
+      "operation": "Fast checkpoint",
+      "currentWaste": "A whole-store ratchet is the only strong receipt, so inner-loop bookkeeping pays global cost",
+      "targetWork": "Verify the transaction's touched sources, relations, and new artifacts only",
+      "acceptance": "Receipt is explicitly PARTIAL and cannot satisfy a full-gate requirement"
+    }
+  ],
+  "hardwareGuidance": [
+    {
+      "setting": "All hardware profiles",
+      "evidence": "Single-pass thinker and unique-path artifact probes improved all three measured filesystems with exact-equivalent outputs",
+      "design": "Use the same work-conserving algorithms everywhere: one source snapshot, dependency-aware refresh, one hash per artifact path, and batched transactions."
+    },
+    {
+      "setting": "Metadata-expensive mount",
+      "evidence": "WSL 9p magnified redundant scans: 109.34 s full check and 38.90 s index",
+      "design": "Use this as the stress profile for file-open and traversal-count regressions, not as a reason for a platform-specific code path."
+    },
+    {
+      "setting": "Fast local storage",
+      "evidence": "ext4 full check was 3.61 s and tmpfs was 3.68 s",
+      "design": "Use as the overhead floor: reject optimizations whose cache bookkeeping makes the already-fast case slower or more complex without measured benefit."
+    },
+    {
+      "setting": "Low-memory machine",
+      "evidence": "Observed full-check peak was 0.9 GiB on ext4",
+      "design": "Make source snapshots compact and stream derived serialization before adding parallelism; retain RSS and work counters in benchmark receipts."
+    },
+    {
+      "setting": "Many-core CPU or GPU workstation",
+      "evidence": "One-CPU ext4 timings were effectively unchanged; GPU was unused",
+      "design": "Do not require accelerators. Only consider a bounded artifact-hash worker pool after deduplication, with one-worker equivalence as the reference path."
+    }
+  ],
+  "methodology": {
+    "isolation": "All mutations and full maintenance trials ran against byte-matched snapshots; the live MoT store was read-only.",
+    "timing": "GNU time wall/user/system/RSS receipts around unmodified Promptus commands plus benchmark-only phase probes.",
+    "repetitions": "Fast operations used 2-5 repetitions and report the median. Expensive end-to-end operations used one repetition, corroborated by the operator's independent measurements and a live read-only doctor run.",
+    "cacheState": "Snapshots were staged immediately before measurement, so results characterize a warm working session rather than cold-boot storage.",
+    "equivalence": "Candidate thinker and artifact phases were accepted only after exact output digests/outcome counts matched current behavior."
+  },
+  "limitations": [
+    "The storage comparison uses one WSL2 host and one large project snapshot; it does not yet measure bare-metal Windows, macOS, NFS, SMB, or slower local disks.",
+    "Most expensive operations have n=1 because a complete WSL 9p suite is long; the independent operator timings are consistent but not a substitute for more hosts.",
+    "The single-pass thinker and unique-path artifact measurements are isolated prototypes, not implemented end-to-end Promptus patches.",
+    "The one-CPU control followed two disposable benchmark writes, a 0.04% unit-count difference; use it as a bottleneck classification control, not an exact release benchmark."
+  ],
+  "rawReceipts": [
+    {
+      "path": "benchmarks/results/maintenance-mot-windows-9p-2026-08-25.json",
+      "sha256": "9ef1d061c8bcf32484ea61ee7b710596a354548055a5610e0ca5aa66e9c7ce20"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-ext4-2026-08-25.json",
+      "sha256": "9af69570c7d5746038c200811dbc2d322a5682a3f3f6b7e50b216fc520c3b2e6"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-tmpfs-2026-08-25.json",
+      "sha256": "844a9aff662f741b2ab57fe35e3930b462ce05c0166d34e4861caa72ebe197d6"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-windows-9p-thinker-2026-08-25.json",
+      "sha256": "2cf617030e0765c73c41fc639f9a64cefcbcf1c32f12993d65542d363ff71562"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-ext4-thinker-2026-08-25.json",
+      "sha256": "89fb9a9b437c83667fc3743a8f26695f268129a648b357c97e8bf2717d5ea373"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-tmpfs-thinker-2026-08-25.json",
+      "sha256": "61f6ded7147eb81762e33c5f0e36bcfcf59ef13b144c88a43998c74763225d2e"
+    },
+    {
+      "path": "benchmarks/results/maintenance-mot-ext4-one-cpu-2026-08-25.json",
+      "sha256": "ab059a3099c2dc7d94fef3c94aa0fbd963659ad1dd907b69a9c77a2a5e85e321"
+    },
+    {
+      "path": "benchmarks/results/maintenance-organon-windows-9p-2026-08-25.json",
+      "sha256": "61456c4a9dca03030bb161e0db94c2cbd553bcfe39722adf6697f3b6d5eccd0c"
+    }
+  ]
+}

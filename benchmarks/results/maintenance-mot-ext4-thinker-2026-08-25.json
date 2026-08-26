@@ -1,0 +1,147 @@
+{
+  "schema": "promptus.maintenance-benchmark.v1",
+  "generatedAt": "2026-08-25T12:55:53.762Z",
+  "profile": "mot-ext4-thinker",
+  "filesystem": "ext4",
+  "suite": "thinker",
+  "cpuList": "inherited",
+  "environment": {
+    "platform": "linux",
+    "release": "6.18.33.2-microsoft-standard-WSL2",
+    "bun": "1.4.0",
+    "logicalCpus": 16,
+    "cpuModel": "AMD Ryzen 9 9950X 16-Core Processor",
+    "totalMemoryBytes": 84336537600,
+    "freeMemoryBytesAtCompletion": 40093388800
+  },
+  "sourceReceipt": {
+    "storeHash": "146237380edb90f19ae574794b7f51af6b3e3fdd6d7dde6c5ca056e64dbd081b",
+    "sourceFiles": 2600,
+    "units": 5338,
+    "artifactRecords": 3700
+  },
+  "plan": [
+    {
+      "name": "thinker-inspect",
+      "repetitions": 1
+    },
+    {
+      "name": "thinker-single-pass",
+      "repetitions": 1
+    },
+    {
+      "name": "thinker-refresh",
+      "repetitions": 1
+    }
+  ],
+  "trials": [
+    {
+      "profile": "mot-ext4-thinker",
+      "filesystem": "ext4",
+      "operation": "thinker-inspect",
+      "iteration": 1,
+      "elapsedSeconds": 0.2,
+      "userSeconds": 0.12,
+      "systemSeconds": 0.1,
+      "maxRssKiB": 66024,
+      "majorFaults": 0,
+      "minorFaults": 8932,
+      "fsInputs": 187,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 1682,
+      "involuntaryContextSwitches": 2,
+      "exitStatus": 0,
+      "stdoutBytes": 199,
+      "stdoutSha256": "28f434a46851c6f616f6176e6244cd281683d97d46628e3376a0ce3da5e8b55f",
+      "details": {
+        "rounds": 13,
+        "issues": 0,
+        "statuses": {
+          "ADJUDICATED": 11,
+          "PREPARED": 2
+        },
+        "bindings": 12,
+        "bindingHash": "3439ee551385f79cc1aa79a5981bc9da76d5a0f5d18ef61d7ac5ddd4fe096c36"
+      }
+    },
+    {
+      "profile": "mot-ext4-thinker",
+      "filesystem": "ext4",
+      "operation": "thinker-single-pass",
+      "iteration": 1,
+      "elapsedSeconds": 0.06,
+      "userSeconds": 0.01,
+      "systemSeconds": 0.04,
+      "maxRssKiB": 52716,
+      "majorFaults": 0,
+      "minorFaults": 6017,
+      "fsInputs": 188,
+      "fsOutputs": 0,
+      "voluntaryContextSwitches": 571,
+      "involuntaryContextSwitches": 4,
+      "exitStatus": 0,
+      "stdoutBytes": 167,
+      "stdoutSha256": "19163c4a37fb53af348890c99cd39e9d40b07af050fd6d23e458be47158b8387",
+      "details": {
+        "roundsWithQuarantine": 11,
+        "findingFilesScanned": 1010,
+        "bindings": 12,
+        "bindingHash": "3439ee551385f79cc1aa79a5981bc9da76d5a0f5d18ef61d7ac5ddd4fe096c36"
+      }
+    },
+    {
+      "profile": "mot-ext4-thinker",
+      "filesystem": "ext4",
+      "operation": "thinker-refresh",
+      "iteration": 1,
+      "elapsedSeconds": 0.27,
+      "userSeconds": 0.11,
+      "systemSeconds": 0.12,
+      "maxRssKiB": 66548,
+      "majorFaults": 0,
+      "minorFaults": 9134,
+      "fsInputs": 187,
+      "fsOutputs": 112,
+      "voluntaryContextSwitches": 1599,
+      "involuntaryContextSwitches": 0,
+      "exitStatus": 0,
+      "stdoutBytes": 24,
+      "stdoutSha256": "7ceec1482d95990b608cc942557efca5caf0167c890e52fb4f254c369fac713f",
+      "details": {
+        "refreshed": true
+      }
+    }
+  ],
+  "summary": [
+    {
+      "operation": "thinker-inspect",
+      "n": 1,
+      "medianSeconds": 0.2,
+      "minSeconds": 0.2,
+      "maxSeconds": 0.2,
+      "medianUserSeconds": 0.12,
+      "medianSystemSeconds": 0.1,
+      "maxRssMiB": 64.4765625
+    },
+    {
+      "operation": "thinker-single-pass",
+      "n": 1,
+      "medianSeconds": 0.06,
+      "minSeconds": 0.06,
+      "maxSeconds": 0.06,
+      "medianUserSeconds": 0.01,
+      "medianSystemSeconds": 0.04,
+      "maxRssMiB": 51.48046875
+    },
+    {
+      "operation": "thinker-refresh",
+      "n": 1,
+      "medianSeconds": 0.27,
+      "minSeconds": 0.27,
+      "maxSeconds": 0.27,
+      "medianUserSeconds": 0.11,
+      "medianSystemSeconds": 0.12,
+      "maxRssMiB": 64.98828125
+    }
+  ]
+}
