@@ -69,8 +69,8 @@ manifest/tag state as the release boundary and never update an installed cache b
 - Commits and PR titles: Conventional `type(scope): subject`; scope is mandatory. Commit bodies
   use flat `-` bullets. CI enforces PR titles with `check-pr-title.ts`.
 - Agent co-authorship is welcome in this project for material contributions: add
-  `- Co-authored-by: Name <email>` to the enforced flat bullet body and name the agent in the PR.
-  Never fabricate a human co-author.
+  `- Co-authored-by: Name <email>` to the enforced flat bullet body and, when a PR exists, name
+  the agent there. Never fabricate a human co-author.
   No emoji in commits, PR bodies, or release notes.
 - Never `--no-verify`. Forward-slash paths everywhere.
 - Scripts are **TypeScript on bun** (`#!/usr/bin/env bun`); tests via `bun test`.
@@ -78,10 +78,12 @@ manifest/tag state as the release boundary and never update an installed cache b
 - License: GPL-3.0 (© 2026 Mohan Qiao). The `editio/skills/humanizer` fork includes Part I from
   blader/humanizer (© 2025 Siqi Chen, MIT); that upstream notice is preserved in `editio/NOTICE`.
 - Releases are **per-plugin tags** — `promptus-vX.Y.Z` / `editio-vX.Y.Z` (see `RELEASING.md`).
-- **Docs ride the change**: a PR that alters what ships updates the affected READMEs /
-  `AGENTS.md` in the same PR; versions never in prose — the badges + `plugin.json` carry them
+- **Docs ride the change**: a change that alters what ships updates the affected READMEs /
+  `AGENTS.md` before it lands; versions never in prose — the badges + `plugin.json` carry them
   (see `CONTRIBUTING.md`, "Docs stay truthful").
-- Don't commit or push unless asked.
+- Routine non-release work may be committed and pushed directly to `main` after the relevant local
+  gates pass. Release cuts are the exception: they require a PR, and the release tag may be pushed
+  only after that PR merges (see `RELEASING.md`).
 
 ## Layout
 

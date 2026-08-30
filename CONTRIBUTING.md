@@ -25,7 +25,7 @@ pre-commit install --hook-type pre-commit --hook-type pre-push
 > (the shared Codex/Claude hook setup), do **not** run `pre-commit install` — it would
 > overwrite the shared hooks. They pick up this repo's config automatically.
 
-CI runs the same hooks, so a clean local run should mean a clean PR.
+CI runs the same hooks, so a clean local run should mean a clean push or PR.
 
 The cross-OS matrix runs on Ubuntu, Windows, and macOS. Codex hook tests execute the selected
 launcher (`command` on macOS/Linux, `commandWindows` on Windows) with a real payload; adding a
@@ -52,8 +52,8 @@ hook requires both fields and an executable regression, not only schema validati
 The store's discipline — no drift between the record and reality — applies to the repo's own
 front pages. Two standing rules, then the event map:
 
-- **Docs ride the change.** A PR that alters what ships updates the affected READMEs (and
-  `AGENTS.md`) *in the same PR* — never "in a follow-up".
+- **Docs ride the change.** A change that alters what ships updates the affected READMEs (and
+  `AGENTS.md`) *before it lands* — never "in a follow-up".
 - **Versions never live in prose.** The tag-prefix-filtered release badges and each plugin's
   `plugin.json` carry them. If you are about to type a version number into a README, stop.
 
@@ -64,14 +64,14 @@ front pages. Two standing rules, then the event map:
 | a plugin joins the marketplace | the root `README.md` (hero cross-link + release badge) · both marketplace manifests · both adapter manifests · `AGENTS.md`'s layout · the plugin README + `CHANGELOG.md` |
 | one capability changes both plugins | both `[Unreleased]` changelogs + a draft under `.github/release-notes/` until the per-plugin releases are cut |
 | a skill distills craft from a source | the source's full citation in the skill's `references/*.md` + an entry in the plugin README's **References** + a lit unit (`kb-add --substrate lit`) — see below |
-| behavior moves or reframes (a skill migrates, a verb changes meaning) | a **re-truth sweep**: grep the old claim across the READMEs / `AGENTS.md` / the Telos / skill descriptions, fix every hit in the same PR, and record the change in the ledger |
+| behavior moves or reframes (a skill migrates, a verb changes meaning) | a **re-truth sweep**: grep the old claim across the READMEs / `AGENTS.md` / the Telos / skill descriptions, fix every hit in the same change, and record it in the ledger |
 
 ### References are load-bearing
 
 The skills ship *distilled* craft, and every distillation names its sources — we want
 references. Credit is part of staying truthful: the citations are how a reader (or a future
 agent) audits what we adopted, and "stand on the shoulders of giants" means saying whose.
-When a PR distills guidance from a source, the same PR gives that source three homes:
+When a change distills guidance from a source, that change gives the source three homes:
 
 1. **the skill's `references/*.md`** — a full citation (authors, year, title, venue, DOI or
    canonical URL) next to the distilled guidance;
@@ -83,11 +83,17 @@ Distill in your own words: pointers and transferable moves, never reproduced tex
 (copyright) — link the original and send readers to it. An uncited "best practice" in a
 skill is a claim without grounds; treat it exactly like one.
 
-## Pull requests
+## Landing changes and pull requests
 
-Keep them focused. When you change something user-facing, add a line under `## [Unreleased]`
-in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`) and keep the docs truthful
-(the section above). Title every PR with a scoped Conventional title such as
-`feat(codex): add native plugin adapters`; CI enforces the shape, including after title edits.
-Complete the PR template's release-note section. See `RELEASING.md` for how per-plugin releases
-are cut.
+Routine non-release changes may be committed and pushed directly to `main` after the relevant
+local gates pass; CI runs again on the push. A PR remains available when review or collaboration is
+useful, but it is not required for ordinary work.
+
+Every release cut is different: the versioned changelog finalization and both manifest bumps must
+land through a PR before the merged release commit is tagged. See `RELEASING.md` for that workflow.
+
+Whichever route a change takes, keep it focused. When you change something user-facing, add a line
+under `## [Unreleased]` in the affected plugin's `CHANGELOG.md` (`promptus/` or `editio/`) and keep
+the docs truthful (the section above). When a PR is used, title it with a scoped Conventional title
+such as `feat(codex): add native plugin adapters`; CI enforces the shape, including after title
+edits. Complete the PR template's release-note section.
