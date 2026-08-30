@@ -1,0 +1,218 @@
+{
+  "schema": "promptus.continuity-suite.v1",
+  "name": "synthetic-northbridge-research",
+  "description": "A wholly synthetic long-running research history for testing continuity and traceability without reading or writing any live project store.",
+  "classification": "synthetic",
+  "telos": "# Telos — synthetic Northbridge benchmark\n\n## North star\nPreserve the current Northbridge result, its failed route, its deployment constraint, and the evidence chain needed to resume a blinded replication.\n",
+  "artifacts": [
+    {
+      "handle": "northbridge-run",
+      "role": "raw-output",
+      "path": "artifacts/northbridge-run.txt",
+      "body": "run=NB-42\ncoefficient=17\nchecksum=7f3c\nbatch_limit=4\n"
+    }
+  ],
+  "units": [
+    {
+      "handle": "lit-protocol",
+      "substrate": "lit",
+      "kind": "PAPER",
+      "status": "CITE",
+      "title": "Northbridge calibration protocol",
+      "source": "https://example.invalid/northbridge-protocol#section-4",
+      "body": "This synthetic protocol defines the Northbridge assay. A publishable calibration must retain the raw run identifier and checksum, and deployment must respect the recorded batch constraint."
+    },
+    {
+      "handle": "finding-old",
+      "substrate": "finding",
+      "kind": "CLAIM",
+      "status": "VALIDATED",
+      "title": "Use coefficient eleven for Northbridge calibration",
+      "body": "The preliminary Northbridge analysis selected coefficient eleven. This conclusion predates the contaminant control and must not govern the blinded replication.",
+      "relations": [
+        { "type": "cites", "target": "lit-protocol" }
+      ]
+    },
+    {
+      "handle": "ledger-deadend",
+      "substrate": "ledger",
+      "kind": "DEADEND",
+      "status": "REFUTED",
+      "title": "Reject the solvent echo normalization route",
+      "body": "The solvent echo normalization route reproduced coefficient eleven only because contaminant carry-over entered the reference channel. Do not retry this route unless the reference chemistry changes.",
+      "relations": [
+        { "type": "challenges", "target": "finding-old" }
+      ]
+    },
+    {
+      "handle": "finding-current",
+      "substrate": "finding",
+      "kind": "RESULT",
+      "status": "VALIDATED",
+      "title": "Northbridge run validates coefficient seventeen",
+      "source": "synthetic-run:NB-42",
+      "body": "The contaminant-controlled Northbridge run NB-42 validates coefficient seventeen. The raw output records checksum 7f3c; this result replaces coefficient eleven.",
+      "relations": [
+        { "type": "supersedes", "target": "finding-old" },
+        { "type": "derives-from", "target": "lit-protocol" }
+      ],
+      "artifacts": ["northbridge-run"]
+    },
+    {
+      "handle": "finding-checksum",
+      "substrate": "finding",
+      "kind": "METHOD",
+      "status": "VALIDATED",
+      "title": "Checksum gates Northbridge calibration publication",
+      "body": "A Northbridge coefficient may be carried into publication only when its raw-output checksum is retained. For run NB-42 the required checksum is 7f3c.",
+      "relations": [
+        { "type": "supports", "target": "finding-current" }
+      ]
+    },
+    {
+      "handle": "memory-budget",
+      "substrate": "memory",
+      "kind": "project",
+      "status": "validated",
+      "title": "Northbridge deployment uses batches of four",
+      "body": "The validated deployment constraint is a maximum batch size of four. Apply coefficient seventeen without splitting one calibration across batches.",
+      "relations": [
+        { "type": "relates-to", "target": "finding-current" }
+      ]
+    },
+    {
+      "handle": "ledger-decision",
+      "substrate": "ledger",
+      "kind": "DECISION",
+      "status": "RESOLVED",
+      "title": "Adopt coefficient seventeen under the batch-four constraint",
+      "body": "Use coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.",
+      "relations": [
+        { "type": "supports", "target": "finding-current" },
+        { "type": "relates-to", "target": "memory-budget" }
+      ]
+    },
+    {
+      "handle": "ledger-resume",
+      "substrate": "ledger",
+      "kind": "RESUME",
+      "status": "VALIDATED",
+      "title": "Resume Northbridge at the blinded replication",
+      "body": "The next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.",
+      "relations": [
+        { "type": "extends", "target": "ledger-decision" }
+      ]
+    }
+  ],
+  "now": "## NOW\nThe contaminant-controlled Northbridge result is coefficient seventeen with checksum 7f3c. Deployment is constrained to batches of four.\n\n## Open frontier\n- Run the blinded replication without reopening solvent echo normalization.\n\n## Next actions\n1. Execute the blinded replication in a batch of four and preserve its raw checksum.\n\n## <<< RESUME HERE AFTER COMPACTION >>>\nResume from the validated Northbridge decision: coefficient seventeen, checksum 7f3c, batch four, solvent echo route closed.\n",
+  "cases": [
+    {
+      "id": "resume-frontier",
+      "capability": "resume",
+      "expect": {
+        "nowThrough": "ledger-resume",
+        "nowContains": ["blinded replication", "coefficient seventeen", "batches of four"]
+      },
+      "prompt": "What exact research frontier should the next session resume?",
+      "choices": ["run-blinded-replication", "reopen-solvent-echo", "ABSTAIN"],
+      "expectedAnswer": "run-blinded-replication",
+      "expectedEvidence": ["ledger-resume", "ledger-decision"]
+    },
+    {
+      "id": "settled-finding",
+      "capability": "retrieval",
+      "query": "NB-42 coefficient seventeen contaminant controlled raw output",
+      "limit": 4,
+      "expect": {
+        "all": ["finding-current"],
+        "first": "finding-current"
+      },
+      "prompt": "Which coefficient is currently validated by run NB-42?",
+      "choices": ["coefficient-seventeen", "coefficient-eleven", "ABSTAIN"],
+      "expectedAnswer": "coefficient-seventeen",
+      "expectedEvidence": ["finding-current"]
+    },
+    {
+      "id": "superseded-result",
+      "capability": "selective-forgetting",
+      "query": "Northbridge calibration coefficient",
+      "limit": 8,
+      "expect": {
+        "all": ["finding-current", "finding-old"],
+        "order": [["finding-current", "finding-old"]],
+        "statuses": {
+          "finding-current": "VALIDATED",
+          "finding-old": "SUPERSEDED"
+        }
+      },
+      "prompt": "Which calibration result governs current work?",
+      "choices": ["coefficient-seventeen", "coefficient-eleven", "ABSTAIN"],
+      "expectedAnswer": "coefficient-seventeen",
+      "expectedEvidence": ["finding-current"],
+      "forbiddenEvidence": ["finding-old"]
+    },
+    {
+      "id": "dead-end-avoidance",
+      "capability": "dead-end",
+      "query": "deadend solvent echo contaminant normalization route",
+      "limit": 4,
+      "expect": {
+        "all": ["ledger-deadend"],
+        "first": "ledger-deadend"
+      },
+      "prompt": "Should the next run retry solvent echo normalization?",
+      "choices": ["do-not-retry", "retry-solvent-echo", "ABSTAIN"],
+      "expectedAnswer": "do-not-retry",
+      "expectedEvidence": ["ledger-deadend"]
+    },
+    {
+      "id": "multi-session-synthesis",
+      "capability": "long-range-synthesis",
+      "query": "Northbridge checksum batch four deployment",
+      "limit": 6,
+      "expect": {
+        "all": ["finding-checksum", "memory-budget"]
+      },
+      "prompt": "What execution package preserves both the publication and deployment constraints?",
+      "choices": ["checksum-7f3c-and-batch-four", "checksum-only", "batch-eight", "ABSTAIN"],
+      "expectedAnswer": "checksum-7f3c-and-batch-four",
+      "expectedEvidence": ["finding-checksum", "memory-budget"]
+    },
+    {
+      "id": "unsupported-question",
+      "capability": "abstention",
+      "query": "zephyr orchard isotope ninety-nine",
+      "limit": 5,
+      "expect": {
+        "zeroHits": true
+      },
+      "prompt": "What isotope was measured in the Zephyr orchard?",
+      "choices": ["isotope-ninety-nine", "isotope-seventeen", "ABSTAIN"],
+      "expectedAnswer": "ABSTAIN",
+      "expectedEvidence": []
+    },
+    {
+      "id": "action-grounding",
+      "capability": "action-use",
+      "query": "Northbridge deployment batch constraint execute",
+      "limit": 4,
+      "expect": {
+        "all": ["memory-budget"]
+      },
+      "prompt": "Select the next execution action under the remembered deployment constraint.",
+      "choices": ["run-batch-four", "run-batch-eight", "ABSTAIN"],
+      "expectedAnswer": "run-batch-four",
+      "expectedEvidence": ["memory-budget"]
+    },
+    {
+      "id": "claim-trace",
+      "capability": "traceability",
+      "trace": {
+        "start": "finding-current",
+        "reachable": ["finding-old", "lit-protocol"],
+        "sourceHandles": ["finding-current", "lit-protocol"],
+        "artifactRoles": ["raw-output"]
+      }
+    }
+  ]
+}
