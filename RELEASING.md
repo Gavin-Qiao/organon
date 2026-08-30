@@ -10,6 +10,10 @@ until the checks pass. The plugins version independently — cutting one never f
 > each plugin's `.claude-plugin/plugin.json` and `.codex-plugin/plugin.json` carry the same
 > version; validation rejects drift between them. Tags + releases are the human-facing record.
 
+Routine validated work may land directly on `main`. A release cut is the only mandatory PR
+boundary: its versioned changelog finalization and both manifest bumps must merge through a PR,
+and only the exact merged release commit may receive the release tag.
+
 ## Versioning ([SemVer](https://semver.org), per plugin)
 
 - **MAJOR** — incompatible change to the store layout, the controlled vocab, or a script's CLI.
@@ -22,27 +26,31 @@ calls it out.
 ## Cutting a release (for plugin `P`)
 
 1. **Land everything on `main`** and confirm CI is green.
-2. **Finalize the changelog.** In `P/CHANGELOG.md`, rename `## [Unreleased]` to
+2. **Create a release branch** from that exact `main`, conventionally `release/P-vX.Y.Z`.
+3. **Finalize the changelog.** In `P/CHANGELOG.md`, rename `## [Unreleased]` to
    `## [X.Y.Z] - YYYY-MM-DD`, open a fresh empty `## [Unreleased]` above it, and update the
    link references at the bottom (the `[Unreleased]` compare URL and a new `[X.Y.Z]` tag URL,
    tags shaped `P-vX.Y.Z`).
    If the work has a cross-plugin draft under `.github/release-notes/`, reconcile it into
    each affected plugin's changelog first; the changelog remains the release-note source of
    record. Do not publish the draft as an Organon-level release.
-3. **Bump both adapter manifests.** Set `version` in `P/.claude-plugin/plugin.json` and
+4. **Bump both adapter manifests.** Set `version` in `P/.claude-plugin/plugin.json` and
    `P/.codex-plugin/plugin.json` to `X.Y.Z`; the validator requires exact parity.
-4. **Sanity-check locally:**
+5. **Sanity-check locally:**
    ```bash
    bun run check                                            # adapters validated, live store healthy, tests
    bun promptus/scripts/changelog.ts check X.Y.Z P/CHANGELOG.md   # release-note gate
    ```
-5. **Commit** with `chore(release): cut P vX.Y.Z` (scope required; flat `- ` bullet body).
-6. **Tag and push:**
+6. **Commit** with `chore(release): cut P vX.Y.Z` (scope required; flat `- ` bullet body).
+7. **Push the branch and open a PR** with the same scoped Conventional title. Merge only after
+   review and all required checks pass; do not tag the branch tip.
+8. **Tag the exact merged release commit and push the tag:**
    ```bash
-   git tag P-vX.Y.Z
+   git fetch origin main
+   git tag P-vX.Y.Z <merged-release-commit>
    git push origin P-vX.Y.Z
    ```
-7. **Watch the workflow.** It validates, checks the version + changelog, and creates the
+9. **Watch the workflow.** It validates, checks the version + changelog, and creates the
    release titled `P vX.Y.Z`. If the `[X.Y.Z]` section in `P/CHANGELOG.md` is missing or
    empty, it stops *before* publishing.
 

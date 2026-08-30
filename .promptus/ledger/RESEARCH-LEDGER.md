@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-26 (Close the v0.9.2 release and install gate)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-08-30 (Record direct-main policy and symlink-safe benchmark custody)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,28 +27,32 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260826T093705Z-release-promptus-v092-and-refresh-the-local-codex-plugin -->
-Promptus v0.9.2 is released and locally installed. Release PR 54 merged to protected main at 52da18da43758ec0472e3f895358baeec1ed41aa; protected-main CI run 32953444082 and tag-triggered release workflow 32953630241 both passed. The public tag and release resolve to that exact commit, and the official Codex cache is /home/mohan/.codex/plugins/cache/organon/promptus/0.9.2.
+<!-- kb:now-through event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy -->
+The isolated continuity benchmark, four-README redesign, and landing-policy update form one validated non-release tranche. Routine validated work may land directly on main after local gates pass; every release cut must merge through a PR before the exact merged commit is tagged. Promptus v0.9.2 remains released and locally installed; no manifest, version, tag, publication, or installed cache changed.
 
-- Exact work conservation preserves Markdown truth and exact gate semantics while reducing MoT stress-mount session doctor from 57.66 to 15.46 seconds, index from 38.90 to 13.48 seconds, full gate from 109.34 to 35.70 seconds, ordinary write from 29.44 to 0.21 seconds, and relation-bearing write from 35.36 to 7.55 seconds.
-- Both installed manifests report 0.9.2; source and cache are byte-identical apart from generated command-skill adapters.
-- The installed strict gate verifies 54 of 54 current artifacts, and installed session preflight is READY with zero errors.
+- Marketplace and plugin validation passed.
+- The complete repository passed 370 tests with 2,018 expectations.
+- Benchmark output confinement now resolves symlinked ancestors before rejecting physical destinations inside a .promptus store; the focused suite passed 6 tests with 28 expectations.
+- Current artifact custody carries the changed agent contract plus contributor and release workflows, while preserving the historical v0.9.2 release facts.
+- No live Psi, MoT, Probatio, or Mensura store was read or written.
 
 ## Open frontier
 
-- Relation resolution remains the measured maintenance residual.
-- Batch writing, touched-files-only health, and SQLite adoption remain deferred until their own measured thresholds justify them.
-- A new Codex task must be started before expecting the current task to load the v0.9.2 skill bundle.
+- GitHub main remains externally protected by four required checks; repository policy permits direct pushes, but remote enforcement may still reject a new direct commit unless the pusher has a bypass or the rules are aligned.
+- Editio manifest and marketplace descriptions still advertise roadmap tables, bibliography, and rebuttal capabilities that current code and READMEs defer; aligning that metadata remains a separate change.
+- Fresh-agent continuity behavior is unmeasured; the current 8 of 8 result covers deterministic mechanics only.
+- Real-project continuity evidence requires sanitized case bundles or operator-approved immutable snapshots; live stores remain out of scope.
+- Relation resolution remains the measured maintenance residual; SQLite stays deferred.
 
 ## Next actions
 
-1. Start a fresh Codex task to load the installed Promptus v0.9.2 plugin.
-2. Continue measuring relation-heavy writes across representative hardware before selecting the next software-level optimization.
-3. Keep SQLite deferred while exact Markdown work conservation provides adequate cadence.
+1. Decide whether to align the stale Editio manifest and marketplace descriptions in a separate change.
+2. Run the continuity packets with a controlled fresh agent before making a behavioral claim.
+3. Gather sanitized self-contained cases before any real-project effectiveness claim.
 
 ## <<< RESUME HERE >>>
 
-Resume from event-20260826T093705Z-release-promptus-v092-and-refresh-the-local-codex-plugin and finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite. Promptus v0.9.2 is published, installed, and verified; relation resolution is the next measured optimization frontier.
+Resume from event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy. The validated tranche includes the symlink-safe continuity benchmark, all four refreshed READMEs, and the direct-main/release-PR workflow; all release and installation state remains unchanged.
 
 <!-- now:end -->
 
@@ -1283,5 +1287,67 @@ This event carries current mutable-source custody forward from the unreleased ca
 Promptus v0.9.2 was released through protected main after release PR 54 merged at exact commit 52da18da43758ec0472e3f895358baeec1ed41aa. Protected-main CI run 32953444082 passed Linux, macOS, Windows, validation, and hygiene. The lightweight tag promptus-v0.9.2 resolves to that exact commit; release workflow 32953630241 passed tests, strict health, tag-manifest parity, note extraction, and publication, producing the public non-draft, non-prerelease release at https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.9.2. The official install command codex plugin add promptus@organon installed /home/mohan/.codex/plugins/cache/organon/promptus/0.9.2. Both installed adapter manifests report 0.9.2, and the installed plugin tree is byte-identical to source apart from Codex-generated migrated command skills. The installed strict gate verified 54 of 54 current artifacts across 318 units and 103 source files, and the installed session doctor reported READY with zero errors. A new Codex task is required to load the newly installed skill bundle.
 ↳ supports event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree
 ↳ supports finding-20260826T082356Z-exact-work-conservation-restores-cadence-without-sqlite
+
+### [2026-08-29 18:55:02] RESULT/VALIDATED — Build an isolated continuity and traceability benchmark
+<!-- kb:id event-20260829T225502Z-build-an-isolated-continuity-and-traceability-benchmark -->
+<!-- kb:artifact benchmark-runner|benchmarks/promptus-continuity.ts|b2106963772f4f940cdee7b30b809b967a66cc7485ea7d94ad7e6166bb185c5c -->
+<!-- kb:artifact benchmark-suite|benchmarks/continuity-cases.json|5e856e7eb90cd3615193414eeff3ccf95d5ccc1c2d00d4cbc580419e1e74567f -->
+<!-- kb:artifact benchmark-tests|benchmarks/promptus-continuity.test.ts|213bfe557ad952828b07ccae7f3fab46eb3208fa500dd2dcb8d891dd6df478c6 -->
+Built a continuity-and-traceability benchmark that has no live-project root input: it materializes a wholly synthetic suite through the real gated writer into a marker-protected operating-system temporary workspace, runs index, strict health, and session preflight there, evaluates eight retrieval and continuity cases, emits bounded replay packets, and removes the fixture by default. The bundled suite passed 8 of 8 deterministic cases; the fixture strict gate was healthy and its session doctor was READY. Five focused isolation and scorer tests passed, including rejection of --root and of any report path inside a .promptus tree while decoy sentinel bytes remained unchanged. A full repository run passed 369 tests with 2,014 expectations, and plugin validation passed. A seven-response oracle exercise passed only as a validation of the response scorer; it is not fresh-agent behavioral evidence. No live Psi, MoT, Probatio, or Mensura store was read or written. The benchmark therefore validates isolated Promptus mechanics, not effectiveness on those projects; the next honest test is fresh-agent replay, followed only by sanitized self-contained case bundles or operator-approved immutable snapshots.
+↳ supports finding-20260829T225443Z-measure-continuity-and-traceability-by-use-before-adding-memory
+
+### [2026-08-30 17:20:33] RESULT/VALIDATED — Refresh all Organon READMEs as one current documentation system
+<!-- kb:id event-20260830T212033Z-refresh-all-organon-readmes-as-one-current-documentation-system -->
+<!-- kb:artifact marketplace-readme|README.md|e4210c464a60c0325f7aa4800dac19a2634284f29ef948bcfc5147432cfce4ff -->
+<!-- kb:artifact promptus-readme|promptus/README.md|2ef5a7dbaec6732dc262d1e3a69f963e289ca921bf5568d8672e25db4201807e -->
+<!-- kb:artifact editio-readme|editio/README.md|f0878f087f378905980fb17ad2ea966d06d75f13e944ff7bab207c2f79187820 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|c7df3a30cbea9f4e6ec6f52c54f56cb685d27861b15523feacd6faf5c44a6d2a -->
+Rebuilt all four repository READMEs as one restrained, GitHub-native documentation system: centered product heroes, compact navigation, current capability and decision tables, Mermaid flows, safety callouts, collapsible deep references, and consistent sentence-case prose. The rewrite corrected substantive drift rather than decorating it: Editio is a writing toolchain rather than a Promptus read-port; agents assign claim grades while deterministic gates audit them; publish is a clean render rather than a universal camera-ready claim; kind, status, and relation are distinct in Promptus; kb-add and kb-index boundaries, PageRank, hooks, and GPL wording now match implementation; the shipped exact-work-conservation result replaces candidate wording; SQLite remains deferred; and the synthetic continuity harness is not presented as fresh-agent or four-project evidence. Promptus now points to the recent memory and provenance research already curated in the store. All local links resolve, details and code fences balance, documented benchmark entry points report valid help, and the retrieval dry run made no network calls or writes. Marketplace/plugin validation passed; the complete repository suite passed 369 tests with 2,014 expectations; a post-fix focused pass passed 35 tests with 353 expectations; and independent final grounding and render audits both returned ship. The four exact README bytes are bound below. No manifest, implementation, version, tag, installed plugin, commit, or release changed. One boundary remains outside this README-only task: Editio manifest/marketplace descriptions still advertise roadmap tables, bibliography, and rebuttal capabilities that the implementation and current READMEs explicitly defer.
+↳ extends event-20260829T225502Z-build-an-isolated-continuity-and-traceability-benchmark
+
+### [2026-08-30 17:33:30] DECISION/RESOLVED — Let routine validated work push directly and keep releases on PRs
+<!-- kb:id event-20260830T213330Z-let-routine-validated-work-push-directly-and-keep-releases-on-pr -->
+Operator decision on 2026-08-30: ordinary non-release work may commit and push directly to main after the relevant local gates pass. A PR remains optional when review or collaboration is useful; every release cut is the sole mandatory PR boundary, and only the exact merged release commit may be tagged. This changes the landing workflow, not any manifest, tag, published release, or installed-cache state.
+↳ relates-to event-20260830T212033Z-refresh-all-organon-readmes-as-one-current-documentation-system
+
+### [2026-08-30 17:35:09] FIX/VALIDATED — Reject symlinked benchmark output into Promptus stores
+<!-- kb:id event-20260830T213509Z-reject-symlinked-benchmark-output-into-promptus-stores -->
+<!-- kb:artifact benchmark-runner|benchmarks/promptus-continuity.ts|cce7b8dd44b842f8688e910a1bf3968e866fa374d065839f225964de6a2d8b85 -->
+<!-- kb:artifact benchmark-suite|benchmarks/continuity-cases.json|5e856e7eb90cd3615193414eeff3ccf95d5ccc1c2d00d4cbc580419e1e74567f -->
+<!-- kb:artifact benchmark-tests|benchmarks/promptus-continuity.test.ts|5211aeb306dc72045c6bbcd949985ff3390234b9a13700b9ee97589696d2b559 -->
+The isolated continuity runner previously rejected only lexical .promptus components for outputs, so a symlinked parent could resolve physically into a live store. Output confinement now rejects a symlink target, resolves the deepest existing ancestor, and checks the physical destination before creating directories or writing. A cross-platform symlink or junction regression routes an output alias into a decoy .promptus directory and proves that no report is created while sentinel bytes remain exact. The focused suite passed 6 tests with 28 expectations; the complete repository passed 370 tests with 2,018 expectations; marketplace and plugin validation passed. No live Psi, MoT, Probatio, or Mensura store was read or written.
+↳ supersedes event-20260829T225502Z-build-an-isolated-continuity-and-traceability-benchmark
+↳ supports finding-20260829T225443Z-measure-continuity-and-traceability-by-use-before-adding-memory
+
+### [2026-08-30 17:35:48] RESULT/VALIDATED — Carry artifact custody through the direct-push landing policy
+<!-- kb:id event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|82e52290baad21cd2b3926077c0c23c7f3e46f2760e143559a8ad002b1fd58ed -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|33424df801896a957c05769250cc41f3f45bd098399b86701e55d040f0a598d5 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|f9aa99cd1e72d8dbdfa7704b57205e4518b2f606a57b12ab5886d90eefcb368b -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|a50197982b41d5528345d37a473f3cb8b4b1527c875d254616de27a7e3e3aa6a -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+The operator-authorized landing policy is now explicit and internally consistent: routine validated work may push directly to main, PRs remain optional for ordinary review, and every release cut must merge through a PR before its exact merged commit is tagged. AGENTS.md, CONTRIBUTING.md, and RELEASING.md carry the rule; CI already runs on main pushes and PRs, while publication remains tag-triggered. This event supersedes the v0.9.2 release-tree unit only as the current mutable-source custody snapshot. It does not retract or revise the historical validation, release, tag, publication, or installed-plugin facts recorded there and in the release receipt. All 22 prior dependencies are carried forward, with only the agent contract changed, and the two detailed workflow documents are newly bound. The complete repository passed 370 tests with 2,018 expectations and marketplace/plugin validation passed. No manifest, version, tag, release, or installed cache changed.
+↳ supersedes event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree
+↳ supports event-20260830T213330Z-let-routine-validated-work-push-directly-and-keep-releases-on-pr
+↳ extends event-20260830T212033Z-refresh-all-organon-readmes-as-one-current-documentation-system
 
 <!-- kb:append-point -->

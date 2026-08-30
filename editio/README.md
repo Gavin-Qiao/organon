@@ -1,54 +1,64 @@
 <div align="center">
 
-# editio
+# Editio
 
-**Write papers that can defend themselves.**
-One markdown source · three renders · every claim graded against your store.
+### Evidence-calibrated academic writing.
+
+Per-section Markdown, checked claims and numbers, three render modes.
 
 [![CI](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml/badge.svg)](https://github.com/Gavin-Qiao/organon/actions/workflows/ci.yml)
-[![release](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=editio-v%2A&label=release)](https://github.com/Gavin-Qiao/organon/releases)
-[![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue.svg)](../LICENSE)
-[![requires: promptus](https://img.shields.io/badge/requires-promptus-8A2BE2.svg)](../promptus/README.md)
+[![Release](https://img.shields.io/github/v/release/Gavin-Qiao/organon?filter=editio-v%2A&label=editio&color=7c3aed)](https://github.com/Gavin-Qiao/organon/releases)
+[![Promptus](https://img.shields.io/badge/requires-promptus-5b5bd6)](../promptus/README.md)
+[![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](../LICENSE)
 
-Part of [**Organon**](../README.md), beside [**promptus**](../promptus/README.md) — the store this plugin writes from.
+[Quick start](#quick-start) · [Audit loop](#the-audit-loop) · [Toolchain](#what-ships) · [Venues](#venue-profiles) · [Organon](../README.md)
 
 </div>
 
-> Latin *editio* — "a bringing forth, a publishing": the read-port where what a project has
-> **validated** becomes a submittable paper.
+Editio is Organon's academic-writing toolchain for Claude Code and Codex. It reads a
+[Promptus](../promptus/README.md) store for grounding and writes a project-local `.editio/paper/`
+workspace. Markdown remains the paper's authored source; TeX and PDFs are derived build products.
 
----
+> [!IMPORTANT]
+> Agents or authors assign claim grades. Editio does not pretend that judgment is mechanical.
+> `editio-status` performs the mechanical half: resolve grounds, compare their status with the
+> asserted grade, and fail unsupported spans unless the author records an explicit override where
+> the contract permits one.
 
-## Why
+## From evidence to paper
 
-A paper is a set of claims wearing prose. The failure mode is drift between the two: the
-sentence sounds `VALIDATED` while the evidence is `CONJECTURED` — or missing. editio keeps
-them honest by making confidence *visible before a reviewer finds it*: content is authored
-as per-section markdown with claims wrapped in spans, each span is graded against the
-promptus store, and the **draft** render prints every grade on the page. `publish` strips
-the scaffolding; `blind` also masks who you are.
-
-```text
-[the gate refuses off-vocab writes]{.claim .validated grounds=the-gate}     → clean prose
-[this transfers to manuscripts]{.claim .conjectured grounds=paper-read-port} → amber in draft
-[40% of retractions fail on provenance]{.claim .unsourced}                   → vermilion + tag
-[editors ask for evidence trails]{.claim}                                    → grey (ungraded)
+```mermaid
+flowchart LR
+  P[("Promptus store<br/>findings · literature · memory")] --> R["recall + grounded review"]
+  R --> M["sections/*.md<br/>marked claims"]
+  N["numbers.json<br/>value + source hash"] --> M
+  I["paper.json<br/>identity + venue"] --> S["scaffold + doctor"]
+  S --> M
+  M --> G{"status and number gates"}
+  G --> D["draft<br/>grades visible"]
+  G --> U["publish<br/>clean prose"]
+  G --> B["blind<br/>identity masked"]
 ```
-
-Markdown stays the only source of truth — the `.tex` siblings are derived and disposable,
-and the renderer **never blocks**: enforcement (zero unsourced, zero overclaims) is a gate
-you run before submitting, not a build failure while thinking.
 
 ## Quick start
 
-Claude Code:
+Promptus is a prerequisite because it supplies the evidence store.
+
+### Claude Code
 
 ```text
-/plugin install promptus@organon      # the store (prerequisite)
+/plugin marketplace add Gavin-Qiao/organon
+/plugin install promptus@organon
 /plugin install editio@organon
 ```
 
-Codex:
+In a repository with `.promptus/`:
+
+```text
+/editio arxiv
+```
+
+### Codex
 
 ```bash
 codex plugin marketplace add Gavin-Qiao/organon
@@ -56,193 +66,223 @@ codex plugin add promptus@organon
 codex plugin add editio@organon
 ```
 
-Then, in a repo that has a `.promptus/` store:
+Then ask Codex to use the `editio` skill to start an arXiv paper.
 
-```text
-/editio arxiv                         # checks the store + TeX, scaffolds .editio/paper/
-/editio nmi                           # NMI Article order, budgets, artwork slots, optional blind mode
-/editio neurips                       # official-kit modes, checklist assembly, content-page gate
+Editio requires a TeX distribution at build time. The `editio-latex` skill detects the local
+environment first and gives platform-aware setup guidance; Editio does not vendor TeX.
+
+## Mark claims where they live
+
+Claims stay inside the prose rather than in a parallel database:
+
+```markdown
+[The controlled run reproduced the effect.]{.claim .validated grounds=finding-run-42}
+
+[The effect may generalize to a second population.]{.claim .conjectured grounds=finding-run-42}
+
+[The mechanism is still unknown.]{.claim .unsourced}
 ```
 
-In Codex, ask it to use the `editio` skill to start an arXiv paper. The skill and Claude
-command adapter execute the same workflow.
+The draft render makes those distinctions visible. The publish render removes claim annotations;
+the blind render also masks identity and self-citations.
 
-The installed skills are host- and OS-neutral: they resolve `<plugin-root>` from their own
-`SKILL.md` location. Organon's CI runs the complete suite on Ubuntu, Windows, and macOS.
+| Mode | Purpose | Output behavior |
+| --- | --- | --- |
+| `draft` | Thinking and internal review | Shows claim grades, grounds, TODOs, and provenance stamps |
+| `publish` | Clean external render | Removes Editio annotations while retaining authored content |
+| `blind` | Anonymous review | Uses publish behavior, masks authorship and self-citations, and drops content marked to be hidden in blind mode |
 
-Write `sections/*.md`, then render and build (from `.editio/paper/`):
-
-```bash
-bun editio/scripts/editio-render.ts --all                    # from an Organon checkout; installed agents use the editio skill
-latexmk main.tex                                             # → build/main.pdf, draft mode
-latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
-```
-
-The canonical, always-current PDFs live in the build dirs (`build/main.pdf` draft,
-`build-publish/main.pdf` publish) — read and hand off from there; the paper source root
-stays PDF-free (the doctor flags strays). For a durable snapshot ("the version I sent
-co-authors"), copy into an `archive/` dir under a dated, self-describing name
-(`mypaper_2026-07-07_publish.pdf`) — never a bare copy in the root, where it goes stale
-and shadows the real build. And the markdown sources ARE the paper, so git is its version
-history: commit the paper dir (the `build*/` dirs stay ignored) and tag milestones
-(`paper-v1-submitted`); the doctor flags sources a repo ignores or never tracked.
-
-No TeX yet? The `editio-latex` skill sets one up in ~5 minutes — detect-first, per-OS,
-never vendored. Your title and authors live in **`paper.json`** and nowhere else; it
-scaffolds as placeholders (`Author One`), blind builds mask it automatically, and
-`editio-identity` delivers it to every document as generated data macros
-(`front/identity.tex`: `\PaperTitle`, `\AuthorList`, bios) — one paper.json edit
-updates the title, author block, and bios everywhere, and the doctor flags any name
-hard-coded outside the macros.
-
-## Three renders, one source
-
-| mode | what the same source becomes |
-|---|---|
-| `draft` | the author's instrument — claim tints (Okabe-Ito), per-section provenance stamps, grounds handles, TODOs on the page |
-| `publish` | camera-ready — every annotation collapses to clean prose |
-| `blind` | publish + `\selfcite` → "[anonymized]", `\blindhide{…}` dropped, authors → "Anonymous Authors" |
+Claim grades do not block rendering. Malformed source or an invalid workspace still can. The
+publication gate is separate so authors can think in an imperfect draft without confusing that
+draft for a defensible submission.
 
 ## The audit loop
 
-1. **Draft** — wrap checkable claims in `{.claim}` spans (ungraded is fine).
-2. **Retrieve** — promptus `recall` looks each claim up; every hit carries `substrate:status`.
-3. **Grade** — the `grounded-writing-reviewer` skill (read-only; also a Claude subagent adapter) reports findings per
-   flagged span; the session maps them to grades.
-4. **Apply or override** — grades are written back into the source. An in-span
-   `override="reason"` passes the gate **on the record** for an `.unsourced` claim (the
-   author accepts it) or a `.validated` claim over weak grounds — never for an ungraded
-   span (ungraded means the loop hasn't run; run it).
-5. **Render** — grades become `\claimV / \claimC / \claimU / \claimG` in draft.
-6. **Gate** — publish requires **no ungraded, no unsourced, no overclaims**.
+1. Write the argument in `sections/*.md`; mark checkable spans with `{.claim}`.
+2. Use Promptus `recall` to retrieve relevant evidence with its status attached.
+3. Run `grounded-writing-reviewer`. It reports unsupported, over-confident, or under-confident
+   spans without editing the source.
+4. Assign the grade and grounds in Markdown. If an author accepts an unsourced claim or an
+   overclaim, add `override="reason"` so the exception remains explicit.
+5. Render, inspect, and run the gates.
+
+```bash
+bun editio/scripts/editio-status.ts --claims
+bun editio/scripts/editio-numbers.ts --gate
+bun editio/scripts/editio-status.ts --gate
+```
+
+`editio-status --gate` requires:
+
+- no ungraded claim spans;
+- no unsourced claim without a recorded override;
+- no validated claim resting on weak, unknown, absent, or invalidated grounds without a recorded
+  override.
+- no conjectured claim resting on invalidated grounds without a recorded override.
+
+An override is not silent success. The report prints the reason and preserves the author's
+responsibility on the record.
+
+## One authored paper, several derived views
+
+```text
+.editio/paper/
+├─ paper.json                 title, authors, venue, section order
+├─ numbers.json               load-bearing values and source files
+├─ sections/*.md              authored paper
+├─ figures/                   source figures + venue-sized style
+├─ front/
+│  ├─ macros.tex              authored extension point
+│  ├─ identity.tex            generated from paper.json
+│  └─ numbers.tex             generated from numbers.json
+├─ main.tex                   generated assembly
+├─ editio.sty                 generated three-mode layer
+├─ build/main.pdf             canonical draft build
+├─ build-publish/main.pdf     canonical publish build
+└─ build-blind/main.pdf       canonical blind build
+```
+
+Generated files are disposable. Authored files survive scaffold reruns; `--force` refreshes only
+the generated contract and the doctor withholds unsafe regeneration advice when workspace order or
+metadata has diverged.
+
+`paper.json` is the single source for title and identity. `editio-identity` generates data macros
+for the title, authors, correspondence, keywords, running heads, and bios. The doctor flags hard
+coded copies that could drift or leak into a blind build.
+
+`numbers.json` plays the same role for results. Every handle names a value and may also name source
+files and the computation that produced it. `editio-numbers --write` produces `front/numbers.tex`
+and locks the source hashes of sourced, unpinned values. The gate rejects stale, unknown,
+malformed, or hand-edited bindings; an explicitly pinned value passes on the record.
 
 ## What ships
 
-| piece | what it does |
-|---|---|
-| `/editio` | Claude Code command adapter: start or resume a paper; always ends at one next action |
-| `editio` skill | portable orchestrator for Claude Code and Codex — start/resume, decision table, invariant, audit loop |
-| `editio-structure` | the argument before the prose: orders (imrad / cs-systems / theory / nature-article / ml-conference), contribution-first framing, the abstract formula — plus craft distilled from exemplary papers ([`references/exemplars.md`](skills/editio-structure/references/exemplars.md)) |
-| `editio-latex` | TeX setup, venue scaffolding, mode builds, single-section previews, notation conventions; the authoring subset is a written contract ([`references/authoring-subset.md`](skills/editio-latex/references/authoring-subset.md)) |
-| `editio-figures` | figures that argue — claim-first captions, panel-first composition sized to the venue slot, statistical honesty, the figure-as-unit provenance contract; the craft is distilled from cited sources ([`references/`](skills/editio-figures/references/)) |
-| `editio-scaffold.ts` | idempotent workspace scaffold — authored files seeded once, generated files (incl. the per-venue `figures/editio.mplstyle`) refresh only with `--force` |
-| `editio-render.ts` | the bespoke md→tex renderer, behind a golden contract ([`templates/contract/`](templates/contract/)) any swapped-in renderer must pass; cwd-proof, warns on unrendered spans, `--concat` exports one reviewable markdown file |
-| `editio-status.ts` | **the grounding layer, tooled**: per-section claim tallies and drafted-word counts (vs each section's `budget:`), every ungraded/unsourced span at `file:line` (`--claims`), grounds handles resolved against the store — and the publish gate as a command (`--gate`: no ungraded, no unsourced, no overclaims over weak/unknown/absent grounds) |
-| `editio-figcheck.ts` | the figure-size gate — a figure PDF must *be* the slot width (±1mm); post-scaling is caught before it silently shrinks fonts |
-| `editio-doctor.ts` | workspace health, report-only — scaffold/order/venue drift, required official assets, stale or unwired sources, identity leaks, and the target venue's real budget surface (whole-PDF pages for TPAMI; source/display budgets for NMI; content pages and PDF size for NeurIPS) (`--strict` exits 1 on hard findings) |
-| `editio-numbers` | **one source of truth per number**: `numbers.json` names each value once, `@num:handle` binds it in prose/math/captions ([`editio-numbers` skill](skills/editio-numbers/SKILL.md)), `--write` generates `front/numbers.tex` + a source-hash lock, `--gate` fails on stale/unknown bindings |
-| `editio.sty` | the three-mode render layer |
-| `humanizer` | the style toolkit (de-AI + positive human patterns); promptus's `grannie` dials it |
-| venues | `arxiv`, `tpami`, `nmi`, `neurips` — venues are **data folders** (class or official package, figure slots/type, mode mapping, assembly, required assets, budgets, live policy sources); add one without hard-coding a journal or conference in the scripts |
+| Layer | Surface | What it owns |
+| --- | --- | --- |
+| Orchestration | `/editio`, `editio` | Start or resume a paper and choose the next workflow |
+| Argument | `editio-structure` | DoCO/DEO section orders, contribution-first framing, abstracts, and exemplar-derived craft |
+| TeX | `editio-latex`, `editio-scaffold`, `editio-render` | Environment guidance, idempotent workspace generation, Markdown-to-TeX contract, three modes |
+| Evidence | `grounded-writing-reviewer`, `editio-status` | Read-only prose audit, grounds resolution, drafted-word counts, publication gate |
+| Numbers | `editio-numbers` | One value per handle, source-hash lock, generated bindings, stale-number gate |
+| Figures | `editio-figures`, `editio-figcheck` | Claim-first figure craft, venue sizing, caption discipline, exact PDF-width check |
+| Identity | `editio-identity` | Data macros from `paper.json`, bios, blind-safe author surfaces |
+| Health | `editio-doctor` | Scaffold, venue, order, source, identity, path, VCS, asset, and budget diagnostics |
+| Voice | `humanizer` | AI-tell removal plus positive human-writing patterns; pure style, no store mutation |
 
-**Roadmap** (built in phases, driven by real papers — the claim gate arrived early because
-the first dogfood demanded it): **next → `editio-tables`** (a data→booktabs unit; the first
-dogfood's request) · `editio-bib` (refs.bib from the lit store) · `editio-repro` →
-`editio-venue` · `editio-rebuttal` · `editio-lint` (structure/notation lint; the claim gate
-already ships as `editio-status --gate`).
+The renderer is deliberately small and tested against a golden contract in
+[`templates/contract/`](templates/contract/). A future Pandoc or other replacement must preserve
+that authoring subset rather than silently changing what the Markdown means.
 
-## Skills, not stacks
+## Venue profiles
 
-editio ships portable expertise and thin, swappable reference implementations. The concrete
-stack is yours: the TeX distribution, the build driver (`latexmk` is the reference, the
-generated `.latexmkrc` is three lines), the renderer (pandoc + a Lua filter is the
-documented swap — the golden contract keeps any replacement honest), the plotting library.
-Venue rules are JSON data. Nothing is vendored, and a `no-identity` test enforces that
-nobody's name ships in the templates.
+Venue rules are data under [`templates/venues/`](templates/venues/), not branches scattered through
+the scripts.
 
-For venues whose official kit must remain year-specific, Editio delegates rather than
-imitates. The NeurIPS profile requires the official `neurips_2026.sty` and checklist in the
-paper workspace, verifies the style's immutable hash, maps `draft` / `blind` / `publish` to
-the kit's `preprint` / `main` / `main,final` options, and checks that the authored checklist
-has no template TODOs. The venue folder carries those rules as data; Editio does not vendor
-or rewrite the organizer's files.
+| Profile | Contract encoded today |
+| --- | --- |
+| `arxiv` | One-column preprint, 165.1 mm figure slot, `article` + `natbib` reference scaffold |
+| `tpami` | IEEEtran Computer Society journal mode, two-column float discipline, running heads, bios, page-budget diagnostics |
+| `nmi` | Nature Machine Intelligence Article order, source/display budgets, optional blind mode, 88/180 mm final-artwork slots; generated layout is an initial-review proxy, not Nature house style |
+| `neurips` | Official annual kit mapping for draft/blind/publish, content-page and PDF-size checks, required checklist and style-file verification |
 
-## References
+Year-specific official kits remain operator-supplied. Editio verifies the declared assets but does
+not redistribute them. For example, the NeurIPS profile requires the official style and checklist
+in the paper workspace. The NMI profile records initial-submission and final-artwork rules without
+claiming to reproduce Nature's production layout.
 
-editio's skills are *distilled* from the sources below — pointers and transferable moves in
-our own words, never their text; read the originals. Every distillation cites its source at
-the point of use (each skill's `references/*.md`) and lands in the lit store, per the repo
-rule ([CONTRIBUTING — "References are load-bearing"](../CONTRIBUTING.md#references-are-load-bearing)).
+## Build and handoff
 
-**Structure & writing craft**
+From an Organon checkout, point the renderer at the paper project:
 
-- Mensh B, Kording K (2017). Ten simple rules for structuring papers. *PLoS Computational
-  Biology* 13(9): e1005619. <https://doi.org/10.1371/journal.pcbi.1005619>
-- Gopen GD, Swan JA (1990). The Science of Scientific Writing. *American Scientist* 78(6):
-  550–558.
-- Whitesides GM (2004). Whitesides' Group: Writing a Paper. *Advanced Materials* 16(15):
-  1375–1377. <https://doi.org/10.1002/adma.200400767>
-- Nature Portfolio. Formatting guide (incl. the annotated summary-paragraph template).
-  <https://www.nature.com/nature/for-authors/formatting-guide>
-- Constantin A, Peroni S, Pettifer S, Shotton D, Vitali F (2016). The Document Components
-  Ontology (DoCO). *Semantic Web* 7(2): 167–181 — with the companion Discourse Elements
-  Ontology (DEO), <http://purl.org/spar/deo>. The structure gate's vocabulary.
+```bash
+bun editio/scripts/editio-render.ts --root /path/to/project --all
+```
 
-**Exemplary papers the craft is distilled from** ([`exemplars.md`](skills/editio-structure/references/exemplars.md))
+Then build from `/path/to/project/.editio/paper/`:
 
-- Watson JD, Crick FHC (1953). A Structure for Deoxyribose Nucleic Acid. *Nature* 171:
-  737–738. <https://doi.org/10.1038/171737a0>
-- Shannon CE (1948). A Mathematical Theory of Communication. *Bell System Technical
-  Journal* 27: 379–423, 623–656.
-- Ongaro D, Ousterhout J (2014). In Search of an Understandable Consensus Algorithm.
-  *USENIX ATC '14*.
-- Vaswani A, et al. (2017). Attention Is All You Need. *NeurIPS 30*. arXiv:1706.03762.
-- Jumper J, et al. (2021). Highly accurate protein structure prediction with AlphaFold.
-  *Nature* 596: 583–589. <https://doi.org/10.1038/s41586-021-03819-2>
+```bash
+latexmk main.tex
+latexmk -usepretex='\def\editiomode{publish}' -outdir=build-publish main.tex
+```
 
-**Figures** ([`editio-figures/references/`](skills/editio-figures/references/))
+Installed agents resolve the script from their plugin root through the skills. Canonical PDFs stay
+inside the build directories. The source root should remain PDF-free; `editio-doctor` flags stray
+copies that can masquerade as the current paper. Put durable handoff snapshots in a dated
+`archive/` path, commit the authored paper directory, and let Git provide version history.
 
-- Rougier NP, Droettboom M, Bourne PE (2014). Ten Simple Rules for Better Figures. *PLoS
-  Computational Biology* 10(9): e1003833. <https://doi.org/10.1371/journal.pcbi.1003833>
-- Cleveland WS, McGill R (1984). Graphical Perception: Theory, Experimentation, and
-  Application to the Development of Graphical Methods. *JASA* 79(387): 531–554.
-  <https://doi.org/10.1080/01621459.1984.10478080>
-- Okabe M, Ito K (2002, rev. 2008). Color Universal Design (CUD).
-  <https://jfly.uni-koeln.de/color/> — popularized by Wong B (2011). Points of view: Color
-  blindness. *Nature Methods* 8: 441. <https://doi.org/10.1038/nmeth.1618>
-- Nuñez JR, Anderton CR, Renslow RS (2018). Optimizing colormaps with consideration for
-  color vision deficiency… (cividis). *PLOS ONE* 13(7): e0199239.
-  <https://doi.org/10.1371/journal.pone.0199239>
-- Krzywinski M, Altman N (2013). Points of Significance: Error bars. *Nature Methods*
-  10(10): 921–922. <https://doi.org/10.1038/nmeth.2659>
-- Tufte ER (1983). *The Visual Display of Quantitative Information*. Graphics Press.
-- Wilke CO (2019). *Fundamentals of Data Visualization*. O'Reilly.
-  Free online: <https://clauswilke.com/dataviz/>
-- Financial Times Visual Journalism. Visual Vocabulary.
-  <https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary>
-- Garrett JD. SciencePlots. <https://github.com/garrettj403/SciencePlots>
-  <https://doi.org/10.5281/zenodo.4106649>
+The adapter contract and test suite run on Ubuntu, Windows, and macOS. Editio ships its own
+templates and `editio.sty`; it does not vendor a TeX distribution, plotting stack, or official
+year-specific venue kit.
 
-**Venue contracts**
+## Deliberately not shipped yet
 
-- NeurIPS. 2026 Main Track Handbook.
-  <https://neurips.cc/Conferences/2026/MainTrackHandbook>
-- NeurIPS. Paper Checklist guidelines.
-  <https://neurips.cc/public/guides/PaperChecklist>
-- NeurIPS. 2026 official formatting kit.
-  <https://media.neurips.cc/Conferences/NeurIPS2026/Formatting_Instructions_For_NeurIPS_2026.zip>
+> [!NOTE]
+> Table generation, bibliography generation from the Promptus literature store, reproducibility
+> packaging, generalized venue packaging, rebuttal tooling, and broader structure/notation linting
+> remain later phases. Current READMEs describe implemented code, not roadmap intent.
 
-**Numbers — one source of truth**
-([`editio-numbers/references/`](skills/editio-numbers/references/))
+The next planned unit is `editio-tables`, driven by a real paper need. Later work remains subject to
+the same rule as the rest of Organon: a concrete failure first, then the smallest reusable tool.
 
-- Claerbout JF, Karrenbach M (1992). Electronic documents give reproducible research a
-  new meaning. *SEG Technical Program Expanded Abstracts*: 601–604.
-  <https://doi.org/10.1190/1.1822162>
-- Leisch F (2002). Sweave: Dynamic Generation of Statistical Reports Using Literate Data
-  Analysis. *Compstat 2002*: 575–580. <https://doi.org/10.1007/978-3-642-57489-4_89>
-- Xie Y (2015). *Dynamic Documents with R and knitr* (2nd ed.). Chapman & Hall/CRC.
-  <https://doi.org/10.1201/9781315382487>
-- Sandve GK, Nekrutenko A, Taylor J, Hovig E (2013). Ten Simple Rules for Reproducible
-  Computational Research. *PLOS Computational Biology* 9(10): e1003285.
-  <https://doi.org/10.1371/journal.pcbi.1003285>
+## Research foundations
 
-**Upstream code**
+<details>
+<summary><strong>Structure and writing craft</strong></summary>
 
-- [blader/humanizer](https://github.com/blader/humanizer) (© 2025 Siqi Chen, MIT) — the
-  base of the `humanizer` skill; notice preserved in [`NOTICE`](NOTICE).
+- Mensh B, Kording K (2017). [Ten simple rules for structuring papers](https://doi.org/10.1371/journal.pcbi.1005619).
+- Gopen GD, Swan JA (1990). *The Science of Scientific Writing*.
+- Whitesides GM (2004). [Whitesides' Group: Writing a Paper](https://doi.org/10.1002/adma.200400767).
+- Nature Portfolio. [Formatting guide](https://www.nature.com/nature/for-authors/formatting-guide).
+- Constantin A, Peroni S, Pettifer S, Shotton D, Vitali F (2016).
+  [The Document Components Ontology](https://doi.org/10.3233/SW-150177), with the companion
+  [Discourse Elements Ontology](http://purl.org/spar/deo).
+
+The `editio-structure` skill's cited distillation and paper exemplars live in
+[`skills/editio-structure/references/`](skills/editio-structure/references/).
+
+</details>
+
+<details>
+<summary><strong>Figure craft</strong></summary>
+
+- Rougier NP, Droettboom M, Bourne PE (2014).
+  [Ten Simple Rules for Better Figures](https://doi.org/10.1371/journal.pcbi.1003833).
+- Cleveland WS, McGill R (1984). [Graphical Perception](https://doi.org/10.1080/01621459.1984.10478080).
+- Okabe M, Ito K. [Color Universal Design](https://jfly.uni-koeln.de/color/).
+- Nuñez JR, Anderton CR, Renslow RS (2018). [The cividis colormap](https://doi.org/10.1371/journal.pone.0199239).
+- Krzywinski M, Altman N (2013). [Error bars](https://doi.org/10.1038/nmeth.2659).
+- Wilke CO (2019). [Fundamentals of Data Visualization](https://clauswilke.com/dataviz/).
+- Financial Times. [Visual Vocabulary](https://github.com/Financial-Times/chart-doctor/tree/main/visual-vocabulary).
+
+The complete cited craft notes live in
+[`skills/editio-figures/references/`](skills/editio-figures/references/).
+
+</details>
+
+<details>
+<summary><strong>Reproducible numbers and upstream code</strong></summary>
+
+`editio-numbers` draws on Claerbout and Karrenbach's reproducible-research account, Sweave,
+knitr, and Sandve et al.'s rules for computational research. The cited notes live in
+[`skills/editio-numbers/references/`](skills/editio-numbers/references/).
+
+The `humanizer` skill is an extended fork of
+[blader/humanizer](https://github.com/blader/humanizer), © 2025 Siqi Chen, MIT. Its notice is
+preserved in [`NOTICE`](NOTICE).
+
+</details>
+
+## Development
+
+```bash
+bun test editio/scripts/test
+bun run validate
+```
+
+Read [`CHANGELOG.md`](CHANGELOG.md) for release history and [`RELEASING.md`](../RELEASING.md) for
+the per-plugin release process.
 
 ## License
 
-GPL-3.0 (© 2026 Mohan Qiao) — see the repo-root [`LICENSE`](../LICENSE). The
-`skills/humanizer` fork preserves the upstream
-[blader/humanizer](https://github.com/blader/humanizer) MIT notice in [`NOTICE`](NOTICE).
+Editio is GPL-3.0-only, © 2026 Mohan Qiao. See [`LICENSE`](../LICENSE). The `humanizer` fork retains
+its upstream MIT notice in [`NOTICE`](NOTICE).
