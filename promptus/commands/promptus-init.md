@@ -15,8 +15,11 @@ initialized (a `.promptus/TELOS.md` exists), report what's there and don't clobb
    `templates/`, Telos first — `.promptus/TELOS.md`, `.promptus/ledger/RESEARCH-LEDGER.md` (with
    the `<!-- kb:append-point -->` sentinel), `.promptus/docs/` + `.promptus/docs/lit/` (with
    `INDEX.md`), `.promptus/memory/MEMORY.md`, and `.promptus/schema/kb-vocab.json`.
-2. **Wire the cadence.** Copy `templates/AGENTS.md` → `AGENTS.md` (filling the project name),
-   so the store-as-you-go habit is always in context. Add `/.promptus/cache/` to `.gitignore`.
+2. **Wire the cadence without replacing project instructions.** If `AGENTS.md` is absent,
+   create it from `templates/AGENTS.md` with the project name. Otherwise read it first and
+   integrate a clearly scoped Promptus cadence section, preserving all existing instructions
+   and avoiding duplicates. Surface genuine policy conflicts rather than choosing silently.
+   Add `/.promptus/cache/` to `.gitignore` without replacing existing rules.
 3. **Confirm the scripts resolve the new root.** From the repo, `bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-find.ts" --root .`
    should find the project root via `.promptus/` and report an empty (or freshly-seeded) catalog rather than erroring.
 4. **Seed + smoke-test.** Store the operator's mandate as the first unit

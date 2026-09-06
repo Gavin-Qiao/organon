@@ -1,0 +1,44 @@
+{
+  "schema": "organon.gpt6-semantic-continuation.v1",
+  "date": "2026-09-04",
+  "agent": "/root/gpt6_semantic_continuation",
+  "model": "gpt-6-astra",
+  "context": "fresh; fork_turns=none",
+  "fixture": "/tmp/promptus-continuity-4OeDEG",
+  "request": "Pick up Northbridge: current supported coefficient, why not the earlier choice, submarine alarm function, and whether real ocean deployment is evidenced. Use configured semantic recall where useful and explain handoff trust obstacles.",
+  "permitted": "Read synthetic source and plugin instructions; query-derived cache writes only. No store edits, index configure/update, network, installation or live projects.",
+  "responseSummary": {
+    "coefficient": 17,
+    "run": "NB-42",
+    "checksum": "7f3c",
+    "batchLimit": 4,
+    "oldCoefficient": 11,
+    "oldRoute": "Solvent echo normalization reflects contaminant carry-over; remains closed unless reference chemistry changes.",
+    "alarm": "cobaltpressurezeta closes the hatch; fictional evidence only.",
+    "oceanDeployment": "No supporting evidence found; protocol/run provenance synthetic, not proof of universal absence.",
+    "preflight": "Exit 1: CACHE_STALE, SEARCH_CATALOG_MISMATCH, SEARCH_SOURCE_LAG. Handoff marker fresh but cached catalog/search omit alarm.",
+    "action": "Fetched source bodies and verified raw artifact; made no repairs."
+  },
+  "agentReportedTools": [
+    "promptus-session-doctor --json",
+    "kb-find --semantic --snippet (calibration, alarm, ocean deployment)",
+    "kb-find --semantic --history (old coefficient/solvent echo)",
+    "kb-get for cited units and anchored ledger",
+    "sha256sum artifacts/northbridge-run.txt",
+    "bounded source rg"
+  ],
+  "agentReportedRouting": "Calibration and history returned route:qmd; two concurrent semantic queries hit the cache lease and fell back to fresh lexical search.",
+  "independentVerification": {
+    "sourceFiles": 10,
+    "expectedHash": "df54021560816f3b81f361e4131afe3206e210093ea30f8ee0a43f16f89fd733",
+    "observedHash": "df54021560816f3b81f361e4131afe3206e210093ea30f8ee0a43f16f89fd733",
+    "sourceUnchanged": true,
+    "referenceReceipt": "semantic-adapter-final-sandbox-2026-09-04.json"
+  },
+  "limitations": [
+    "One unreplicated synthetic task, no causal comparison.",
+    "Tool use and route details are agent-reported; this receipt is not a full tool transcript.",
+    "Independent source-hash preservation verified by parent; no live-project effectiveness or real ocean evidence implied.",
+    "The agent used instructions before the subsequent preflight-policy clarification."
+  ]
+}

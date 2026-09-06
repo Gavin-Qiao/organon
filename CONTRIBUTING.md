@@ -59,7 +59,7 @@ front pages. Two standing rules, then the event map:
 
 | when this lands… | update this |
 |---|---|
-| a release is cut | nothing — the badges update themselves (see `RELEASING.md`) |
+| a release is cut | review affected human docs and adoption guidance; version badges update themselves (see `RELEASING.md`) |
 | a skill / command / script ships | the plugin's README (what-ships / commands tables) + its `CHANGELOG.md` `[Unreleased]` + `AGENTS.md`'s layout if the shape changed |
 | a plugin joins the marketplace | the root `README.md` (hero cross-link + release badge) · both marketplace manifests · both adapter manifests · `AGENTS.md`'s layout · the plugin README + `CHANGELOG.md` |
 | one capability changes both plugins | both `[Unreleased]` changelogs + a draft under `.github/release-notes/` until the per-plugin releases are cut |
@@ -88,6 +88,10 @@ skill is a claim without grounds; treat it exactly like one.
 Routine non-release changes may be committed and pushed directly to `main` after the relevant
 local gates pass; CI runs again on the push. A PR remains available when review or collaboration is
 useful, but it is not required for ordinary work.
+
+Repository policy permits that direct route; remote branch protection may still require a PR.
+When GitHub rejects a routine push, use a PR and its required checks. Do not bypass or weaken
+protection to reconcile it with this policy.
 
 Every release cut is different: the versioned changelog finalization and both manifest bumps must
 land through a PR before the merged release commit is tagged. See `RELEASING.md` for that workflow.

@@ -12,7 +12,7 @@ For Claude Code and Codex.
 [![Bun](https://img.shields.io/badge/runtime-bun-14151a?logo=bun&logoColor=white)](https://bun.sh)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](LICENSE)
 
-[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Benchmarks](benchmarks/README.md) · [Contributing](CONTRIBUTING.md)
+[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Upgrade guide](MIGRATION.md) · [Benchmarks](benchmarks/README.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -92,6 +92,21 @@ installed and falls back to plain-language answers when Editio is absent.
 
 </details>
 
+## What changes in daily work
+
+- **Resume with evidence.** Actionable preflight diagnostics and source-backed evidence cards
+  expose recorded support, replacements, and open work without deciding scientific truth.
+- **Keep maintenance bounded.** Record a batch, then rebuild and check once. Lexical retrieval
+  stays the default; persistent raw caching is off, and local semantic recall is optional.
+- **Write from the current record.** Manuscript grounds retain canonical identity and lifecycle;
+  historical claims report rejected evidence without turning it into positive support.
+- **Adopt one project at a time.** Preview exact source, policy, and package fingerprints before
+  a derived-only refresh. Installation never implies that a running research session has updated.
+
+See the [upgrade guide](MIGRATION.md), [retrieval design](RETRIEVAL.md), and
+[implementation verification](RELEASE-VERIFICATION.md). Release badges identify published
+versions; the verification records describe their own tested scope, not live-project adoption.
+
 ## From research to paper
 
 Initialize Promptus first:
@@ -116,6 +131,11 @@ Draft displays the grade and grounds of each marked claim span. Publish removes 
 blind also masks identity.
 
 ## Design constraints
+
+The current integration adds preview-first project adoption, bounded raw-parse caching,
+actionable resume diagnostics, and source-backed evidence navigation. See the
+[release integration plan](RELEASE-PLAN.md) and [Promptus operations guide](promptus/README.md#runtime-resource-controls-and-project-adoption).
+These are checkout capabilities, not a claim that installed plugins or live projects have updated.
 
 > [!IMPORTANT]
 > Markdown is the only source of truth. Derived indexes and generated TeX are disposable. Source

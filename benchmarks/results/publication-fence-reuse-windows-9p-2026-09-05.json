@@ -1,0 +1,633 @@
+{
+  "schema": "organon.publication-trial.v1",
+  "started": "2026-09-05T08:40:10.512Z",
+  "filesystem": "9p /mnt/c/users/mohan/desktop/telotia/organon",
+  "bun": "1.4.0",
+  "corpus": {
+    "pages": 512,
+    "ledgerUnits": 4096,
+    "ballastRepeats": 16,
+    "synthetic": true
+  },
+  "originalRuntimeHash": "812e7eba2757adaf19fd74408334f909564725e406e4bb14c11e85afe2df4187",
+  "instrumentedRuntimeHash": "0dae59c993f6396b90e8a78b823b060074b648ebb7e124b1eaab7b5aa4302dd1",
+  "hooks": {
+    "lib/store-lock.ts": {
+      "original": "98eb4538c53b5c4ae34cedbcf0077cd56cf951ed25d91cac07e199537e00b389",
+      "instrumented": "89563d0545942214966bc487914b2e8b40cac34fff09950e4ac441f321f5431c"
+    },
+    "kb-add.ts": {
+      "original": "065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f",
+      "instrumented": "b45448d957042b22ca3a228f2c23acfb2e313e86d8bbc19f1bcfc212a51eb62a"
+    },
+    "kb-amend.ts": {
+      "original": "6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf",
+      "instrumented": "1d9c8bc587437ba3520d37c3cf912e07630e335c0254deb5565b1fa868c373fd"
+    }
+  },
+  "codeHashes": {
+    "publication-fence.ts": "8f71002d0cc5339c02897d4efe7ec659e4d6a3182a5c112a472b02628479f5f7",
+    "publication-fixture.ts": "8a67026fad165bb77d85de949c79bd5e4dc877d775f1916863195688a30d9a8a",
+    "publication-cli.ts": "269cb3645c54a29782b19cc281f8ff5b5d7fb763f391d21a2ab8a5e0479d5b65",
+    "publication-trial.ts": "903d162d135a5103a942147946cf75e50c01fefec5626e47ba75329c67e28d94",
+    "publication-fence.test.ts": "fe6131859aaceab2ba85fdf35bfe3005d507fb930f93755578d62ede662052be",
+    "PUBLICATION-FENCE.md": "a2253d9165c830b8c49f214f1d64304694f591eff78f81369c2f8da11390cd4c"
+  },
+  "arms": {
+    "baseline": {
+      "traces": [
+        {
+          "operation": "append",
+          "ordinal": 0,
+          "writeMs": 268.3926250000004,
+          "maintenanceMs": 2707.9906630000005,
+          "findMs": 147.2050360000012,
+          "getMs": 132.51521300000059,
+          "totalMs": 3256.1035370000027,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16671077
+        },
+        {
+          "operation": "amend",
+          "ordinal": 0,
+          "writeMs": 2780.2347599999994,
+          "maintenanceMs": 0,
+          "findMs": 149.90114600000015,
+          "getMs": 94.89876500000173,
+          "totalMs": 3025.0346710000013,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16671274
+        },
+        {
+          "operation": "append",
+          "ordinal": 1,
+          "writeMs": 286.6990509999996,
+          "maintenanceMs": 2763.599368000003,
+          "findMs": 151.19950199999948,
+          "getMs": 131.8460559999985,
+          "totalMs": 3333.3439770000005,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16672482
+        },
+        {
+          "operation": "amend",
+          "ordinal": 1,
+          "writeMs": 2779.465492000003,
+          "maintenanceMs": 0,
+          "findMs": 153.99362900000415,
+          "getMs": 97.59821999999986,
+          "totalMs": 3031.057341000007,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16672489
+        },
+        {
+          "operation": "append",
+          "ordinal": 2,
+          "writeMs": 294.3313809999963,
+          "maintenanceMs": 2960.8390519999957,
+          "findMs": 160.17876499999693,
+          "getMs": 138.08646299999964,
+          "totalMs": 3553.4356609999886,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16673698
+        },
+        {
+          "operation": "amend",
+          "ordinal": 2,
+          "writeMs": 3182.1225300000006,
+          "maintenanceMs": 0,
+          "findMs": 162.89613200000167,
+          "getMs": 105.92334699999628,
+          "totalMs": 3450.9420089999985,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16673708
+        },
+        {
+          "operation": "append",
+          "ordinal": 3,
+          "writeMs": 298.0389260000011,
+          "maintenanceMs": 2970.738744999995,
+          "findMs": 160.40333600000304,
+          "getMs": 142.75792699999874,
+          "totalMs": 3571.938933999998,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16674912
+        },
+        {
+          "operation": "amend",
+          "ordinal": 3,
+          "writeMs": 3044.5515840000007,
+          "maintenanceMs": 0,
+          "findMs": 164.2477710000021,
+          "getMs": 104.54542600000423,
+          "totalMs": 3313.344781000007,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16674919
+        },
+        {
+          "operation": "append",
+          "ordinal": 4,
+          "writeMs": 297.806614000001,
+          "maintenanceMs": 3149.3133729999972,
+          "findMs": 172.75455299999157,
+          "getMs": 154.56852700001036,
+          "totalMs": 3774.443067,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16676128
+        },
+        {
+          "operation": "amend",
+          "ordinal": 4,
+          "writeMs": 3254.0356220000103,
+          "maintenanceMs": 0,
+          "findMs": 169.80838800000492,
+          "getMs": 112.07404999999562,
+          "totalMs": 3535.918060000011,
+          "writerMetrics": null,
+          "findMetrics": null,
+          "getMetrics": null,
+          "sourceBytesFetched": null,
+          "logicalPeakUpperBoundBytes": 16676138
+        }
+      ],
+      "navigationSamplesMs": [
+        173.97107299999334,
+        172.26617999999144,
+        176.18460400000913,
+        169.76258600001165,
+        171.0197569999873
+      ],
+      "navigation": {
+        "n": 5,
+        "medianMs": 172.26617999999144,
+        "minMs": 169.76258600001165,
+        "maxMs": 176.18460400000913
+      },
+      "append": {
+        "n": 5,
+        "medianMs": 3553.4356609999886,
+        "minMs": 3256.1035370000027,
+        "maxMs": 3774.443067
+      },
+      "amend": {
+        "n": 5,
+        "medianMs": 3313.344781000007,
+        "minMs": 3025.0346710000013,
+        "maxMs": 3535.918060000011
+      },
+      "sourceHashAfterMeasuredTraces": "54e767dd9c3cd4912229ac3377d02c927a14f9a4702fc8e5f15236b8182825c7",
+      "canonicalParity": true,
+      "initialStoreBytes": 10728775,
+      "finalStoreBytes": 10735389,
+      "finalDerivedBytes": 4018741,
+      "finalLedgerBytes": 5941037,
+      "instrumentedPeakTrace": {
+        "writer": null,
+        "reader": null
+      }
+    },
+    "fenced": {
+      "traces": [
+        {
+          "operation": "append",
+          "ordinal": 0,
+          "writeMs": 410.77673199999845,
+          "maintenanceMs": 0,
+          "findMs": 2955.9871189999976,
+          "getMs": 200.8266869999934,
+          "totalMs": 3567.5905379999895,
+          "writerMetrics": {
+            "leaseWaitMs": 11.437145999999998,
+            "rebuildMs": 0,
+            "componentBytesHashed": 0,
+            "replacementBytesWritten": 6525232,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 12.307988000000009,
+            "rebuildMs": 2618.884907,
+            "componentBytesHashed": 4014160,
+            "replacementBytesWritten": 4015346,
+            "peakStoreBytes": 0,
+            "rebuilds": 1
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.289006,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4014160,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 5940171,
+          "logicalPeakUpperBoundBytes": 16671649
+        },
+        {
+          "operation": "amend",
+          "ordinal": 0,
+          "writeMs": 2973.9304700000066,
+          "maintenanceMs": 0,
+          "findMs": 268.92721500000334,
+          "getMs": 163.12080499999865,
+          "totalMs": 3405.9784900000086,
+          "writerMetrics": {
+            "leaseWaitMs": 11.332972999999996,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4014282,
+            "replacementBytesWritten": 3535393,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 12.094483000000011,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4014282,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "getMetrics": {
+            "leaseWaitMs": 11.863508999999993,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4014282,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 1559,
+          "logicalPeakUpperBoundBytes": 16671833
+        },
+        {
+          "operation": "append",
+          "ordinal": 1,
+          "writeMs": 458.2929989999975,
+          "maintenanceMs": 0,
+          "findMs": 3270.1411110000045,
+          "getMs": 218.40536199999042,
+          "totalMs": 3946.8394719999924,
+          "writerMetrics": {
+            "leaseWaitMs": 12.702229000000003,
+            "rebuildMs": 0,
+            "componentBytesHashed": 0,
+            "replacementBytesWritten": 6525544,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 13.398728000000006,
+            "rebuildMs": 2899.980633,
+            "componentBytesHashed": 4015152,
+            "replacementBytesWritten": 4016338,
+            "peakStoreBytes": 0,
+            "rebuilds": 1
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.726510999999988,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4015152,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 5940341,
+          "logicalPeakUpperBoundBytes": 16673041
+        },
+        {
+          "operation": "amend",
+          "ordinal": 1,
+          "writeMs": 3201.605887999991,
+          "maintenanceMs": 0,
+          "findMs": 308.8859119999979,
+          "getMs": 183.048661000008,
+          "totalMs": 3693.540460999997,
+          "writerMetrics": {
+            "leaseWaitMs": 12.031716000000003,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4015157,
+            "replacementBytesWritten": 3536151,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 14.234792999999996,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4015157,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "getMetrics": {
+            "leaseWaitMs": 13.621731999999994,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4015157,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 1561,
+          "logicalPeakUpperBoundBytes": 16673048
+        },
+        {
+          "operation": "append",
+          "ordinal": 2,
+          "writeMs": 416.17940900000394,
+          "maintenanceMs": 0,
+          "findMs": 3166.7583440000017,
+          "getMs": 195.34341200001654,
+          "totalMs": 3778.281165000022,
+          "writerMetrics": {
+            "leaseWaitMs": 11.499736999999996,
+            "rebuildMs": 0,
+            "componentBytesHashed": 0,
+            "replacementBytesWritten": 6525860,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 13.313547,
+            "rebuildMs": 2813.136113,
+            "componentBytesHashed": 4016026,
+            "replacementBytesWritten": 4017212,
+            "peakStoreBytes": 0,
+            "rebuilds": 1
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.007576,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016026,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 5940511,
+          "logicalPeakUpperBoundBytes": 16674257
+        },
+        {
+          "operation": "amend",
+          "ordinal": 2,
+          "writeMs": 3021.268148000003,
+          "maintenanceMs": 0,
+          "findMs": 279.79952400000184,
+          "getMs": 173.98847299997578,
+          "totalMs": 3475.0561449999805,
+          "writerMetrics": {
+            "leaseWaitMs": 12.520045999999994,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016034,
+            "replacementBytesWritten": 3536907,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 11.850468000000006,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016034,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.757324999999994,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016034,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 1559,
+          "logicalPeakUpperBoundBytes": 16674267
+        },
+        {
+          "operation": "append",
+          "ordinal": 3,
+          "writeMs": 424.99034499999834,
+          "maintenanceMs": 0,
+          "findMs": 3219.260447000008,
+          "getMs": 210.2759730000107,
+          "totalMs": 3854.526765000017,
+          "writerMetrics": {
+            "leaseWaitMs": 13.123106000000007,
+            "rebuildMs": 0,
+            "componentBytesHashed": 0,
+            "replacementBytesWritten": 6526172,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 13.682282999999998,
+            "rebuildMs": 2874.111781,
+            "componentBytesHashed": 4016902,
+            "replacementBytesWritten": 4018088,
+            "peakStoreBytes": 0,
+            "rebuilds": 1
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.480111000000008,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016902,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 5940681,
+          "logicalPeakUpperBoundBytes": 16675471
+        },
+        {
+          "operation": "amend",
+          "ordinal": 3,
+          "writeMs": 2975.8441610000154,
+          "maintenanceMs": 0,
+          "findMs": 273.01974199997494,
+          "getMs": 160.9507239999948,
+          "totalMs": 3409.814626999985,
+          "writerMetrics": {
+            "leaseWaitMs": 11.28905300000001,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016894,
+            "replacementBytesWritten": 3537650,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 12.065098000000006,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016894,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "getMetrics": {
+            "leaseWaitMs": 11.477956000000006,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4016894,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 1561,
+          "logicalPeakUpperBoundBytes": 16675475
+        },
+        {
+          "operation": "append",
+          "ordinal": 4,
+          "writeMs": 401.66142800002126,
+          "maintenanceMs": 0,
+          "findMs": 2963.913227000012,
+          "getMs": 197.4703139999765,
+          "totalMs": 3563.0449690000096,
+          "writerMetrics": {
+            "leaseWaitMs": 11.578669000000005,
+            "rebuildMs": 0,
+            "componentBytesHashed": 0,
+            "replacementBytesWritten": 6526488,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 11.595327999999995,
+            "rebuildMs": 2638.111497,
+            "componentBytesHashed": 4017763,
+            "replacementBytesWritten": 4018949,
+            "peakStoreBytes": 0,
+            "rebuilds": 1
+          },
+          "getMetrics": {
+            "leaseWaitMs": 12.23083100000001,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4017763,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 5940851,
+          "logicalPeakUpperBoundBytes": 16676674
+        },
+        {
+          "operation": "amend",
+          "ordinal": 4,
+          "writeMs": 2976.857397999993,
+          "maintenanceMs": 0,
+          "findMs": 277.16035400002147,
+          "getMs": 176.1636929999804,
+          "totalMs": 3430.1814449999947,
+          "writerMetrics": {
+            "leaseWaitMs": 11.446725999999998,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4017784,
+            "replacementBytesWritten": 3538425,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "findMetrics": {
+            "leaseWaitMs": 12.114857999999998,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4017784,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "getMetrics": {
+            "leaseWaitMs": 13.188029999999998,
+            "rebuildMs": 0,
+            "componentBytesHashed": 4017784,
+            "replacementBytesWritten": 0,
+            "peakStoreBytes": 0,
+            "rebuilds": 0
+          },
+          "sourceBytesFetched": 1559,
+          "logicalPeakUpperBoundBytes": 16676699
+        }
+      ],
+      "navigationSamplesMs": [
+        277.8614220000163,
+        274.5595960000064,
+        276.632397999987,
+        271.57615099998657,
+        273.48600199999055
+      ],
+      "navigation": {
+        "n": 5,
+        "medianMs": 274.5595960000064,
+        "minMs": 271.57615099998657,
+        "maxMs": 277.8614220000163
+      },
+      "append": {
+        "n": 5,
+        "medianMs": 3778.281165000022,
+        "minMs": 3563.0449690000096,
+        "maxMs": 3946.8394719999924
+      },
+      "amend": {
+        "n": 5,
+        "medianMs": 3430.1814449999947,
+        "minMs": 3405.9784900000086,
+        "maxMs": 3693.540460999997
+      },
+      "sourceHashAfterMeasuredTraces": "1e5e93f9c26e324177a55ccbfb62df259f38696ab8d12150ea285ac6d48fd9e9",
+      "canonicalParity": true,
+      "initialStoreBytes": 10729347,
+      "finalStoreBytes": 10735950,
+      "finalDerivedBytes": 4019302,
+      "finalLedgerBytes": 5941037,
+      "instrumentedPeakTrace": {
+        "writer": {
+          "leaseWaitMs": 12.68468399999999,
+          "rebuildMs": 0,
+          "componentBytesHashed": 0,
+          "replacementBytesWritten": 6526838,
+          "peakStoreBytes": 16675994,
+          "rebuilds": 0
+        },
+        "reader": {
+          "leaseWaitMs": 12.324747000000002,
+          "rebuildMs": 14522.716209,
+          "componentBytesHashed": 4018728,
+          "replacementBytesWritten": 4019918,
+          "peakStoreBytes": 13686793,
+          "rebuilds": 1
+        }
+      }
+    }
+  },
+  "limits": [
+    "Synthetic repeated text is not representative real-project relevance or worst-case postings entropy.",
+    "Fresh CLI, warm/uncontrolled OS page cache; no power-loss or cross-OS certification.",
+    "Latency runs disable recursive peak sampling. Separate instrumented trace measures logical file-byte high water, not filesystem allocated blocks, RAM or journal internals.",
+    "Component-byte hashing is measured; canonical traversal/parse/source reads inside reused scripts are not individually instrumented. Rebuild time includes those phases without pretending they disappeared.",
+    "Full canonical rebuilding, not persistent sparse parsing. No SQLite, semantic model, watcher or daemon.",
+    "Fence timeout is 1 second for bounded tests, not a chosen production policy.",
+    "No operator-approved adoption budget. End-to-end wrapper latency includes child startup and receipt serialization."
+  ],
+  "completed": "2026-09-05T08:44:05.808Z",
+  "productionSourceUnchanged": true,
+  "generatedScratchBytes": 22111532,
+  "generatedScratchRemoved": true
+}

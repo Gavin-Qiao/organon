@@ -1,0 +1,382 @@
+{
+  "schema": "organon.continuation-failure-fixture.v1",
+  "created": "2026-09-05T01:49:05.036Z",
+  "root": "/tmp/promptus-continuity-3falFw",
+  "retainedArtifactDirectory": "/tmp/organon-retained-evidence-woG1bB",
+  "fixtureHash": "8f67deb19aefdc7bed20f97655cf5414659a425f6017c7917ad0d42618c0e670",
+  "harnessHash": "2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0",
+  "before": {
+    "hash": "dd981e0b552b52ef31373dd0eb52399b30745ac5f7b029d9eb0d184ba4e7edfe",
+    "files": 9
+  },
+  "prepared": {
+    "hash": "dd981e0b552b52ef31373dd0eb52399b30745ac5f7b029d9eb0d184ba4e7edfe",
+    "files": 9
+  },
+  "preservedUnits": [
+    {
+      "id": "event-20260905T014904Z-reject-the-solvent-echo-normalization-route",
+      "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T21:49:04",
+      "substrate": "ledger",
+      "textHash": "f87afd2b430c491426f38db77b26fee8057c95ceb65c8384c468a8d11f8d0e5f"
+    },
+    {
+      "id": "event-20260905T014904Z-adopt-coefficient-seventeen-under-the-batch-four-constraint",
+      "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T21:49:04.001",
+      "substrate": "ledger",
+      "textHash": "0280065c7661492480216619592dd1b7588ef2125a7306e8904164860e7ae6e4"
+    },
+    {
+      "id": "event-20260905T014904Z-resume-northbridge-at-the-blinded-replication",
+      "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T21:49:04.002",
+      "substrate": "ledger",
+      "textHash": "f21e0749b1af716354fcd69742e5af18459ebe0877b8bd7b10865162b7ddd9b0"
+    },
+    {
+      "id": "lit-20260905T014904Z-northbridge-calibration-protocol",
+      "path": ".promptus/docs/lit/northbridge-calibration-protocol.md",
+      "substrate": "lit",
+      "textHash": "c2e55613ac6a781684fecea020af05dbcd5287e248beebd4a7ca8edccea131b1"
+    },
+    {
+      "id": "memory-20260905T014904Z-northbridge-deployment-uses-batches-of-four",
+      "path": ".promptus/memory/northbridge-deployment-uses-batches-of-four.md",
+      "substrate": "memory",
+      "textHash": "29f59cd027e3c2b6542ee34efc352d9ffa2e4ef11ae9ea690929d72c02895277"
+    },
+    {
+      "id": "finding-20260905T014904Z-checksum-gates-northbridge-calibration-publication",
+      "path": ".promptus/docs/checksum-gates-northbridge-calibration-publication.md",
+      "substrate": "finding",
+      "textHash": "237b92e4ee8bc9dabdf1ff75fe273ed4656343a0fecb1e16aab6f3552389b157"
+    },
+    {
+      "id": "finding-20260905T014904Z-northbridge-run-validates-coefficient-seventeen",
+      "path": ".promptus/docs/northbridge-run-validates-coefficient-seventeen.md",
+      "substrate": "finding",
+      "textHash": "5f2477a00fd6d3330473cdabcbdbcff33fa9e7bc60cfa6dd5be322a70d155871"
+    },
+    {
+      "id": "finding-20260905T014904Z-use-coefficient-eleven-for-northbridge-calibration",
+      "path": ".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md",
+      "substrate": "finding",
+      "textHash": "66c61d7baebe4fd547556384a59d677262bb6cc001f95298e3ccfe1604376f7f"
+    }
+  ],
+  "missingArtifact": "artifacts/northbridge-run.txt",
+  "partial": "work/replication.partial.json",
+  "preflight": {
+    "status": 1,
+    "report": {
+      "schema": "promptus.session-doctor.v1",
+      "root": "/tmp/promptus-continuity-3falFw",
+      "readOnly": true,
+      "sessionReady": false,
+      "orientationReady": true,
+      "retrievalReady": true,
+      "historyRetrievalReady": true,
+      "graphTraversalReady": true,
+      "graphTraversalComplete": true,
+      "hardIntegrityReady": false,
+      "integrityReceiptReady": true,
+      "orientation": {
+        "project": "Telos — synthetic Northbridge benchmark",
+        "northStar": "Preserve the current Northbridge result, its failed route, its deployment constraint, and the evidence chain needed to resume a blinded replication.",
+        "now": "The contaminant-controlled Northbridge result is coefficient seventeen with checksum 7f3c. Deployment is constrained to batches of four.",
+        "blocker": "Run the blinded replication without reopening solvent echo normalization.",
+        "next": "Execute the blinded replication in a batch of four and preserve its raw checksum.",
+        "resume": "Resume from the validated Northbridge decision: coefficient seventeen, checksum 7f3c, batch four, solvent echo route closed."
+      },
+      "orientationSource": {
+        "northStarHeading": "North star",
+        "canonicalNorthStarHeading": true
+      },
+      "handoff": {
+        "configured": true,
+        "startMarkers": 1,
+        "endMarkers": 1,
+        "markers": [
+          "event-20260905T014904Z-resume-northbridge-at-the-blinded-replication"
+        ],
+        "expected": "event-20260905T014904Z-resume-northbridge-at-the-blinded-replication",
+        "fresh": true,
+        "missingFields": [],
+        "appendSentinels": {
+          "count": 1,
+          "lines": [
+            44
+          ]
+        }
+      },
+      "scale": {
+        "sourceFiles": 9,
+        "sourceBytes": 8686,
+        "ledgerBytes": 2341,
+        "ledgerUnits": 3,
+        "liveSourceUnits": 8,
+        "coldSourceUnits": 0,
+        "catalogUnits": 8,
+        "searchDocuments": 8,
+        "liveSearchDocuments": 8,
+        "coldSearchDocuments": 0
+      },
+      "source": {
+        "fingerprint": "dd981e0b552b52ef31373dd0eb52399b30745ac5f7b029d9eb0d184ba4e7edfe",
+        "files": 9,
+        "bytes": 8686,
+        "newest": {
+          "path": ".promptus/ledger/RESEARCH-LEDGER.md",
+          "modifiedAt": "2026-09-05T01:49:04.851Z"
+        }
+      },
+      "healthReceipt": {
+        "present": true,
+        "authoritative": true,
+        "checkedAt": "2026-09-05T01:49:04.936Z",
+        "recordedFingerprint": "dd981e0b552b52ef31373dd0eb52399b30745ac5f7b029d9eb0d184ba4e7edfe",
+        "sourceFingerprintMatches": true,
+        "healthy": true,
+        "indexFailed": false,
+        "indexError": "",
+        "staleFlag": false,
+        "units": 8,
+        "sourceFiles": 9,
+        "unclassified": 0,
+        "duplicateIds": 0,
+        "unresolvedRelations": 0,
+        "dangling": 0,
+        "orphans": 0,
+        "artifactChecks": 1,
+        "artifactFailures": 0,
+        "archivalArtifactWarnings": 0,
+        "artifactOutcomes": {
+          "ok": 1
+        },
+        "artifactFailureSample": [],
+        "archivalArtifactWarningSample": [],
+        "ratchetNewDebt": {
+          "unclassified": 0,
+          "dangling": 0,
+          "orphans": 0
+        }
+      },
+      "cache": {
+        "ready": true,
+        "missing": [],
+        "unreadable": [],
+        "files": [
+          {
+            "path": ".promptus/cache/CATALOG.md",
+            "present": true,
+            "bytes": 1833,
+            "modifiedAt": "2026-09-05T01:49:04.887Z"
+          },
+          {
+            "path": ".promptus/cache/search.json",
+            "present": true,
+            "bytes": 8514,
+            "modifiedAt": "2026-09-05T01:49:04.893Z"
+          },
+          {
+            "path": ".promptus/cache/graph.json",
+            "present": true,
+            "bytes": 4861,
+            "modifiedAt": "2026-09-05T01:49:04.891Z"
+          },
+          {
+            "path": ".promptus/cache/health.json",
+            "present": true,
+            "bytes": 1718,
+            "modifiedAt": "2026-09-05T01:49:04.935Z"
+          }
+        ],
+        "healthFingerprintMatches": true,
+        "searchSchema": "promptus.lexical-search.v2",
+        "searchSchemaValid": true,
+        "catalogHash": "c721a9594f49f4801c5d75943e2c5c66e5b13427c6f9d38e5e0cc48ea373d513",
+        "recordedSearchCatalogHash": "c721a9594f49f4801c5d75943e2c5c66e5b13427c6f9d38e5e0cc48ea373d513",
+        "searchCatalogHashMatches": true,
+        "countDivergences": [],
+        "searchKeys": {
+          "missing": 0,
+          "missingSample": [],
+          "collisions": 0,
+          "liveCollisions": 0,
+          "historyOnlyCollisions": 0,
+          "collisionSample": []
+        },
+        "catalogPolicy": "CATALOG.md contains live units; search.json may additionally contain cold-history units.",
+        "delimiterCollisions": {
+          "count": 0,
+          "sample": []
+        },
+        "catalogCoverage": {
+          "missing": 0,
+          "identityMismatches": 0,
+          "extra": 0,
+          "missingSample": [],
+          "mismatchSample": [],
+          "extraSample": []
+        },
+        "searchCoverage": {
+          "missing": 0,
+          "identityMismatches": 0,
+          "extra": 0,
+          "missingSample": [],
+          "mismatchSample": [],
+          "extraSample": []
+        },
+        "coldSearchCoverage": {
+          "missing": 0,
+          "identityMismatches": 0,
+          "extra": 0,
+          "missingSample": [],
+          "mismatchSample": [],
+          "extraSample": []
+        }
+      },
+      "schemaCompatibility": {
+        "version": 5,
+        "templateVersion": 5,
+        "versionBehind": false,
+        "compatible": true,
+        "missing": [],
+        "customCount": 0,
+        "customSample": []
+      },
+      "thinkerExchange": {
+        "present": false,
+        "governed": false,
+        "markerValid": false,
+        "indexCurrent": false,
+        "findingFilesScanned": 0,
+        "rounds": [],
+        "issues": []
+      },
+      "extraTrees": [],
+      "aliasRegistry": {
+        "path": null,
+        "present": false,
+        "valid": true,
+        "aliases": 0,
+        "collisions": 0,
+        "missingTargets": 0,
+        "recoverableDangling": 0,
+        "sample": []
+      },
+      "ratchet": {
+        "baselinePath": ".promptus/schema/health-baseline.json",
+        "baselinePresent": false,
+        "baselineValid": false,
+        "recordedAt": null,
+        "receiptEnabled": false,
+        "receiptBaselineMissing": false,
+        "authoritative": true,
+        "currentDebt": {
+          "unclassified": 0,
+          "dangling": 0,
+          "orphans": 0
+        },
+        "newDebt": {
+          "unclassified": {
+            "count": 0,
+            "sample": []
+          },
+          "dangling": {
+            "count": 0,
+            "sample": []
+          },
+          "orphans": {
+            "count": 0,
+            "sample": []
+          }
+        }
+      },
+      "cachedGraph": {
+        "authoritative": true,
+        "nodes": 5,
+        "relations": 9,
+        "relationsByType": {
+          "challenges": {
+            "resolved": 1,
+            "unresolved": 0
+          },
+          "supports": {
+            "resolved": 2,
+            "unresolved": 0
+          },
+          "relates-to": {
+            "resolved": 2,
+            "unresolved": 0
+          },
+          "extends": {
+            "resolved": 1,
+            "unresolved": 0
+          },
+          "supersedes": {
+            "resolved": 1,
+            "unresolved": 0
+          },
+          "derives-from": {
+            "resolved": 1,
+            "unresolved": 0
+          },
+          "cites": {
+            "resolved": 1,
+            "unresolved": 0
+          }
+        },
+        "unresolvedRelations": 0,
+        "dangling": 0,
+        "danglingByReason": {},
+        "danglingSample": [],
+        "orphans": 0,
+        "artifactRecords": 1,
+        "uniqueArtifactSpecs": 1,
+        "unresolvedSample": []
+      },
+      "graphPolicy": "Unresolved typed relations and known-but-unapplied compatibility aliases block traversal; ordinary dangling concept handles remain visible debt and make traversal incomplete without blocking lexical retrieval.",
+      "artifacts": {
+        "checkedNow": true,
+        "checked": 1,
+        "uniqueChecked": 1,
+        "failures": 1,
+        "archivalWarnings": 0,
+        "outcomes": {
+          "missing": 1
+        },
+        "sample": [
+          {
+            "from": "finding-20260905T014904Z-northbridge-run-validates-coefficient-seventeen",
+            "spec": "raw-output|artifacts/northbridge-run.txt|b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854",
+            "status": "VALIDATED",
+            "ok": false,
+            "outcome": "missing"
+          }
+        ],
+        "archivalSample": []
+      },
+      "issues": [
+        {
+          "severity": "info",
+          "code": "RATCHET_NOT_ESTABLISHED",
+          "message": "no health debt baseline is recorded; inherited versus new classification/graph debt cannot be distinguished"
+        },
+        {
+          "severity": "error",
+          "code": "ARTIFACTS_FAIL_NOW",
+          "message": "1 current artifact dependencies fail a live read-only check"
+        }
+      ],
+      "timingMs": {
+        "fingerprint": 0.9,
+        "artifacts": 0.4,
+        "total": 7.3
+      },
+      "performance": {
+        "rssBytes": 38715392
+      },
+      "guarantee": "No files were written, rebuilt, repaired, refreshed, or baselined."
+    }
+  }
+}

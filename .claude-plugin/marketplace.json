@@ -14,7 +14,7 @@
     {
       "name": "editio",
       "source": "./editio",
-      "description": "The academic-writing toolchain: turn a promptus store's validated knowledge into defensible, submittable papers — structure, three renders (draft/publish/blind), figures, tables, bibliography, venue packaging, rebuttals. Ships the humanizer style toolkit. Requires the promptus plugin."
+      "description": "Evidence-grounded academic writing: structured Markdown drafting, claim and number gates, draft/publish/blind renders, figures, workspace diagnostics, and venue profiles. Includes the humanizer style toolkit. Uses a Promptus evidence store."
     }
   ]
 }

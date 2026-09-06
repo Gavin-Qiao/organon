@@ -1,0 +1,21 @@
+{
+  "schema": "promptus.thinker-round.intake.v1",
+  "round_id": "markdown-io-delta-design",
+  "received_at": "2026-09-05T06:54:32.161Z",
+  "disposition": "QUARANTINED",
+  "capture": "ATTACHMENT_BYTES",
+  "response": {
+    "path": ".promptus/thinker/rounds/markdown-io-delta-design/response.md",
+    "bytes": 35383,
+    "sha256": "5ca7e6e603fa69257cb686efc6be52e2ddc07a199d9cee40d79e5c773abf83a7"
+  },
+  "declared_round_id": "markdown-io-delta-design",
+  "quarantine": {
+    "path": ".promptus/docs/lit/external-thinker-markdown-io-delta-design-response.md",
+    "id": "lit-20260905T065432Z-external-thinker-markdown-io-delta-design-response",
+    "source": "external-thinker:markdown-io-delta-design",
+    "status": "UNTRUSTED",
+    "content_sha256": "5ca7e6e603fa69257cb686efc6be52e2ddc07a199d9cee40d79e5c773abf83a7",
+    "wrapper_sha256": "7159c04a06055b3672a181f4fa79d6a512cd0a59808cbe5c3f84ad469445b14a"
+  }
+}

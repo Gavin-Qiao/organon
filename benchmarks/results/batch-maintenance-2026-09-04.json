@@ -1,0 +1,915 @@
+{
+  "schema": "organon.batch-maintenance.v1",
+  "created": "2026-09-05T01:53:53.069Z",
+  "protocol": {
+    "repeats": 3,
+    "writes": 20,
+    "filler": 500,
+    "alternatingOrder": true,
+    "includes": "writer processes, NOW update, full strict health and artifact session preflight",
+    "excludes": "fixture construction, dependency installation and model work"
+  },
+  "inputHashes": {
+    "/mnt/c/users/mohan/desktop/telotia/organon/benchmarks/batch-maintenance.ts": "8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca",
+    "/mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-add.ts": "065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f",
+    "/mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-now.ts": "349a5e100d1b806b09b3f3bfad33138c5ae9a29c31ba9f23243123fea32d7d3b",
+    "/mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-index.ts": "2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a",
+    "/mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/promptus-check.ts": "117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134",
+    "/mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/promptus-session-doctor.ts": "2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033"
+  },
+  "changedInputs": [],
+  "mediansMs": {
+    "per-write-index": 2408.2670469999994,
+    "explicit-batch": 1054.5314759999983
+  },
+  "runs": [
+    {
+      "repeat": 0,
+      "mode": "per-write-index",
+      "root": "/tmp/promptus-continuity-5CJAGE",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 2419.576615,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 43.57753200000002
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 69.101583
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.481449999999995
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 68.904361
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.097557999999935
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.92698600000006
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.73472500000014
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.96810299999993
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.27960400000006
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.0331349999999
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.66818400000011
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.491714
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.68847400000004
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.16725900000006
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.6403429999998
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 63.98799699999995
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.3379010000001
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.52966199999992
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.10506599999985
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 63.20930199999998
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.109376999999995
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.55226100000004
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.89213699999982
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 69.05043100000012
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 46.529587999999876
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.61484800000017
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.43367999999964
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.7096489999999
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.86525800000027
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.58184699999993
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.24752599999965
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.16549299999997
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.96833800000013
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 68.66001399999959
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.6544530000001
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.314527
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.482270000000426
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.29013499999974
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.468159000000014
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 71.4140269999998
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 42.62345499999992
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 75.0089640000001
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 70.33703099999957
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    },
+    {
+      "repeat": 0,
+      "mode": "explicit-batch",
+      "root": "/tmp/promptus-continuity-XnaAit",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 1056.6510050000006,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 43.12375400000019
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.955409000000145
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.76352700000007
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.65464400000019
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.37767799999983
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.59430199999997
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.33355699999993
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.75059599999986
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.545442000000094
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.103383000000576
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.570762000000286
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.03777099999934
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.87368499999957
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.03777100000025
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.20127499999944
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.44441000000006
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 46.550640999999814
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.45469799999955
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.10133300000052
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.014940000000024
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 34.97208899999987
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 74.0278360000002
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 74.5950499999999
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    },
+    {
+      "repeat": 1,
+      "mode": "explicit-batch",
+      "root": "/tmp/promptus-continuity-tUS8Ou",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 1045.500161,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 43.41098899999997
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.60087199999998
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.254595999999765
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.98587000000043
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.834727999999814
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.912992999999915
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.16214800000034
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.33469800000057
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.026670999999624
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.61239299999943
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.727145000000746
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.52059999999983
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.402766999999585
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.87921800000004
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 38.37458399999923
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.58868199999961
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.42771900000025
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.83023899999989
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 39.9419369999996
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.585197999999764
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 37.73003200000039
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 76.38542099999995
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 67.21785799999998
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    },
+    {
+      "repeat": 1,
+      "mode": "per-write-index",
+      "root": "/tmp/promptus-continuity-lrfXGX",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 2408.2670469999994,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 43.51216199999999
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.85322200000064
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.40714899999966
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.59566900000027
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.74512800000048
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.55112700000063
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.907178999999815
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.3353990000005
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.44096400000035
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.01779699999952
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.101040999999896
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.57513599999947
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.405163999999786
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 71.26886999999988
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.311515999999756
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.07302100000015
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.48831599999994
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.55021699999998
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.996478999999454
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.55074400000012
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.12054200000057
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.12145599999985
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 46.87611499999912
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.89694400000008
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.87781899999936
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.8532320000013
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.18290500000148
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.63979800000016
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.11545400000068
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.76572900000065
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.89966900000036
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.00077000000056
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.94038100000034
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 70.1565329999994
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.08313300000009
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.17911800000002
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.23753599999873
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.71256800000083
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.19327399999929
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 73.01041700000133
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 38.26875199999995
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 70.09565199999997
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 71.32219499999883
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    },
+    {
+      "repeat": 2,
+      "mode": "per-write-index",
+      "root": "/tmp/promptus-continuity-mfT9Fa",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 2405.0870269999996,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 46.343213999998625
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.46397599999909
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.051260000000184
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.33866399999897
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.353008000000045
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 64.92811500000062
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.38336900000104
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 69.70140399999946
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.14095300000008
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.4673240000011
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.1237919999985
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.59395600000062
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.56061000000045
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 69.03968199999872
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.20979400000033
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.53962700000011
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.85577999999987
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 67.22011399999974
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.604919999999765
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.98603399999956
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.8258360000018
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 63.77489400000013
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.97791099999995
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.9134439999998
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.766976000000795
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.54669600000125
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.32607800000005
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 65.69208900000012
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.757526999999754
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.26148099999955
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.08613299999888
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 63.715862999999445
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.53665000000001
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 66.66633900000124
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.35099799999989
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 71.09445199999936
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.213527000001704
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 71.68740200000138
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.41515000000072
+        },
+        {
+          "command": "kb-index.ts",
+          "ms": 68.59933999999885
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 43.43459400000029
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 71.2249439999996
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 71.25060800000028
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    },
+    {
+      "repeat": 2,
+      "mode": "explicit-batch",
+      "root": "/tmp/promptus-continuity-jYeT6O",
+      "initialUnits": 508,
+      "finalUnits": 528,
+      "writes": 20,
+      "elapsedMs": 1054.5314759999983,
+      "timings": [
+        {
+          "command": "kb-add.ts",
+          "ms": 43.945959999999104
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.50688199999968
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.16058399999929
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.638144000000466
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.008042999999816
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.22585600000093
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.89947799999936
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.34130499999992
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.93898600000102
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.29379599999993
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 42.653855000000476
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 45.34840599999916
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.986039999999775
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.0384610000001
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.038971999998466
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.50887900000089
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 43.87796800000069
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 47.11313899999914
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.0515319999995
+        },
+        {
+          "command": "kb-add.ts",
+          "ms": 44.105671999999686
+        },
+        {
+          "command": "kb-now.ts",
+          "ms": 38.19277099999999
+        },
+        {
+          "command": "promptus-check.ts",
+          "ms": 70.6951140000001
+        },
+        {
+          "command": "promptus-session-doctor.ts",
+          "ms": 67.54955500000142
+        }
+      ],
+      "healthy": true,
+      "sessionReady": true,
+      "originalBodiesPreserved": true,
+      "uniqueNewEvents": 20
+    }
+  ],
+  "passed": true,
+  "limitations": [
+    "Synthetic local Linux fixtures, not live-project timings.",
+    "Per-write arm models the removed indexing cadence, not the hook host-dispatch overhead.",
+    "Authored body comparison excludes terminal append-sentinel framing; exact artifact verification remains enabled."
+  ]
+}

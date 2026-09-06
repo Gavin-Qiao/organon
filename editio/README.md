@@ -11,7 +11,7 @@ Per-section Markdown, checked claims and numbers, three render modes.
 [![Promptus](https://img.shields.io/badge/requires-promptus-5b5bd6)](../promptus/README.md)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](../LICENSE)
 
-[Quick start](#quick-start) · [Audit loop](#the-audit-loop) · [Toolchain](#what-ships) · [Venues](#venue-profiles) · [Organon](../README.md)
+[Quick start](#quick-start) · [Audit loop](#the-audit-loop) · [Upgrade](../MIGRATION.md#manuscripts) · [Venues](#venue-profiles) · [Organon](../README.md)
 
 </div>
 
@@ -66,7 +66,10 @@ codex plugin add promptus@organon
 codex plugin add editio@organon
 ```
 
-Then ask Codex to use the `editio` skill to start an arXiv paper.
+Start a new Codex task, then ask it to use the `editio` skill to start an arXiv paper.
+For an existing manuscript, follow the [compatibility guide](../MIGRATION.md#manuscripts):
+an updated evidence gate can correctly reject previously accepted stale grounds. Updating the
+plugin does not rewrite the paper or build PDFs automatically.
 
 Editio requires a TeX distribution at build time. The `editio-latex` skill detects the local
 environment first and gives platform-aware setup guidance; Editio does not vendor TeX.
@@ -117,13 +120,38 @@ bun editio/scripts/editio-status.ts --gate
 - no ungraded claim spans;
 - no unsourced claim without a recorded override;
 - no validated claim resting on weak, unknown, absent, or invalidated grounds without a recorded
-  override.
-- no conjectured claim resting on invalidated grounds without a recorded override.
+  override;
+- no conjectured claim resting on invalidated or unknown grounds; overrides do not apply here;
+- no conflicting grades or historical report without resolvable closed evidence.
 
 An override is not silent success. The report prints the reason and preserves the author's
 responsibility on the record.
 
+Use stable Promptus IDs for durable grounds; legacy slugs and unique aliases remain supported.
+Editio now reads effective lifecycle through Promptus's canonical parser, including supersession
+and memory retirement, rather than interpreting raw frontmatter independently. This is a checked
+packaged copy, not a runtime dependency on a sibling plugin or a potentially stale cache.
+Explicit manuscript grounds also resolve archived pages and ledger entries. Moving evidence
+to an archive does not change its status or erase its lifecycle relations; invalidated evidence
+still cannot become positive support.
+
+An explicitly attributed account of a rejected, superseded, or retired record uses
+`[The log records why the route was rejected.]{.claim .historical grounds=<id>}`.
+This is not a validated positive claim. Draft rendering uses grey text and a historical grounds
+label; the gate prints the source's closed status and rejects unknown/untrusted grounds, mixed
+grades, and overrides. The reviewer must still check that the prose reports history rather than
+endorsing the rejected proposition. Metadata checks cannot prove semantic entailment.
+
+Maintainers edit the reader only under `promptus/scripts/lib/`, then run
+`bun promptus/scripts/sync-reader.ts --write`. Plugin validation checks the packaged copy for
+drift. Existing manuscripts and older minimal stores need no rewrite; new historical annotations
+require the new reader and remain ungraded under older Editio gates.
+
 ## One authored paper, several derived views
+
+For a single-section authoring preview, `editio-latex` supplies a wrapper that loads the same
+bound numbers, shared macros and identity definitions. Its article-class preview is not a
+substitute for the venue-specific final build.
 
 ```text
 .editio/paper/
@@ -159,7 +187,7 @@ malformed, or hand-edited bindings; an explicitly pinned value passes on the rec
 
 | Layer | Surface | What it owns |
 | --- | --- | --- |
-| Orchestration | `/editio`, `editio` | Start or resume a paper and choose the next workflow |
+| Orchestration | `/editio`, `editio` | Start or resume a paper and continue the requested writing, rendering, or audit work |
 | Argument | `editio-structure` | DoCO/DEO section orders, contribution-first framing, abstracts, and exemplar-derived craft |
 | TeX | `editio-latex`, `editio-scaffold`, `editio-render` | Environment guidance, idempotent workspace generation, Markdown-to-TeX contract, three modes |
 | Evidence | `grounded-writing-reviewer`, `editio-status` | Read-only prose audit, grounds resolution, drafted-word counts, publication gate |

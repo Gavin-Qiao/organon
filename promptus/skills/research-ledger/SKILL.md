@@ -1,6 +1,6 @@
 ---
 name: research-ledger
-description: Proactively record a research project into Promptus as work happens — append a unit after every decision, run, observation, dead-end, or finding via kb-add (never freehand). Teaches the recording habit so the ledger fills itself instead of being reconstructed later. The script owns timestamp, id, and placement. Pairs with the promptus-checkpoint workflow.
+description: Record consequential decisions, results, failed approaches, and evidence in a Promptus project's research ledger.
 ---
 
 # research-ledger — record as you go
@@ -25,7 +25,10 @@ the compaction-safe core a resuming agent reads instead of the whole file) and a
 
 ## The recording reflex — append through the gate, never freehand
 
-During real work, watch for the moments worth keeping and write each the moment it happens:
+Record consequential changes in what the project knows promptly. A completed
+experiment, decision, failed approach, or new evidence merits a unit. Repeated
+tool calls and routine checks that change no conclusion do not each need an entry.
+Batch derived maintenance while keeping perishable knowledge recorded:
 
 ```
 echo "<prose body>" | bun "<plugin-root>/scripts/kb-add.ts" \
@@ -94,14 +97,15 @@ lives. The ledger entry then records only the event, as it should.
 
 ## Keeping it readable (the bloat rule)
 
-The NOW-header stays small and current — it is what gets read. At checkpoint, distill recent
-entries into `docs/` finding pages (one concept per file, `[[linked]]`, via `kb-add --substrate
-finding`). When the Log passes a few thousand lines, archive older sections to
-`ledger/archive/<YYYY-MM>.md` and leave a one-line pointer — history preserved, never rewritten.
+The NOW-header stays small and current — it is what gets read. A checkpoint stores only
+unrecorded knowledge and refreshes the handoff; do not re-distill settled entries. Archive
+maintenance is a separate, scoped operation justified by measured retrieval or maintenance
+cost, not a line-count trigger or an implicit part of checkpointing. Preserve exact unit
+bytes, identities and lifecycle links when an archive operation is authorized.
 
 ## Standing cadence (put this in the project's AGENTS.md)
 
-> Maintain the research ledger: append a unit after every completed unit of work — including
-> mistakes, fixes, dead-ends, and brainstorms, not only successes — with
+> Maintain the research ledger: record consequential completed work — including
+> mistakes, fixes, dead-ends, and useful hypotheses — with
 > `bun "<plugin-root>/scripts/kb-add.ts" --substrate ledger …` (never hand-type `### [ts]`). Refresh the
 > NOW-header and run the `promptus-checkpoint` workflow before compaction.

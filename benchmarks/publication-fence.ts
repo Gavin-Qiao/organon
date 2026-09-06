@@ -1,0 +1,164 @@
+/** Benchmark-only publication protocol. Never imported by production scripts. */
+import { createHash, randomUUID } from "node:crypto";
+import { existsSync, lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
+import { basename, join, relative, resolve } from "node:path";
+import { atomicStoreWrite, withStoreLock } from "../promptus/scripts/lib/store-lock.ts";
+import { ledgerEntriesFromText } from "../promptus/scripts/lib/units.ts";
+
+export const MARKER = "organon.publication-fixture.v1";
+export const COMPONENTS = ["CATALOG.md", "graph.json", "search.json"];
+// Small experimental bound to exercise overflow cheaply; not a product default.
+export const PATH_CAP = 16;
+export const sha = (bytes: string | Buffer) => createHash("sha256").update(bytes).digest("hex");
+export function fixture(root: string) {
+  if (resolve(root) !== realpathSync(root) || !basename(root).startsWith("publication-fixture-")) throw Error("not a physical publication fixture");
+  const marker = JSON.parse(readFileSync(join(root, "fixture.json"), "utf8"));
+  if (marker.schema !== MARKER || marker.root !== root) throw Error("unmarked publication fixture");
+  return marker as { schema: string; root: string; runtime: string; runtimeHash: string };
+}
+export function byteSize(dir: string): number {
+  if (!existsSync(dir)) return 0;
+  const s = lstatSync(dir);
+  if (s.isSymbolicLink()) throw Error("symlink in fixture");
+  return s.isDirectory() ? readdirSync(dir).reduce((n, name) => n + byteSize(join(dir, name)), 0) : s.size;
+}
+type State = {
+  schema: 1; epoch: string; root: string; config: string; ticket: number;
+  published: number; phase: "DIRTY" | "PUBLISHING" | "CLEAN";
+  dirty: string[] | "ALL"; components: Record<string, string>;
+};
+export const controlPath = (root: string) => join(root, ".promptus/cache/publication.json");
+let activeRoot = "", writing = false;
+let state: State;
+export const metrics = { leaseWaitMs: 0, rebuildMs: 0, componentBytesHashed: 0, replacementBytesWritten: 0, peakStoreBytes: 0, rebuilds: 0 };
+const detailed = process.env.ORGANON_PUBLICATION_METRICS !== "0";
+function peak(root: string) { if (detailed) metrics.peakStoreBytes = Math.max(metrics.peakStoreBytes, byteSize(join(root, ".promptus"))); }
+export function cut(point: string) {
+  if (process.env.ORGANON_PUBLICATION_FAULT !== point) return;
+  if (process.env.ORGANON_PUBLICATION_CRASH === "1") process.kill(process.pid, "SIGKILL");
+  throw Object.assign(Error(`injected ${point}`), { code: "ENOSPC" });
+}
+function config(root: string) { return sha(fixture(root).runtimeHash + readFileSync(join(root, ".promptus/schema/kb-vocab.json"), "utf8")); }
+function fresh(root: string): State {
+  return { schema: 1, epoch: randomUUID(), root, config: config(root), ticket: 0, published: 0, phase: "DIRTY", dirty: "ALL", components: {} };
+}
+function load(root: string): State {
+  try {
+    const s = JSON.parse(readFileSync(controlPath(root), "utf8")) as State;
+    if (s.schema !== 1 || s.root !== root || s.config !== config(root) || typeof s.epoch !== "string"
+      || !Number.isSafeInteger(s.ticket) || s.ticket < 0 || !Number.isSafeInteger(s.published) || s.published < 0 || s.published > s.ticket
+      || !["DIRTY", "PUBLISHING", "CLEAN"].includes(s.phase)
+      || !(s.dirty === "ALL" || (Array.isArray(s.dirty) && s.dirty.length <= PATH_CAP && s.dirty.every(x => typeof x === "string")))
+      || !s.components || typeof s.components !== "object"
+      || (s.phase === "CLEAN" && (s.published !== s.ticket || !Array.isArray(s.dirty) || s.dirty.length !== 0))) throw Error("invalid control");
+    return s;
+  } catch { return fresh(root); }
+}
+function save(root: string, point: string) {
+  cut(point);
+  const bytes = JSON.stringify(state) + "\n";
+  // Count the control temporary in the logical high-water estimate too.
+  if (detailed) metrics.peakStoreBytes = Math.max(metrics.peakStoreBytes, byteSize(join(root, ".promptus")) + Buffer.byteLength(bytes));
+  atomicStoreWrite(root, controlPath(root), bytes);
+  metrics.replacementBytesWritten += Buffer.byteLength(bytes);
+}
+export function configure(root: string) { fixture(root); activeRoot = root; }
+export function configureFromArgv() {
+  const i = process.argv.indexOf("--root");
+  if (i < 0 || !process.argv[i + 1]) throw Error("fixture --root required");
+  configure(resolve(process.argv[i + 1]));
+}
+/** Injected inside, not around, the existing writer lease. */
+export function aroundWriter<T>(root: string, action: () => T, waitMs = 0): T {
+  if (root !== activeRoot || writing) throw Error("unexpected writer root/reentrancy");
+  state = load(root);
+  metrics.leaseWaitMs += waitMs;
+  if (state.ticket === Number.MAX_SAFE_INTEGER) state = fresh(root);
+  state.ticket++;
+  state.phase = "DIRTY";
+  save(root, "before-intent");
+  cut("after-intent");
+  writing = true;
+  try {
+    const result = action();
+    save(root, "before-ack");
+    process.stderr.write(`PUBLICATION ${JSON.stringify({ epoch: state.epoch, ticket: state.ticket, acknowledged: true, scope: state.phase === "CLEAN" ? "governed-source-and-index-committed" : "governed-source-committed-index-pending", metrics })}\n`);
+    return result;
+  } finally { writing = false; }
+}
+export function beforeReplace(root: string, path: string) {
+  if (root !== activeRoot) throw Error("unexpected replacement root");
+  const rel = relative(root, path).replaceAll("\\", "/");
+  if (!rel.startsWith(".promptus/")) throw Error("replacement outside fixture store");
+  if (rel.startsWith(".promptus/cache/")) return;
+  if (!writing) throw Error("source mutation outside writer lease");
+  if (state.dirty !== "ALL") {
+    state.dirty = [...new Set([...state.dirty, rel])];
+    if (state.dirty.length > PATH_CAP) state.dirty = "ALL";
+  }
+  save(root, "before-path-intent");
+}
+/** Sample after temporary creation, before rename, to include overlapping bytes. */
+export function afterTemporary(root: string, path: string, content: string) {
+  metrics.replacementBytesWritten += Buffer.byteLength(content);
+  peak(root);
+  if (!relative(root, path).replaceAll("\\", "/").startsWith(".promptus/cache/")) cut("after-source-temp");
+}
+export function afterReplace(root: string, path: string) {
+  const rel = relative(root, path).replaceAll("\\", "/");
+  if (!rel.startsWith(".promptus/cache/")) cut("after-source-rename");
+  else cut(`after-${basename(path)}`);
+}
+function componentHashes(root: string) {
+  return Object.fromEntries(COMPONENTS.map(name => {
+    const bytes = readFileSync(join(root, ".promptus/cache", name));
+    metrics.componentBytesHashed += bytes.length;
+    return [name, sha(bytes)];
+  }));
+}
+/** Called only after the existing kb-amend full rebuild succeeds, still under its lease. */
+export function completeExistingIndex(root: string) {
+  if (root !== activeRoot || !writing) throw Error("index completion outside writer lease");
+  state.components = componentHashes(root);
+  state.phase = "CLEAN"; state.dirty = []; state.published = state.ticket;
+  save(root, "before-clean");
+}
+function matches(root: string) {
+  try { return JSON.stringify(componentHashes(root)) === JSON.stringify(state.components); }
+  catch { return false; }
+}
+export function readThrough<T>(root: string, rebuild: () => void, read: () => T, force = false) {
+  configure(root);
+  const waiting = performance.now();
+  return withStoreLock(root, () => {
+    metrics.leaseWaitMs += performance.now() - waiting;
+    state = load(root);
+    if (force || state.phase !== "CLEAN" || !matches(root)) {
+      state.phase = "PUBLISHING";
+      save(root, "before-publishing");
+      const started = performance.now();
+      rebuild();
+      metrics.rebuildMs += performance.now() - started;
+      metrics.rebuilds++;
+      state.components = componentHashes(root);
+      state.phase = "CLEAN"; state.dirty = []; state.published = state.ticket;
+      save(root, "before-clean");
+    }
+    const result = read();
+    peak(root);
+    return { result, receipt: { epoch: state.epoch, ticket: state.published, scope: "governed-navigation", outsideEdits: "unknown-unbounded", snapshotCertified: false }, metrics };
+  }, { timeoutMs: 1000 }); // bounded experiment timeout, not a production default
+}
+/** Same buffer supplies the source revision and bounded unit; no saved offsets. */
+export function exactFetch(root: string, path: string, title?: string, expectedRevision?: string) {
+  const [rel, anchor] = path.split("#");
+  if (!rel.startsWith(".promptus/") || rel.includes("..") || realpathSync(join(root, rel)) !== join(root, rel)) throw Error("unsafe source locator");
+  const bytes = readFileSync(join(root, rel));
+  const text = bytes.toString("utf8").replaceAll("\r\n", "\n");
+  const entries = anchor ? ledgerEntriesFromText(text).filter(e => e.anchor === anchor && (!title || e.title === title)) : [];
+  if (anchor && entries.length !== 1) throw Error("missing/ambiguous source unit");
+  const body = anchor ? entries[0].text : text;
+  if (Buffer.byteLength(body) > 65536 || (!anchor && /<!-- kb:append-point -->/.test(text))) throw Error("unbounded source fetch");
+  const revision = sha(bytes);
+  return { body, sourceSha256: revision, sourceBytesRead: bytes.length, changedSinceSelection: expectedRevision === undefined ? "not-supplied" : expectedRevision !== revision, scope: "selected-buffer-only" };
+}

@@ -1,0 +1,184 @@
+{
+  "schema": "promptus.semantic-adapter-trial.v1",
+  "created": "2026-09-05T01:28:18.914Z",
+  "fixture": "/tmp/promptus-continuity-4OeDEG",
+  "sourceHashes": {
+    "lib/semantic.ts": "8eaa1b20c794e0d725a6272997a5c1847dda065da4b18d29936b3e5ab3b20cec",
+    "lib/semantic-worker.mjs": "d933556076ceab23f62482c6db617936021a24ff3db2e14ccbca82715208b4fc",
+    "lib/read-store.ts": "c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9",
+    "kb-find.ts": "d33318cd11be452002dac9d6da1ecb24f178b5efbfc6fbf2aa6edbb43df4b1a2",
+    "kb-semantic.ts": "45706df3c5c9ab30ed4da420bacd73cddd2d63bb4d536db8b0678c7d1a3761ce"
+  },
+  "changedCode": [],
+  "before": {
+    "hash": "eba1a3a76730cf5b6868c81d32cf770907cec2f1573ac0c34170352d465ad00b",
+    "files": 9
+  },
+  "readOnlyAfter": {
+    "hash": "eba1a3a76730cf5b6868c81d32cf770907cec2f1573ac0c34170352d465ad00b",
+    "files": 9
+  },
+  "after": {
+    "hash": "df54021560816f3b81f361e4131afe3206e210093ea30f8ee0a43f16f89fd733",
+    "files": 10
+  },
+  "passed": true,
+  "steps": [
+    {
+      "name": "configure",
+      "ms": 254.20374200000003,
+      "result": {
+        "configured": true,
+        "next": "kb-semantic update",
+        "modelSha256": "b5ce9d77a3fc4b3b39ccb5643c36777911cc4eb46a66962eadfa3f5f60490d63"
+      }
+    },
+    {
+      "name": "update",
+      "ms": 3593.6827770000004,
+      "result": {
+        "unchanged": false,
+        "units": 8,
+        "result": {
+          "update": {
+            "collections": 7,
+            "indexed": 8,
+            "updated": 0,
+            "unchanged": 0,
+            "removed": 0,
+            "skipped": 0,
+            "needsEmbedding": 8
+          },
+          "embed": {
+            "docsProcessed": 8,
+            "chunksEmbedded": 8,
+            "errors": 0,
+            "failures": [],
+            "durationMs": 2828
+          }
+        }
+      }
+    },
+    {
+      "name": "current-query",
+      "ms": 1873.9501500000006,
+      "result": [
+        {
+          "id": "finding-20260905T012803Z-northbridge-run-validates-coefficient-seventeen",
+          "status": "VALIDATED",
+          "title": "Northbridge run validates coefficient seventeen",
+          "path": ".promptus/docs/northbridge-run-validates-coefficient-seventeen.md"
+        },
+        {
+          "id": "finding-20260905T012803Z-checksum-gates-northbridge-calibration-publication",
+          "status": "VALIDATED",
+          "title": "Checksum gates Northbridge calibration publication",
+          "path": ".promptus/docs/checksum-gates-northbridge-calibration-publication.md"
+        },
+        {
+          "id": "memory-20260905T012803Z-northbridge-deployment-uses-batches-of-four",
+          "status": "validated",
+          "title": "Northbridge deployment uses batches of four",
+          "path": ".promptus/memory/northbridge-deployment-uses-batches-of-four.md"
+        },
+        {
+          "id": "event-20260905T012803Z-adopt-coefficient-seventeen-under-the-batch-four-constraint",
+          "status": "RESOLVED",
+          "title": "Adopt coefficient seventeen under the batch-four constraint",
+          "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T21:28:03.001"
+        },
+        {
+          "id": "lit-20260905T012803Z-northbridge-calibration-protocol",
+          "status": "CITE",
+          "title": "Northbridge calibration protocol",
+          "path": ".promptus/docs/lit/northbridge-calibration-protocol.md"
+        }
+      ]
+    },
+    {
+      "name": "history-status-query",
+      "ms": 1859.3694320000004,
+      "result": [
+        {
+          "id": "finding-20260905T012803Z-use-coefficient-eleven-for-northbridge-calibration",
+          "status": "SUPERSEDED"
+        }
+      ]
+    },
+    {
+      "name": "fresh-cli-query",
+      "ms": 1974.412381,
+      "result": {
+        "status": 0,
+        "stdout": "finding:VALIDATED · Northbridge run validates coefficient seventeen · .promptus/docs/northbridge-run-validates-coefficient-seventeen.md · route:qmd\nledger:RESOLVED · Adopt coefficient seventeen under the batch-four constraint · .promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T21:28:03.001 · route:qmd\nmemory:validated · Northbridge deployment uses batches of four · .promptus/memory/northbridge-deployment-uses-batches-of-four.md · route:qmd\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "unchanged-update",
+      "ms": 263.38169799999923,
+      "result": {
+        "unchanged": true,
+        "units": 8
+      }
+    },
+    {
+      "name": "gated-add",
+      "ms": 40.50712399999975,
+      "result": {
+        "status": 0,
+        "stdout": "kb-add: finding:VALIDATED — Synthetic submarine pressure alarm\n  -> .promptus/docs/synthetic-submarine-pressure-alarm.md  (id finding-20260905T012813Z-synthetic-submarine-pressure-alarm)\n  catalog: .promptus/cache/CATALOG.md  ·  run `bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-index.ts --root /tmp/promptus-continuity-4OeDEG` to rebuild authoritatively\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "stale-fallback",
+      "ms": 42.93448999999964,
+      "result": {
+        "status": 0,
+        "stdout": "finding:VALIDATED · Synthetic submarine pressure alarm · .promptus/docs/synthetic-submarine-pressure-alarm.md · route:lexical-fallback\n",
+        "stderr": "kb-find: semantic unavailable (Error: semantic index is stale; run kb-semantic update); using current-source lexical fallback\n"
+      }
+    },
+    {
+      "name": "incremental-refresh",
+      "ms": 3244.774055,
+      "result": {
+        "unchanged": false,
+        "units": 9,
+        "result": {
+          "update": {
+            "collections": 7,
+            "indexed": 1,
+            "updated": 0,
+            "unchanged": 8,
+            "removed": 0,
+            "skipped": 0,
+            "needsEmbedding": 1
+          },
+          "embed": {
+            "docsProcessed": 1,
+            "chunksEmbedded": 1,
+            "errors": 0,
+            "failures": [],
+            "durationMs": 2512
+          }
+        }
+      }
+    },
+    {
+      "name": "fresh-post-mutation-query",
+      "ms": 2135.0887199999997,
+      "result": {
+        "status": 0,
+        "stdout": "finding:VALIDATED · Synthetic submarine pressure alarm · .promptus/docs/synthetic-submarine-pressure-alarm.md · route:qmd\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "limitations": [
+    "Real pinned SDK/model on a synthetic store, not live-project effectiveness.",
+    "Successful read-only phase must preserve source bytes; the subsequent add is an explicitly gated fixture mutation.",
+    "Fixture is retained for independent inspection; no installed cache or global dependency changes."
+  ]
+}

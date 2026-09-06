@@ -35,9 +35,10 @@ detect an already-initialized repo and never clobber an existing store; report a
 
 ## After scaffolding
 
-Hand off to the `research-ledger` skill so recording starts immediately, and drop the standing
-cadence into the project's **root** `AGENTS.md` (template: `templates/AGENTS.md`) — agents look
-for it there, so it stays out of the namespace. Then store the first unit — the operator's
+Hand off to the `research-ledger` skill so recording starts immediately. Read an existing root
+`AGENTS.md` and merge a scoped cadence section without replacing project instructions or
+duplicating guidance; create from `templates/AGENTS.md` only when absent. Surface genuine policy
+conflicts. Then store the first unit — the operator's
 mandate — as `kb-add --substrate ledger --kind DECISION`, and run
 `bun "<plugin-root>/scripts/kb-index.ts"` to prove the loop closes.
 

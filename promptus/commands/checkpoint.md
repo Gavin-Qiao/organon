@@ -17,7 +17,7 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    was rejected and why, `[[links]]` to its lit units), not just a ledger event; the
    `research-ledger` skill's "three homes" table is the rule.
    A draft trajectory review is the exception to automatic digestion: persist it as
-   `finding:REVIEW` only when the operator explicitly authorizes that second act. Store any
+   a finding with `--kind REVIEW` only when the operator explicitly authorizes that second act. Store any
    separately accepted project decision through the ordinary ledger/Telos/NOW boundary.
 2. **Add** each through the gate (the script owns the timestamp / id / placement):
    ```
@@ -39,7 +39,8 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    we do X now", the current method or tool) belongs here or in the NOW-header — the Telos is
    **read, never written, at a checkpoint** (its edits are operator-triggered; the `telos`
    skill has the boundary). Reconcile what the session touched; don't re-survey the store.
-5. **Drift check (judgment — against the Telos).** Read `.promptus/TELOS.md` — the north star,
+5. **Drift check (judgment — against the Telos).** Use the complete current `.promptus/TELOS.md`
+   already in context, or read it when absent or uncertain — the north star,
    the commitments, and the rules that never bend — and weigh it against this session's recent
    ledger entries and the NOW-header. Ask one question: *is the work still in service of the Telos,
    or has a commitment quietly bent* — scope creep, machinery added without a measured threshold,
@@ -50,7 +51,7 @@ NOW-header); load it if you need the spec. Work from facts; never invent entries
    - **Drift** → a terse, specific flag: name the tension, the commitment or invariant at stake,
      and what would resolve it. This is for the human steward — surface it at the **top** of the
      report (step 6), not buried. Never invent drift; flag only what the entries actually show.
-6. **Re-index, health-check, and report.** Rebuild with `kb-index`, then run
+6. **Health-check and report.** The health gate includes re-indexing; run
    `promptus-check --ratchet` when the project has a recorded debt baseline (otherwise run normal
    `promptus-check` and explicitly report the debt). Then the summary — **lead with the drift verdict
    from step 5** (a flag for the human if the work has wandered, otherwise "on course"), then: N

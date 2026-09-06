@@ -1,0 +1,22 @@
+{
+  "schema": "organon.release-gates.v1",
+  "recorded": "2026-09-05T12:55:04.657Z",
+  "platform": "linux",
+  "bun": "1.4.0",
+  "commands": [
+    "bun test",
+    "bun promptus/scripts/validate-plugin.ts",
+    "python3 /home/mohan/.codex/skills/.system/skill-creator/scripts/quick_validate.py promptus/skills/promptus",
+    "git diff --check"
+  ],
+  "tests": {
+    "pass": 478,
+    "fail": 0,
+    "assertions": 3069,
+    "files": 47
+  },
+  "adapters": "both passed; canonical reader parity passed",
+  "skill": "valid",
+  "diffCheck": "passed",
+  "scope": "Local source gates only; no cross-OS CI, release, installation or live-project rollout."
+}

@@ -50,7 +50,8 @@ budget: 800                 # advisory word budget (lint, Phase 5)
 […]{.claim .validated grounds=the-gate}                        → \claimV  (clean) + margin handle
 […]{.claim .conjectured grounds=h1,h2}                         → \claimC  (amber)
 […]{.claim .unsourced}                                         → \claimU  (vermilion + tag)
-[…]{.claim .conjectured override="narrower unit; kept plain"}  → grade kept; reason stays in source + audit report
+[…]{.claim .historical grounds=closed-id}                       → \claimG + historical label (attributed closed evidence, not positive support)
+[…]{.claim .validated grounds=missing override="author accepts unsupported statement"} → explicit recorded exception, not verified evidence
 ```
 
 Grades are written into the source by the audit step (the reviewer agent is read-only — it
@@ -58,6 +59,10 @@ reports; the session applies). `ungraded ≠ unsourced`: ungraded means the loop
 the publish gate requires **no ungraded, no unsourced, no overclaims** — and since v1.1 the
 gate is a command, not prose: `editio-status --gate` (report: `editio-status`, ungraded
 locations: `--claims`).
+
+Historical reports require resolved rejected/superseded/retired grounds and faithful
+attribution; they cannot use overrides. Conjectured claims also cannot use overrides.
+Do not combine grades. The gate checks metadata; the reviewer reads bodies to judge meaning.
 
 Span text may nest citations and crossrefs — `[the same percept ([@sec:theory])]{.claim}`
 parses by balanced brackets (v1.1; the first dogfood's bug). A span that fails to parse —

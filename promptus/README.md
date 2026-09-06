@@ -11,7 +11,7 @@ Gated Markdown for long-running agentic work, retrieved with its confidence atta
 [![Bun](https://img.shields.io/badge/runtime-bun-14151a?logo=bun&logoColor=white)](https://bun.sh)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](../LICENSE)
 
-[Quick start](#quick-start) · [Model](#four-stores-one-record) · [Workflows](#specialized-workflows) · [Reference](#commands-and-skills) · [Organon](../README.md)
+[Quick start](#quick-start) · [Operations](#runtime-resource-controls-and-project-adoption) · [Upgrade](../MIGRATION.md) · [Reference](#commands-and-skills) · [Organon](../README.md)
 
 </div>
 
@@ -60,15 +60,19 @@ retrieval.
 
 ### Work normally
 
-Use `research-ledger` to record decisions, results, observations, and dead ends through `kb-add`.
-Use `recall` before making a claim about prior project work. Before compaction or a long handoff,
-use `promptus-checkpoint`.
+Use `research-ledger` to record consequential decisions, results, observations, and dead ends
+through `kb-add`; repeated tool checks do not need separate entries. Use `recall` to ground claims
+about prior work, reusing source already present when it is complete and current. Before compaction
+or a long handoff, use `promptus-checkpoint`.
 
 ```text
-work → store the durable result → rebuild the derived index → retrieve before claiming → checkpoint
+work → store durable results → check the batch → retrieve as needed → checkpoint
 ```
 
 The `promptus` skill is the portable map. Claude Code exposes the same map as `/promptus:help`.
+Task-specific workflows load when needed; ordinary work does not require a thinker round,
+trajectory review, or manuscript audit. Isolated tests check these instruction paths;
+they do not establish a general improvement in long-running research behavior.
 
 ## How it works
 
@@ -118,7 +122,7 @@ recorded.
 | **Retrieve** | `kb-find` ranks and caps headers; `kb-get` fetches bounded bodies; `kb-graph` navigates links | Verify each used claim at its source, then synthesize at the recorded confidence |
 
 `kb-add` writes the source unit and updates the catalog entry needed for immediate continuity. The
-authoritative `kb-index` rebuild, run directly or by a trusted hook, refreshes the complete lexical
+authoritative `kb-index` rebuild, run explicitly after a batch, refreshes the complete lexical
 and graph projections.
 
 <details>
@@ -134,8 +138,7 @@ printf '%s\n' 'The controlled run reproduced the result.' \
       --substrate ledger --kind RESULT --status VALIDATED \
       --title 'Reproduce the controlled run'
 
-# Rebuild and verify.
-bun promptus/scripts/kb-index.ts
+# Rebuild and verify once after the batch; the health gate includes re-indexing.
 bun promptus/scripts/promptus-check.ts --strict
 
 # Retrieve headers first, then fetch only the units that earned a read.
@@ -143,14 +146,78 @@ bun promptus/scripts/kb-find.ts 'controlled run'
 bun promptus/scripts/kb-get.ts '.promptus/docs/example.md'
 ```
 
+`kb-amend` serializes metadata changes with other source writers and preserves the page body.
+Repeat `--alias <legacy-handle>` to retain old links without rewriting history; collisions with
+another unit's ID, slug, or alias are rejected. `--dry-run` validates without source or cache writes.
+Symlinked amendment targets are refused. Ledger corrections remain new `kb-add` entries, not
+in-place amendments.
+
+Index maintenance is batch-explicit: `kb-add` updates the catalog and returns the correct
+project-scoped next action; run `kb-index` or the health gate after the batch. Hooks load the
+handoff, protect source writes and prompt checkpoints, but do not guess shell commands or
+rebuild an index after each tool call. Optional embeddings also refresh only when requested.
+
 </details>
 
 ## Resume safely
 
+### Runtime, resource controls and project adoption
+
+When explicitly enabled, index refresh reuses raw parses only after verifying each physical file's exact bytes.
+It still discovers all files and recomputes global lifecycle, search and graph projections;
+this is not a stat-only or watcher-only index. Strict health and evidence consumers parse
+source independently. Phrase verification uses the same optional cached text after checking
+the consumed source bytes; `kb-get` remains an exact source fetch. Ordinary word queries do
+not load the raw-text cache. Interrupted/mixed index publication falls back to source-only
+retrieval with a diagnostic. Resume preflight remains necessary: a publication receipt is
+not a certificate that no outside edit occurred after the last index.
+
+```bash
+# Inspect disk use and replacement scratch before enabling optional acceleration.
+bun promptus/scripts/kb-cache.ts status --root /absolute/project
+# Persistent raw caching is off by default. Opt in with a byte limit (example: 16 MiB).
+PROMPTUS_PARSE_CACHE_BYTES=16777216 bun promptus/scripts/kb-index.ts --root /absolute/project
+# 0 disables reuse and new cache writes; eviction is a separate explicit operation.
+PROMPTUS_PARSE_CACHE_BYTES=0 bun promptus/scripts/kb-index.ts --root /absolute/project
+# Preview first; --apply evicts only the optional parsed-units-v1.json.gz file.
+bun promptus/scripts/kb-cache.ts evict --root /absolute/project
+
+# Navigate recorded support, replacements and explicit OPEN work, with source bodies.
+bun promptus/scripts/kb-evidence.ts '<stable-id>' --bodies --root /absolute/project
+bun promptus/scripts/kb-evidence.ts --open --root /absolute/project
+
+# Preview this project, identifying an explicitly supplied installed package.
+bun promptus/scripts/promptus-upgrade.ts --root /absolute/project \
+  --installed-plugin /absolute/installed/promptus
+```
+
+The raw cache is opt-in, disposable and CPU-only, with a 128 MiB decoded-size ceiling. A
+production synthetic acceptance run found overhead rather than a speedup, so existing
+projects do not enable it implicitly. The cache-free phrase path memoizes ledger slices
+within each process without adding a stored index. Quota or
+optional-cache write failure keeps canonical indexing available. The limit covers only this
+cache, not the catalog, search, graph, QMD database, model files or total process RSS.
+`kb-semantic preview` reports the exact projected Markdown size and explicitly unknown
+database/model growth; do not enable QMD on a tight disk without an external filesystem quota.
+No command downloads a model implicitly. Eviction coordinates with source writers and never
+removes Markdown, ordinary indexes, unrelated files or models.
+
+Upgrade preview is read-only and emits a plan token. Applying requires `--apply --expect-plan
+<token>` plus the same explicit project and installed package; source/package/policy drift
+requires a new preview. It refreshes derived state and runs strict health/preflight, preserving
+`AGENTS.md`, vocabulary and research files. It does not install the plugin, migrate source,
+reload running agents, or certify another project. Follow [the adoption guide](../MIGRATION.md)
+for the separate host update, snapshot and per-project smoke checks.
+
+Doctor JSON issues include the affected surface, paths and recovery advice, never automatic
+repair authority. Evidence navigation preserves effective status and reports missing artifacts;
+typed support is attribution, not proof. Omitted or over-budget bodies must be fetched before
+claims are asserted. Its `--open` view lists explicit OPEN records, not inferred research gaps.
+
 > [!WARNING]
 > Run `promptus-session-doctor` before trusting a long-running project's NOW header, cached search,
-> graph traversal, or prior health receipt. A non-zero result is a stop signal, not permission to
-> repair the store automatically.
+> graph traversal, or prior health receipt. A non-zero result blocks reliance on affected state;
+> independent authorized work may continue. The preflight does not authorize repairs.
 
 The session doctor is strictly read-only. It compares every live Markdown unit with catalog and
 search, checks cold history, detects identity collisions, validates the NOW boundary, and separates
@@ -294,16 +361,43 @@ the plugin does not silently trust executable hooks; inspect them with `/hooks` 
 The plugin itself keeps scripts, skills, command adapters, hooks, and templates in separate
 directories. See the validated adapter manifests for the installed surface.
 
-## Why no database or embeddings?
+## Lexical by default, semantic when useful
 
 At notes scale, explicit headers, status filters, and Markdown links are cheap and inspectable.
-Promptus therefore ships bounded lexical retrieval and a file-derived graph, with no database,
+Default retrieval uses bounded lexical search and a file-derived graph, with no database,
 daemon, or embedding dependency. This is a measured boundary rather than an article of faith.
 
 Organon's [benchmark notebook](../benchmarks/README.md) records both sides of that decision. Exact
 work conservation restored large-store maintenance cadence without SQLite, so SQLite remains
-deferred. Local dense retrieval improved semantic recall, but a dense replacement lost lexical
-controls; a lifecycle-filtered mixed candidate route remains an experiment, not a shipped feature.
+deferred for default maintenance. The unreleased [retrieval candidate](../RETRIEVAL.md) adds
+optional local QMD vectors for conceptual questions. Fresh synthetic cases support better first-result
+ranking, not universal superiority or proven live-project gains. Ranking never validates a claim.
+
+With QMD 2.8.3, Node >=22 and an embedding GGUF already staged separately:
+
+```sh
+bun promptus/scripts/kb-semantic.ts configure --package /absolute/path/to/qmd \
+  --node /absolute/path/to/node --model /absolute/path/to/embedding.gguf
+bun promptus/scripts/kb-semantic.ts update
+bun promptus/scripts/kb-find.ts 'conceptual question' --semantic
+```
+
+Installed callers use their absolute plugin script paths and may pass `--root <project>`.
+Configuration and refresh write only `.promptus/cache/semantic/`; they do not install dependencies,
+download models, transmit notes, require a GPU, or start a resident server. Use trusted local SDK
+and model files. Embedding refresh is explicit and can be expensive; it is not part of `kb-index`.
+
+Semantic results retain canonical IDs, source paths and effective statuses. Default semantic
+scope excludes superseded, refuted, retired and untrusted units; explicit `--status`, `--history`
+or `--include-inactive` widens the relevant scope. Quoted/required terms and `--all` bypass vectors.
+Missing, stale or failed semantic state reports a diagnostic and uses fresh lexical source instead.
+Inspect source bodies with `kb-get` before citing them.
+
+The optional cache is disposable. Update rebuilds missing, unverified or corrupted database
+generations; changed models require reconfiguration. An interrupted `operation.lock` is not removed
+automatically: confirm its process has stopped before removing that exact lock. To disable the route,
+omit `--semantic`; retiring its project-local cache requires no Markdown migration. Isolated
+adapter tests do not certify a host installation or live-project adoption.
 
 ## Research foundations
 

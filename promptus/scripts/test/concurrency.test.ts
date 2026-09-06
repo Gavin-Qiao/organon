@@ -1,11 +1,11 @@
 /** Regression contract for multi-agent STORE concurrency. */
 import { afterAll, expect, test } from "bun:test";
 import { spawn, spawnSync } from "node:child_process";
-import { closeSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { closeSync, copyFileSync, existsSync, mkdirSync, mkdtempSync, openSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { ledgerEntries } from "../lib/units.ts";
-import { isStoreLockContention } from "../lib/store-lock.ts";
+import { atomicStoreWrite, isStoreLockContention, withStoreLock } from "../lib/store-lock.ts";
 
 const PROMPTUS = join(import.meta.dir, "..", "..");
 const ADD = join(PROMPTUS, "scripts", "kb-add.ts");
@@ -72,4 +72,48 @@ test("concurrent kb-add writers lose no events and mint unique IDs", async () =>
   expect(cards).toHaveLength(count);
   expect(new Set(cards.map((line) => /id:(\S+)/.exec(line)?.[1]))).toEqual(new Set(ids));
   expect(existsSync(join(root, ".promptus", "cache", ".locks", "store.lock"))).toBe(false);
+});
+
+test("concurrent kb-amend writers preserve every independently added alias", async () => {
+  const root = scaffold();
+  const path = ".promptus/docs/shared.md";
+  writeFileSync(join(root, path), "---\nid: finding-shared\n---\n# Shared\n\nUntouched body.\n");
+  const results = await Promise.all(Array.from({ length: 12 }, (_, ordinal) => new Promise<number | null>((resolve, reject) => {
+    const child = spawn(process.execPath, [join(PROMPTUS, "scripts", "kb-amend.ts"), "--root", root, "--path", path,
+      "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED", "--alias", `legacy-${ordinal}`], { stdio: "ignore" });
+    child.on("error", reject);
+    child.on("close", resolve);
+  })));
+  expect(results).toEqual(Array(12).fill(0));
+  const text = readFileSync(join(root, path), "utf8");
+  for (let ordinal = 0; ordinal < 12; ordinal++) expect(text).toMatch(new RegExp(`legacy-${ordinal}(?:,|\\])`));
+  expect(text).toContain("id: finding-shared\n");
+  expect(text.endsWith("# Shared\n\nUntouched body.\n")).toBe(true);
+  expect(existsSync(join(root, ".promptus/cache/.locks/store.lock"))).toBe(false);
+});
+
+test("a terminated writer preserves source and fails closed until its exact lease is cleared", async () => {
+  const root = scaffold(), ledger = join(root, ".promptus/ledger/RESEARCH-LEDGER.md");
+  const before = readFileSync(ledger, "utf8"), lock = join(root, ".promptus/cache/.locks/store.lock");
+  const code = `import {withStoreLock} from ${JSON.stringify(join(PROMPTUS, "scripts/lib/store-lock.ts"))};
+    withStoreLock(${JSON.stringify(root)}, () => { process.stdout.write("acquired\\n"); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)),0,0,60000); });`;
+  const child = spawn(process.execPath, ["-e", code], { stdio: ["ignore", "pipe", "pipe"] });
+  let closed = false;
+  const terminal = new Promise<void>((resolve) => child.on("close", () => { closed = true; resolve(); }));
+  try {
+    await new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => reject(Error("test writer never acquired lease")), 3000);
+      child.stdout.once("data", () => { clearTimeout(timer); resolve(); });
+      child.once("error", error => { clearTimeout(timer); reject(error); });
+    });
+    expect(JSON.parse(readFileSync(lock, "utf8")).pid).toBe(child.pid);
+    child.kill("SIGKILL"); await terminal; // exact newly spawned fixture process, now confirmed terminal
+    expect(readFileSync(ledger, "utf8")).toBe(before);
+    expect(() => withStoreLock(root, () => atomicStoreWrite(root, ledger, "must not write"), { timeoutMs: 20 })).toThrow("timed out");
+    expect(readFileSync(ledger, "utf8")).toBe(before);
+    unlinkSync(lock); // explicit recovery only after the owning process is terminal
+    withStoreLock(root, () => atomicStoreWrite(root, ledger, before + "\nRecovered fixture write.\n"));
+    expect(readFileSync(ledger, "utf8")).toBe(before + "\nRecovered fixture write.\n");
+    expect(existsSync(lock)).toBe(false);
+  } finally { if (!closed) { child.kill("SIGKILL"); await terminal; } }
 });

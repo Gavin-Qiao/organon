@@ -1,0 +1,287 @@
+{
+  "schema": "organon.fresh-agent-manuscript.v1",
+  "created": "2026-09-05T00:29:13.130Z",
+  "model": "gpt-6-astra",
+  "task": "/root/gpt6_grounded_paper_retest",
+  "method": "Fresh-context synthetic operational trial, same task and suite as the initial manuscript trial. Read-only evidence; no prior diagnosis or expected answer supplied to the test agent.",
+  "suite": {
+    "name": "synthetic-northbridge-research",
+    "description": "A wholly synthetic long-running research history for testing continuity and traceability without reading or writing any live project store.",
+    "classification": "synthetic",
+    "sha256": "8f67deb19aefdc7bed20f97655cf5414659a425f6017c7917ad0d42618c0e670"
+  },
+  "sourceBefore": {
+    "hash": "fa6a79f0bbf158a956d2cc8a539795f05fd19df6c0527921c7e2873448678efb",
+    "files": 9
+  },
+  "sourceAfter": {
+    "hash": "fa6a79f0bbf158a956d2cc8a539795f05fd19df6c0527921c7e2873448678efb",
+    "files": 9
+  },
+  "agentReport": {
+    "outcome": "Completed the synthetic Evaluation section, rendered Markdown to LaTeX, and passed claim and number gates without overrides.",
+    "fixture_root": "/tmp/promptus-continuity-dZSegi",
+    "changed_files": [
+      ".editio/paper/sections/evaluation.md",
+      ".editio/paper/numbers.json",
+      ".editio/paper/front/numbers.tex",
+      ".editio/paper/front/numbers.lock.json",
+      ".editio/paper/sections/abstract.tex",
+      ".editio/paper/sections/introduction.tex",
+      ".editio/paper/sections/motivation.tex",
+      ".editio/paper/sections/background.tex",
+      ".editio/paper/sections/methods.tex",
+      ".editio/paper/sections/evaluation.tex",
+      ".editio/paper/sections/related-work.tex",
+      ".editio/paper/sections/conclusion.tex",
+      "agent-report.json"
+    ],
+    "regenerated_without_identity_edits": [
+      ".editio/paper/front/identity.tex"
+    ],
+    "command_roots": {
+      "promptus": "/mnt/c/users/mohan/desktop/telotia/organon/promptus",
+      "editio": "/mnt/c/users/mohan/desktop/telotia/organon/editio"
+    },
+    "commands": [
+      {
+        "command": "bun <promptus>/scripts/promptus-session-doctor.ts",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <editio>/scripts/editio-status.ts",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <promptus>/scripts/kb-find.ts '<query>' --snippet",
+        "queries": [
+          "Northbridge",
+          "coefficient",
+          "checksum",
+          "solvent echo",
+          "batch",
+          "blinded replication"
+        ],
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "command": "bun <promptus>/scripts/kb-get.ts '<path>'",
+        "paths": [
+          ".promptus/docs/northbridge-run-validates-coefficient-seventeen.md",
+          ".promptus/memory/northbridge-deployment-uses-batches-of-four.md",
+          ".promptus/docs/checksum-gates-northbridge-calibration-publication.md",
+          ".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md",
+          ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29",
+          ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.001",
+          ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.002",
+          ".promptus/docs/lit/northbridge-calibration-protocol.md"
+        ],
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "command": "bun <promptus>/scripts/promptus-session-doctor.ts --artifacts",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <editio>/scripts/editio-numbers.ts --write",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <editio>/scripts/editio-render.ts --all",
+        "cwd": "/tmp/promptus-continuity-dZSegi/.editio/paper",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <editio>/scripts/editio-status.ts --gate",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      },
+      {
+        "command": "bun <editio>/scripts/editio-numbers.ts --gate",
+        "cwd": "/tmp/promptus-continuity-dZSegi",
+        "exit_code": 0
+      }
+    ],
+    "evidence_paths_used": [
+      ".promptus/TELOS.md",
+      ".promptus/docs/northbridge-run-validates-coefficient-seventeen.md",
+      ".promptus/docs/checksum-gates-northbridge-calibration-publication.md",
+      ".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md",
+      ".promptus/memory/northbridge-deployment-uses-batches-of-four.md",
+      ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29",
+      ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.001",
+      ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.002",
+      ".promptus/docs/lit/northbridge-calibration-protocol.md",
+      "artifacts/northbridge-run.txt"
+    ],
+    "review": {
+      "workflow": "Editio command, structure, numbers, LaTeX rendering, Promptus recall, and read-only grounded-writing-reviewer with humanizer style lens",
+      "style_findings": [],
+      "grounding_findings": [],
+      "verdict": "Section may be handed off as a grounded pilot draft; whole-paper readiness is not established.",
+      "claim_counts": {
+        "validated": 5,
+        "historical": 2,
+        "ungraded": 0,
+        "unsourced": 0
+      },
+      "historical_review": "The old finding has VALIDATED source front matter but relation-derived SUPERSEDED status. Prose attributes it to preliminary analysis. The REFUTED ledger record is used only to report rejection and its stated reason.",
+      "numbers": {
+        "current-coefficient": "17",
+        "old-coefficient": "11",
+        "batch-limit": "4"
+      },
+      "run_id": "NB-42",
+      "run_checksum": "7f3c",
+      "artifact_sha256_verified": "b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854",
+      "render_inspection": "Numeric handles became editionum macros; historical spans became claimG with historical grounds; current claims became claimV."
+    },
+    "limitations": [
+      "Synthetic recorded pilot only; no new experiment or blinded replication was performed.",
+      "No statistical significance, sample size, uncertainty estimate, or independent replication result is inferred.",
+      "Claim gates verify metadata and lifecycle; prose entailment was checked manually against fetched source bodies.",
+      "Number bindings preserve transcribed evidence and source hashes; they do not recompute experimental results.",
+      "No PDF build, TeX installation, network access, or commit was attempted.",
+      "Other Markdown section stubs and placeholder identity remain intact. The whole paper is not publication ready.",
+      "Fixture .promptus and artifacts were only read. No ledger, NOW, index, or cache was refreshed or amended.",
+      "The synthetic protocol URL was not accessed; only its recorded local literature unit was read."
+    ]
+  },
+  "independentGateReruns": [
+    {
+      "script": "editio-status.ts",
+      "exitCode": 0,
+      "stdout": "editio-status: 8 section(s) — /tmp/promptus-continuity-dZSegi/.editio/paper\n  abstract           doco:Abstract          drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  introduction       deo:Introduction       drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  motivation         deo:Motivation         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  background         deo:Background         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  methods            deo:Methods            drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  evaluation         deo:Evaluation         drafting   grounds 0  claims 5V 0C 0U 0G 2H  words 139/250\n  related-work       deo:RelatedWork        drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  conclusion         deo:Conclusion         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  claims: 7 total — 5 validated · 0 conjectured · 0 unsourced · 0 ungraded · 139 words drafted\n  historical: 2 report(s) of closed evidence, not current positive support; review prose attribution\n  grounds: 7 handle(s) — 5 resolved · 2 weak · 0 unknown\n    weak    finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration = finding:SUPERSEDED (evaluation.md:12)\n    weak    event-20260905T002329Z-reject-the-solvent-echo-normalization-route = ledger:REFUTED (evaluation.md:12)\n  historical-only finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration = finding:SUPERSEDED at sections/evaluation.md:12; not positive support\n  historical-only event-20260905T002329Z-reject-the-solvent-echo-normalization-route = ledger:REFUTED at sections/evaluation.md:12; not positive support\n  gate: publish-clean — no ungraded, no unsourced, no overclaims.\n",
+      "stderr": ""
+    },
+    {
+      "script": "editio-numbers.ts",
+      "exitCode": 0,
+      "stdout": "editio-numbers: 3 handle(s) — /tmp/promptus-continuity-dZSegi/.editio/paper\n  current-coefficient      = 17           fresh  used ×2\n  old-coefficient          = 11           fresh  used ×2\n  batch-limit              = 4            fresh  used ×2\n  bindings: front/numbers.tex present · 6 use(s) in 1 file(s) (sections wired or not, plus front/macros.tex)\n  gate: numbers-clean — every handle bound and matching, every source fresh (or pinned on the record).\n",
+      "stderr": ""
+    }
+  ],
+  "paperFiles": {
+    ".editio/paper/sections/evaluation.md": "---\nclass: deo:Evaluation\nstatus: drafting\ngrounds: []\nupdated: 2026-09-05\nbudget: 250\n---\n# Evaluation\n\n[The synthetic Northbridge pilot records coefficient @num:current-coefficient from run NB-42 after contaminant control, with raw-output checksum 7f3c.]{.claim .validated grounds=finding-20260905T002329Z-northbridge-run-validates-coefficient-seventeen} [The recorded publication rule requires retaining that checksum when reporting the coefficient.]{.claim .validated grounds=finding-20260905T002329Z-checksum-gates-northbridge-calibration-publication}\n\n[The preliminary analysis selected coefficient @num:old-coefficient before contaminant control; that finding is now superseded.]{.claim .historical grounds=finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration} [The rejection record attributes the solvent echo normalization route's reproduction of coefficient @num:old-coefficient to contaminant carry-over into the reference channel. It closes that route unless the reference chemistry changes.]{.claim .historical grounds=event-20260905T002329Z-reject-the-solvent-echo-normalization-route}\n\n[Deployment has a maximum batch size of @num:batch-limit, and a calibration must remain within one batch.]{.claim .validated grounds=memory-20260905T002329Z-northbridge-deployment-uses-batches-of-four} [The adopted replication plan uses coefficient @num:current-coefficient, retains checksum 7f3c, and executes in batches of @num:batch-limit with the solvent echo route closed.]{.claim .validated grounds=event-20260905T002329Z-adopt-coefficient-seventeen-under-the-batch-four-constraint} [The handoff identifies blinded replication as the next step.]{.claim .validated grounds=event-20260905T002329Z-resume-northbridge-at-the-blinded-replication} This section reports the recorded pilot and its operating constraints; it makes no claim of completed replication or statistical significance.\n",
+    ".editio/paper/sections/evaluation.tex": "% GENERATED by editio-render from sections/evaluation.md — edits here are disposable.\n% class: deo:Evaluation · status: drafting\n\n\\section{Evaluation}\\label{sec:evaluation}\n\\editiostamp{2026-09-05}{}\n\n\\claimV{The synthetic Northbridge pilot records coefficient \\editionum{current-coefficient} from run NB-42 after contaminant control, with raw-output checksum 7f3c.}\\editiogrounds{finding-20260905T002329Z-northbridge-run-validates-coefficient-seventeen} \\claimV{The recorded publication rule requires retaining that checksum when reporting the coefficient.}\\editiogrounds{finding-20260905T002329Z-checksum-gates-northbridge-calibration-publication}\n\n\\claimG{The preliminary analysis selected coefficient \\editionum{old-coefficient} before contaminant control; that finding is now superseded.}\\editiogrounds{historical: finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration} \\claimG{The rejection record attributes the solvent echo normalization route's reproduction of coefficient \\editionum{old-coefficient} to contaminant carry-over into the reference channel. It closes that route unless the reference chemistry changes.}\\editiogrounds{historical: event-20260905T002329Z-reject-the-solvent-echo-normalization-route}\n\n\\claimV{Deployment has a maximum batch size of \\editionum{batch-limit}, and a calibration must remain within one batch.}\\editiogrounds{memory-20260905T002329Z-northbridge-deployment-uses-batches-of-four} \\claimV{The adopted replication plan uses coefficient \\editionum{current-coefficient}, retains checksum 7f3c, and executes in batches of \\editionum{batch-limit} with the solvent echo route closed.}\\editiogrounds{event-20260905T002329Z-adopt-coefficient-seventeen-under-the-batch-four-constraint} \\claimV{The handoff identifies blinded replication as the next step.}\\editiogrounds{event-20260905T002329Z-resume-northbridge-at-the-blinded-replication} This section reports the recorded pilot and its operating constraints; it makes no claim of completed replication or statistical significance.\n",
+    ".editio/paper/numbers.json": "{\n  \"current-coefficient\": {\n    \"value\": \"17\",\n    \"source\": [\"artifacts/northbridge-run.txt\", \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\"],\n    \"note\": \"Recorded coefficient in synthetic run NB-42; transcribed from existing evidence, not recomputed.\"\n  },\n  \"old-coefficient\": {\n    \"value\": \"11\",\n    \"source\": [\".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md\", \".promptus/ledger/RESEARCH-LEDGER.md\"],\n    \"note\": \"Historical coefficient only: superseded preliminary finding and rejected normalization route.\"\n  },\n  \"batch-limit\": {\n    \"value\": \"4\",\n    \"source\": [\"artifacts/northbridge-run.txt\", \".promptus/memory/northbridge-deployment-uses-batches-of-four.md\", \".promptus/ledger/RESEARCH-LEDGER.md\"],\n    \"note\": \"Maximum deployment batch size; adopted replication plan uses batches of four without splitting a calibration.\"\n  }\n}\n",
+    ".editio/paper/front/numbers.tex": "% front/numbers.tex — GENERATED by editio-numbers --write from numbers.json.\n% The ONE place values exist; everything else references \\editionum{handle}.\n\\expandafter\\gdef\\csname editionum@current-coefficient\\endcsname{17}\n\\expandafter\\gdef\\csname editionum@old-coefficient\\endcsname{11}\n\\expandafter\\gdef\\csname editionum@batch-limit\\endcsname{4}\n",
+    ".editio/paper/front/numbers.lock.json": "{\n  \"written\": \"2026-09-05T00:25:29.814Z\",\n  \"handles\": {\n    \"current-coefficient\": {\n      \"value\": \"17\",\n      \"sources\": {\n        \"artifacts/northbridge-run.txt\": \"b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854\",\n        \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\": \"1ff06e72eb828902255d5006de9379901cc993003c02e7b7cc91af8974867b30\"\n      }\n    },\n    \"old-coefficient\": {\n      \"value\": \"11\",\n      \"sources\": {\n        \".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md\": \"6d14405c3e33a828a3de88f1c9518dbde6b31c0c3384899c01e318cfa52980d0\",\n        \".promptus/ledger/RESEARCH-LEDGER.md\": \"576aa121e85a7038a3d7eb0b196c3886e94a08815afd11939c6c6e2a60e09508\"\n      }\n    },\n    \"batch-limit\": {\n      \"value\": \"4\",\n      \"sources\": {\n        \"artifacts/northbridge-run.txt\": \"b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854\",\n        \".promptus/memory/northbridge-deployment-uses-batches-of-four.md\": \"b4efffdf935106952b5e93216e399159668bc3e0f41726f102836555c12edfab\",\n        \".promptus/ledger/RESEARCH-LEDGER.md\": \"576aa121e85a7038a3d7eb0b196c3886e94a08815afd11939c6c6e2a60e09508\"\n      }\n    }\n  }\n}\n"
+  },
+  "resolvedIdentity": [
+    [
+      "event-20260905T002329Z-reject-the-solvent-echo-normalization-route",
+      {
+        "substrate": "ledger",
+        "status": "REFUTED",
+        "id": "event-20260905T002329Z-reject-the-solvent-echo-normalization-route",
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29",
+        "title": "Reject the solvent echo normalization route"
+      }
+    ],
+    [
+      "event-20260905T002329Z-adopt-coefficient-seventeen-under-the-batch-four-constraint",
+      {
+        "substrate": "ledger",
+        "status": "RESOLVED",
+        "id": "event-20260905T002329Z-adopt-coefficient-seventeen-under-the-batch-four-constraint",
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.001",
+        "title": "Adopt coefficient seventeen under the batch-four constraint"
+      }
+    ],
+    [
+      "event-20260905T002329Z-resume-northbridge-at-the-blinded-replication",
+      {
+        "substrate": "ledger",
+        "status": "VALIDATED",
+        "id": "event-20260905T002329Z-resume-northbridge-at-the-blinded-replication",
+        "path": ".promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:23:29.002",
+        "title": "Resume Northbridge at the blinded replication"
+      }
+    ],
+    [
+      "memory-20260905T002329Z-northbridge-deployment-uses-batches-of-four",
+      {
+        "substrate": "memory",
+        "status": "validated",
+        "id": "memory-20260905T002329Z-northbridge-deployment-uses-batches-of-four",
+        "path": ".promptus/memory/northbridge-deployment-uses-batches-of-four.md",
+        "title": "Northbridge deployment uses batches of four"
+      }
+    ],
+    [
+      "finding-20260905T002329Z-checksum-gates-northbridge-calibration-publication",
+      {
+        "substrate": "finding",
+        "status": "VALIDATED",
+        "id": "finding-20260905T002329Z-checksum-gates-northbridge-calibration-publication",
+        "path": ".promptus/docs/checksum-gates-northbridge-calibration-publication.md",
+        "title": "Checksum gates Northbridge calibration publication"
+      }
+    ],
+    [
+      "finding-20260905T002329Z-northbridge-run-validates-coefficient-seventeen",
+      {
+        "substrate": "finding",
+        "status": "VALIDATED",
+        "id": "finding-20260905T002329Z-northbridge-run-validates-coefficient-seventeen",
+        "path": ".promptus/docs/northbridge-run-validates-coefficient-seventeen.md",
+        "title": "Northbridge run validates coefficient seventeen"
+      }
+    ],
+    [
+      "finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration",
+      {
+        "substrate": "finding",
+        "status": "SUPERSEDED",
+        "id": "finding-20260905T002329Z-use-coefficient-eleven-for-northbridge-calibration",
+        "path": ".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md",
+        "title": "Use coefficient eleven for Northbridge calibration"
+      }
+    ]
+  ],
+  "implementationHashes": {
+    "promptus/scripts/lib/read-store.ts": "5d2d2f28759cb1af48129efd57a695967440c4d5387638cb215dd2520b19d71b",
+    "editio/scripts/grounds.ts": "fb22ce6d6412fe92eb3f627273d78454a8e4787fe67028d6e9fd0b9062c2c905",
+    "editio/scripts/editio-status.ts": "a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c",
+    "editio/scripts/editio-render.ts": "08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed",
+    "editio/skills/editio/SKILL.md": "9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4",
+    "promptus/scripts/sync-reader.ts": "d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7"
+  },
+  "verification": {
+    "tests": 386,
+    "expectations": 2137,
+    "files": 33,
+    "durationSeconds": 35.32,
+    "pluginValidation": "passed including reader-copy parity",
+    "refactorProjection": "341-unit Organon reindex; zero derived writes"
+  },
+  "limitations": [
+    "One fresh agent on one synthetic manuscript task, not a general effectiveness estimate.",
+    "Historical grade records provenance and closed lifecycle; prose entailment still requires review.",
+    "No PDF build, external literature retrieval, complete paper, or real-project store access.",
+    "Initial failing receipt is retained separately; no source status or evidence was changed to pass gates."
+  ]
+}

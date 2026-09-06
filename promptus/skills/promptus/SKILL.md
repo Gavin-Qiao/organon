@@ -1,77 +1,56 @@
 ---
 name: promptus
-description: Orchestrator and map for the Promptus research knowledge system — a substrate for the LLM agent. Use at the start of research book-keeping to choose the right verb/script/skill — STORE (kb-add/kb-amend), BOOK-KEEP (promptus-check + kb-index + graph + checkpoint), RETRIEVE (kb-find → kb-get + recall). grannie is the one human read-port. Knows the four stores, substrate:status tagging, the [[link]] graph, and the invariant.
+description: Record, retrieve, or maintain a project's Promptus research memory. Use to choose the appropriate store operation.
 ---
 
-# Promptus — orchestrator
+# Promptus
 
-**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
-two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
-host-specific environment variable exists in the project shell.
+Promptus preserves decisions, findings, sources, and durable memory across sessions.
+Markdown is authoritative; scripts own IDs, timestamps, placement, indexes, and
+validation. The agent judges relevance and what the evidence supports.
 
-Promptus stores / keeps / retrieves what a research project knows as gated markdown — a
-substrate for the agent; grannie is the one human read-port. Read `.promptus/TELOS.md` for the
-canonical statement and the invariant.
-This skill is the map: pick the verb, run the piece.
+Resolve `<plugin-root>` two directories above this `SKILL.md`. Pass `--root` when
+working outside the project; do not assume host environment variables exist.
 
-## Decision table — intent → do this
+## Choose the operation
 
-| You are about to… | Verb | Do |
-|---|---|---|
-| resume a long-running project or trust its NOW/cache | PREFLIGHT | the `promptus-session-doctor` skill; strictly read-only, stop on stale or ambiguous state |
-| record a decision / run / observation / dead-end / finding | STORE | `bun "<plugin-root>/scripts/kb-add.ts" --substrate ledger …` (or the `research-ledger` skill for the habit) |
-| distill a settled finding into a concept page | STORE | `kb-add --substrate finding …` (one concept per file, `[[linked]]`) |
-| capture external prior art you read | STORE | `kb-add --substrate lit --source "<src#anchor>" …` |
-| ask a stateless outside reasoner to attack one precise theoretical bottleneck | — | the `thinker-round` skill: retrieve first → seal one self-contained prompt + refute-first plan → operator transports → quarantine return → independently adjudicate |
-| ask whether an endeavour is converging, narrowing, parking, or reopening for good reasons | RETRIEVE | the `trajectory-review` skill: strict preflight → bounded deterministic packet → body-verified causal retrospective; read-only unless the operator separately authorizes persistence |
-| preserve an external thinker response before auditing it | STORE | `kb-ingest quarantine <file> --source "<provenance>" --apply` → `lit:UNTRUSTED`; promote no claim automatically |
-| remember a durable, cross-session fact | STORE | `kb-add --substrate memory …` |
-| change the status or metadata of an existing curated unit | STORE | `bun "<plugin-root>/scripts/kb-amend.ts" --path <path> --substrate <finding|lit|memory> --kind <kind> --status <status>` |
-| make the index current after writes | BOOK-KEEP | `bun "<plugin-root>/scripts/kb-index.ts"` |
-| verify the whole store is classified, uniquely identified, related, and current | BOOK-KEEP | the `promptus-check` skill (`bun "<plugin-root>/scripts/promptus-check.ts" --strict`) |
-| check the knowledge web's health (dangling `[[links]]`, orphans) | BOOK-KEEP | `bun "<plugin-root>/scripts/kb-graph.ts" lint` |
-| flush a session before compaction | BOOK-KEEP | the `promptus-checkpoint` skill (`/promptus:checkpoint` in Claude Code) |
-| answer "what did we decide / find / read about X" | RETRIEVE | the `recall` skill (drives `kb-find` → `kb-get`) |
-| answer "where are we / what blocks us / what is next" for a person | RETRIEVE | `/grannie status` (drives deterministic `promptus-status`, then explains plainly) |
-| read one unit's body without opening the whole ledger | RETRIEVE | `bun "<plugin-root>/scripts/kb-get.ts" "<path>"` (the `path` column `kb-find` prints) |
-| find the load-bearing units (what to read first) | RETRIEVE | `bun "<plugin-root>/scripts/kb-graph.ts" rank` |
-| find related-but-unlinked notes to connect | RETRIEVE | `bun "<plugin-root>/scripts/kb-graph.ts" suggest` |
-| write something the project already knows | RETRIEVE | `recall` to ground it; editio's `humanizer` for style, when installed |
-| explain a stored concept to a human | read-port | `grannie` (`/grannie explain <concept>`) — grounds from the store |
-| audit a draft for AI-tells + unsourced claims | audit | the `grounded-writing-reviewer` skill |
-| initialize Promptus in a repo | — | the `promptus-init` skill (runs `telos`; `/promptus:promptus-init` in Claude Code) |
-| change the project's direction (edit the Telos) | — | **operator-triggered**: record a ledger DECISION + propose (the `telos` skill's boundary); rewrite in place on the operator's word — the frontier goes to `kb-now`, never into `TELOS.md` |
+| Need | Operation |
+| --- | --- |
+| Resume from NOW or cached knowledge | `promptus-session-doctor`; inspect source when the affected surface is blocked |
+| Record a decision, result, failed approach, or observation | `research-ledger`; `scripts/kb-add.ts --substrate ledger` |
+| Save a finding, external source, or durable fact | `scripts/kb-add.ts --substrate finding`, `lit`, or `memory`; literature requires `--source` |
+| Correct a unit's metadata or status | `scripts/kb-amend.ts`; keep the previous claim traceable |
+| Find recorded knowledge | `recall`; `scripts/kb-find.ts` then `scripts/kb-get.ts` |
+| Trace recorded support/replacements or explicit OPEN work | `scripts/kb-evidence.ts`; request bounded bodies before asserting claims; relations are attribution, not proof |
+| Inspect disk cost or evict optional raw parses | `scripts/kb-cache.ts`; eviction previews unless explicitly applied; `kb-semantic preview` exposes uncapped third-party growth |
+| Preview a project upgrade | `scripts/promptus-upgrade.ts --root <exact-project>`; host installation and token-bound derived application are separate; preserve custom instructions |
+| Configure or refresh optional local semantic recall | `scripts/kb-semantic.ts`; requires separately staged QMD, Node and model; ordinary recall needs none |
+| Refresh only derived state | `scripts/kb-index.ts` |
+| Verify the store | `promptus-check`; its gate includes the index rebuild |
+| Inspect relationships or link debt | `promptus-graph` |
+| Diagnose layout or plan migration | `promptus-doctor` |
+| Flush before compaction or handoff | `promptus-checkpoint` |
+| Explain knowledge or current state plainly | `grannie` |
 
-## The four stores
+Use `--help` on the selected script for arguments. Under `.promptus/`, Telos holds
+direction, the ledger records events, `docs/` and `docs/lit/` hold findings and
+literature, and `memory/` holds durable facts.
 
-Telos (`.promptus/TELOS.md`, direction) · Ledger (`.promptus/ledger/RESEARCH-LEDGER.md`, events) ·
-Knowledge (`.promptus/docs/` findings + `.promptus/docs/lit/` literature) · Memory
-(`.promptus/memory/`, durable facts). Every unit
-is tagged `substrate:status` — `ledger:DEADEND`, `finding:VALIDATED`, `lit:CITE`,
-`memory:validated`.
+## Conditional workflows
 
-## The knowledge graph
+Use `thinker-round` for an operator-carried external theoretical question; returned
+text stays untrusted until independently checked. Use `trajectory-review` for a
+bounded retrospective when the route or its justification needs examination.
+Use `telos` when the operator asks to establish or change project direction.
+These workflows are not prerequisites for ordinary retrieval or recording.
 
-The resolved `[[wikilinks]]` and typed relations between units form the connectivity graph (no DB,
-no embeddings — see the invariant); `kb-index` derives `.promptus/cache/graph.json`, while
-PageRank deliberately remains over the page-wikilink subgraph:
-- `kb-graph rank` — PageRank over active page units; add `--history` to include inactive units.
-- `kb-graph lint` — health: dangling `[[handles]]` (with a "did you mean?") and units with neither
-  a resolved wikilink nor a resolved typed relation. `--strict` to gate.
-- `kb-graph suggest` — latent links: unit pairs that are unlinked but probably related (shared
-  vocabulary + shared source), so you can draw the missing `[[link]]`. Suggest-only; you judge.
+## Preserve meaning
 
-Retrieval is two-tier: `kb-find` uses the disposable lexical index (ranked, capped at 20), then
-`kb-get` fetches only the bodies the ranked headers earned — an unanchored ledger is refused and
-each fetch has a byte ceiling, so a mistaken request cannot dump the whole store.
+Read source bodies before citing them. Preserve substrate, epistemic status,
+provenance, and lifecycle changes. Search relevance does not validate a claim.
+Fetch bounded units; never dump an unanchored ledger into context.
 
-## The invariant (do not break)
-
-markdown is the only source of truth · the index is derived & disposable · writes go through
-a gated script, never freehand · prefer a script over a server · add machinery only past a
-threshold you've **measured**.
-
-## When NOT to use Promptus
-
-Throwaway scratch work, a one-off answer, or anything you would not want to resume after a
-compaction. Storing noise is as bad as losing signal — record what you'd hate to lose.
+Use gated writers for knowledge mutations. Add retrieval machinery when measurements
+warrant it; keep derived state rebuildable from Markdown. Store consequential
+knowledge promptly. Omit throwaway scratch work and repeated mechanical steps
+that add nothing a future session needs.

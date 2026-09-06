@@ -1,0 +1,14 @@
+% Authoring proxy: render the section and refresh front definitions before use.
+\providecommand{\editiomode}{draft}
+\documentclass{article}
+\usepackage{editio}
+\usepackage{amsmath,graphicx,booktabs}
+\usepackage{hyperref}
+\usepackage[capitalise]{cleveref}
+\InputIfFileExists{front/numbers}{}{}
+\InputIfFileExists{front/macros}{}{}
+\InputIfFileExists{front/identity}{}{}
+\providecommand{\previewsection}{methods}
+\begin{document}
+\input{sections/\previewsection}
+\end{document}

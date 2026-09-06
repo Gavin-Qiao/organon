@@ -1,7 +1,7 @@
 {
   "name": "editio",
   "version": "0.7.0",
-  "description": "The academic-writing toolchain for coding agents — turn a promptus store's validated knowledge into a defensible, submittable paper: DoCO/DEO-grounded structure, one markdown source with three renders (draft / publish / blind), publication-grade figures and tables, a bibliography from the lit store, venue packaging, and rebuttals. Ships the humanizer style toolkit. Requires the promptus plugin.",
+  "description": "Evidence-grounded academic writing: structured Markdown drafting, claim and number gates, draft/publish/blind renders, figures, workspace diagnostics, and venue profiles. Includes the humanizer style toolkit. Uses a Promptus evidence store.",
   "author": {
     "name": "Mohan Qiao",
     "url": "https://github.com/Gavin-Qiao"
@@ -9,7 +9,7 @@
   "license": "GPL-3.0-only",
   "homepage": "https://github.com/Gavin-Qiao/organon",
   "repository": "https://github.com/Gavin-Qiao/organon",
-  "keywords": ["academic-writing", "latex", "paper", "figures", "bibliography", "humanizer"],
+  "keywords": ["academic-writing", "latex", "paper", "figures", "evidence", "humanizer"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Editio",

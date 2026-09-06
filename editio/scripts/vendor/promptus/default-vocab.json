@@ -1,0 +1,177 @@
+{
+  "version": 5,
+  "substrates": {
+    "ledger": {
+      "prefix": "event",
+      "store": ".promptus/ledger/RESEARCH-LEDGER.md",
+      "placement": "sentinel",
+      "envelope": "log",
+      "policy": "permissive",
+      "kinds": {
+        "core": [
+          "PLAN",
+          "EXP",
+          "RESULT",
+          "FINDING",
+          "DECISION",
+          "RESEARCH",
+          "RESUME"
+        ],
+        "extended": [
+          "IDEA",
+          "MISTAKE",
+          "FIX",
+          "DEADEND"
+        ]
+      },
+      "statuses": {
+        "core": [
+          "CONJECTURED",
+          "VALIDATED",
+          "REFUTED",
+          "CONFOUNDED",
+          "SUPERSEDED"
+        ],
+        "extended": [
+          "OPEN",
+          "RESOLVED",
+          "WONTFIX"
+        ]
+      }
+    },
+    "finding": {
+      "prefix": "finding",
+      "store": ".promptus/docs",
+      "placement": "file",
+      "envelope": "page",
+      "policy": "strict",
+      "kinds": {
+        "core": [
+          "RESULT",
+          "METHOD",
+          "CLAIM",
+          "CONCEPT"
+        ],
+        "extended": [
+          "REVIEW"
+        ]
+      },
+      "statuses": {
+        "core": [
+          "CONJECTURED",
+          "VALIDATED",
+          "REFUTED",
+          "CONFOUNDED",
+          "SUPERSEDED"
+        ],
+        "extended": []
+      }
+    },
+    "lit": {
+      "prefix": "lit",
+      "store": ".promptus/docs/lit",
+      "placement": "file",
+      "envelope": "page",
+      "policy": "strict",
+      "kinds": {
+        "core": [
+          "PAPER",
+          "NOTE",
+          "QUOTE"
+        ],
+        "extended": []
+      },
+      "statuses": {
+        "core": [
+          "CITE",
+          "BACKGROUND",
+          "CONTESTED"
+        ],
+        "extended": [
+          "UNTRUSTED"
+        ]
+      },
+      "derived_statuses": [
+        "SUPERSEDED"
+      ],
+      "requires": [
+        "source"
+      ]
+    },
+    "memory": {
+      "prefix": "memory",
+      "store": ".promptus/memory",
+      "placement": "file",
+      "envelope": "memory",
+      "index": ".promptus/memory/MEMORY.md",
+      "policy": "strict",
+      "kinds": {
+        "core": [
+          "user",
+          "feedback",
+          "project",
+          "reference"
+        ],
+        "extended": []
+      },
+      "statuses": {
+        "core": [
+          "validated",
+          "provisional",
+          "retired"
+        ],
+        "extended": []
+      }
+    }
+  },
+  "relations": {
+    "supersedes": {
+      "inverse_status": "SUPERSEDED",
+      "inverse_status_by_substrate": {
+        "memory": "retired"
+      },
+      "cito": "cito:corrects",
+      "prov": "prov:wasRevisionOf"
+    },
+    "fixes": {
+      "inverse_status": "SUPERSEDED",
+      "inverse_status_by_substrate": {
+        "memory": "retired"
+      },
+      "cito": "cito:corrects",
+      "prov": "prov:wasRevisionOf"
+    },
+    "refutes": {
+      "cito": "cito:refutes"
+    },
+    "challenges": {
+      "cito": "cito:disputes"
+    },
+    "supports": {
+      "cito": "cito:supports"
+    },
+    "extends": {
+      "cito": "cito:extends"
+    },
+    "derives-from": {
+      "prov": "prov:wasDerivedFrom"
+    },
+    "cites": {
+      "cito": "cito:cites"
+    },
+    "relates-to": {
+      "cito": "cito:relatesTo"
+    }
+  },
+  "lit_reuse": {
+    "CITE": "cito:cites",
+    "DO-NOT-REBUILD": "cito:usesMethodIn",
+    "REUSE": "cito:reusesDataFrom",
+    "NOVEL": "cito:extends"
+  },
+  "status_glyphs": {
+    "CONFOUNDED": "⚠CONFOUNDED",
+    "SUPERSEDED": "↩SUPERSEDED"
+  },
+  "sentinel": "<!-- kb:append-point -->"
+}

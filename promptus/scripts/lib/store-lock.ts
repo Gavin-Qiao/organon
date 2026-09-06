@@ -11,10 +11,12 @@ import {
   closeSync, existsSync, mkdirSync, openSync, readFileSync, renameSync, rmSync,
   unlinkSync, writeFileSync,
 } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, resolve } from "node:path";
 import { derivedDir } from "./paths.ts";
 
 interface LockOwner { pid: number; token: string; acquiredAt: string }
+// Synchronous nested operations (amend -> index) share the already-owned lease.
+const held = new Set<string>();
 
 const pause = (milliseconds: number) => {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
@@ -37,6 +39,8 @@ export function withStoreLock<T>(
   action: () => T,
   options: { timeoutMs?: number } = {},
 ): T {
+  root = resolve(root);
+  if (held.has(root)) return action.call(undefined);
   const timeoutMs = options.timeoutMs ?? 30_000;
   const lockDir = join(derivedDir(root), ".locks");
   const lockPath = join(lockDir, "store.lock");
@@ -64,9 +68,11 @@ export function withStoreLock<T>(
     }
   }
 
+  held.add(root);
   try {
     return action();
   } finally {
+    held.delete(root);
     try {
       const current = JSON.parse(readFileSync(lockPath, "utf8")) as Partial<LockOwner>;
       if (current.token === owner.token) unlinkSync(lockPath);
@@ -77,7 +83,7 @@ export function withStoreLock<T>(
 }
 
 /** Replace one file atomically, keeping temporary bytes outside the source fingerprint. */
-export function atomicStoreWrite(root: string, path: string, content: string): void {
+export function atomicStoreWrite(root: string, path: string, content: string | Uint8Array): void {
   const transactionDir = join(derivedDir(root), ".transactions");
   mkdirSync(transactionDir, { recursive: true });
   mkdirSync(dirname(path), { recursive: true });

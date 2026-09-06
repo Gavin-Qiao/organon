@@ -18,6 +18,9 @@ repos:
       - id: end-of-file-fixer
       - id: check-merge-conflict
       - id: check-added-large-files
+        # Immutable public/synthetic overhaul receipts (0.5–5.8 MB), already
+        # source-hash bound in Promptus. Keep the default cap everywhere else.
+        exclude: '^benchmarks/results/engines-(development(-semantic(-retry)?)?|synthetic-(500-ipc-retry|5000|content-verified-500))-2026-09-04\.json$'
       - id: check-json
       - id: check-yaml
 

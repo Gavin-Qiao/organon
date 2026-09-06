@@ -14,6 +14,7 @@ import { readFileSync, readdirSync, existsSync, statSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parseFrontmatter } from "./lib/frontmatter.ts";
+import { syncReader } from "./sync-reader.ts";
 
 function arg(argv: string[], k: string): string | undefined {
   const i = argv.indexOf(`--${k}`);
@@ -195,6 +196,14 @@ for (const dir of pluginDirs) {
     checkHooks(`${dir}/hooks/hooks.json`);
   }
   if (typeof codexPlugin?.hooks === "string") checkHooks(`${dir}/${pluginPath(codexPlugin.hooks)}`, true);
+}
+
+if (existsSync(join(repo, "promptus/scripts/lib/read-store.ts"))) {
+  try {
+    const drift = syncReader(repo);
+    if (drift.length) fail("Editio canonical reader drift; run bun promptus/scripts/sync-reader.ts --write");
+    else pass("Editio canonical reader matches Promptus source");
+  } catch (error) { fail(`canonical reader: ${String(error)}`); }
 }
 
 console.log("");
