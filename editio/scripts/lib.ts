@@ -1,6 +1,5 @@
-// lib.ts — editio's own thin helpers. Deliberately independent of promptus's
-// scripts/lib (the plugins reuse each other at the SKILL level, never by import),
-// so this stays small and carries its own tests.
+// Editio's manuscript helpers. Knowledge parsing lives in grounds.ts, using
+// the checked local vendor copy of Promptus's canonical read-only implementation.
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 

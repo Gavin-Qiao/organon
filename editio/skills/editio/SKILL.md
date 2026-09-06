@@ -1,9 +1,9 @@
 ---
 name: editio
-description: Academic-writing orchestrator — turn a promptus store's validated knowledge into a defensible, submittable paper. Use when starting, resuming, structuring, rendering, or auditing a paper, or deciding which editio piece does a job. Knows the paper workspace, markdown-is-truth, three renders, the DoCO/DEO structure gate, and the evidence-calibrated audit loop.
+description: Write, render, or audit an Editio manuscript grounded in Promptus evidence. Use to select the relevant paper workflow.
 ---
 
-# editio — the paper read-port
+# Editio — the manuscript workflow
 
 **Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root
 two directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a
@@ -16,7 +16,10 @@ status, and the draft render makes that status *visible* before a reviewer sees 
 
 **Prerequisite:** the promptus plugin (a `.promptus/` store in the host repo). editio reuses it
 at the skill level — `recall` grounds claims, the `grounded-writing-reviewer` audits drafts.
-A TeX distribution is the user's own (see `editio-latex` for the 5-minute setup).
+The gate shares Promptus's canonical read-only parser through a checked packaged copy:
+stable IDs, unique aliases, and relation-derived lifecycle resolve from source Markdown,
+without a cache refresh or knowledge of the other plugin's installation path.
+A TeX distribution is needed only for PDF builds (see `editio-latex`).
 
 ## Decision table — intent → do this
 
@@ -59,11 +62,17 @@ hand-written: one paper.json edit updates the title, author block, and bios ever
    *flagged* span (unsupported / over-confident / style tells); *you* map them to grades:
    `finding:VALIDATED`/`lit:CITE` → `.validated` · `CONJECTURED`/provisional → `.conjectured`
    · nothing found → `.unsourced` · `DEADEND`/`REFUTED` backing the claim → an **overclaim** flag.
+   A faithful account of a rejected, superseded, or retired result is `.historical`, not
+   `.validated`: `[The log records why this route was rejected.]{.claim .historical grounds=<id>}`.
+   Use this only for explicitly attributed history, never to endorse the rejected proposition.
+   The gate requires closed-source grounds, prints their status, rejects overrides and mixed
+   grades, and renders a grey historical annotation using existing style macros. It checks
+   provenance and role, not prose entailment; the reviewer must verify the attribution.
 4. **Apply + override** — *you* (the session) write the grades back into the spans, adding
    `grounds=<handle>`; the author accepts, overrides in-span with a reason
    (`override="holds for our corpus"`), or fixes the prose / stores the evidence.
 5. **Render** — grades become `\claimV` (clean) / `\claimC` (amber) / `\claimU` (vermilion) /
-   `\claimG` (grey, ungraded) on the draft page.
+   `\claimG` (grey, ungraded or explicitly historical) on the draft page.
 6. **Gate** — `editio-status --gate`: zero overclaims (a `.validated` claim over weak,
    unknown, or **absent** grounds), nothing left ungraded, and every `.unsourced` claim
    either fixed or explicitly accepted. `override="reason"` passes the gate **on the

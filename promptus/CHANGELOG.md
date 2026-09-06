@@ -17,6 +17,47 @@ and the project adheres to [Semantic Versioning 2.0.0](https://semver.org/spec/v
 
 ## [Unreleased]
 
+### Added
+
+- Add preview-first per-project adoption with package/source/policy-bound approval tokens,
+  derived-only application, strict postflight, explicit partial failure and rollback guidance.
+- Add bounded source-only `kb-evidence` navigation for typed support, replacement and OPEN
+  records, retaining effective status, provenance, source bodies and artifact diagnostics.
+- Add `kb-cache` usage/eviction and `kb-semantic preview`; expose raw-cache quotas, replacement
+  scratch and unknown third-party growth without automatic downloads or source deletion.
+- Add explicit offline `kb-semantic configure/update` and optional `kb-find --semantic` using
+  separately staged QMD, Node and an embedding model. Preserve canonical identities, lifecycle,
+  status/history filters and exact lexical controls, with diagnostic fresh-source fallback.
+  Keep projections disposable and reject stale, interrupted or physically redirected cache state.
+- Add collision-checked compatibility aliases through `kb-amend --alias`, preserving stable
+  identity and page bodies without rewriting historical links.
+
+### Changed
+
+- Add opt-in reuse of byte-verified raw parses during index refresh and consume the same cached text for
+  phrase verification. Keep strict evidence collectors independent and ordinary queries free
+  of raw-cache reads; fall back safely on cache loss, corruption or quota refusal.
+- Keep persistent raw caching disabled by default after production acceptance exposed overhead;
+  memoize exact ledger slices during cache-free phrase verification without extra disk storage.
+- Serialize index refresh with source writers and detect incomplete index publication before
+  using mixed projections. Extend session diagnostics with affected surfaces and recovery advice.
+- Route provenance/status amendments through the gate and require fetched source bodies in
+  grounded-writing review; treat empty retrieval as a coverage gap rather than a truth verdict.
+- Keep index maintenance explicit after a batch instead of inferring writer targets from shell
+  hooks. Preserve existing project instructions at initialization, scope failed preflight to
+  affected state, and keep checkpointing separate from archive maintenance.
+- Extract the canonical read-only unit collector for checked source reuse in Editio, preserving
+  Promptus projections and independently installable plugin packages.
+- Shorten core skill discovery and load specialized workflows when relevant. Reuse complete
+  current source context and avoid redundant index rebuilds before the health gate.
+- Make the project cadence template portable across hosts and distinguish blocked state
+  reliance from independent authorized work.
+
+### Fixed
+
+- Serialize metadata amendments with other source writers, replace files atomically, reject
+  symlink targets and unknown arguments, and keep dry runs non-mutating.
+
 ## [0.9.2] - 2026-08-26
 
 ### Changed

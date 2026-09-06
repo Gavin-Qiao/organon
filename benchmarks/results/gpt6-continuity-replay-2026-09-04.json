@@ -1,0 +1,586 @@
+{
+  "schema": "promptus.fresh-agent-replay.v1",
+  "created": "2026-09-05T00:05:00.264Z",
+  "model": "gpt-6-astra",
+  "method": {
+    "context": "Two separate collaboration agents, fork_turns none; shared platform instructions remain present.",
+    "task": "Read assigned recall instructions and the same generated synthetic evidence packets; return fixed choices and evidence handles.",
+    "access": "Only two specified input files per agent; no expected answers, source test suite, internet, repository or live-project access authorized.",
+    "scope": "Packet interpretation only. No autonomous retrieval, skill discovery, continuation, writing, or tool execution quality is measured.",
+    "repetitions": 1
+  },
+  "suiteSha256": "8f67deb19aefdc7bed20f97655cf5414659a425f6017c7917ad0d42618c0e670",
+  "packets": {
+    "schema": "promptus.continuity-packets.v1",
+    "suite": "synthetic-northbridge-research",
+    "packets": [
+      {
+        "caseId": "resume-frontier",
+        "capability": "resume",
+        "prompt": "What exact research frontier should the next session resume?",
+        "choices": [
+          "run-blinded-replication",
+          "reopen-solvent-echo",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "ledger-resume",
+            "substrate": "ledger",
+            "status": "VALIDATED",
+            "title": "Resume Northbridge at the blinded replication",
+            "body": "### [2026-09-04 20:02:59.002] RESUME/VALIDATED — Resume Northbridge at the blinded replication\n<!-- kb:id event-20260905T000259Z-resume-northbridge-at-the-blinded-replication -->\nThe next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.\n↳ extends event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint\n\n<!-- kb:append-point -->"
+          },
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          }
+        ]
+      },
+      {
+        "caseId": "settled-finding",
+        "capability": "retrieval",
+        "prompt": "Which coefficient is currently validated by run NB-42?",
+        "choices": [
+          "coefficient-seventeen",
+          "coefficient-eleven",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "finding-current",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Northbridge run validates coefficient seventeen",
+            "body": "---\nid: finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\nsubstrate: finding\nkind: RESULT\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nsource: \"synthetic-run:NB-42\"\nrelations: [\"supersedes:finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration\", \"derives-from:lit-20260905T000259Z-northbridge-calibration-protocol\"]\nartifacts: [raw-output|artifacts/northbridge-run.txt|b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854]\n---\n# Northbridge run validates coefficient seventeen\n\nThe contaminant-controlled Northbridge run NB-42 validates coefficient seventeen. The raw output records checksum 7f3c; this result replaces coefficient eleven.\n"
+          },
+          {
+            "handle": "finding-checksum",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Checksum gates Northbridge calibration publication",
+            "body": "---\nid: finding-20260905T000259Z-checksum-gates-northbridge-calibration-publication\nsubstrate: finding\nkind: METHOD\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nrelations: [\"supports:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n# Checksum gates Northbridge calibration publication\n\nA Northbridge coefficient may be carried into publication only when its raw-output checksum is retained. For run NB-42 the required checksum is 7f3c.\n"
+          },
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          },
+          {
+            "handle": "lit-protocol",
+            "substrate": "lit",
+            "status": "CITE",
+            "title": "Northbridge calibration protocol",
+            "body": "---\nid: lit-20260905T000259Z-northbridge-calibration-protocol\nsubstrate: lit\nkind: PAPER\nstatus: CITE\ncreated: \"2026-09-04 20:02:59\"\nsource: \"https://example.invalid/northbridge-protocol#section-4\"\n---\n# Northbridge calibration protocol\n\nThis synthetic protocol defines the Northbridge assay. A publishable calibration must retain the raw run identifier and checksum, and deployment must respect the recorded batch constraint.\n"
+          }
+        ]
+      },
+      {
+        "caseId": "superseded-result",
+        "capability": "selective-forgetting",
+        "prompt": "Which calibration result governs current work?",
+        "choices": [
+          "coefficient-seventeen",
+          "coefficient-eleven",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "finding-checksum",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Checksum gates Northbridge calibration publication",
+            "body": "---\nid: finding-20260905T000259Z-checksum-gates-northbridge-calibration-publication\nsubstrate: finding\nkind: METHOD\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nrelations: [\"supports:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n# Checksum gates Northbridge calibration publication\n\nA Northbridge coefficient may be carried into publication only when its raw-output checksum is retained. For run NB-42 the required checksum is 7f3c.\n"
+          },
+          {
+            "handle": "finding-current",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Northbridge run validates coefficient seventeen",
+            "body": "---\nid: finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\nsubstrate: finding\nkind: RESULT\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nsource: \"synthetic-run:NB-42\"\nrelations: [\"supersedes:finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration\", \"derives-from:lit-20260905T000259Z-northbridge-calibration-protocol\"]\nartifacts: [raw-output|artifacts/northbridge-run.txt|b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854]\n---\n# Northbridge run validates coefficient seventeen\n\nThe contaminant-controlled Northbridge run NB-42 validates coefficient seventeen. The raw output records checksum 7f3c; this result replaces coefficient eleven.\n"
+          },
+          {
+            "handle": "lit-protocol",
+            "substrate": "lit",
+            "status": "CITE",
+            "title": "Northbridge calibration protocol",
+            "body": "---\nid: lit-20260905T000259Z-northbridge-calibration-protocol\nsubstrate: lit\nkind: PAPER\nstatus: CITE\ncreated: \"2026-09-04 20:02:59\"\nsource: \"https://example.invalid/northbridge-protocol#section-4\"\n---\n# Northbridge calibration protocol\n\nThis synthetic protocol defines the Northbridge assay. A publishable calibration must retain the raw run identifier and checksum, and deployment must respect the recorded batch constraint.\n"
+          },
+          {
+            "handle": "memory-budget",
+            "substrate": "memory",
+            "status": "validated",
+            "title": "Northbridge deployment uses batches of four",
+            "body": "---\nid: memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four\nname: northbridge-deployment-uses-batches-of-four\ndescription: Northbridge deployment uses batches of four\ntype: project\nstatus: validated\nrelations: [\"relates-to:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n\nThe validated deployment constraint is a maximum batch size of four. Apply coefficient seventeen without splitting one calibration across batches.\n"
+          },
+          {
+            "handle": "finding-old",
+            "substrate": "finding",
+            "status": "SUPERSEDED",
+            "title": "Use coefficient eleven for Northbridge calibration",
+            "body": "---\nid: finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration\nsubstrate: finding\nkind: CLAIM\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nrelations: [\"cites:lit-20260905T000259Z-northbridge-calibration-protocol\"]\n---\n# Use coefficient eleven for Northbridge calibration\n\nThe preliminary Northbridge analysis selected coefficient eleven. This conclusion predates the contaminant control and must not govern the blinded replication.\n"
+          },
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          },
+          {
+            "handle": "ledger-resume",
+            "substrate": "ledger",
+            "status": "VALIDATED",
+            "title": "Resume Northbridge at the blinded replication",
+            "body": "### [2026-09-04 20:02:59.002] RESUME/VALIDATED — Resume Northbridge at the blinded replication\n<!-- kb:id event-20260905T000259Z-resume-northbridge-at-the-blinded-replication -->\nThe next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.\n↳ extends event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint\n\n<!-- kb:append-point -->"
+          },
+          {
+            "handle": "ledger-deadend",
+            "substrate": "ledger",
+            "status": "REFUTED",
+            "title": "Reject the solvent echo normalization route",
+            "body": "### [2026-09-04 20:02:59] DEADEND/REFUTED — Reject the solvent echo normalization route\n<!-- kb:id event-20260905T000259Z-reject-the-solvent-echo-normalization-route -->\nThe solvent echo normalization route reproduced coefficient eleven only because contaminant carry-over entered the reference channel. Do not retry this route unless the reference chemistry changes.\n↳ challenges finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration"
+          }
+        ]
+      },
+      {
+        "caseId": "dead-end-avoidance",
+        "capability": "dead-end",
+        "prompt": "Should the next run retry solvent echo normalization?",
+        "choices": [
+          "do-not-retry",
+          "retry-solvent-echo",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "ledger-deadend",
+            "substrate": "ledger",
+            "status": "REFUTED",
+            "title": "Reject the solvent echo normalization route",
+            "body": "### [2026-09-04 20:02:59] DEADEND/REFUTED — Reject the solvent echo normalization route\n<!-- kb:id event-20260905T000259Z-reject-the-solvent-echo-normalization-route -->\nThe solvent echo normalization route reproduced coefficient eleven only because contaminant carry-over entered the reference channel. Do not retry this route unless the reference chemistry changes.\n↳ challenges finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration"
+          },
+          {
+            "handle": "ledger-resume",
+            "substrate": "ledger",
+            "status": "VALIDATED",
+            "title": "Resume Northbridge at the blinded replication",
+            "body": "### [2026-09-04 20:02:59.002] RESUME/VALIDATED — Resume Northbridge at the blinded replication\n<!-- kb:id event-20260905T000259Z-resume-northbridge-at-the-blinded-replication -->\nThe next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.\n↳ extends event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint\n\n<!-- kb:append-point -->"
+          },
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          },
+          {
+            "handle": "finding-old",
+            "substrate": "finding",
+            "status": "SUPERSEDED",
+            "title": "Use coefficient eleven for Northbridge calibration",
+            "body": "---\nid: finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration\nsubstrate: finding\nkind: CLAIM\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nrelations: [\"cites:lit-20260905T000259Z-northbridge-calibration-protocol\"]\n---\n# Use coefficient eleven for Northbridge calibration\n\nThe preliminary Northbridge analysis selected coefficient eleven. This conclusion predates the contaminant control and must not govern the blinded replication.\n"
+          }
+        ]
+      },
+      {
+        "caseId": "multi-session-synthesis",
+        "capability": "long-range-synthesis",
+        "prompt": "What execution package preserves both the publication and deployment constraints?",
+        "choices": [
+          "checksum-7f3c-and-batch-four",
+          "checksum-only",
+          "batch-eight",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "memory-budget",
+            "substrate": "memory",
+            "status": "validated",
+            "title": "Northbridge deployment uses batches of four",
+            "body": "---\nid: memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four\nname: northbridge-deployment-uses-batches-of-four\ndescription: Northbridge deployment uses batches of four\ntype: project\nstatus: validated\nrelations: [\"relates-to:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n\nThe validated deployment constraint is a maximum batch size of four. Apply coefficient seventeen without splitting one calibration across batches.\n"
+          },
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          },
+          {
+            "handle": "ledger-resume",
+            "substrate": "ledger",
+            "status": "VALIDATED",
+            "title": "Resume Northbridge at the blinded replication",
+            "body": "### [2026-09-04 20:02:59.002] RESUME/VALIDATED — Resume Northbridge at the blinded replication\n<!-- kb:id event-20260905T000259Z-resume-northbridge-at-the-blinded-replication -->\nThe next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.\n↳ extends event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint\n\n<!-- kb:append-point -->"
+          },
+          {
+            "handle": "lit-protocol",
+            "substrate": "lit",
+            "status": "CITE",
+            "title": "Northbridge calibration protocol",
+            "body": "---\nid: lit-20260905T000259Z-northbridge-calibration-protocol\nsubstrate: lit\nkind: PAPER\nstatus: CITE\ncreated: \"2026-09-04 20:02:59\"\nsource: \"https://example.invalid/northbridge-protocol#section-4\"\n---\n# Northbridge calibration protocol\n\nThis synthetic protocol defines the Northbridge assay. A publishable calibration must retain the raw run identifier and checksum, and deployment must respect the recorded batch constraint.\n"
+          },
+          {
+            "handle": "finding-checksum",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Checksum gates Northbridge calibration publication",
+            "body": "---\nid: finding-20260905T000259Z-checksum-gates-northbridge-calibration-publication\nsubstrate: finding\nkind: METHOD\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nrelations: [\"supports:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n# Checksum gates Northbridge calibration publication\n\nA Northbridge coefficient may be carried into publication only when its raw-output checksum is retained. For run NB-42 the required checksum is 7f3c.\n"
+          },
+          {
+            "handle": "finding-current",
+            "substrate": "finding",
+            "status": "VALIDATED",
+            "title": "Northbridge run validates coefficient seventeen",
+            "body": "---\nid: finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\nsubstrate: finding\nkind: RESULT\nstatus: VALIDATED\ncreated: \"2026-09-04 20:02:59\"\nsource: \"synthetic-run:NB-42\"\nrelations: [\"supersedes:finding-20260905T000259Z-use-coefficient-eleven-for-northbridge-calibration\", \"derives-from:lit-20260905T000259Z-northbridge-calibration-protocol\"]\nartifacts: [raw-output|artifacts/northbridge-run.txt|b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854]\n---\n# Northbridge run validates coefficient seventeen\n\nThe contaminant-controlled Northbridge run NB-42 validates coefficient seventeen. The raw output records checksum 7f3c; this result replaces coefficient eleven.\n"
+          }
+        ]
+      },
+      {
+        "caseId": "unsupported-question",
+        "capability": "abstention",
+        "prompt": "What isotope was measured in the Zephyr orchard?",
+        "choices": [
+          "isotope-ninety-nine",
+          "isotope-seventeen",
+          "ABSTAIN"
+        ],
+        "evidence": []
+      },
+      {
+        "caseId": "action-grounding",
+        "capability": "action-use",
+        "prompt": "Select the next execution action under the remembered deployment constraint.",
+        "choices": [
+          "run-batch-four",
+          "run-batch-eight",
+          "ABSTAIN"
+        ],
+        "evidence": [
+          {
+            "handle": "ledger-decision",
+            "substrate": "ledger",
+            "status": "RESOLVED",
+            "title": "Adopt coefficient seventeen under the batch-four constraint",
+            "body": "### [2026-09-04 20:02:59.001] DECISION/RESOLVED — Adopt coefficient seventeen under the batch-four constraint\n<!-- kb:id event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint -->\nUse coefficient seventeen for the blinded replication, retain checksum 7f3c, and execute in batches of four. The solvent echo route remains closed.\n↳ supports finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\n↳ relates-to memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four"
+          },
+          {
+            "handle": "memory-budget",
+            "substrate": "memory",
+            "status": "validated",
+            "title": "Northbridge deployment uses batches of four",
+            "body": "---\nid: memory-20260905T000259Z-northbridge-deployment-uses-batches-of-four\nname: northbridge-deployment-uses-batches-of-four\ndescription: Northbridge deployment uses batches of four\ntype: project\nstatus: validated\nrelations: [\"relates-to:finding-20260905T000259Z-northbridge-run-validates-coefficient-seventeen\"]\n---\n\nThe validated deployment constraint is a maximum batch size of four. Apply coefficient seventeen without splitting one calibration across batches.\n"
+          },
+          {
+            "handle": "lit-protocol",
+            "substrate": "lit",
+            "status": "CITE",
+            "title": "Northbridge calibration protocol",
+            "body": "---\nid: lit-20260905T000259Z-northbridge-calibration-protocol\nsubstrate: lit\nkind: PAPER\nstatus: CITE\ncreated: \"2026-09-04 20:02:59\"\nsource: \"https://example.invalid/northbridge-protocol#section-4\"\n---\n# Northbridge calibration protocol\n\nThis synthetic protocol defines the Northbridge assay. A publishable calibration must retain the raw run identifier and checksum, and deployment must respect the recorded batch constraint.\n"
+          },
+          {
+            "handle": "ledger-resume",
+            "substrate": "ledger",
+            "status": "VALIDATED",
+            "title": "Resume Northbridge at the blinded replication",
+            "body": "### [2026-09-04 20:02:59.002] RESUME/VALIDATED — Resume Northbridge at the blinded replication\n<!-- kb:id event-20260905T000259Z-resume-northbridge-at-the-blinded-replication -->\nThe next session starts with the blinded replication: coefficient seventeen, checksum 7f3c, batches of four, and no solvent echo normalization.\n↳ extends event-20260905T000259Z-adopt-coefficient-seventeen-under-the-batch-four-constraint\n\n<!-- kb:append-point -->"
+          }
+        ]
+      }
+    ]
+  },
+  "arms": {
+    "baseline": {
+      "task": "/root/gpt6_baseline",
+      "instructions": "---\nname: recall\ndescription: Retrieve what a project already knows, with provenance and status, before asserting it. Use when grounding a statement, answering \"what did we decide / find / read about X\", or checking a draft's claims against the store. Auto-invoke by judgement whenever a claim could be verified against recorded knowledge. Drives kb-find; verifies each claim against its source before synthesizing.\n---\n\n# recall — retrieval reasoning\n\n**Portable path rule:** in commands below, replace `<plugin-root>` with the absolute plugin root\ntwo directories above this `SKILL.md`. Resolve it from the loaded skill path; do not assume a\nhost-specific environment variable exists in the project shell.\n\nTurn a question into grounded, cited knowledge. This is the reasoning layer over\n`scripts/kb-find.ts` — and where grounding lives (style stays with editio's humanizer). It is\n**auto-invoked by judgement**: if a claim under discussion could be checked against the\nstore, check it rather than asserting from memory.\n\n## Procedure\n\n1. **Decompose.** Break the question into retrievable sub-questions. A multi-hop question\n   (\"does our method beat the baseline on the hard cases?\") splits into facts you can look up.\n2. **Retrieve header-first, then fetch only what you need.** Two tiers — find the headers, then\n   pull just the bodies the headers earned. For each sub-question:\n   ```\n   bun \"<plugin-root>/scripts/kb-find.ts\" \"<sub-question>\" [--all] [--substrate ledger|finding|lit|memory] [--status <S>] [--hops <n>] [--snippet]\n   ```\n   Retrieval is ranked and capped at 20 by default: read the returned headers (add `--snippet` to see the matched\n   line), decide which units are worth the body, then fetch just those — never the whole ledger:\n   ```\n   bun \"<plugin-root>/scripts/kb-get.ts\" \"<path>\" [--title \"<title>\"]   # <path> = kb-find's 3rd ` · ` column\n   ```\n   `kb-get` returns one unit's text — a page's whole file, or a single ledger entry's slice (not\n   the ~200 it shares a file with); unanchored ledgers are refused. `--title` disambiguates a\n   same-second anchor. Widen `--hops` (1–2) for associative neighbours. Add `--history` only when\n   the question genuinely asks about archived, refuted, or superseded work.\n3. **Confidence-gate on status** — this is the calibration source:\n   - `ledger:CONJECTURED`, `finding:CONJECTURED`, `memory:provisional` → **weak**; hedge.\n   - `finding:VALIDATED`, `ledger:VALIDATED`, `memory:validated` → **firm**; state plainly.\n   - `lit:CITE` → citable prior art; attribute it by name.\n   - `ledger:DEADEND`, `finding:REFUTED`, `finding:SUPERSEDED` → say it failed / was overturned.\n   - `finding:REVIEW` → a bounded retrospective, not a project decision or independent scientific\n     source. Preserve its fact/inference boundary and fetch the underlying units before reusing a\n     load-bearing claim or recommendation.\n4. **Verify.** Read each unit you cite — its body via `kb-get` (a page or a ledger slice), or a\n   lit unit's `source#anchor` at the real source. Do **not** pass through a unit you didn't read.\n   If the store doesn't back the claim, say *unsupported*, don't invent.\n5. **Synthesize.** Answer in the form the caller (grannie, a reviewer, editio's humanizer) can render\n   honestly: each point carries its `substrate:status` and its citation.\n\n## Output shape\n\n```\n<claim> — <substrate:status> — <source#anchor or path>\n```\n\nIf nothing is found, say so plainly and suggest storing it once it's known. Retrieval that\ninvents coverage is worse than retrieval that admits a gap.\n",
+      "instructionBytes": 3597,
+      "instructionSha256": "5457f8313f29a3ea1b30aa758bffada01564a475f5b07c57136e019a62ad833d",
+      "responses": {
+        "schema": "promptus.continuity-responses.v1",
+        "responses": [
+          {
+            "caseId": "resume-frontier",
+            "answer": "run-blinded-replication",
+            "evidence": [
+              "ledger-resume",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "settled-finding",
+            "answer": "coefficient-seventeen",
+            "evidence": [
+              "finding-current"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "superseded-result",
+            "answer": "coefficient-seventeen",
+            "evidence": [
+              "finding-current",
+              "ledger-decision",
+              "finding-old"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "dead-end-avoidance",
+            "answer": "do-not-retry",
+            "evidence": [
+              "ledger-deadend",
+              "ledger-resume",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "multi-session-synthesis",
+            "answer": "checksum-7f3c-and-batch-four",
+            "evidence": [
+              "finding-checksum",
+              "memory-budget",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "unsupported-question",
+            "answer": "ABSTAIN",
+            "evidence": [],
+            "abstained": true
+          },
+          {
+            "caseId": "action-grounding",
+            "answer": "run-batch-four",
+            "evidence": [
+              "memory-budget",
+              "ledger-decision"
+            ],
+            "abstained": false
+          }
+        ]
+      },
+      "score": {
+        "status": "scored",
+        "cases": [
+          {
+            "id": "resume-frontier",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "settled-finding",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "superseded-result",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": false,
+            "abstentionCorrect": true,
+            "traceableCorrect": false
+          },
+          {
+            "id": "dead-end-avoidance",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "multi-session-synthesis",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "unsupported-question",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "action-grounding",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          }
+        ],
+        "metrics": {
+          "cases": 7,
+          "answerAccuracy": 1,
+          "evidenceCompleteness": 1,
+          "traceableAccuracy": 0.8571428571428571
+        }
+      }
+    },
+    "candidate": {
+      "task": "/root/gpt6_candidate",
+      "instructions": "---\nname: recall\ndescription: Answer questions about recorded project knowledge or ground a claim in Promptus evidence, preserving provenance and epistemic status.\n---\n\n# Recall\n\nRetrieve evidence for the question at hand. Resolve `<plugin-root>` two directories\nabove this `SKILL.md`; pass `--root` when the shell is outside the project.\n\n```sh\nbun \"<plugin-root>/scripts/kb-find.ts\" \"<query>\" --snippet\nbun \"<plugin-root>/scripts/kb-get.ts\" \"<path returned by kb-find>\"\n```\n\nStart with ranked headers and fetch relevant bodies. Split a question when it\nneeds distinct pieces of evidence; a simple lookup needs no decomposition.\nReuse source material already read in context when it remains current.\n\n`kb-find` caps results at 20. `--substrate` and `--status` narrow the search;\n`--all` requires all unquoted terms; `+term` requires one term; quoted phrases\nmatch exactly. `--history` includes archived ledger units. `--hops` expands graph\nneighbors. Use `--help` for details. `kb-get --title` disambiguates legacy entries\nsharing a timestamp; an unanchored ledger fetch is refused.\n\n## Interpret the evidence\n\n- VALIDATED/RESOLVED findings and validated memory record checked knowledge;\n  confirm the evidence supports the present claim and scope.\n- CONJECTURED, provisional, CONFOUNDED, or UNTRUSTED material is not established.\n- `lit:CITE` is attributable literature, not independent project validation.\n- SUPERSEDED, REFUTED, RETIRED, and dead-end material explains history. Do not\n  present it as the current accepted answer.\n- A unit of kind REVIEW contains retrospective judgment. Retrieve its underlying\n  evidence before reusing a consequential claim; it is not itself a new decision.\n\nRead each cited body or the relevant external source. Explain uncertainty or\nmissing evidence directly. An empty search is a coverage gap, not proof that a\nclaim is false. Answer in the requested form with citations and confidence where\nit matters; a fixed reporting template is unnecessary.\n",
+      "instructionBytes": 1989,
+      "instructionSha256": "7529e9e0967a105700a1e04e45f6fc4ab55eae45ecef794ef09c9dc9a6c268e3",
+      "responses": {
+        "schema": "promptus.continuity-responses.v1",
+        "responses": [
+          {
+            "caseId": "resume-frontier",
+            "answer": "run-blinded-replication",
+            "evidence": [
+              "ledger-resume",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "settled-finding",
+            "answer": "coefficient-seventeen",
+            "evidence": [
+              "finding-current"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "superseded-result",
+            "answer": "coefficient-seventeen",
+            "evidence": [
+              "finding-current",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "dead-end-avoidance",
+            "answer": "do-not-retry",
+            "evidence": [
+              "ledger-deadend",
+              "ledger-resume",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "multi-session-synthesis",
+            "answer": "checksum-7f3c-and-batch-four",
+            "evidence": [
+              "finding-checksum",
+              "memory-budget",
+              "ledger-decision"
+            ],
+            "abstained": false
+          },
+          {
+            "caseId": "unsupported-question",
+            "answer": "ABSTAIN",
+            "evidence": [],
+            "abstained": true
+          },
+          {
+            "caseId": "action-grounding",
+            "answer": "run-batch-four",
+            "evidence": [
+              "ledger-decision",
+              "memory-budget"
+            ],
+            "abstained": false
+          }
+        ]
+      },
+      "score": {
+        "status": "scored",
+        "cases": [
+          {
+            "id": "resume-frontier",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "settled-finding",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "superseded-result",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "dead-end-avoidance",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "multi-session-synthesis",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "unsupported-question",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          },
+          {
+            "id": "action-grounding",
+            "answerCorrect": true,
+            "evidenceComplete": true,
+            "forbiddenEvidenceAbsent": true,
+            "abstentionCorrect": true,
+            "traceableCorrect": true
+          }
+        ],
+        "metrics": {
+          "cases": 7,
+          "answerAccuracy": 1,
+          "evidenceCompleteness": 1,
+          "traceableAccuracy": 1
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Seven answerable packets; the eighth suite case is a deterministic provenance trace, not an agent answer.",
+    "One agent per arm, without replication or randomization; no causal improvement claim.",
+    "Both agents selected all correct answers and recognized the superseded result. The baseline failed one strict evidence-list check by also citing the old unit; the response format does not distinguish historical context from supporting evidence.",
+    "Full independent sessions, repeated trials, operational continuation and real-project effectiveness remain unmeasured."
+  ]
+}

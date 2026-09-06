@@ -1,0 +1,12 @@
+---
+id: finding-20260905T003025Z-canonical-grounding-makes-the-isolated-manuscript-continuation-p
+substrate: finding
+kind: RESULT
+status: VALIDATED
+created: "2026-09-04 20:30:25"
+relations: ["fixes:finding-20260905T001413Z-fresh-manuscript-continuation-exposes-a-split-grounding-contract"]
+artifacts: [grounding-retest|benchmarks/results/gpt6-manuscript-grounding-retest-2026-09-04.json|271c604330fa0845aa317227556e44299c3930cf407dcc51cca14a8243238ab1]
+---
+# Canonical grounding makes the isolated manuscript continuation pass
+
+The grounding defect found by the first synthetic manuscript trial is addressed in the candidate. Promptus collectUnits was extracted unchanged into a canonical read-only module; Editio ships checked local source copies, preserving standalone plugin installation without relying on cache freshness or sibling-plugin paths. Stable IDs, slugs, unique aliases, nested/custom layouts and relation-derived supersession/retirement now feed manuscript grounds. Duplicate identity and ambiguous/unresolved lifecycle targets fail closed. A distinct .historical grade permits explicitly attributed accounts of closed evidence, emits grey historical labels, and prints source status without treating that record as current positive support. Unknown or untrusted history, mixed grades, invalid conjecture overrides, and partially unknown positive grounds are rejected; prose entailment still requires agent review. Seven new regression cases pass, including standalone package execution and copied-reader drift detection. The initial full run exposed a no-identity test failure from an unused export URL in the generated default vocabulary; stripping only export metadata from that reader view fixed it without weakening the test. The final repository suite passed 386 tests, 2,137 expectations, 33 files in 35.32 seconds, and plugin validation passed. Reindexing the unchanged 341-unit Organon store after extraction produced zero derived writes. A fresh gpt-6-astra agent repeated the synthetic manuscript task: five current claims, two historical claims, three numeric bindings, both gates passed without overrides, and the nine-file evidence-store hash remained fa6a79f0bbf158a956d2cc8a539795f05fd19df6c0527921c7e2873448678efb. Parent gate reruns agree. This establishes the bounded workflow, not general effectiveness or whole-paper readiness. The original failed receipt remains intact. Return next to retrieval-engine selection and all remaining overhaul rows; no release, installation or live-project store was touched.

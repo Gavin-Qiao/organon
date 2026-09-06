@@ -28,20 +28,6 @@
         ]
       }
     ],
-    "PostToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bun \"${PLUGIN_ROOT}/hooks/auto-index.ts\"",
-            "commandWindows": "bun \"%PLUGIN_ROOT%/hooks/auto-index.ts\"",
-            "statusMessage": "Refreshing the Promptus index",
-            "timeout": 30
-          }
-        ]
-      }
-    ],
     "PreCompact": [
       {
         "matcher": "manual|auto",

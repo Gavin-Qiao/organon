@@ -1,0 +1,27 @@
+{
+  "schema": "promptus.thinker-round.v1",
+  "round_id": "markdown-io-delta-design",
+  "title": "What minimal reuse-based change improves a large Markdown research wiki without rebuilding its working core?",
+  "prepared_at": "2026-09-05T06:09:45.986Z",
+  "prompt": {
+    "path": ".promptus/thinker/rounds/markdown-io-delta-design/prompt.md",
+    "bytes": 17683,
+    "sha256": "4f6d4d5c834ff27bb41213902c6c836db9230fa8fcfcc53ac29561764c90d7d6"
+  },
+  "validation_plan": {
+    "path": ".promptus/thinker/rounds/markdown-io-delta-design/validation-plan.md",
+    "bytes": 6685,
+    "sha256": "24570bf015f66dce1d91da7529fea420d4e7b59768fe6f4b71b8cd4322670430"
+  },
+  "response_contract": {
+    "first_line": "ROUND_ID: markdown-io-delta-design",
+    "source": "external-thinker:markdown-io-delta-design",
+    "status": "lit:UNTRUSTED"
+  },
+  "context": {
+    "workspace": false,
+    "session_history": false,
+    "network": false,
+    "transport": "operator-mediated"
+  }
+}

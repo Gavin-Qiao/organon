@@ -1,0 +1,318 @@
+{
+  "schema": "organon.local-cpu-replay-summary.v1",
+  "created": "2026-09-05T04:55:15.196Z",
+  "filesystem": "tmpfs: memory-backed; verified with df -T and stat -f",
+  "results": [
+    {
+      "label": "psi",
+      "engine": "lexical-sqlite",
+      "passed": true,
+      "started": "2026-09-05T04:27:14.312Z",
+      "completed": "2026-09-05T04:27:41.717Z",
+      "captureHash": "380d187f6cac19a07c032e53ff923091596c7adbd135ac81a9ac62f40454d978",
+      "units": 6494,
+      "privateReceiptHash": "5f010091178621fc41ca8482cd849e8f90f89b151bbb1e07dabd84b0955c815e",
+      "codeUnchanged": true,
+      "sourceFiles": 2794,
+      "sourceBytes": 16455428,
+      "canonical": {
+        "units": 6494,
+        "cold": 87,
+        "ledger": 3819
+      },
+      "initialIndexMs": 1221.106723,
+      "sqliteBuildMs": 3249.257,
+      "sqliteBytes": 65597440,
+      "exactQueryCases": 12,
+      "exactInitialQueries": true,
+      "exactPostWriteQueries": true,
+      "lifecycleAndRestart": true,
+      "lexicalWarm": {
+        "n": 36,
+        "medianMs": 2.1581810000006953,
+        "minMs": 0.7324339999995573,
+        "maxMs": 146.59678499999973
+      },
+      "sqliteWarm": {
+        "n": 36,
+        "medianMs": 2.5019569999985833,
+        "minMs": 1.3001439999989088,
+        "maxMs": 186.20401599999968
+      },
+      "jsonFresh": {
+        "n": 3,
+        "medianMs": 183.53697099999954,
+        "minMs": 169.2736530000002,
+        "maxMs": 192.0151220000007
+      },
+      "sqliteFresh": {
+        "n": 3,
+        "medianMs": 66.1574410000012,
+        "minMs": 65.42765300000065,
+        "maxMs": 66.60109699999884
+      },
+      "freshResultHashesAgree": true,
+      "writes": {
+        "n": 3,
+        "medianMs": 72.92828100000042,
+        "minMs": 71.24880099999973,
+        "maxMs": 81.51513700000032
+      },
+      "immediateLexicalRead": {
+        "n": 3,
+        "medianMs": 858.4263019999999,
+        "minMs": 803.451648000002,
+        "maxMs": 874.4182880000008
+      },
+      "deltaPreparation": {
+        "n": 3,
+        "medianMs": 151.30433999999877,
+        "minMs": 149.09891700000117,
+        "maxMs": 153.0353159999995
+      },
+      "sqlDeltaWall": {
+        "n": 3,
+        "medianMs": 49.793610000000626,
+        "minMs": 48.505245000000286,
+        "maxMs": 55.72432099999969
+      },
+      "fullIndex": {
+        "n": 3,
+        "medianMs": 1266.3535359999987,
+        "minMs": 1240.9755729999997,
+        "maxMs": 1269.1422999999995
+      },
+      "writeAndDelta": {
+        "n": 3,
+        "medianMs": 279.1192990000018,
+        "minMs": 274.0262309999998,
+        "maxMs": 280.00843799999893
+      },
+      "jsonFreshPeakRssKiB": 188532,
+      "sqliteFreshPeakRssKiB": 65240
+    },
+    {
+      "label": "mot",
+      "engine": "lexical-sqlite",
+      "passed": true,
+      "started": "2026-09-05T04:28:43.842Z",
+      "completed": "2026-09-05T04:29:11.092Z",
+      "captureHash": "65fa8b32fd2cfa3784923a03c1a701b1fee2eff8db6b0b8e7b3ccb9729276ca7",
+      "units": 6332,
+      "privateReceiptHash": "8eec5f514978fd15aa72026497588dbcc28c03fd7b05320bc8fe582899bf974c",
+      "codeUnchanged": true,
+      "sourceFiles": 3404,
+      "sourceBytes": 19010016,
+      "canonical": {
+        "units": 6332,
+        "cold": 0,
+        "ledger": 3393
+      },
+      "initialIndexMs": 1292.4795530000001,
+      "sqliteBuildMs": 3275.006,
+      "sqliteBytes": 73195520,
+      "exactQueryCases": 12,
+      "exactInitialQueries": true,
+      "exactPostWriteQueries": true,
+      "lifecycleAndRestart": true,
+      "lexicalWarm": {
+        "n": 36,
+        "medianMs": 1.5878600000005463,
+        "minMs": 0.8488859999997658,
+        "maxMs": 138.2404260000003
+      },
+      "sqliteWarm": {
+        "n": 36,
+        "medianMs": 2.494227000000137,
+        "minMs": 1.2347929999996268,
+        "maxMs": 164.68398400000024
+      },
+      "jsonFresh": {
+        "n": 3,
+        "medianMs": 191.13083299999926,
+        "minMs": 183.20793400000002,
+        "maxMs": 209.864286
+      },
+      "sqliteFresh": {
+        "n": 3,
+        "medianMs": 69.57298099999934,
+        "minMs": 64.93389399999978,
+        "maxMs": 74.3203709999998
+      },
+      "freshResultHashesAgree": true,
+      "writes": {
+        "n": 3,
+        "medianMs": 83.997883,
+        "minMs": 79.53708999999981,
+        "maxMs": 91.27343499999915
+      },
+      "immediateLexicalRead": {
+        "n": 3,
+        "medianMs": 806.577514999999,
+        "minMs": 788.9225780000015,
+        "maxMs": 867.4296209999993
+      },
+      "deltaPreparation": {
+        "n": 3,
+        "medianMs": 147.88090799999918,
+        "minMs": 138.22628599999916,
+        "maxMs": 150.22357199999897
+      },
+      "sqlDeltaWall": {
+        "n": 3,
+        "medianMs": 52.07369099999778,
+        "minMs": 50.18511699999908,
+        "maxMs": 55.87295300000005
+      },
+      "fullIndex": {
+        "n": 3,
+        "medianMs": 1253.9927189999999,
+        "minMs": 1250.5329359999996,
+        "maxMs": 1256.2202419999994
+      },
+      "writeAndDelta": {
+        "n": 3,
+        "medianMs": 290.094407999999,
+        "minMs": 267.94849299999805,
+        "maxMs": 291.2280339999961
+      },
+      "jsonFreshPeakRssKiB": 187436,
+      "sqliteFreshPeakRssKiB": 65580
+    },
+    {
+      "label": "psi",
+      "engine": "qmd",
+      "passed": false,
+      "started": "2026-09-05T04:29:44.100Z",
+      "completed": "2026-09-05T04:49:45.869Z",
+      "captureHash": "380d187f6cac19a07c032e53ff923091596c7adbd135ac81a9ac62f40454d978",
+      "units": 6494,
+      "privateReceiptHash": "cc92ff58d1513178cf53cdcac1ddebf0a3c7fcc01524ee62085abde23fa805a8",
+      "codeUnchanged": true,
+      "failure": "Run did not complete; private failure receipt retained. No successful-performance claim.",
+      "failureClass": "INITIAL_BUILD_TIMEOUT",
+      "elapsedMs": 1201769,
+      "stderrHash": "4f9d25e2aa82fcb3c3f8c9ee5fb26e5953a8680afdea01900fff53d507898e68",
+      "resource": {
+        "userSeconds": 8539.36,
+        "systemSeconds": 15.09,
+        "maxRssKiB": 2899512
+      },
+      "concurrentFallback": {
+        "schema": "organon.concurrent-lexical-fallback.v1",
+        "started": "2026-09-05T04:47:42.770Z",
+        "ms": 2148.67189,
+        "heldBefore": true,
+        "heldAfter": true,
+        "exitCode": 0,
+        "lexicalFallback": true,
+        "boundedLines": 6,
+        "stdoutHash": "b6f74ad585a887e97b41f891110335ae2c6b881d2be665c11a1228df1036b0ef",
+        "stderrHash": "50df59c6db6adab59c9f5e01339e5c6ed90638f1a67ae5fc6f7d6f2c5a38d1f9",
+        "harnessHash": "f9e3eb39f36ee93695fb7e78bbf29bcce0934e1683eced856d7e6c8a242d55fc",
+        "limitation": "One deliberate concurrent read; its CPU contention is included in the ongoing initial-build timing."
+      }
+    },
+    {
+      "label": "psi",
+      "engine": "zvec",
+      "passed": true,
+      "started": "2026-09-05T04:52:44.075Z",
+      "completed": "2026-09-05T04:53:31.734Z",
+      "captureHash": "380d187f6cac19a07c032e53ff923091596c7adbd135ac81a9ac62f40454d978",
+      "units": 6494,
+      "privateReceiptHash": "695891ce8fae84d18f3ca6f2e48a71a3a93ab5c49d654ea6e48cbb5caac6f030",
+      "codeUnchanged": true,
+      "buildMs": 19571.632496,
+      "repeatedRead": {
+        "n": 9,
+        "medianMs": 644.353317000001,
+        "minMs": 613.1983489999984,
+        "maxMs": 759.2922680000011
+      },
+      "write": {
+        "n": 3,
+        "medianMs": 53.570652999998856,
+        "minMs": 50.57426599999599,
+        "maxMs": 59.11400599999979
+      },
+      "immediateLexicalRead": {
+        "n": 3,
+        "medianMs": 820.9865930000014,
+        "minMs": 805.5774670000028,
+        "maxMs": 879.529634999999
+      },
+      "singleRecordRefresh": {
+        "n": 3,
+        "medianMs": 3371.3691919999983,
+        "minMs": 3243.1481770000028,
+        "maxMs": 3483.234658000001
+      },
+      "postRefreshQuery": {
+        "n": 3,
+        "medianMs": 211.65345800000068,
+        "minMs": 208.31077000000369,
+        "maxMs": 213.1820529999968
+      },
+      "refutationChecked": true,
+      "missingConfigurationFallback": false,
+      "freshZvecQuery": 664.8696219999983,
+      "maxReportedRssKiB": 2256084,
+      "semanticQuality": "Not scored: title and synthetic insertion probes are not independent relevance labels."
+    },
+    {
+      "label": "mot",
+      "engine": "zvec",
+      "passed": true,
+      "started": "2026-09-05T04:53:43.257Z",
+      "completed": "2026-09-05T04:54:32.339Z",
+      "captureHash": "65fa8b32fd2cfa3784923a03c1a701b1fee2eff8db6b0b8e7b3ccb9729276ca7",
+      "units": 6332,
+      "privateReceiptHash": "cdd8a10dd4a098d2cdd58410fc3a86f4d9072f6f8dde4945cb123fb4c8f8e7d6",
+      "codeUnchanged": true,
+      "buildMs": 21167.009749,
+      "repeatedRead": {
+        "n": 9,
+        "medianMs": 643.9821009999978,
+        "minMs": 621.339093999999,
+        "maxMs": 772.9303359999976
+      },
+      "write": {
+        "n": 3,
+        "medianMs": 54.65675499999634,
+        "minMs": 54.54482799999823,
+        "maxMs": 56.641766999997344
+      },
+      "immediateLexicalRead": {
+        "n": 3,
+        "medianMs": 832.3611949999977,
+        "minMs": 805.7836819999939,
+        "maxMs": 874.0362800000003
+      },
+      "singleRecordRefresh": {
+        "n": 3,
+        "medianMs": 3290.268535000003,
+        "minMs": 3211.7811199999996,
+        "maxMs": 3434.374554000002
+      },
+      "postRefreshQuery": {
+        "n": 3,
+        "medianMs": 210.9264719999992,
+        "minMs": 208.52539599999727,
+        "maxMs": 211.3793500000029
+      },
+      "refutationChecked": true,
+      "missingConfigurationFallback": false,
+      "freshZvecQuery": 695.7201980000027,
+      "maxReportedRssKiB": 2324644,
+      "semanticQuality": "Not scored: title and synthetic insertion probes are not independent relevance labels."
+    }
+  ],
+  "limitations": [
+    "Read-only captures of latest local Psi/MoT at the recorded capture boundary; all benchmark mutations occur in independent temporary copies.",
+    "Temporary filesystem is tmpfs (RAM-backed), not persistent ext4 disk or the original Windows 9p mount. Durable-disk flush cost is not measured.",
+    "SQL delta includes source-scan preparation but is benchmark-only, not an atomic source-plus-index production transaction.",
+    "Semantic stacks use different models and verification paths; no engine-only or relevance superiority claim.",
+    "Private text, queries, ranked identities, embeddings and logs are excluded from this public receipt."
+  ]
+}

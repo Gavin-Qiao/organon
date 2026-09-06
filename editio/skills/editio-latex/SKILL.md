@@ -95,17 +95,24 @@ tracked — a gitignored paper dir means zero committed versions of a submittabl
 
 ## Preview one section (the big-paper latency fix)
 
-Write `_preview.tex` next to `main.tex`:
+Render the target section first. Copy the bundled `templates/latex/preview.tex` to
+`_preview.tex` next to `main.tex` and set `\previewsection` to its rendered basename:
 
 ```latex
 \providecommand{\editiomode}{draft}
 \documentclass{article}\usepackage{editio}\usepackage{amsmath,graphicx,booktabs}
 \usepackage{hyperref}\usepackage[capitalise]{cleveref}
-\begin{document}\InputIfFileExists{sections/methods}{}{}\end{document}
+\InputIfFileExists{front/numbers}{}{}
+\InputIfFileExists{front/macros}{}{}
+\InputIfFileExists{front/identity}{}{}
+\providecommand{\previewsection}{methods}
+\begin{document}\input{sections/\previewsection}\end{document}
 ```
 
 `latexmk _preview.tex` compiles that section alone in seconds. Cross-refs into other sections
-show as `??` in preview — that is expected, not broken.
+show as `??` in preview — that is expected. Unbound numbers and undefined shared macros are
+not expected: refresh their definitions. This article-class preview is an authoring proxy;
+venue-specific raw LaTeX may need the venue preamble or the full manuscript build.
 
 ## Notation (defined once, used everywhere)
 

@@ -17,10 +17,12 @@ names its mutation boundary, and records what the result does **not** establish.
 
 | Experiment | Current evidence | Decision |
 | --- | --- | --- |
-| [Continuity and traceability](#continuity-and-traceability) | The synthetic fixture passes 8/8 deterministic mechanics checks; replay packets are ready | The harness is valid. Fresh-agent behavior and real-project effectiveness remain unmeasured. |
+| [Continuity and traceability](#continuity-and-traceability) | 8/8 deterministic checks; two fresh GPT-6 packet readers answered 7/7 correctly | Packet interpretation has an initial pilot. Autonomous continuation and real-project effectiveness remain unmeasured. |
 | [Maintenance](#maintenance) | Exact work conservation restored large-store cadence while preserving gate semantics | The optimization shipped. Relation resolution remains the measured maintenance residual. |
 | [SQLite shadow](#sqlite-shadow) | Fast governed deltas, slower clean builds, larger derived storage, no safe replacement for exact health checks | Defer SQLite while file-derived maintenance remains adequate. |
+| [Publication fence](#publication-fence) | Isolated writer/read consistency prototype; interruption and cross-process checks with the existing backend | Benchmark only. No live-store migration, backend adoption or installed change. |
 | [Retrieval](#retrieval) | Lifecycle-filtered dense retrieval improves semantic recall, but dense replacement loses lexical controls | Keep lexical retrieval. Prototype only a lifecycle-aware mixed candidate route on a fresh holdout. |
+| [Local engine comparison](#local-engine-comparison) | Fresh cases and 500/5,000-unit workloads favor QMD for optional semantic ranking; lexical stays fast | Candidate adapter passes isolated SDK checks; no release or project installation. |
 
 ## Safety contract
 
@@ -47,8 +49,103 @@ names its mutation boundary, and records what the result does **not** establish.
 | `promptus-maintenance.ts` | None | Explicit staged snapshot | `bun run benchmark:maintenance -- help` |
 | `promptus-sqlite.ts` | None | SQLite projection under a verified snapshot/scratch root | `bun run benchmark:sqlite -- help` |
 | `promptus-retrieval.ts` | None | Gitignored benchmark cache; remote calls require an explicit flag | `bun run benchmark:retrieval -- --dry-run` |
+| `promptus-engines.ts` | Offline execution; stage dependencies and models separately | Public Organon input; generated OS-temp unit projection | `bun benchmarks/promptus-engines.ts --help` |
+| `engine-workload.ts` | Offline execution; stage pinned models first | Fresh synthetic cases; generated OS-temp unit projections | Command below; no live-project root accepted |
+
+## Local engine comparison
+
+The overhaul compares existing Promptus retrieval, SQLite FTS5, QMD, and zvec-grep on one
+lifecycle-filtered unit projection. The runner accepts no live-project root. Dependencies must
+be in a marked OS-temp trial directory; it creates and removes its own fixture. Reports refuse
+overwrite and are confined to `benchmarks/results` or OS temp. Model downloads are staged
+separately; fetches are disabled during the measured run.
+
+The [completed CPU receipt](results/engines-development-semantic-retry-2026-09-04.json) used
+QMD 2.8.3, zvec-grep 0.2.1, and 276 active units from a 332-unit Organon snapshot. Three of the
+45 historical cases now target superseded findings and were excluded explicitly. The remaining
+42 cases were repeated three times without rank changes.
+
+| Route | Expected result in top 10 | Median query | Build |
+| --- | ---: | ---: | ---: |
+| Promptus lexical | 31/42 | 0.23 ms | 32 ms |
+| SQLite FTS5 | 31/42 | 0.5 ms | 7 ms |
+| QMD vector, EmbeddingGemma 300M | 27/42 | 22 ms | 34 s |
+| zvec-grep hybrid, Potion 32M | 32/42 | 162 ms | 1.6 s |
+| Promptus + QMD, fixed five candidates per route | 35/42 | Combined-route latency not measured | Uses both indexes |
+| Promptus + zvec-grep, same fixed policy | 34/42 | Combined-route latency not measured | Uses both indexes |
+
+This is development evidence, not a holdout, large-store result, or fresh-agent effectiveness
+claim. Engines use different models; the comparison does not isolate backend quality. QMD's
+raw lexical API ANDs full questions and returned no hits; that is a query-adapter mismatch, not
+evidence that its complete search product fails. Query expansion and reranking are untested.
+QMD vectors used a persistent portable Node worker because the native binding probe timed out
+under the tested Bun build. The [failed worker receipt](results/engines-development-semantic-2026-09-04.json)
+records a sandbox IPC failure, not retrieval quality. Model downloads are excluded from timings.
+
+The [fresh synthetic suite](engine-workload-cases.json) was written by an independent GPT-6
+test agent without seeing those outcomes: 30 fictional notes, 20 answerable questions, and four
+absence questions. It is padded with repetitive inventory notes for scale, not represented as
+a diverse paper corpus. [500-unit](results/engines-synthetic-500-ipc-retry-2026-09-04.json) and
+[5,000-unit](results/engines-synthetic-5000-2026-09-04.json) receipts include repeated queries,
+three fresh-process queries with warm OS caches, index storage, and edit/add/delete refresh.
+QMD ranked all 20 answers first at both scales. Lexical found all answers in its top five,
+so this suite does not demonstrate additional mixed-route recall. Zvec's ranking varied across
+fresh builds and placed four answers below its top five at 5,000 units.
+
+The [harness audit](results/engine-workload-audit-2026-09-04.json) identified that same-ID
+retrieval did not prove old indexed content was removed. The
+[strengthened 500-unit run](results/engines-synthetic-content-verified-500-2026-09-04.json)
+checks actual stored content/entities or lexical postings, verifies removed units have no
+current indexed content, matches fresh-process rankings to warm rankings, and binds inputs
+before execution with after-run drift checks. All four engines pass. It does not prove every
+old vector was physically erased. The earlier [sandbox failure](results/engines-synthetic-500-2026-09-04.json)
+remains intact; QMD's Node worker needed working local IPC for the retry.
+
+```sh
+bun benchmarks/engine-workload.ts \
+  --dependencies /tmp/organon-overhaul-engine-trial \
+  --units 500 --repeats 3 \
+  --output /tmp/new-engine-workload-receipt.json
+```
+
+The dependency path must contain the marked, separately staged trial described by the runner,
+including its pinned packages and CPU models; the command never installs them. Receipts refuse
+overwrite. `--engines promptus-lexical,sqlite-fts5` narrows execution, but the recorded protocol
+still requires the staged model artifacts for provenance.
+
+[The architecture decision](../RETRIEVAL.md) keeps lexical as the default and selects QMD as
+an optional semantic route. Its better tested ranking and repeated-query latency justify that
+candidate; its model-loading cost rules out using it indiscriminately. The optional adapter now
+passes [ordinary-sandbox SDK checks](results/semantic-adapter-hardened-sandbox-2026-09-04.json).
+Separate SDK-double tests cover exact controls, archive/lifecycle handling, stale/racing state,
+cache corruption and physical path safety. Fresh-agent use and packaging still need verification.
+Nothing was installed as a production backend. The [expanded 14-step trial](results/semantic-adapter-mutations-empty-collection-fix-2026-09-04.json)
+also verifies actual indexed body replacement, embedding-row presence, refutation, archive
+movement, deletion and restart. The original measurement-sidecar and empty-collection failures
+remain recorded. A [fresh GPT-6 recall pilot](results/gpt6-semantic-continuation-2026-09-04.json)
+preserves source bytes and distinguishes current evidence, closed routes and fictional provenance.
+
+`semantic-adapter-trial.ts --dependencies <marked-temporary-dependency-root> --output <new-receipt>`
+creates a new synthetic continuity store, then runs actual local configuration, update, queries,
+unchanged refresh, gated addition, stale fallback and post-refresh CLI restart. It hashes adapter
+code before/after and checks source preservation in the read-only phase. No project-root argument
+is accepted. Request-file workers and explicit tokenizer model selection work inside the ordinary
+sandbox; the earlier Bun-to-Node stdin benchmark failure remains a historical receipt.
 
 ## Continuity and traceability
+
+The [fresh interrupted-work pilot](results/gpt6-interrupted-continuation-2026-09-04.json)
+asks GPT-6 to complete a readiness note and checkpoint with a missing raw artifact and no
+replication output. Independent verification preserves all eight old unit bodies (accounting
+for relocation of the terminal append delimiter), confirms one new OPEN handoff, and leaves
+the artifact gate red. A status checkpoint is not treated as proof of a live process or result.
+
+The [batch-maintenance comparison](results/batch-maintenance-2026-09-04.json) alternates three
+runs per mode: 20 writes into 508-unit synthetic stores, NOW update, strict health and artifact
+preflight. Median total latency was 2.408 s with per-write indexing and 1.055 s with explicit
+batch maintenance. All 120 new events survived, source bodies remained intact, and all six
+end states passed. Fixture construction and host-hook dispatch overhead are excluded; these
+are local Linux measurements, not live-project speedups.
 
 The continuity harness checks the mechanics a resumed agent depends on:
 
@@ -85,9 +182,75 @@ bun benchmarks/promptus-continuity.ts \
   --responses /tmp/promptus-continuity-responses.json
 ```
 
-The scorer cannot prove how the responses were produced or whether the session was fresh. The next
-behavioral experiment must control that separately. Any future project-derived suite must first
-become a sanitized, self-contained case bundle or an operator-approved immutable snapshot.
+The scorer cannot prove how the responses were produced or whether the session was fresh.
+The [first GPT-6 replay receipt](results/gpt6-continuity-replay-2026-09-04.json) retains the actual
+instruction texts, packets, responses, scores, and separate fresh-context task identities. Both
+agents answered all seven answerable packets correctly; the strict evidence-list scores were
+6/7 for baseline recall instructions and 7/7 for the candidate. The baseline also cited an old
+unit while correctly recognizing supersession. This is one trial per arm, not causal evidence
+of improvement. It measures packet interpretation, not autonomous retrieval or continuation.
+Any future project-derived suite must first become a sanitized, self-contained case bundle or
+an operator-approved immutable snapshot.
+
+A [separate fresh GPT-6 manuscript trial](results/gpt6-manuscript-continuation-2026-09-04.json)
+exercised real retrieval, writing, numeric binding, rendering, and gating inside a synthetic
+fixture. The evidence-store hash stayed unchanged. The number gate passed; the claim gate
+correctly remained red under its existing rule, which cannot distinguish reporting a rejected
+route from endorsing it. The agent also encountered unsupported stable-ID grounds. Independent
+inspection found Editio ignores relation-derived supersession. These are open grounding-contract
+defects, not a successful end-to-end manuscript result.
+
+The [grounding retest](results/gpt6-manuscript-grounding-retest-2026-09-04.json) used another fresh
+GPT-6 agent with the same task and synthetic suite. It passed both gates without overrides:
+five current claims, two historical claims, and three numeric bindings, all using stable IDs.
+The source hash remained unchanged. The candidate shares the canonical parser and makes
+historical reporting explicit; seven new regression tests cover identity, lifecycle, source
+freshness, negative support, invalid roles, custom layouts and independent plugin packaging.
+This establishes the bounded fixture outcome, not whole-paper or real-project effectiveness.
+
+## Publication fence
+
+The [fixed protocol](PUBLICATION-FENCE.md) tests a small persistent dirty marker
+around the existing writer lease and full-index publisher. It uses synthetic,
+marked fixtures and an instrumented runtime copy; production scripts are unchanged.
+Readers reconcile pending governed writes before serving a cached generation.
+This is not a global outside-edit freshness or power-loss guarantee.
+
+```bash
+bun test benchmarks/publication-fence.test.ts
+bun benchmarks/publication-trial.ts /path/to/existing/scratch-parent /path/to/new-result.json
+```
+
+The trial refuses existing output files and removes only the synthetic scratch it
+created after a successful run. It accepts no live-project or private-corpus input.
+Source trees and instrumentation are hashed; canonical catalog, graph and search
+parity are checked. Tests cover interruption, injected ENOSPC, a killed writer,
+concurrent readers/writers, multi-file partial writes, cache loss and outside edits.
+
+The [initial Windows-mount receipt](results/publication-fence-windows-9p-2026-09-05.json)
+retains a costly first implementation: amendment workflows rebuilt twice.
+The [refinement](PUBLICATION-FENCE-REFINEMENT.md) reuses the successful full rebuild
+already performed inside `kb-amend`'s lease. Neither version implements sparse
+parsing or introduces SQLite. The [refined 9p receipt](results/publication-fence-reuse-windows-9p-2026-09-05.json)
+records 4,608 synthetic units and five samples per operation/arm:
+
+| End-to-end operation | Baseline median | Fenced median |
+| --- | ---: | ---: |
+| Append, reconcile, find, get | 3.55 s | 3.78 s |
+| Amend, find, get | 3.31 s | 3.43 s |
+| Clean fresh-process navigation | 172 ms | 275 ms |
+
+Full canonical parity passed. The final cache was 4,018,741 versus 4,019,302 bytes
+(561 additional bytes); this prototype stores a control record, not a second database.
+The fence closes a governed-visibility gap but has not earned deployment as a speed
+optimization. Keep it benchmark-only; persistent changed-file parsing remains a
+separate implementation question. The 23 focused fault/concurrency regressions ran
+on tmpfs; normal end-to-end flows and parity were measured on 9p, not power-loss
+recovery on 9p.
+
+Recursive peak-space instrumentation runs separately
+from latency samples. Logical bytes are not filesystem allocation or power-loss
+durability measurements; repeated synthetic text is not real-project relevance.
 
 ## Maintenance
 

@@ -8,7 +8,7 @@ import { test, expect, afterAll } from "bun:test";
 import { spawnSync } from "node:child_process";
 import {
   copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, utimesSync,
-  writeFileSync,
+  writeFileSync, symlinkSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -121,6 +121,60 @@ test("kb-amend is dry-run-safe and refuses off-vocab status", () => {
   const bad = amend(root, ["--path", ".promptus/docs/legacy.md", "--substrate", "finding", "--kind", "CONCEPT", "--status", "OPEN"]);
   expect(bad.status).toBe(1);
   expect(readFileSync(path, "utf8")).toBe(before);
+});
+
+test("kb-amend adds compatibility aliases without changing identity or body", () => {
+  const root = scaffold();
+  const path = ".promptus/docs/current.md";
+  const body = "# Current\r\n\r\nKeep exact bytes: $& and [[source]].\r\n";
+  writeFileSync(join(root, path), "---\nid: finding-current\naliases: [first-name]\n---\n" + body);
+  const args = ["--path", path, "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED"];
+  expect(amend(root, [...args, "--alias", "old-name", "--alias", "first-name"]).status).toBe(0);
+  const text = read(root, path);
+  expect(text).toContain("id: finding-current\n");
+  expect(text).toContain("aliases: [first-name, old-name]\n");
+  expect(text.slice(text.indexOf("# Current"))).toBe(body);
+  expect(catalog(root)).toContain("alias:old-name");
+  expect(existsSync(join(root, ".promptus/cache/.locks/store.lock"))).toBe(false);
+});
+
+test("kb-amend rejects ambiguous aliases and unknown arguments without mutation", () => {
+  const root = scaffold();
+  writeFileSync(join(root, ".promptus/docs/other.md"), "---\nid: finding-other\naliases: [other-alias]\n---\n# Other\n");
+  const path = ".promptus/docs/current.md";
+  writeFileSync(join(root, path), "# Current\n");
+  const args = ["--path", path, "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED"];
+  for (const extra of [["--alias", "finding-other"], ["--alias", "other"], ["--alias", "other-alias"], ["--alias", "bad,handle"], ["--aliases", "typo"], ["--source", "one\ntwo"], ["--status", "REFUTED"]]) {
+    expect(amend(root, [...args, ...extra]).status).toBe(1);
+    expect(read(root, path)).toBe("# Current\n");
+    expect(existsSync(join(root, ".promptus/cache/.locks/store.lock"))).toBe(false);
+  }
+});
+
+test("kb-amend dry-run alias validation leaves source and cache absent or unchanged", () => {
+  const root = scaffold();
+  const path = ".promptus/docs/current.md";
+  writeFileSync(join(root, path), "# Current\n");
+  const result = amend(root, ["--path", path, "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED", "--alias", "legacy", "--dry-run"]);
+  expect(result.status).toBe(0);
+  expect(result.stdout).toContain("aliases: [legacy]");
+  expect(read(root, path)).toBe("# Current\n");
+  expect(existsSync(join(root, ".promptus/cache"))).toBe(false);
+});
+
+test("kb-amend refuses symlinked files and stores outside its physical boundary", () => {
+  const root = scaffold();
+  const outside = scaffold();
+  const target = join(outside, ".promptus/docs/external.md");
+  writeFileSync(target, "# External\n");
+  symlinkSync(target, join(root, ".promptus/docs/link.md"));
+  symlinkSync(join(outside, ".promptus/docs"), join(root, ".promptus/docs/linked-store"));
+  for (const path of [".promptus/docs/link.md", ".promptus/docs/linked-store/external.md"]) {
+    const result = amend(root, ["--path", path, "--substrate", "finding", "--kind", "CONCEPT", "--status", "VALIDATED"]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("symlink");
+    expect(readFileSync(target, "utf8")).toBe("# External\n");
+  }
 });
 
 test("kb-add rejects an unknown --status on a STRICT substrate, printing the allowed set", () => {

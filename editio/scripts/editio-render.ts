@@ -118,7 +118,7 @@ export function parseAttrs(raw: string): { classes: string[]; attrs: Record<stri
   return { classes, attrs };
 }
 
-const CLAIM_CLASSES = new Set(["claim", "validated", "conjectured", "unsourced"]);
+const CLAIM_CLASSES = new Set(["claim", "validated", "conjectured", "historical", "unsourced"]);
 
 function spans(s: string, ctx: string, warn?: (m: string) => void): string {
   const found = findSpans(s);
@@ -140,7 +140,8 @@ function spans(s: string, ctx: string, warn?: (m: string) => void): string {
         : classes.includes("unsourced") ? "\\claimU"
         : "\\claimG";
       const body = inline(f.text.replace(/\n/g, " "), ctx);
-      const grounds = attrs.grounds ? protect(`\\editiogrounds{${texEscape(attrs.grounds.split(",").map((g) => g.trim()).join(", "))}}`) : "";
+      const historical = classes.includes("historical") ? "historical: " : "";
+      const grounds = attrs.grounds ? protect(`\\editiogrounds{${texEscape(historical + attrs.grounds.split(",").map((g) => g.trim()).join(", "))}}`) : "";
       out += protect(`${grade}{${body}}${grounds}`);
     } else {
       out += s.slice(f.start, f.end); // not ours — leave for later passes

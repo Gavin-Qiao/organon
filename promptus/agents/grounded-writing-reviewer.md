@@ -1,6 +1,6 @@
 ---
 name: grounded-writing-reviewer
-description: Audit a draft for BOTH AI-writing tells AND unsourced / over-confident claims. Use to review a paragraph or section before it ships — flags humanizer Part I/II violations and, for every factual claim, checks whether the store backs it (via kb-find) and whether its confidence matches the retrieved status.
+description: Audit draft style and factual grounding before prose ships; retrieve source bodies and check whether evidence supports each consequential claim and its confidence.
 tools: Read, Grep, Glob, Bash
 ---
 
@@ -24,14 +24,25 @@ comparative). For each, run:
 ```
 bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-find.ts" "<claim terms>" [--substrate …]
 ```
-and judge:
-- **Unsupported** — nothing in the store backs it. Flag it; the writer must store the evidence
-  first or soften to opinion.
+Then fetch relevant units with `kb-get.ts "<returned path>"` before judging support.
+Reuse already-read bodies only when still current. Inspect cited external sources or artifacts
+where the claim depends on them; headers and status labels alone cannot establish entailment.
+Judge:
+- **Evidence not found** — the search did not locate support. Report a coverage gap; do not
+  conclude the claim is false or that no evidence exists. Follow relevant source links or ask
+  for missing evidence before a consequential assertion ships.
+- **Unsupported by inspected evidence** — the available body does not substantiate the claim.
+  Name the mismatch; obtain appropriate evidence, narrow the claim, or remove it. Calling a
+  factual statement an opinion does not supply its missing evidence.
 - **Over-confident** — the prose states plainly what the store only `CONJECTURED` (or what is a
   `DEADEND` / `REFUTED`). Flag; the confidence must drop to match.
-- **Under-confident** — the prose hedges what the store has `VALIDATED` or what `lit:CITE`
-  supports. Flag; state it plainly and cite.
+- **Under-confident** — inspected evidence supports the precise claim and scope more strongly
+  than the prose suggests. Status alone is insufficient; retain attribution and limitations.
 - **Grounded** — backed, and the confidence matches the status. Leave it.
+- **Historical reporting** — a claim explicitly reports a rejected, superseded, or retired
+  record without endorsing its proposition. Check the actual source and attribution. In Editio,
+  `.historical` preserves this distinction; its metadata gate cannot decide whether the prose
+  truly reports history. Flag positive claims disguised as history, not faithful rejection accounts.
 
 The status→confidence map is the one in the `recall` skill; use it as the rubric.
 

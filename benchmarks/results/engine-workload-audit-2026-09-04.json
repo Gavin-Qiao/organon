@@ -1,0 +1,19 @@
+{
+  "schema": "organon.engine-workload-audit.v1",
+  "agent": {"task": "gpt6_workload_audit", "model": "gpt-6-astra", "freshContext": true, "readOnly": true},
+  "reviewed": ["engine-workload.ts", "engine-workload-adapters.ts", "engine-workload-qmd.mjs", "engine-workload.test.ts", "engine-workload-cases.json", "results/engines-synthetic-500-2026-09-04.json", "results/engines-synthetic-500-ipc-retry-2026-09-04.json"],
+  "verdict": "Useful synthetic ranking and fresh-process timing evidence; insufficient to claim stale-content eviction or reproducible independently rebuilt semantic rankings.",
+  "findings": [
+    {"priority": 1, "file": "engine-workload.ts", "line": 139, "issue": "Edit lifecycle checks only whether the same probe ID appears for the replacement query. An engine retaining both old and new representations passes. Inspect stored content/version or vectors; semantic candidate presence alone is insufficient."},
+    {"priority": 2, "file": "engine-workload.ts", "line": 125, "issue": "stableAcrossPasses describes one index only. Identical recorded inputs and code produced zvec top1 14/20 and 13/20 across fresh builds; q001, q008, q017 and q023 changed ordering. Report cross-build variation separately."},
+    {"priority": 2, "file": "engine-workload.ts", "line": 174, "issue": "Suite and harness are hashed at report end, allowing edits during execution to misattribute code. Snapshot before the run and detect subsequent changes; imported search code and model digests belong in computational provenance."}
+  ],
+  "scope": [
+    "Cold processes really reopen indexes. All three completed cold rankings match the corresponding warm rankings. They are three different queries once each, with warm filesystem/model caches, not cold-disk or repeated-identical-query variability.",
+    "Frozen union is correctly lexical-first five plus five, deduplicated. All 20 positive labels already occur in lexical top5; this suite cannot demonstrate additional union recall or better first-result ranks from that policy.",
+    "Inactive units are filtered before indexing. Deletion tests active-projection removal, not integrated Promptus lifecycle changes.",
+    "Normal-path output confinement resolves parent symlinks and uses exclusive writes. Fixture roots are process-created temp directories. Fetch overrides are not an OS network sandbox.",
+    "Only the retry supports four-engine comparison; the original receipt preserves QMD's IPC failure."
+  ],
+  "dispositionAtReview": "Preserve the receipts. Strengthen stale-content and provenance checks before broader correctness claims. Record semantic ranking variability. No benchmark or source edit was performed by the auditor."
+}

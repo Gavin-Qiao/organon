@@ -1,0 +1,614 @@
+{
+  "schema": "organon.public-retrieval-quality.v1",
+  "created": "2026-09-05T05:43:04.103Z",
+  "requestedAgentModel": "gpt-5.6-luna",
+  "requestedReasoningEffort": "max",
+  "authors": 2,
+  "judges": 2,
+  "methodAuditors": 1,
+  "results": [
+    {
+      "project": "psi",
+      "units": 6494,
+      "pooledCandidates": 84,
+      "routes": [
+        {
+          "name": "lexical",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.8166666666666668,
+              "all5": 0.6,
+              "all10": 1,
+              "directPrecision5": 0.6599999999999999,
+              "usefulPrecision5": 0.9
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.6666666666666667,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.7000000000000001,
+              "usefulPrecision5": 1
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.30000000000000004,
+              "usefulPrecision5": 0.7
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 0,
+              "all10": 1,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.8
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.75,
+              "all5": 0,
+              "all10": 1,
+              "directPrecision5": 1,
+              "usefulPrecision5": 1
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 7
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 100,
+            "maxEligible": 100,
+            "meanRaw": 6403.5
+          }
+        },
+        {
+          "name": "zvec-1",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.8533333333333333,
+              "all5": 0.8,
+              "all10": 0.8,
+              "directPrecision5": 0.58,
+              "usefulPrecision5": 0.9199999999999999
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.8,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.5,
+              "usefulPrecision5": 0.95
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.30000000000000004,
+              "usefulPrecision5": 0.7
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.8,
+              "usefulPrecision5": 1
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.6666666666666666,
+              "all5": 0,
+              "all10": 0,
+              "directPrecision5": 0.8,
+              "usefulPrecision5": 1
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 4
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 52,
+            "maxEligible": 86,
+            "meanRaw": 85
+          }
+        },
+        {
+          "name": "zvec-2",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.8533333333333333,
+              "all5": 0.8,
+              "all10": 0.8,
+              "directPrecision5": 0.58,
+              "usefulPrecision5": 0.9199999999999999
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.8,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.5,
+              "usefulPrecision5": 0.95
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.30000000000000004,
+              "usefulPrecision5": 0.7
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.8,
+              "usefulPrecision5": 1
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.6666666666666666,
+              "all5": 0,
+              "all10": 0,
+              "directPrecision5": 0.8,
+              "usefulPrecision5": 1
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 4
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 52,
+            "maxEligible": 86,
+            "meanRaw": 85
+          }
+        }
+      ],
+      "stability": {
+        "questions": 12,
+        "meanTop5Overlap": 1,
+        "exactOrderedTop5": 12
+      },
+      "privateSummaryHash": "1182ad1ce3f7d7308385c4037eb1c8999288a108da14fb42835e68657e88670f",
+      "freezeHash": "127048b1cf53c04a2c4d69b7ae8b5ec7049565c8f7ee55d57cdff047b75b3d3d",
+      "questionsHash": "aa44f09b2dc2452b26ba6fb624b6d07f70b1c5a37cca8513cc360918f79f1cc1",
+      "judgmentsHash": "24584be55402c5306c5d86d1bb418c2e43da37f9d231b09507cf8f46b53dfb06"
+    },
+    {
+      "project": "mot",
+      "units": 6332,
+      "pooledCandidates": 97,
+      "routes": [
+        {
+          "name": "lexical",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 0.8,
+              "hit10": 0.8,
+              "rr10": 0.6333333333333333,
+              "all5": 0.7,
+              "all10": 0.7,
+              "directPrecision5": 0.56,
+              "usefulPrecision5": 0.9
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 0.5,
+              "hit10": 0.5,
+              "rr10": 0.375,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.44999999999999996,
+              "usefulPrecision5": 0.8500000000000001
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 1,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.9
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.75,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.7,
+              "usefulPrecision5": 1
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.6666666666666666,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.6000000000000001,
+              "usefulPrecision5": 0.9
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 7
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 100,
+            "maxEligible": 100,
+            "meanRaw": 6301.166666666667
+          }
+        },
+        {
+          "name": "zvec-1",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 0.7,
+              "hit10": 0.8,
+              "rr10": 0.3583333333333333,
+              "all5": 0.7,
+              "all10": 0.7,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.96
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 0.5,
+              "hit10": 0.5,
+              "rr10": 0.20833333333333331,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.5,
+              "usefulPrecision5": 0.95
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.75,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.9
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.41666666666666663,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.7,
+              "usefulPrecision5": 1
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 0.5,
+              "hit10": 1,
+              "rr10": 0.20833333333333331,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.7,
+              "usefulPrecision5": 1
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 8
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 53,
+            "maxEligible": 87,
+            "meanRaw": 86.58333333333333
+          }
+        },
+        {
+          "name": "zvec-2",
+          "groups": {
+            "all-positive": {
+              "n": 10,
+              "hit5": 0.7,
+              "hit10": 0.8,
+              "rr10": 0.3583333333333333,
+              "all5": 0.7,
+              "all10": 0.7,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.96
+            },
+            "conceptual": {
+              "n": 4,
+              "hit5": 0.5,
+              "hit10": 0.5,
+              "rr10": 0.20833333333333331,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.5,
+              "usefulPrecision5": 0.95
+            },
+            "exact": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.75,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.6,
+              "usefulPrecision5": 0.9
+            },
+            "historical": {
+              "n": 2,
+              "hit5": 1,
+              "hit10": 1,
+              "rr10": 0.41666666666666663,
+              "all5": 1,
+              "all10": 1,
+              "directPrecision5": 0.7,
+              "usefulPrecision5": 1
+            },
+            "multi": {
+              "n": 2,
+              "hit5": 0.5,
+              "hit10": 1,
+              "rr10": 0.20833333333333331,
+              "all5": 0.5,
+              "all10": 0.5,
+              "directPrecision5": 0.7,
+              "usefulPrecision5": 1
+            }
+          },
+          "unsupported": {
+            "questions": 2,
+            "returned5": 10,
+            "directAnswerEvidence5": 8
+          },
+          "candidates": {
+            "questions": 12,
+            "minEligible": 53,
+            "maxEligible": 87,
+            "meanRaw": 86.5
+          }
+        }
+      ],
+      "stability": {
+        "questions": 12,
+        "meanTop5Overlap": 1,
+        "exactOrderedTop5": 12
+      },
+      "privateSummaryHash": "e3751cd411ac4e887119a5e5391dabf129bc8a544e43c916b8dd68aa11f900d1",
+      "freezeHash": "fccdf917015757b3901a0c85d0ce567342665d13df0cb7d4022569b1a290efe2",
+      "questionsHash": "da25c07325ffff39622575b6b4b75d70b84c4c9ff50e798be1240a14828b21f9",
+      "judgmentsHash": "258753383be484d03a52e24aae97efeb6b21c8d042a1fbbab55aad9483801c45"
+    }
+  ],
+  "combined": [
+    {
+      "name": "lexical",
+      "groups": {
+        "all-positive": {
+          "n": 20,
+          "hit5": 0.9,
+          "hit10": 0.9,
+          "rr10": 0.725,
+          "all5": 0.65,
+          "all10": 0.85,
+          "directPrecision5": 0.61,
+          "usefulPrecision5": 0.9
+        },
+        "conceptual": {
+          "n": 8,
+          "hit5": 0.75,
+          "hit10": 0.75,
+          "rr10": 0.5208333333333334,
+          "all5": 0.75,
+          "all10": 0.75,
+          "directPrecision5": 0.575,
+          "usefulPrecision5": 0.925
+        },
+        "exact": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 1,
+          "all5": 1,
+          "all10": 1,
+          "directPrecision5": 0.45,
+          "usefulPrecision5": 0.8
+        },
+        "historical": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.875,
+          "all5": 0.5,
+          "all10": 1,
+          "directPrecision5": 0.6499999999999999,
+          "usefulPrecision5": 0.9
+        },
+        "multi": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.7083333333333333,
+          "all5": 0.25,
+          "all10": 0.75,
+          "directPrecision5": 0.8,
+          "usefulPrecision5": 0.95
+        }
+      }
+    },
+    {
+      "name": "zvec-1",
+      "groups": {
+        "all-positive": {
+          "n": 20,
+          "hit5": 0.85,
+          "hit10": 0.9,
+          "rr10": 0.6058333333333333,
+          "all5": 0.75,
+          "all10": 0.75,
+          "directPrecision5": 0.5900000000000001,
+          "usefulPrecision5": 0.9399999999999998
+        },
+        "conceptual": {
+          "n": 8,
+          "hit5": 0.75,
+          "hit10": 0.75,
+          "rr10": 0.5041666666666667,
+          "all5": 0.75,
+          "all10": 0.75,
+          "directPrecision5": 0.5,
+          "usefulPrecision5": 0.95
+        },
+        "exact": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.875,
+          "all5": 1,
+          "all10": 1,
+          "directPrecision5": 0.45,
+          "usefulPrecision5": 0.8
+        },
+        "historical": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.7083333333333333,
+          "all5": 1,
+          "all10": 1,
+          "directPrecision5": 0.75,
+          "usefulPrecision5": 1
+        },
+        "multi": {
+          "n": 4,
+          "hit5": 0.75,
+          "hit10": 1,
+          "rr10": 0.4375,
+          "all5": 0.25,
+          "all10": 0.25,
+          "directPrecision5": 0.75,
+          "usefulPrecision5": 1
+        }
+      }
+    },
+    {
+      "name": "zvec-2",
+      "groups": {
+        "all-positive": {
+          "n": 20,
+          "hit5": 0.85,
+          "hit10": 0.9,
+          "rr10": 0.6058333333333333,
+          "all5": 0.75,
+          "all10": 0.75,
+          "directPrecision5": 0.5900000000000001,
+          "usefulPrecision5": 0.9399999999999998
+        },
+        "conceptual": {
+          "n": 8,
+          "hit5": 0.75,
+          "hit10": 0.75,
+          "rr10": 0.5041666666666667,
+          "all5": 0.75,
+          "all10": 0.75,
+          "directPrecision5": 0.5,
+          "usefulPrecision5": 0.95
+        },
+        "exact": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.875,
+          "all5": 1,
+          "all10": 1,
+          "directPrecision5": 0.45,
+          "usefulPrecision5": 0.8
+        },
+        "historical": {
+          "n": 4,
+          "hit5": 1,
+          "hit10": 1,
+          "rr10": 0.7083333333333333,
+          "all5": 1,
+          "all10": 1,
+          "directPrecision5": 0.75,
+          "usefulPrecision5": 1
+        },
+        "multi": {
+          "n": 4,
+          "hit5": 0.75,
+          "hit10": 1,
+          "rr10": 0.4375,
+          "all5": 0.25,
+          "all10": 0.25,
+          "directPrecision5": 0.75,
+          "usefulPrecision5": 1
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Exploratory 24-question source-conditioned model-labelled pilot; 20 positive and 4 unsupported. One author and one fresh blind judge per project. No human gold, inter-rater agreement or significance claim.",
+    "zvec-grep 0.2.1 Potion 32M CPU top 100 context entities, deduplicated then scope-filtered; not an engine-isolated embedding-model comparison.",
+    "First vector build is primary; second is replication, never cherry-picked. Known-target coverage is not exhaustive recall. Per-route precision uses fixed five positions from blinded pool judgments.",
+    "Unsupported-premise probes do not measure generated-answer hallucination or prove absence. Scientific truth is not determined by retrieval or model judgments.",
+    "Runtime, whole dependency native/dist closure and resolved agent model build are not fully pinned. Frozen runner/adapter/lexical source and package manifest/model bytes are bound in private receipts.",
+    "No live project, installed plugin or production-source change. Full source verification costs belong to the separate CPU replay. Private text/labels/rankings/vectors remain outside this repository."
+  ]
+}

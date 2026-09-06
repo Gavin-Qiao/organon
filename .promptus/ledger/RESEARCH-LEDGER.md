@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-08-30 (Record direct-main policy and symlink-safe benchmark custody)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-09-06 (landing and release PR preparation authorized)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,32 +27,22 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy -->
-The isolated continuity benchmark, four-README redesign, and landing-policy update form one validated non-release tranche. Routine validated work may land directly on main after local gates pass; every release cut must merge through a PR before the exact merged commit is tagged. Promptus v0.9.2 remains released and locally installed; no manifest, version, tag, publication, or installed cache changed.
-
-- Marketplace and plugin validation passed.
-- The complete repository passed 370 tests with 2,018 expectations.
-- Benchmark output confinement now resolves symlinked ancestors before rejecting physical destinations inside a .promptus store; the focused suite passed 6 tests with 28 expectations.
-- Current artifact custody carries the changed agent contract plus contributor and release workflows, while preserving the historical v0.9.2 release facts.
-- No live Psi, MoT, Probatio, or Mensura store was read or written.
+<!-- kb:now-through event-20260906T050245Z-land-the-implementation-and-prepare-separate-minor-release-prs -->
+Source implementation is complete. The operator authorized commit/push and release PR preparation on September 6, stopping before merge, tags, publication or installation. RELEASE-VERIFICATION.md retains the implementation scope and limitations. The existing 478-test result is historical; local gates are being repeated before landing.
 
 ## Open frontier
 
-- GitHub main remains externally protected by four required checks; repository policy permits direct pushes, but remote enforcement may still reject a new direct commit unless the pusher has a bypass or the rules are aligned.
-- Editio manifest and marketplace descriptions still advertise roadmap tables, bibliography, and rebuttal capabilities that current code and READMEs defer; aligning that metadata remains a separate change.
-- Fresh-agent continuity behavior is unmeasured; the current 8 of 8 result covers deterministic mechanics only.
-- Real-project continuity evidence requires sanitized case bundles or operator-approved immutable snapshots; live stores remain out of scope.
-- Relation resolution remains the measured maintenance residual; SQLite stays deferred.
+Land validated implementation on main, verify cross-platform CI, then create separate release cuts for Promptus 0.10.0 and Editio 0.8.0. Persistent raw caching remains opt-in and off by default. Both changelogs already record capabilities; finalize categories, compatibility notes, dates and compare links on release branches only. Keep original receipts and full successor artifact custody intact.
 
 ## Next actions
 
-1. Decide whether to align the stale Editio manifest and marketplace descriptions in a separate change.
-2. Run the continuity packets with a controlled fresh agent before making a behavioral claim.
-3. Gather sanitized self-contained cases before any real-project effectiveness claim.
+1. Finish local gates and commit with a scoped Conventional title and flat bullet body.
+2. Push main, inspect CI, address concrete release-blocking failures within scope.
+3. Prepare and push the two release branches and open PRs after main CI passes. Do not merge, tag or install.
 
 ## <<< RESUME HERE >>>
 
-Resume from event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy. The validated tranche includes the symlink-safe continuity benchmark, all four refreshed READMEs, and the direct-main/release-PR workflow; all release and installation state remains unchanged.
+Run session-doctor and inspect git/remote before continuing. No live research project or installed plugin has been changed. This handoff records authorized work in progress, not a claim that commits, CI or PRs already completed. Existing graph and archival drift remains visible; no baseline or scientific repair is authorized.
 
 <!-- now:end -->
 
@@ -1349,5 +1339,930 @@ The operator-authorized landing policy is now explicit and internally consistent
 ↳ supersedes event-20260826T092423Z-validate-the-exact-promptus-v092-release-tree
 ↳ supports event-20260830T213330Z-let-routine-validated-work-push-directly-and-keep-releases-on-pr
 ↳ extends event-20260830T212033Z-refresh-all-organon-readmes-as-one-current-documentation-system
+
+### [2026-09-04 08:14:57] RESULT/VALIDATED — Remove the completed Nemotron benchmark cache
+<!-- kb:id event-20260904T121457Z-remove-the-completed-nemotron-benchmark-cache -->
+On 2026-09-04, after operator authorization and a dry run identifying one cached repository and one revision, `hf cache rm` removed `/home/mohan/.cache/huggingface/hub/models--nvidia--Nemotron-3-Embed-8B-BF16` and reported 15.9 GB freed. A post-deletion existence check confirmed that exact cache path is absent. The benchmarked revision remains pinned as `c44c20ab3f6b430336706847a6372de4b2eb3dbd`; its configuration and four model-shard URLs returned HTTP 200 before deletion, so an exact rerun remains recoverable by downloading it again. The committed benchmark receipts and [[cross-project-evidence-favors-mixed-retrieval-and-rules-out-dens]], installed plugins, live project Promptus stores, and Codex session history were not removed. This cleanup changes only local cache residency, not the mixed-retrieval decision or runtime behavior; a future exact rerun will pay the download cost.
+Related: [[cross-project-evidence-favors-mixed-retrieval-and-rules-out-dens]]
+
+### [2026-09-04 19:52:35] PLAN/OPEN — Overhaul Organon across retrieval memory agents and manuscripts
+<!-- kb:id event-20260904T235235Z-overhaul-organon-across-retrieval-memory-agents-and-manuscripts -->
+<!-- kb:artifact implementation-plan|OVERHAUL.md|- -->
+Mohan requested a complete end-to-end Organon overhaul considering zvec or a better established retrieval framework and the GPT-6 instruction model. OVERHAUL.md preserves the full scope and completion matrix: retrieval comparison and adoption, source and maintenance workflows, both plugin instruction surfaces, controlled session continuity, Editio manuscript integration, packaging, migration and final verification. The baseline passed 370 tests with 2018 expectations. Candidate dependencies are isolated under /tmp/organon-overhaul-engines-JS0XGI; live Psi, MoT, Probatio and Mensura stores remain out of scope. No framework has been selected from documentation alone and no release or installation has occurred. The first working changes simplify current policy and core skill routing, remove Editio premature stopping, and add a reproducible public-corpus engine comparison. Completion of this plan requires the full matrix, not these initial changes.
+Related: [[gpt-6-guidance-favors-precise-instructions-and-calibrated-complet]] · [[zvec-grep-exposes-local-hybrid-retrieval-and-incremental-indexin]] · [[qmd-offers-separate-lexical-semantic-and-reranking-routes]]
+
+### [2026-09-04 20:15:05] RESULT/VALIDATED — Validate initial overhaul trials and preserve the open grounding frontier
+<!-- kb:id event-20260905T001505Z-validate-initial-overhaul-trials-and-preserve-the-open-grounding -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|82e52290baad21cd2b3926077c0c23c7f3e46f2760e143559a8ad002b1fd58ed -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|67cd8442a332ffb4705521286238c5418d911c561cbca7b62e2057bb0f4edb37 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|64932287673c34d5700ef26aebc626dcc7ee0e3f3c114d28338e01813e214520 -->
+<!-- kb:artifact promptus-readme|promptus/README.md|f9304516f98ef122908a51be581288fb297d50abf35a5a49de747987ed8a93fb -->
+<!-- kb:artifact editio-readme|editio/README.md|88a26a1657b505094163111e16438c3025f2c7c810150a792243adf64f21d4b0 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|3950719d665cf34c360ef023366c7000b3efabdafc45ed6a4bd38e1d843d91b2 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|aaee5325aedb244d279c9ee25814716e01c078139617f8f71ed512b213a1a227 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|3fa6b5f8c05d044b46d3b6bdce8ca0fc8b37cf1df83a9437989199cee387bd33 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|ed0e08d410d6b937bcbc703f78ca067708a946a14f4f4a3aece7b1737a4191db -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|7529e9e0967a105700a1e04e45f6fc4ab55eae45ecef794ef09c9dc9a6c268e3 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|26a433fe67fb26671afe688b93140ac0d0ea1208a9ba1d739d6236729b1c97c3 -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|fb67b81d1e393da34b00e8f9d9469ce593e35d9779157e33ad6b7fe60b1861b8 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|86d966b6674d5b9dd4f471089e95a07def8aaf8954999955436b55986211bb8f -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+The initial overhaul tranche passed the complete repository suite (379 tests, 2,086 expectations) and both plugin adapter validations. It adds serialized atomic metadata amendments, collision-checked compatibility aliases, strict argument and physical-path checks, concise core skills, conditional cadence and checkpoint instructions, portable template paths, and an Editio entry point that continues requested work. Manifest descriptions now match implemented Editio capabilities; versions were not bumped. The new plan's one-character truncated source-handle mistake was repaired through kb-amend --alias, preserving the append-only log and source page body. CPU comparisons and fresh GPT-6 tests are preserved as separate receipts and linked findings, including failed IPC and manuscript-gate evidence. The operational manuscript exposed unsupported stable IDs, ignored relation-derived supersession, and no historical-evidence distinction in Editio. Those remain open; the whole overhaul is NOT complete and no retrieval framework is selected. This event carries current mutable-source artifact custody forward from the three prior snapshots, preserving every prior dependency and adding changed surfaces. Supersession here updates source custody only: it does not retract historical release, installation, validation, or landing-policy facts. No commit, push, tag, release, installed plugin cache, or live Psi/MoT/Probatio/Mensura store changed. Next implement and test the canonical grounding contract before finishing retrieval selection, packaging/migration, and the full completion audit.
+Related: [[small-cpu-semantic-routes-improve-mixed-retrieval-on-the-organon]] · [[fresh-gpt-6-packet-readers-preserve-answers-under-shorter-recall]] · [[fresh-manuscript-continuation-exposes-a-split-grounding-contract]]
+↳ extends event-20260904T235235Z-overhaul-organon-across-retrieval-memory-agents-and-manuscripts
+↳ supersedes event-20260830T213548Z-carry-artifact-custody-through-the-direct-push-landing-policy
+↳ supersedes event-20260830T212033Z-refresh-all-organon-readmes-as-one-current-documentation-system
+↳ supersedes event-20260823T134548Z-release-editio-v070-and-refresh-the-local-codex-plugin
+
+### [2026-09-04 20:34:23] RESULT/VALIDATED — Validate canonical grounding and successful fresh GPT-6 manuscript continuation
+<!-- kb:id event-20260905T003423Z-validate-canonical-grounding-and-successful-fresh-gpt-6-manuscri -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|c4ebc0a8102bc6b1b608b78b2f2adbe01e61c5b9caf625021506dc8061c99dbe -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|ad0f05711a3afa3f785c977ff0baa303ab5ee23b067a514dea70f3be99c5e24a -->
+<!-- kb:artifact promptus-readme|promptus/README.md|f9304516f98ef122908a51be581288fb297d50abf35a5a49de747987ed8a93fb -->
+<!-- kb:artifact editio-readme|editio/README.md|049932b1817add306e480900c82e9654e72cdc59e780cb1f4c837f7158a57807 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|68bad4e30fc80eceae99d0503fa80cf92ff04ff107b76703dccc7c8facba141e -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|224e417b26758790ed350d0d848852220e8ef2d6642cefb012cf191831ffd703 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|3fa6b5f8c05d044b46d3b6bdce8ca0fc8b37cf1df83a9437989199cee387bd33 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|ed0e08d410d6b937bcbc703f78ca067708a946a14f4f4a3aece7b1737a4191db -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|7529e9e0967a105700a1e04e45f6fc4ab55eae45ecef794ef09c9dc9a6c268e3 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|26a433fe67fb26671afe688b93140ac0d0ea1208a9ba1d739d6236729b1c97c3 -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|86d966b6674d5b9dd4f471089e95a07def8aaf8954999955436b55986211bb8f -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|5d2d2f28759cb1af48129efd57a695967440c4d5387638cb215dd2520b19d71b -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|fb22ce6d6412fe92eb3f627273d78454a8e4787fe67028d6e9fd0b9062c2c905 -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|f6df9618fd277416e04af9bf054f02aa0541121900db36c3b79a4dacce5d635f -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|67efb99b3aba04a8663b00123c5a00132c644abaa4380fc1ebdb1a18484a8374 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|5d2d2f28759cb1af48129efd57a695967440c4d5387638cb215dd2520b19d71b -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+Canonical source reading now gives Editio stable IDs, compatibility handles and relation-derived lifecycle status without a sibling-plugin runtime dependency. The reader is mechanically packaged with byte-parity validation. Explicit historical claims remain separate from positive validated support; unknown grounds, mixed grades and hidden conjecture overrides fail closed. The fresh isolated GPT-6 manuscript retest passes claim and number gates without overrides (five current claims, two historical claims, three bound numbers); its nine-file source-store hash stayed unchanged. Parent checks independently repeated both gates. The original failing manuscript receipt remains immutable. Full validation: 386 passing tests, 2,137 expectations, 33 files, both plugin adapters and packaged-reader parity; zero derived writes for the unchanged 341-unit store after parser extraction. The first full run exposed a generated default-vocab export URL in the no-identity packaging sweep; removing unused export metadata from that generated view fixed it without weakening the test. This source-custody successor retains all 46 prior dependencies, updates only seven reviewed changed paths, and adds 17 grounding/packaging dependencies. Historical release and installation facts remain historical facts. Whole-overhaul work is still active: no backend is selected; independent retrieval cases, cold/delta/delete/scale measurements, broader continuity, maintenance, migration/packaging and final scope audit remain. No commit, push, tag, release, version bump, installed cache update or live Psi/MoT/Probatio/Mensura store mutation occurred.
+↳ supersedes event-20260905T001505Z-validate-initial-overhaul-trials-and-preserve-the-open-grounding
+
+### [2026-09-04 20:56:15] DECISION/VALIDATED — Select lexical default and optional QMD for the overhaul candidate
+<!-- kb:id event-20260905T005615Z-select-lexical-default-and-optional-qmd-for-the-overhaul-candida -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|c4ebc0a8102bc6b1b608b78b2f2adbe01e61c5b9caf625021506dc8061c99dbe -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|ad0f05711a3afa3f785c977ff0baa303ab5ee23b067a514dea70f3be99c5e24a -->
+<!-- kb:artifact promptus-readme|promptus/README.md|f9304516f98ef122908a51be581288fb297d50abf35a5a49de747987ed8a93fb -->
+<!-- kb:artifact editio-readme|editio/README.md|049932b1817add306e480900c82e9654e72cdc59e780cb1f4c837f7158a57807 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|e197b3d7b74a50332c5529ddcdb8c59c3551621e7ad66b8e232ada8f1c442bf9 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|224e417b26758790ed350d0d848852220e8ef2d6642cefb012cf191831ffd703 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|3fa6b5f8c05d044b46d3b6bdce8ca0fc8b37cf1df83a9437989199cee387bd33 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|ed0e08d410d6b937bcbc703f78ca067708a946a14f4f4a3aece7b1737a4191db -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|7529e9e0967a105700a1e04e45f6fc4ab55eae45ecef794ef09c9dc9a6c268e3 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|26a433fe67fb26671afe688b93140ac0d0ea1208a9ba1d739d6236729b1c97c3 -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|86d966b6674d5b9dd4f471089e95a07def8aaf8954999955436b55986211bb8f -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|5d2d2f28759cb1af48129efd57a695967440c4d5387638cb215dd2520b19d71b -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|fb22ce6d6412fe92eb3f627273d78454a8e4787fe67028d6e9fd0b9062c2c905 -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|f6df9618fd277416e04af9bf054f02aa0541121900db36c3b79a4dacce5d635f -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|67efb99b3aba04a8663b00123c5a00132c644abaa4380fc1ebdb1a18484a8374 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|5d2d2f28759cb1af48129efd57a695967440c4d5387638cb215dd2520b19d71b -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|014c3bec1825b55b1a10d3d77a7f331baba3d540b60abe3857c3be337f1643dd -->
+Select dependency-free lexical retrieval as the default and the existing local QMD vector SDK as the optional semantic route for the overhaul candidate, under RETRIEVAL.md. This is an implementation choice based on the preserved public development comparison and fresh synthetic workload trials, not a production installation or a claim that the full overhaul is complete. The new finding records ranking/cost evidence, the IPC failure, the independent GPT-6 audit, strengthened content checks, and limits. The 5000-unit trial reached lexical/QMD first-place counts 11/20 versus 20/20; lexical still finds all answers in five and remains sub-100-ms for tested fresh-process queries. The complete suite passes 391 tests / 2164 expectations / 34 files; marketplace/plugin validation and checked canonical-reader parity pass. This event retains all 63 prior source dependencies, updates only the reviewed benchmark README, and adds the workload implementation/tests and architecture decision. Historical grounding, validation, release and installation facts are not retracted by this source-custody rollover. Next implement QMD configuration/projection/query/fallback in the candidate and test source lifecycle, exact controls, ordinary-sandbox execution, stale/interrupted refresh, archives and isolated packaging; finish every remaining OVERHAUL.md row. No commit, push, tag, release, version bump, global install, installed cache or live Psi/MoT/Probatio/Mensura store changed.
+↳ supersedes event-20260905T003423Z-validate-canonical-grounding-and-successful-fresh-gpt-6-manuscri
+
+### [2026-09-04 21:30:56] RESULT/VALIDATED — Implement optional QMD recall and preserve the remaining overhaul frontier
+<!-- kb:id event-20260905T013056Z-implement-optional-qmd-recall-and-preserve-the-remaining-overhau -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|678a28d7e6c48f9d131fd0c1710142a8e68d31c4457c355da86e68251aa4f854 -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|149d6fcf6eaff2dda40b7406fd925d47ff7346a37d2e58906c55c72c57895964 -->
+<!-- kb:artifact promptus-readme|promptus/README.md|c9f8338f349807eebefd3b76352c65c7ed403e56db85c28634eb1403e4a54dee -->
+<!-- kb:artifact editio-readme|editio/README.md|049932b1817add306e480900c82e9654e72cdc59e780cb1f4c837f7158a57807 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|d45c49b47c660824c48cbb4ff3c2c0c46bde49f4a7444fcb2447b1ca31a116fc -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|224e417b26758790ed350d0d848852220e8ef2d6642cefb012cf191831ffd703 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|3fa6b5f8c05d044b46d3b6bdce8ca0fc8b37cf1df83a9437989199cee387bd33 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|434c5afa71f5bd02c0ff957f16a03408d961fac52618bb810cd3911779c20e9c -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|26a433fe67fb26671afe688b93140ac0d0ea1208a9ba1d739d6236729b1c97c3 -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|86d966b6674d5b9dd4f471089e95a07def8aaf8954999955436b55986211bb8f -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|274f77ad6a1b122b9d866fc681a6a086802cd4886dbfa5a395aad0979e663c41 -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|f6df9618fd277416e04af9bf054f02aa0541121900db36c3b79a4dacce5d635f -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|67efb99b3aba04a8663b00123c5a00132c644abaa4380fc1ebdb1a18484a8374 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|58033fb4bde789b3f54f5d6b57820527491b490206e21e39e35f3a0db1617a19 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|8eaa1b20c794e0d725a6272997a5c1847dda065da4b18d29936b3e5ab3b20cec -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|d933556076ceab23f62482c6db617936021a24ff3db2e14ccbca82715208b4fc -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|45706df3c5c9ab30ed4da420bacd73cddd2d63bb4d536db8b0678c7d1a3761ce -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|d33318cd11be452002dac9d6da1ecb24f178b5efbfc6fbf2aa6edbb43df4b1a2 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|526d5d54487546c9016694b6e1caa54c5b54d246c2b0bcb2a6759e5da5a8296e -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|d5ef480bda4172ad53339c847932199237189b75a96d4c635dacd9a541918756 -->
+Implement the optional local QMD recall candidate and retain the full overhaul frontier. [[finding-20260905T013019Z-optional-qmd-recall-passes-isolated-offline-integration-with-gua]] records the design, interrupted attempts, GPT-6 safety audit, corrected tokenizer configuration, four real-SDK successes and limits.
+
+Validation: 404 tests pass / 2232 expectations / 35 files; both plugin adapters and canonical-reader parity pass; the revised recall/router skill validators and both Unreleased sections pass. The final real SDK receipt passes all ten steps under ordinary sandbox permissions, preserving source bytes in its read-only phase and adapter bytes throughout. Thirteen isolated SDK-double regressions cover additional stale/race, exact/filter/archive/delete, identity and cache-recovery boundaries; do not call those real semantic quality measurements.
+
+This event supersedes only the previous mutable candidate source-custody snapshot, not its historical observations or the lexical/QMD selection rationale. Carry all 68 previous artifact dependencies, updating exactly the ten reviewed changed files and adding seven new source/plan dependencies. Strict health reported these ten current hash mismatches before this deliberate successor; historical receipts remain unchanged. The new 75-file candidate custody covers the optional adapter, CLI, test/harness, canonical resolver extraction and usage documentation.
+
+No commit, push, release, tag, model/global install, installed-cache change or live Psi/MoT/Probatio/Mensura access. Still finish fresh GPT-6 semantic-route use, broader actual-SDK mutation coverage, interrupted-work continuity, instruction inventory, maintenance, packaging/migration and final requirement-by-requirement verification. OVERHAUL.md remains active, not complete.
+Related: [[finding-20260905T013019Z-optional-qmd-recall-passes-isolated-offline-integration-with-gua]]
+↳ supersedes event-20260905T005615Z-select-lexical-default-and-optional-qmd-for-the-overhaul-candida
+
+### [2026-09-04 21:46:33] RESULT/VALIDATED — Verify semantic mutations and package boundaries while retaining the full overhaul scope
+<!-- kb:id event-20260905T014633Z-verify-semantic-mutations-and-package-boundaries-while-retaining -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|ac19b88816d200f500c291f33e65af7fcea0c4caa52246000f5a4879c3a3311d -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|9d32fa3416141e57d7ff61818efead16ade1026d759125fc351066cd613188bc -->
+<!-- kb:artifact promptus-readme|promptus/README.md|2b9b18bc6c3e1fac6905884dcf0a69404f3e3838dcf9dc709b490a408c5a7574 -->
+<!-- kb:artifact editio-readme|editio/README.md|f9b4efeafba81cc8c6f63a0cf8a5be97056e0d55783c0469d7f7a8f746ef9d82 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|72aba1bd9848081e91ac79d2fb40c58c467922e1d2854f5247938fe79341da00 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|2083e57255b4abe4a077a688d3889ab2238260949903519ca189b678db69a6a6 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|3fa6b5f8c05d044b46d3b6bdce8ca0fc8b37cf1df83a9437989199cee387bd33 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|434c5afa71f5bd02c0ff957f16a03408d961fac52618bb810cd3911779c20e9c -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|67efb99b3aba04a8663b00123c5a00132c644abaa4380fc1ebdb1a18484a8374 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|a4a60a84c4eeb6eaeea7205c8cba66cf6cd5174d79e21b4bcb413df3ffe551f5 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|45706df3c5c9ab30ed4da420bacd73cddd2d63bb4d536db8b0678c7d1a3761ce -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|d33318cd11be452002dac9d6da1ecb24f178b5efbfc6fbf2aa6edbb43df4b1a2 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|a7520496c53ee4929f2828268270b469b78917cd2b4e09c66213cecd131f205a -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/packaging.test.ts|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|MIGRATION.md|c9f20c1a600832adc4ac77245581cd6d0e96a6a734826cf946df3a6d8030914b -->
+Complete real-SDK mutation and fresh-agent recall tests, correct audited instruction boundaries, preserve archived manuscript evidence, and verify isolated packages. [[finding-20260905T014551Z-real-sdk-mutation-tests-and-fresh-semantic-recall-preserve-canon]] records the two failed mutation trials and corrected14-step pass plus source-preserving fresh GPT-6 recall. [[finding-20260905T014552Z-instruction-and-package-audit-removes-scope-conflicts-without-re]] records the instruction audit, removed wrong-root shell hook, archive grounding and migration/package checks.
+
+Current candidate verification:407 passing tests/2272 expectations/36 files; two package tests37 expectations; eight grounds tests48 expectations; thirteen semantic contract tests68 expectations. Both adapters and canonical-reader parity pass. The actual SDK mutation trial is ordinary-sandbox and source/code bound, with physical-vector erasure explicitly out of scope.
+
+Supersede only the previous mutable candidate source snapshot: carry all75 dependencies, update exactly15 reviewed changed files, and add seven dependencies for init/preflight instructions, both hook adapters, packaging regressions and migration guidance (82 total). Deleted auto-index.ts is represented by removal from the hook configs and the guarded package test, not an existence artifact that should remain red. Old receipts and source custody remain historical.
+
+No commit/push/release/tag/install/global model changes or access to Psi/MoT/Probatio/Mensura. Keep goal active: missing-artifact/interrupted-work continuation, batch maintenance timing, specialized instruction coverage and the final requirement-by-requirement audit remain. Local package checks are not native host-delivery or cross-OS execution certification.
+Related: [[finding-20260905T014551Z-real-sdk-mutation-tests-and-fresh-semantic-recall-preserve-canon]] · [[finding-20260905T014552Z-instruction-and-package-audit-removes-scope-conflicts-without-re]]
+↳ supersedes event-20260905T013056Z-implement-optional-qmd-recall-and-preserve-the-remaining-overhau
+
+### [2026-09-04 22:03:31] RESULT/VALIDATED — Complete the verified Organon overhaul source candidate
+<!-- kb:id event-20260905T020331Z-complete-the-verified-organon-overhaul-source-candidate -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|23e1f703017f8afc6554f864c19c20b7616201d8c7fe16f62ac37fb4a0f6111f -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|784d7b8ca8f06dfb1295cf6eb1f5e9a0e6b552a47fbb00f4a454b0a60ee548ba -->
+<!-- kb:artifact promptus-readme|promptus/README.md|2b9b18bc6c3e1fac6905884dcf0a69404f3e3838dcf9dc709b490a408c5a7574 -->
+<!-- kb:artifact editio-readme|editio/README.md|bdef4882a5b7c44b57e401b4f5c4a62615bbeb28462265b8c5c2bbf9cabfa5f3 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|f66700c862fc936376016415b5a5fb6868f5ccd8b8609035fad02d32f5c183a0 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|35cabe00cf287d1d46138efe8169270a77c4fd9917bdcad2301e792aba8915a5 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|ab6bde044a95f641e6ac20dfdaeb1e5514163f9d6fdcf14f7363c92ba0259267 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|434c5afa71f5bd02c0ff957f16a03408d961fac52618bb810cd3911779c20e9c -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|56be8dd84832e5bb6e31806347c68295561d59fe1e3f9ae7307d2395fd19f2b2 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|0d653a838ff6f466e9ca5b5882bacd4ffdb805276afb4036b7dedbeeb4517559 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|45706df3c5c9ab30ed4da420bacd73cddd2d63bb4d536db8b0678c7d1a3761ce -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|d33318cd11be452002dac9d6da1ecb24f178b5efbfc6fbf2aa6edbb43df4b1a2 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|7a4277134bbddfbf1e729fd164cfb099d8b6ec68c5b4769c09bfc9b3db86c41c -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/packaging.test.ts|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|MIGRATION.md|c9f20c1a600832adc4ac77245581cd6d0e96a6a734826cf946df3a6d8030914b -->
+<!-- kb:artifact ingest-workflow|promptus/commands/promptus-ingest.md|6157aadbf3e395bbeed0e2b574f58d8ad608a48c3ba0706cbea58ccd9a3b0d29 -->
+<!-- kb:artifact telos-workflow|promptus/skills/telos/SKILL.md|6edc6e1366a8f7360ee402774fb6f18306831b3fd197b2a22edc460de8fa676f -->
+<!-- kb:artifact latex-workflow|editio/skills/editio-latex/SKILL.md|37dfc2ba56f280c9999dc92c917d0fa8740a276ca3e2a0f6fa2ec240f5069250 -->
+<!-- kb:artifact authoring-contract|editio/skills/editio-latex/references/authoring-subset.md|09064c18abce57a943178ade6a543d865640bb5672c24f0f19c2227adfa15023 -->
+<!-- kb:artifact section-preview|editio/templates/latex/preview.tex|ffd613f21cc1832cbc74af09c2988301ecf050cd92330f8edf168676dbad3eb2 -->
+<!-- kb:artifact preview-regression|editio/scripts/test/preview.test.ts|35c6b5e958d492fe7989f0c0295c0978a26e989a354a6cced565693c0aa5101b -->
+<!-- kb:artifact batch-benchmark|benchmarks/batch-maintenance.ts|8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca -->
+<!-- kb:artifact failure-fixture|benchmarks/continuation-failure-fixture.ts|2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0 -->
+<!-- kb:artifact failure-verifier|benchmarks/continuation-failure-verify.ts|762014d04f549d455a6ac320fc1d5783f62a58005b7642ebef18f6031af9a868 -->
+<!-- kb:artifact completion-audit|OVERHAUL-VERIFICATION.md|457c6f964c1f095d19ba5be8a873b0045695d5b68d3b76f7075c1cce9f1cd102 -->
+<!-- kb:artifact hygiene-policy|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+Complete the requested a-z Organon source candidate and leave release/installation separate. [[finding-20260905T020242Z-final-continuity-and-maintenance-checks-complete-the-source-cand]] preserves final fresh-agent missing-evidence/interruption behavior, exact parent verification, measured batch timing, killed-writer recovery, specialized instruction audit and real preview compile.
+
+The completion matrix is fully evidenced in OVERHAUL-VERIFICATION.md: comparative backend selection, optional QMD with offline mutation/restart tests, source-preserving writes and concurrency, scoped/body-grounded agent workflows, fresh-context continuation, canonical/archived manuscript grounding and number/render gates, isolated plugin packaging and exact-byte legacy migration/rollback guidance. All broad efficacy claims remain qualified by synthetic/local scope. No full-overhaul requirement remains awaiting implementation inside the authorized source-candidate boundary.
+
+Final tests:409 pass/2284 expectations/37 files. Both adapters and checked reader parity pass; changed skill validators, both Unreleased sections, JSON syntax, diff/whitespace and exact-filename large-receipt checks pass. Strict health and read-only artifact preflight run after this final custody event/NOW.
+
+Supersede only prior mutable source custody: preserve all82 dependencies, update exactly9 reviewed paths and add11 final dependencies (93 total). Original receipts and all failed attempts remain immutable. The six oversized receipt filenames have a documented, exact hygiene exception; no generalized file-size or artifact-integrity gate was disabled.
+
+No commit/push/tag/release/install, global model setup, installed-cache update or live Psi/MoT/Probatio/Mensura access. Future live adoption, actual desktop hook delivery, other-OS native models and release workflow execution require their own applicable scope, not implied publication of this candidate. Drift check:on course.
+Related: [[finding-20260905T020242Z-final-continuity-and-maintenance-checks-complete-the-source-cand]]
+↳ supersedes event-20260905T014633Z-verify-semantic-mutations-and-package-boundaries-while-retaining
+
+### [2026-09-04 22:05:32] DECISION/VALIDATED — Advance hygiene configuration custody while preserving historical CI results
+<!-- kb:id event-20260905T020532Z-advance-hygiene-configuration-custody-while-preserving-historica -->
+<!-- kb:artifact ci-workflow|.github/workflows/ci.yml|5640e1f8bea3104b0256b08416a191c0f141205312e8d6d0b1542c354b84e495 -->
+<!-- kb:artifact release-workflow|.github/workflows/release.yml|1a1b4b0145efdd1b448ad354632291b2a5b868789a870e8d724afa6b1404361c -->
+<!-- kb:artifact pre-commit-config|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+The completion gate exposed two remaining current hash dependencies on the pre-overhaul .pre-commit-config.yaml. These belong to the August CI-wrapper correction and hosted-run validation events. Their historical successes remain true at their recorded revision; they do not certify this new candidate's hygiene configuration.
+
+This successor advances only current configuration custody: both .github workflow files retain their exact prior hashes, while .pre-commit-config.yaml adds the documented exact-filename exception for six immutable public/synthetic benchmark receipts. Carry the three distinct artifact dependencies from both records; validate unchanged workflow bytes and update only the known hygiene-config hash. No old event, original benchmark receipt or hosted-run observation is rewritten. No hosted CI was rerun, no release behavior changed, and no claim of candidate Windows/macOS execution is made.
+
+The full candidate remains evidenced by [[event-20260905T020331Z-complete-the-verified-organon-overhaul-source-candidate]] and OVERHAUL-VERIFICATION.md. This resolves the final two current custody failures rather than suppressing integrity checks. Run strict health and live artifact preflight after refreshing NOW. No commit/push/release/tag/install is authorized.
+Related: [[event-20260905T020331Z-complete-the-verified-organon-overhaul-source-candidate]]
+↳ supersedes event-20260824T120435Z-replace-the-stale-pre-commit-action-wrapper-with-an-exact-runner
+↳ supersedes event-20260824T122237Z-validate-refreshed-dependencies-on-protected-hosted-runners
+
+### [2026-09-05 00:28:35] PLAN/OPEN — Replay latest private Psi and MoT copies with CPU-only local retrieval
+<!-- kb:id event-20260905T042835Z-replay-latest-private-psi-and-mot-copies-with-cpu-only-local-ret -->
+The operator authorized a CPU-only retrieval experiment using the latest Psi and MoT copies. Fresh source-only snapshots were captured from the current local checkouts with matching before/after/copied content manifests: Psi has 6494 units including 87 cold units; MoT has 6332 units and no cold units. All mutations are confined to independent temporary copies, with private text, queries, vectors and logs retained outside the Organon repository. The live stores, installed plugins and prior overhaul candidate production code are not changed.
+
+The experiment reuses the existing exact-ranking SQLite shadow and QMD/zvec CPU adapters. It charges end-to-end startup and incremental preparation separately, tests immediate lexical visibility after individual gated writes, and uses full-corpus semantic probes for latency rather than claiming independently judged relevance. The first Psi lexical/SQLite pass preserved query scores and order but stopped at an incorrect harness expectation that lexical default excludes REFUTED results; source inspection confirms down-ranking is current behavior. That receipt remains at /tmp/organon-replay-psi-AmL0hn/report.json. A QMD trial also stopped before configuration because of incorrect CLI argument ordering and spelling; /tmp/organon-semantic-private-psi-qmd-E6QNnw/report.json is retained. Harness corrections change neither production behavior nor source evidence.
+
+### [2026-09-05 00:59:06] RESULT/VALIDATED — Complete the private CPU replay while retaining the QMD readiness failure
+<!-- kb:id event-20260905T045906Z-complete-the-private-cpu-replay-while-retaining-the-qmd-readines -->
+<!-- kb:artifact cpu-protocol|benchmarks/LOCAL-CPU-REPLAY.md|947be38848f8365f03776ece31e06265e63637b273264365753cc60c86710074 -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-snapshot.ts|4ddba74ffe6ffd613a0754849f608efc2db12517bd98597658fafb0348cb7746 -->
+<!-- kb:artifact cpu-test|benchmarks/local-retrieval-snapshot.test.ts|9b72b23b937cb75f17de337f4773b69adc5fc863029ff7090cfb1a2110db34ee -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-replay.ts|0dff82b1c10464f40185369f28b2fafa16e0abd0dbcae7074b3484db42cdeb36 -->
+<!-- kb:artifact cpu-harness|benchmarks/local-semantic-replay.ts|6a6c9a9992be383fdff4a79c7b6aab1f67587eec5d7faa228025218414cb19a4 -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-during-build.ts|f9e3eb39f36ee93695fb7e78bbf29bcce0934e1683eced856d7e6c8a242d55fc -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-report.ts|2dcc17a32979f18d2baea158537f4046c6d566500f247c27e79ab070a0f4f7fb -->
+<!-- kb:artifact cpu-test|benchmarks/local-retrieval-report.test.ts|5a2e75f00e1338dde364331a7f9a0628ac3592e212aa4b975f56e4d552fe57f9 -->
+Completed the bounded CPU-only replay on newly captured, content-verified private Psi and MoT snapshots. Both lexical/SQLite replays and both corrected zvec-grep replays pass their declared checks. The actual QMD adapter's full Psi CPU build reaches its 20-minute timeout; this negative result is retained, not converted to a passing benchmark. A concurrent read returns lexical fallback while the build lease is held. No QMD MoT or incremental-refresh result is claimed after stopping that arm at the readiness failure.
+
+The summary and linked finding distinguish memory-backed tmpfs timings, different model/adapter configurations, exact lexical equivalence, synthetic freshness checks and unmeasured independent semantic relevance. Three individual ledger additions per corpus preserve canonical digests and result scores/order. Initial zvec source-only trials omitted the complete ordinary lexical cache, so those early immediate-lexical timings were rejected and both replays repeated with a counted full baseline. Initial harness assertion/CLI failures remain retained. No production plugin source, live project store, installed cache, model package or Git publication state was changed by this follow-up.
+
+Verification: affected tests pass 10/10 with 54 assertions. The complete repository suite passes 413 tests, zero failures, 2297 assertions across 39 files. Diff whitespace checks pass. Both frozen snapshot manifests reverify. New benchmark and protocol sources are bound below; the finding owns the immutable public numeric receipt. Private original receipts remain under /tmp/organon-replay-psi-gXO6c3, /tmp/organon-replay-mot-wygTTe, /tmp/organon-semantic-private-psi-qmd-XMqeA2, /tmp/organon-semantic-private-psi-zvec-HlVv0I and /tmp/organon-semantic-private-mot-zvec-UTi2GE. Earlier attempts and the two frozen captures remain retained. All timed processes are terminal.
+
+This completes the experiment pass, not adoption. Keep lexical default; investigate persistent-disk writer-aware SQLite before integration, and independently judge zvec-grep semantic quality before choosing it. The earlier overhaul candidate remains uncommitted, unreleased and uninstalled, with the new CPU-readiness limitation now explicit.
+
+Related: [[fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca]]
+↳ supersedes event-20260905T042835Z-replay-latest-private-psi-and-mot-copies-with-cpu-only-local-ret
+↳ supports finding-20260905T045735Z-fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca
+
+### [2026-09-05 01:15:27] PLAN/OPEN — Assess frozen private retrieval quality with independent Luna max agents
+<!-- kb:id event-20260905T051527Z-assess-frozen-private-retrieval-quality-with-independent-luna-ma -->
+The operator requests a Luna-max team assessment of zvec retrieval quality. Independently authored, source-grounded questions on the frozen Psi/MoT copies will be hash-frozen before querying. Compare current lexical ranking with two independently built zvec-grep Potion 32M CPU indexes; no tuning against outcomes. Apply the same explicitly scoped eligible set, report candidate caps and known-target coverage rather than exhaustive recall. Fresh Luna-max judges will grade route/rank-blinded pooled passages. This is an exploratory model-labelled pilot, not human gold or an adoption gate. Private research text, labels, rankings and vectors remain outside the repository; no live-project, installed-plugin or production-source changes. Method audit and result artifacts will preserve limitations and failures.
+Related: [[finding-20260905T045735Z-fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca]]
+
+### [2026-09-05 01:46:24] RESULT/VALIDATED — Complete the blind private retrieval quality pilot without changing defaults
+<!-- kb:id event-20260905T054624Z-complete-the-blind-private-retrieval-quality-pilot-without-chang -->
+<!-- kb:artifact quality-source-0|benchmarks/quality-sources.ts|3405b1e5b6eb8ebc99b43144c96751a52cd52da29dfbe102aa612ac7829f86bd -->
+<!-- kb:artifact quality-source-1|benchmarks/quality-sources.test.ts|a64615a0ef1e5f3bfc938338d5d3de85874d8103fdcf4a7aba53c7f8c4f49728 -->
+<!-- kb:artifact quality-source-2|benchmarks/private-retrieval-quality.ts|16c057c4ba28da45f2ca4fda537b468f81432fb5bb8ce62809b936ece65b265a -->
+<!-- kb:artifact quality-source-3|benchmarks/private-retrieval-quality.test.ts|478f6a64793ca17fe83fb8673d6386a2cd01019921d5531d2402b79178892c1c -->
+<!-- kb:artifact quality-source-4|benchmarks/private-quality-report.ts|2fe0beedd91cf79480227fe41d06de7c29cd9a6f1b78b785b8f8c07c84a38962 -->
+<!-- kb:artifact quality-source-5|benchmarks/private-quality-report.test.ts|8eb849b281fc20014ab7f46b715fb764aff41c83c3fe051da08ebe8223309311 -->
+<!-- kb:artifact quality-source-6|benchmarks/PRIVATE-RETRIEVAL-QUALITY.md|f55bae72828ae483ca226c0fb5994c5428a2156868391bb522162ea2aa108ae9 -->
+Completed the operator-authorized Luna-max retrieval quality pilot on frozen private Psi/MoT copies. Five fresh-context agents supplied source-only authorship, methodology/scoring audit and blind passage judgments. The protocol, source reader, frozen-question gate, two-build runner, metric implementation, public numeric allowlist and tests are artifact-bound here. The result is digested in [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]], which owns the public receipt.
+
+Across 20 positive questions, lexical versus zvec-grep Potion 32M CPU: Hit@5 18/20 versus 17/20; direct-evidence precision@5 61% versus 59%; useful-context-inclusive precision@5 90% versus 94%. Four unsupported probes were separate. All 181 final passage judgments and positive quotations passed the gate; 10 initial quotation transcription failures were caught, original drafts retained, and zero relevance grades/rationales changed during repairs. Both independent vector builds returned identical ordered top-five results for every question. A small model-labelled pilot establishes no universal winner or scientific truth; keep lexical default and leave any combined-route or adoption work for separate direction.
+
+Private frozen questions, source mappings, rankings, original/final judgments and vectors remain in /tmp/organon-quality-y4Hlbc. Captures and frozen code/model guards passed after the run. Full suite: 420 pass, 0 fail, 2327 assertions across 42 files. No production source, live project store, installed plugin, model/dependency installation, commit, push, tag or release changed. The original overhaul and CPU experiment custody chains remain intact; only this pilot's OPEN plan is superseded. Refresh final NOW and strict health immediately after this entry.
+Related: [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]]
+↳ supersedes event-20260905T051527Z-assess-frozen-private-retrieval-quality-with-independent-luna-ma
+
+### [2026-09-05 02:11:24] PLAN/OPEN — Prepare a reuse-first thinker design round for Markdown retrieval and writes
+<!-- kb:id event-20260905T061124Z-prepare-a-reuse-first-thinker-design-round-for-markdown-retrieva -->
+<!-- kb:artifact thinker-prompt|.promptus/thinker/rounds/markdown-io-delta-design/prompt.md|4f6d4d5c834ff27bb41213902c6c836db9230fa8fcfcc53ac29561764c90d7d6 -->
+<!-- kb:artifact frozen-validation|.promptus/thinker/rounds/markdown-io-delta-design/validation-plan.md|24570bf015f66dce1d91da7529fea420d4e7b59768fe6f4b71b8cd4322670430 -->
+<!-- kb:artifact sealed-round|.promptus/thinker/rounds/markdown-io-delta-design/round.json|c29e943a8e7f98352f3dfc7ba59d3b564c8e17edf94ac91f97530cc7bea4b20c -->
+At the operator's request, prepared and sealed the workspace-free thinker round markdown-io-delta-design. The priority is reliable and efficient frequent retrieval plus sparse writes over large Markdown/Obsidian-compatible research stores, using established components and preserving the working source candidate. Disk scarcity and CPU-only availability are constraints; SQLite, vectors, a daemon or a wholesale migration are not selected destinations.
+
+The prompt inventories ten existing capability groups and their real limits, embeds the CPU/quality/space measurements with their caveats, and asks one integrated consistency-and-cost question: what smallest reuse-based architectural delta, if any, is justified? It requires a KEEP/EXTEND/REPLACE/DEFER table, concrete protocol, correctness/counterexample reasoning, full disk/latency accounting, and one bounded next action. It explicitly prevents treating already implemented IDs, canonical parsing, locks, batching or optional QMD integration as new work.
+
+The project-side validation plan was frozen before any response. Refute-first checks cover outside edits, stale candidate versus global recall, remote lifecycle dependencies, ledger slice invalidation, crash cuts, disk exhaustion, duplicate caches and actual library fit. The preparation gate reports PREPARED with no issues; prompt SHA256 is 4f6d4d5c834ff27bb41213902c6c836db9230fa8fcfcc53ac29561764c90d7d6. No response exists and nothing was dispatched. The operator transports only prompt.md and returns the original response beginning ROUND_ID: markdown-io-delta-design. Intake must preserve exact bytes and quarantine as lit:UNTRUSTED before any interpretation.
+
+Only the governed thinker exchange and Organon's own handoff records were changed. No working source, live project store, experiment, dependency/plugin installation, cleanup, commit, push or release is authorized by this preparation. Earlier overhaul/CPU/quality evidence and custody remain intact.
+Related: [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]] · [[finding-20260905T045735Z-fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca]]
+
+### [2026-09-05 03:02:10] RESULT/VALIDATED — Adjudicate the Markdown IO thinker response without adopting its proposal
+<!-- kb:id event-20260905T070210Z-adjudicate-the-markdown-io-thinker-response-without-adopting-its -->
+<!-- kb:artifact thinker-intake|.promptus/thinker/rounds/markdown-io-delta-design/intake.json|- -->
+Received and quarantined the operator's exact 35,383-byte response for markdown-io-delta-design, SHA256 5ca7e6e603fa69257cb686efc6be52e2ddc07a199d9cee40d79e5c773abf83a7. Reviewed all 8 numbered claims through independent source inspection and conditional/counterexample analysis against the frozen plan; no new runtime experiment was performed. The linked synthesis is CONJECTURED: abstract safety and freshness limits survive, while implementation parity and deployment benefit remain unresolved. The original response remains lit:UNTRUSTED.
+
+Material qualifications: preserve canonical ordering and live/cold consumer semantics; use supersedes rather than an unmapped refutes edge for the current status counterexample; preserve an active cache-local lease during cache maintenance; charge whole-ledger parsing, full logical resolution, serialization and reader contention. POST_RESPONSE refinements are explicitly labelled in the synthesis.
+
+Recommend a separately authorized disposable-copy correctness slice with the current backend before considering a reduced SQL shadow. Keep an untouched baseline for attribution. No backend adoption, live project mutation, implementation, new experiment, installation, cleanup, commit, push or release is authorized by this intake. The completed source candidate remains uncommitted/unreleased/uninstalled; latest full implementation suite remains the earlier 420 pass, 0 fail result, not a new run.
+Related: [[finding-20260905T070106Z-a-changed-file-publication-fence-merits-a-bounded-trial-before-b]]
+↳ supersedes event-20260905T061124Z-prepare-a-reuse-first-thinker-design-round-for-markdown-retrieva
+
+### [2026-09-05 04:23:03] PLAN/OPEN — Test the existing-backend publication fence in isolated fixtures
+<!-- kb:id event-20260905T082303Z-test-the-existing-backend-publication-fence-in-isolated-fixtures -->
+<!-- kb:artifact publication-protocol|benchmarks/PUBLICATION-FENCE.md|- -->
+The operator authorized continuation after the qualified thinker adjudication. Build the benchmark-only existing-backend consistency slice described in benchmarks/PUBLICATION-FENCE.md. Preserve production implementation and live project stores. Use marked synthetic fixtures and an instrumented runtime copy of existing writers/lease/index code; retain an untouched baseline. The first stage deliberately uses full canonical rebuilding, not a claimed persistent incremental parser.
+
+Acceptance covers fresh-process visibility, source/index parity, lifecycle effects on unchanged targets, fault cuts and injected ENOSPC, killed-process lease recovery, corrupt/missing cache, outside-edit scope and bounded dirty state. Measure end-to-end costs on the actual Windows mount with full storage accounting and explicit gaps; no invented adoption budget. No SQLite/semantic bakeoff, installation, commit/push or release is authorized by this continuation.
+Related: [[finding-20260905T070106Z-a-changed-file-publication-fence-merits-a-bounded-trial-before-b]]
+
+### [2026-09-05 04:39:53] EXP/VALIDATED — Retain the initial publication trial and remove duplicated amendment maintenance
+<!-- kb:id event-20260905T083953Z-retain-the-initial-publication-trial-and-remove-duplicated-amend -->
+<!-- kb:artifact initial-publication-trial|benchmarks/results/publication-fence-windows-9p-2026-09-05.json|- -->
+<!-- kb:artifact initial-gate-source|benchmarks/results/publication-fence-initial-gate-2026-09-05.txt|- -->
+<!-- kb:artifact publication-refinement|benchmarks/PUBLICATION-FENCE-REFINEMENT.md|- -->
+The initial isolated 9p publication trial passed exact full catalog/graph/search parity on a synthetic 4,608-unit store. Five write/find/get traces per operation and arm showed append medians 3.237 s baseline versus 3.406 s fenced; amend medians 2.995 s versus 5.761 s; clean fresh navigation 149.7 ms versus 264.5 ms. These warm/uncontrolled-page-cache synthetic measurements are not deployment adoption evidence.
+
+The amendment overhead exposed duplicated existing work: kb-amend already completes full indexing inside its lease, and the initial reader fence indexed again. Preserve the original numeric receipt and initial gate source. The separately documented refinement adds a completion hook immediately after that existing successful index call, still under the lease, and tests the publication boundary without rebuilding twice. Additions still require reconciliation. No production source or live store changed. Generated synthetic trial scratch was removed after parity and source-preservation checks; original private fixtures were untouched.
+Related: [[finding-20260905T070106Z-a-changed-file-publication-fence-merits-a-bounded-trial-before-b]]
+
+### [2026-09-05 04:52:41] RESULT/VALIDATED — Complete the isolated publication slice and retain the production baseline
+<!-- kb:id event-20260905T085241Z-complete-the-isolated-publication-slice-and-retain-the-productio -->
+<!-- kb:artifact publication-gate|benchmarks/publication-fence.ts|8f71002d0cc5339c02897d4efe7ec659e4d6a3182a5c112a472b02628479f5f7 -->
+<!-- kb:artifact publication-fixture|benchmarks/publication-fixture.ts|8a67026fad165bb77d85de949c79bd5e4dc877d775f1916863195688a30d9a8a -->
+<!-- kb:artifact publication-port|benchmarks/publication-cli.ts|269cb3645c54a29782b19cc281f8ff5b5d7fb763f391d21a2ab8a5e0479d5b65 -->
+<!-- kb:artifact publication-trial|benchmarks/publication-trial.ts|b6c39bba8735c5794c7289e3c5168463df3b428c33e5f41405de0a336ab2fff6 -->
+<!-- kb:artifact publication-protocol|benchmarks/PUBLICATION-FENCE.md|a2253d9165c830b8c49f214f1d64304694f591eff78f81369c2f8da11390cd4c -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+Complete the authorized existing-backend publication consistency slice. The linked bounded finding records 23 focused tmpfs regressions, actual Windows 9p normal-workflow and canonical-parity trials, the retained initial duplicated-maintenance result, and the refinement that reuses kb-amend's existing in-lease rebuild. Final full suite: 443 pass, 0 fail, 2,746 assertions across 43 files; both plugin adapters validate.
+
+Refined medians (five samples/arm): append/reconcile/find/get 3.553 s baseline versus 3.778 s fenced; amend/find/get 3.313 versus 3.430 s; clean fresh navigation 172.3 versus 274.6 ms. Final derived bytes 4,018,741 versus 4,019,302. The 561-byte observed clean-state overhead is inexpensive, but the prototype is not a speedup or an adoption decision. Full parsing, outside-edit scope, actual power-loss/disk-full behavior and deployment budgets remain explicit limits.
+
+No production script, installed cache, live Psi/MoT/Probatio/Mensura store, dependency, commit, push or release changed. New work is benchmark-only plus Organon's governed records and benchmark README. Generated synthetic trial scratch was removed; initial/final receipts, original initial gate source, sealed thinker custody and prior private snapshots remain preserved. Next decision is a separately bounded unchanged-file parse-reuse experiment, not automatic SQLite integration or promotion of the fence.
+Related: [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+↳ supersedes event-20260905T082303Z-test-the-existing-backend-publication-fence-in-isolated-fixtures
+
+### [2026-09-05 04:55:15] DECISION/VALIDATED — Advance source custody for the publication benchmark documentation
+<!-- kb:id event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|2906cd6de017d1a1abf24d070025ddabbf27357b9a3ee996559113683d04482a -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|2b13d3b518c5791eec20f007825ca26e05919bd4f84578a4503ad91b7de74033 -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|23e1f703017f8afc6554f864c19c20b7616201d8c7fe16f62ac37fb4a0f6111f -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|6b5109056a857ded6415d900be11b0d980c77d21cf86c8c5d9a252cfce50dfb8 -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|784d7b8ca8f06dfb1295cf6eb1f5e9a0e6b552a47fbb00f4a454b0a60ee548ba -->
+<!-- kb:artifact promptus-readme|promptus/README.md|2b9b18bc6c3e1fac6905884dcf0a69404f3e3838dcf9dc709b490a408c5a7574 -->
+<!-- kb:artifact editio-readme|editio/README.md|bdef4882a5b7c44b57e401b4f5c4a62615bbeb28462265b8c5c2bbf9cabfa5f3 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|35cabe00cf287d1d46138efe8169270a77c4fd9917bdcad2301e792aba8915a5 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|ab6bde044a95f641e6ac20dfdaeb1e5514163f9d6fdcf14f7363c92ba0259267 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|434c5afa71f5bd02c0ff957f16a03408d961fac52618bb810cd3911779c20e9c -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|56be8dd84832e5bb6e31806347c68295561d59fe1e3f9ae7307d2395fd19f2b2 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|c2623f9ec14a5a3472fe2ea3cb9302a4214f7d04a43b5848015bea28f3d937c9 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|0d653a838ff6f466e9ca5b5882bacd4ffdb805276afb4036b7dedbeeb4517559 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|45706df3c5c9ab30ed4da420bacd73cddd2d63bb4d536db8b0678c7d1a3761ce -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|d33318cd11be452002dac9d6da1ecb24f178b5efbfc6fbf2aa6edbb43df4b1a2 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|7a4277134bbddfbf1e729fd164cfb099d8b6ec68c5b4769c09bfc9b3db86c41c -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/packaging.test.ts|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|MIGRATION.md|c9f20c1a600832adc4ac77245581cd6d0e96a6a734826cf946df3a6d8030914b -->
+<!-- kb:artifact ingest-workflow|promptus/commands/promptus-ingest.md|6157aadbf3e395bbeed0e2b574f58d8ad608a48c3ba0706cbea58ccd9a3b0d29 -->
+<!-- kb:artifact telos-workflow|promptus/skills/telos/SKILL.md|6edc6e1366a8f7360ee402774fb6f18306831b3fd197b2a22edc460de8fa676f -->
+<!-- kb:artifact latex-workflow|editio/skills/editio-latex/SKILL.md|37dfc2ba56f280c9999dc92c917d0fa8740a276ca3e2a0f6fa2ec240f5069250 -->
+<!-- kb:artifact authoring-contract|editio/skills/editio-latex/references/authoring-subset.md|09064c18abce57a943178ade6a543d865640bb5672c24f0f19c2227adfa15023 -->
+<!-- kb:artifact section-preview|editio/templates/latex/preview.tex|ffd613f21cc1832cbc74af09c2988301ecf050cd92330f8edf168676dbad3eb2 -->
+<!-- kb:artifact preview-regression|editio/scripts/test/preview.test.ts|35c6b5e958d492fe7989f0c0295c0978a26e989a354a6cced565693c0aa5101b -->
+<!-- kb:artifact batch-benchmark|benchmarks/batch-maintenance.ts|8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca -->
+<!-- kb:artifact failure-fixture|benchmarks/continuation-failure-fixture.ts|2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0 -->
+<!-- kb:artifact failure-verifier|benchmarks/continuation-failure-verify.ts|762014d04f549d455a6ac320fc1d5783f62a58005b7642ebef18f6031af9a868 -->
+<!-- kb:artifact completion-audit|OVERHAUL-VERIFICATION.md|457c6f964c1f095d19ba5be8a873b0045695d5b68d3b76f7075c1cce9f1cd102 -->
+<!-- kb:artifact hygiene-policy|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+Advance the current source-candidate artifact custody after the authorized benchmark README addition. The strict gate found exactly one current dependency mismatch: the prior completion record pins the old benchmarks/README.md. The new README documents the completed isolated publication trial; this is an intentional document change, not a changed production implementation or an invalid historical result.
+
+Carry all 93 artifact dependencies from the prior source-candidate completion record: verify and preserve the other 92 hashes exactly, and update only benchmarks/README.md to its reviewed current hash be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0. The gate rejects any unexpected second mismatch before this entry is written. The old record and original evidence remain immutable; this successor advances current custody, not historical outcomes.
+
+The current implementation is the same uncommitted/unreleased/uninstalled overhaul candidate, supplemented by benchmark-only code and documents. Current local verification is 443 passing tests, 0 failures, both plugin adapters valid, and the new bounded publication finding. Earlier fresh-agent, model, packaging and manuscript trial claims remain scoped to their original receipts; they were not re-executed by this custody update. No release, installed plugin or live project changes occur. Re-run strict health after NOW refresh with every carried dependency still active.
+Related: [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+↳ supersedes event-20260905T020331Z-complete-the-verified-organon-overhaul-source-candidate
+
+### [2026-09-05 05:07:53] PLAN/OPEN — Evaluate raw parse reuse behind the isolated publication fence
+<!-- kb:id event-20260905T090753Z-evaluate-raw-parse-reuse-behind-the-isolated-publication-fence -->
+<!-- kb:artifact parse-reuse-protocol|benchmarks/PARSE-REUSE.md|- -->
+The operator requested the next bounded optimization: reuse unchanged physical-source parses behind the isolated publication fence. benchmarks/PARSE-REUSE.md freezes the question and failure checks. Reuse canonical traversal/ownership/order and existing parsers; cache only during index construction and retain raw status separately from effective lifecycle. Full lifecycle resolution, lexical construction and directory discovery remain charged. Compare compressed derived raw-unit storage, including duplicated text, against the previous fenced full-parser baseline on synthetic fixtures and the actual 9p mount. Include less-compressible synthetic text as a storage stress control.
+
+No production scripts, installed plugin or live Psi/MoT/Probatio/Mensura store changes. Existing trial code/receipts and sealed thinker artifacts remain unchanged. Record parity, fault behavior, end-to-end timings and all cache costs before any adoption recommendation. No commit, push, release or installation is authorized by this experiment.
+Related: [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+
+### [2026-09-05 05:31:15] RESULT/VALIDATED — Complete the isolated parse reuse experiment without production adoption
+<!-- kb:id event-20260905T093115Z-complete-the-isolated-parse-reuse-experiment-without-production -->
+<!-- kb:artifact parse-trial|benchmarks/results/parse-reuse-windows-9p-2026-09-05.json|272dbfa02b721f17127f8e4c76908edcd77a1008e8c2e6f3bd717280a372d7f8 -->
+Completed the operator-authorized benchmark-only parse-reuse experiment. The retained finding is [[finding-20260905T092949Z-raw-parse-reuse-reduces-synthetic-maintenance-latency-at-a-measu]]. Against the prior fenced full-parser baseline, five-sample Windows 9p medians improved 45–57% for synthetic append/amend–find–fetch workflows. Repeated full/reuse append 3.674/1.683 s, amend 3.404/1.453 s; heterogeneous append 4.160/2.267 s, amend 3.895/2.046 s. Clean navigation did not improve. Added raw gzip cache is 174,689 or 2,531,365 bytes, with full resource/coverage limits in the finding and result document.
+
+Sixteen new regressions pass; the full suite passes 459 tests with zero failures and 2,965 assertions in 44 files. Both plugin adapters validate and git diff --check passes. Raw-unit and byte-exact component parity were checked before canonical oracle rebuilding, including four mounted corpus/arm cases. Initial development failures were a certification test bypassing fence configuration and a missing brace before timing; both were corrected and are disclosed in the result document.
+
+Only new benchmark helpers/protocol/tests/report/result documentation and gated Organon research records were added in this continuation. Prior benchmark files, existing README artifact custody, production scripts, installed plugins, sealed thinker artifacts, private captures and four live project stores were not changed. The measured runner verifies production script hashes and removed its own 61,868,472-byte synthetic scratch directory. No commit, push, release or install.
+
+The experiment is complete, not a production integration. Keep the production candidate as-is. Recommended next decision: authorize a bounded disposable-real-copy workload and choose disk/RAM allowances before considering integration; clean-read frequency, outside-edit honesty, lock contention and remaining whole-ledger costs matter. No database or semantic re-comparison is needed for this result.
+Related: [[finding-20260905T092949Z-raw-parse-reuse-reduces-synthetic-maintenance-latency-at-a-measu]]
+↳ supersedes event-20260905T090753Z-evaluate-raw-parse-reuse-behind-the-isolated-publication-fence
+
+### [2026-09-05 06:36:18] PLAN/OPEN — Test bounded private-copy parse reuse on Psi and MoT
+<!-- kb:id event-20260905T103618Z-test-bounded-private-copy-parse-reuse-on-psi-and-mot -->
+<!-- kb:artifact private-parse-protocol|benchmarks/PRIVATE-PARSE-REUSE.md|- -->
+The operator authorized the next bounded disposable Psi/MoT-copy parse-reuse trial. Reuse the verified September 5 frozen captures and the existing parser/publication implementation; live stores and installed plugins remain untouched. Private source/index/log files stay outside the repository on the actual Windows mount. Only aggregates and hashes enter public evidence.
+
+Preregistered experimental limits: 16 MiB compressed raw-cache pre-write cap per project, 256 MiB logical scratch stop checked between phases, 1 GiB sampled subprocess-tree RSS stop and 60-second subprocess deadline. These are trial safety ceilings, not production adoption budgets. One corpus pair at a time limits duplicate data. Three append and three synthetic-page metadata-amendment workflows per arm, each with fresh selection/fetch and ten clean reads; 100:1 reweighting is sensitivity analysis rather than measured session behavior. Actual user session read/write ratios remain unknown.
+
+Require byte-exact canonical output, raw/effective status separation, exact selected source content and frozen source preservation. Record failures without altering real scientific source or silently raising limits. Retain production unchanged after measurement pending an integration decision. See [[finding-20260905T092949Z-raw-parse-reuse-reduces-synthetic-maintenance-latency-at-a-measu]].
+Related: [[finding-20260905T092949Z-raw-parse-reuse-reduces-synthetic-maintenance-latency-at-a-measu]]
+
+### [2026-09-05 08:04:49] RESULT/VALIDATED — Complete the bounded private parse reuse trial and retain the read path frontier
+<!-- kb:id event-20260905T120449Z-complete-the-bounded-private-parse-reuse-trial-and-retain-the-re -->
+<!-- kb:artifact private-parse-trial|benchmarks/results/private-parse-reuse-windows-9p-2026-09-05.json|830e42fc33d3d9d9c00c6716a617eb5ed3ba88ca74836b707d4c0624f910dc4a -->
+Completed the operator-authorized bounded private-copy experiment, now recorded in [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]. Both frozen Psi/MoT inputs passed raw-unit, canonical index and eleven-query-control equivalence; fresh writes/statuses and exact fetches passed. All 416 experiment commands succeeded. The trial and production script hashes are unchanged.
+
+Mean full/reuse write–find–fetch times were 21.13/11.94 s on Psi and 29.50/15.39 s on MoT, about 44%/48% faster. Raw caches were 5,137,998 and 4,959,091 bytes, within the staged 16 MiB guard. Ordinary clean-query medians increased from 449 to 492 ms and 466 to 507 ms. Phrase-only medians remained about 19–23 s. Ten-read workflow means were 71.85/67.15 s and 92.30/71.08 s. The 100-read calculations are sensitivity projections, not observed user-session workloads, and the phrase/ordinary split changes their interpretation.
+
+Maximum sampled command-tree RSS across all logged commands was 761,208 KiB, below the 1 GiB stop. The working-copy scratch root peaked at 91,827,635 logical bytes; private notes/runtime were about 2.02 MB separately. Generated working copies totaling 173,573,188 bytes were removed and the root is empty. Original captures and private logs remain. No live project, installed plugin, prior artifact, production script, commit, push or release was changed by this continuation.
+
+Verification: 465 tests pass, zero failures, 2,984 assertions across 46 files; marketplace/plugin adapters and whitespace checks pass. The small helper syntax error was fixed before measurement. The result document preserves sampling, source-only capture, query-mixture, midpoint-versus-upper-median and outside-edit limitations. Earlier validated synthetic results remain intact rather than being reclassified to conceal a new limit.
+
+Keep production unchanged. The next concrete read-path candidate is to reuse already-cached raw text for phrase verification and inspect whether ordinary reads need unused-cache verification, preserving current matching/ranking and exact source fetch. These are not implemented or adopted. No new stored index, GPU or backend comparison is needed; quota fallback, contention and outside-edit honesty remain integration requirements. Await the operator's next scope decision.
+Related: [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+↳ supersedes event-20260905T103618Z-test-bounded-private-copy-parse-reuse-on-psi-and-mot
+
+### [2026-09-05 08:22:31] PLAN/OPEN — Expand the release goal with four operational requirements
+<!-- kb:id event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements -->
+<!-- kb:artifact release-plan|RELEASE-PLAN.md|- -->
+The operator explicitly requested that all four proposed improvements join the current update goal and plan: reliable upgrades across projects, actionable diagnostics, predictable resource use, and evidence navigation. They are required scope alongside skills, runtime integration and canonical Promptus/Editio grounding, not optional follow-up suggestions.
+
+RELEASE-PLAN.md is the current release frontier. It extends the earlier completed source-candidate plan without altering its historical evidence. It defines acceptance criteria, dependency order and distinct source, release and four-project adoption finish lines. Reuse existing tools and tests; add only missing behavior. The operator has ended exploratory experiments: no backend/model bakeoff or ontology redesign is planned. Targeted regression and bounded performance acceptance checks remain necessary engineering verification.
+
+Implement runtime/resource/recovery boundaries together, then evidence navigation and the preview-first upgrade workflow, then affected documentation and final gates. After separately authorized landing and delivery, follow the merged-release-PR rule and verify sequential adoption in Psi, MoT, Probatio and Mensura. This request authorizes the plan update, not live-store access, installation, commit/push, release or evidence repair. Markdown, custom project policy and original evidence remain authoritative.
+
+The prior private-copy result remains VALIDATED for its bounded scope: parse reuse improves maintenance but does not establish faster ordinary retrieval. No expanded feature is claimed implemented by this plan. Previous findings, sealed artifacts and benchmark receipts are unchanged.
+Related: [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]] · [[finding-20260905T020242Z-final-continuity-and-maintenance-checks-complete-the-source-cand]]
+
+### [2026-09-05 08:53:13] RESULT/VALIDATED — Retain publication trial custody through archived original staging
+<!-- kb:id event-20260905T125313Z-retain-publication-trial-custody-through-archived-original-stagi -->
+<!-- kb:artifact publication-gate|benchmarks/publication-fence.ts|8f71002d0cc5339c02897d4efe7ec659e4d6a3182a5c112a472b02628479f5f7 -->
+<!-- kb:artifact publication-fixture|benchmarks/history/pre-release-integration/publication-fixture.ts|8a67026fad165bb77d85de949c79bd5e4dc877d775f1916863195688a30d9a8a -->
+<!-- kb:artifact publication-port|benchmarks/publication-cli.ts|269cb3645c54a29782b19cc281f8ff5b5d7fb763f391d21a2ab8a5e0479d5b65 -->
+<!-- kb:artifact publication-trial|benchmarks/publication-trial.ts|b6c39bba8735c5794c7289e3c5168463df3b428c33e5f41405de0a336ab2fff6 -->
+<!-- kb:artifact publication-protocol|benchmarks/PUBLICATION-FENCE.md|a2253d9165c830b8c49f214f1d64304694f591eff78f81369c2f8da11390cd4c -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+This is a custody successor, not a scientific reversal. Original measurements and receipts remain unchanged. Historical harness dependencies now point to byte-identical archived source; current harness adapters accommodate the production integration and do not retroactively certify old results.
+All six original dependencies are retained; only the original staging source location changes.
+Related: [[event-20260905T085241Z-complete-the-isolated-publication-slice-and-retain-the-productio]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+↳ supersedes event-20260905T085241Z-complete-the-isolated-publication-slice-and-retain-the-productio
+
+### [2026-09-05 08:53:14] RESULT/VALIDATED — Advance full source custody after release integration verification
+<!-- kb:id event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|9fe560c350e204f1ad982942eb893de4228429b650ee0a9e670ef737c708e377 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|76b9f9dd81cf8278a3bccd9718709f58fd0c98cc52fcf03ee2a341ec4817cdee -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|f651e5a9a3b281f0300f8701191aeb6a99180404f78e922f61513986bdb318bd -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|60c12ced99f5c2baa37a33df952c30a1f992ed3bbd408ddd1236f8f7c0e6b59e -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|08326c7feba553418f143f5ef8f31e188e100922a816cd92c52cf4868ce20a37 -->
+<!-- kb:artifact promptus-readme|promptus/README.md|cdf33b1567405d47ddf9d5aa52348dafacd3dcf8f75775a53bf6c703b1a20536 -->
+<!-- kb:artifact editio-readme|editio/README.md|bdef4882a5b7c44b57e401b4f5c4a62615bbeb28462265b8c5c2bbf9cabfa5f3 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|dc7b35d88c01266ceb5e2654b332d7f0efaf0a095eab32115545b5b47f10a9a9 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|ab6bde044a95f641e6ac20dfdaeb1e5514163f9d6fdcf14f7363c92ba0259267 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|8645e3ea7265683e8fa009c482c54a99306ab290350db5c88cdcde8344b76b40 -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|56be8dd84832e5bb6e31806347c68295561d59fe1e3f9ae7307d2395fd19f2b2 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/engine-workload-adapters.ts|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|0d653a838ff6f466e9ca5b5882bacd4ffdb805276afb4036b7dedbeeb4517559 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|338d9a9aae2fa880c85c4d542f08b4d3bca53597a120388ecbed11ee9aa77493 -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|277f33e5db7f0f63f4472b942f8a046b37fa3b9888c17b73411c1529829968f8 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|7a4277134bbddfbf1e729fd164cfb099d8b6ec68c5b4769c09bfc9b3db86c41c -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/packaging.test.ts|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|MIGRATION.md|4def9f33f982af3a5e7fec7815b7dc55b780b0ed5eed5d8e9b44c5784f23f0a7 -->
+<!-- kb:artifact ingest-workflow|promptus/commands/promptus-ingest.md|6157aadbf3e395bbeed0e2b574f58d8ad608a48c3ba0706cbea58ccd9a3b0d29 -->
+<!-- kb:artifact telos-workflow|promptus/skills/telos/SKILL.md|6edc6e1366a8f7360ee402774fb6f18306831b3fd197b2a22edc460de8fa676f -->
+<!-- kb:artifact latex-workflow|editio/skills/editio-latex/SKILL.md|37dfc2ba56f280c9999dc92c917d0fa8740a276ca3e2a0f6fa2ec240f5069250 -->
+<!-- kb:artifact authoring-contract|editio/skills/editio-latex/references/authoring-subset.md|09064c18abce57a943178ade6a543d865640bb5672c24f0f19c2227adfa15023 -->
+<!-- kb:artifact section-preview|editio/templates/latex/preview.tex|ffd613f21cc1832cbc74af09c2988301ecf050cd92330f8edf168676dbad3eb2 -->
+<!-- kb:artifact preview-regression|editio/scripts/test/preview.test.ts|35c6b5e958d492fe7989f0c0295c0978a26e989a354a6cced565693c0aa5101b -->
+<!-- kb:artifact batch-benchmark|benchmarks/batch-maintenance.ts|8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca -->
+<!-- kb:artifact failure-fixture|benchmarks/continuation-failure-fixture.ts|2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0 -->
+<!-- kb:artifact failure-verifier|benchmarks/continuation-failure-verify.ts|762014d04f549d455a6ac320fc1d5783f62a58005b7642ebef18f6031af9a868 -->
+<!-- kb:artifact completion-audit|OVERHAUL-VERIFICATION.md|457c6f964c1f095d19ba5be8a873b0045695d5b68d3b76f7075c1cce9f1cd102 -->
+<!-- kb:artifact hygiene-policy|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+The operator authorized implementation of RELEASE-PLAN.md. The release integration adds optional exact-byte parse reuse, cache-free ledger slice mapping, coherent index publication fallback, evidence navigation, structured recovery advice and preview-first derived adoption. All 93 predecessor dependency records are retained, with hashes advanced only to their current source bytes. Historical stage verification is not a claim about this new implementation. RELEASE-VERIFICATION.md and the final result provide the current gate and performance limits; persistent raw caching remains off by default because production acceptance did not establish a benefit.
+Related: [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+↳ supersedes event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati
+
+### [2026-09-05 08:55:35] RESULT/VALIDATED — Complete release integration with opt-in caching and four operational improvements
+<!-- kb:id event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat -->
+<!-- kb:artifact release-0|RELEASE-PLAN.md|7f993123f28d366c35ea22541e97fe3d138ba5084d8ed3cd72fa5895238fffef -->
+<!-- kb:artifact release-1|RELEASE-VERIFICATION.md|632f04273962e5341e681156e502f5ce8228d9e23b45c39e6b6749a4397ab433 -->
+<!-- kb:artifact release-2|promptus/scripts/lib/parse-cache.ts|8acfa01670578c5799acf4aeefdfe83f5a9e72b3028e8bf045040c293766f0da -->
+<!-- kb:artifact release-3|promptus/scripts/lib/diagnostics.ts|b8d8e41f1f4331e461ae120674b54712e0e8a3270b5947b706a7bd5835764808 -->
+<!-- kb:artifact release-4|promptus/scripts/lib/store-lock.ts|abbe268d3826f49147bd6eabc9cb568722391ad863795dcf172dcfb38e7d33ac -->
+<!-- kb:artifact release-5|promptus/scripts/kb-cache.ts|ecd092110bc230229fd1b6fc525b2724138cabef68ce0e864eed0b1790ab12d1 -->
+<!-- kb:artifact release-6|promptus/scripts/kb-evidence.ts|2e793d3fe8e5428a547d7c2dd521ea93fbfa6dd98dad5f8ff8b59778255d2545 -->
+<!-- kb:artifact release-7|promptus/scripts/promptus-upgrade.ts|e40c4e8bbba24785b6b0a75ead76bacabaf4969619667e0c5fbb2c5add317ed7 -->
+<!-- kb:artifact release-8|promptus/scripts/test/release-integration.test.ts|775a6091306b690d8e6ef6c6ce3a2913a5b57a95a858163725c1e32391398b9f -->
+<!-- kb:artifact release-9|benchmarks/publication-fixture.ts|71f55e29a0a1c5808a2cbf43c94372ff014bd9c702522d09e04e0f2d690fcd1c -->
+<!-- kb:artifact release-10|benchmarks/parse-reuse-stage.ts|28ae22a7a6be16a9416c19382922ff7e861f2c3fb498b1ffdcbd475a3ef77be2 -->
+<!-- kb:artifact release-11|benchmarks/publication-fence.test.ts|599d29b1130bd563b9bda09441e76020a38b94a60bd10396cad2c241d7e770ec -->
+<!-- kb:artifact release-12|benchmarks/release-runtime-acceptance.ts|911908b2a83adc2d70905799513d7bb2afbbfa125ee9736e17547fc794b9c8c4 -->
+<!-- kb:artifact release-13|benchmarks/results/release-runtime-acceptance-2026-09-05.json|3c7a930108a6972d6ef02c5fd19142483445a3ae034fa25e074d99f1602fe735 -->
+<!-- kb:artifact release-14|benchmarks/results/release-runtime-acceptance-final-2026-09-05.json|f140cf3696cbee084175cddc3e0422936f9860acba977dffa750afc34f899598 -->
+<!-- kb:artifact release-15|benchmarks/results/release-integration-gates-2026-09-05.json|e737d8c4554ea3b4e5c0c50802f45762cdffe79491e3e966edc1690a0024bdd2 -->
+Implemented the operator-authorized expanded release plan in the checkout. New source surfaces provide exact-byte optional raw parse reuse; cache-free per-process ledger slice lookup; coherent index publication detection/current-source fallback; structured recovery advice; bounded source-only evidence navigation; cache usage and targeted eviction; semantic resource preview; and exact-project, package/source/policy/limit-token-bound derived adoption. Promptus skill routing, READMEs, migration guidance and both affected changelogs describe the actual boundaries.
+
+Final repository suite: 478 pass, 0 fail, 3,069 assertions across 47 files. Both adapters and checked Editio reader parity pass. The amended skill validates and git diff --check passes. Thirteen release-integration tests cover exact projection parity, stat-preserving outside edits, archive/delete movement, lifecycle cloning, corruption/loss, quota/space policy, optional write failure, safe eviction/contention, interrupted publication, support/refutation/replacement navigation, body limits, diagnostics, read-only upgrade preview, changed-token refusal, repeatable derived application and partial failure.
+
+The production acceptance decision is deliberately narrower than the earlier prototype result. Three alternating updates per arm on the existing 512-page/1,024-event synthetic fixture preserve byte-exact catalog/graph/search and query parity, and exact updated source fetches. Final median cache-disabled/enabled index times are 139.18/201.72 ms and phrase times 82.70/111.62 ms. Exact-byte verification and persistence cost outweigh reuse here. Persistent raw caching therefore defaults OFF (PROMPTUS_PARSE_CACHE_BYTES=0); it is an explicitly bounded option, not an automatic project upgrade. No general runtime speedup is claimed from this comparison. Existing batch maintenance improvements and the cache-free slice map do not require extra disk storage. QMD growth remains explicitly uncapped by the raw-cache limit; its preview warns against enabling builds on tight disks without an external filesystem quota. No model/backend or private-corpus experiment was restarted.
+
+The first full-suite attempt exposed historical benchmark instrumentation collisions with production caching/locking. Disposable staging now reconstructs the earlier experiment boundary. Its old negative control is a positive production stale-publication regression. The three original harness/test sources are archived byte-identically and the original measured receipts remain unchanged. Custody successors retain all 6 and 93 predecessor dependency records; the two historical empirical findings are retained through custody-only successors with unchanged measured bodies and archived original dependencies. No artifact dependency was dropped to silence a gate. An unavailable `python` command was replaced with the available `python3` for skill validation.
+
+RELEASE-VERIFICATION.md maps the required areas and limitations. Source implementation is complete; external delivery is not: no commit, push, manifest bump, PR, tag, release, plugin installation or live Psi/MoT/Probatio/Mensura read/write occurred. The upgrade tool intentionally does not install plugins, overwrite custom instructions, migrate source, reload running agents or certify other projects. Native Windows/macOS CI and per-project continuation smoke checks remain delivery gates. No inherited graph or archival evidence debt was repaired or baselined.
+Related: [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+
+### [2026-09-06 01:02:45] PLAN/OPEN — Land the implementation and prepare separate minor release PRs
+<!-- kb:id event-20260906T050245Z-land-the-implementation-and-prepare-separate-minor-release-prs -->
+The operator authorized committing/pushing the completed implementation and preparing release PRs, with scoped Conventional titles and flat bullet summaries. Stop before merging, tagging, publication or installation. Remote main was verified at dfbbbc1571a36a9dc07defa0af7df0961d0e764e and there were no open PRs. Prepare Promptus 0.10.0 and Editio 0.8.0 as separate minor release cuts after implementation CI passes; versioned changelogs remain the source of release notes. Preserve lexical/default-no-raw-cache behavior and explicitly explain hook removal, grounding compatibility, and separate live adoption. No additional project scope is granted.
+Related: [[event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat]]
 
 <!-- kb:append-point -->

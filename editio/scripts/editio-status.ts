@@ -13,23 +13,25 @@
  *                                        unsourced span, or overclaim (a .validated claim whose
  *                                        grounds are weak, unknown, or absent)
  *
- * Grounds resolution: a handle resolves against file units (.promptus/docs/*,
- * docs/lit/*, memory/* — slug = filename) or a ledger entry's slugified title.
+ * Grounds resolution uses the packaged canonical Promptus reader: stable IDs,
+ * slugs and unique aliases over live source units with effective lifecycle.
  * Grounds have a deterministic strength: firm units may support .validated prose,
  * conjectured/provisional/open units require .conjectured prose, and invalidated
  * units (REFUTED / SUPERSEDED / DEADEND / CONFOUNDED / CONTESTED / retired)
  * contradict either grade.
  */
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { findRoot, markdownProseWordCount, paperDir, parseFrontmatter, slugify } from "./lib.ts";
+import { findRoot, markdownProseWordCount, paperDir, parseFrontmatter } from "./lib.ts";
+import { storeUnits, type GroundUnit as Unit } from "./grounds.ts";
+export { storeUnits } from "./grounds.ts";
 import { findSpans, parseAttrs, sectionOrder } from "./editio-render.ts";
 
-interface Unit { substrate: string; status: string }
-interface Claim { section: string; line: number; grade: "validated" | "conjectured" | "unsourced" | "ungraded"; text: string; grounds: string[]; override?: string }
+interface Claim { section: string; line: number; grade: "validated" | "conjectured" | "historical" | "unsourced" | "ungraded"; text: string; grounds: string[]; override?: string; conflictingGrades: boolean }
 type GroundStrength = "firm" | "weak" | "invalid";
 
 const INVALID = new Set(["REFUTED", "SUPERSEDED", "DEADEND", "CONFOUNDED", "CONTESTED", "retired", "WONTFIX"]);
+const HISTORICAL = new Set(["REFUTED", "SUPERSEDED", "DEADEND", "retired", "WONTFIX"]);
 
 function groundStrength(u: Unit): GroundStrength {
   if (INVALID.has(u.status)) return "invalid";
@@ -45,30 +47,6 @@ function arg(argv: string[], k: string): string | undefined {
   return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith("--") ? argv[i + 1] : undefined;
 }
 
-/** Every store unit a grounds handle can name: file units by filename slug,
- *  ledger entries by slugified title (file units win on collision). */
-export function storeUnits(root: string): Map<string, Unit> {
-  const map = new Map<string, Unit>();
-  const p = join(root, ".promptus");
-  const ledger = join(p, "ledger", "RESEARCH-LEDGER.md");
-  if (existsSync(ledger)) {
-    for (const m of readFileSync(ledger, "utf8").matchAll(/^### \[[^\]]+\] ([A-Z]+)\/([A-Za-z]+) — (.+)$/gm)) {
-      map.set(slugify(m[3]), { substrate: "ledger", status: m[2] });
-    }
-  }
-  for (const [dir, substrate] of [["docs", "finding"], ["docs/lit", "lit"], ["memory", "memory"]] as const) {
-    const d = join(p, dir);
-    if (!existsSync(d)) continue;
-    for (const f of readdirSync(d)) {
-      if (!f.endsWith(".md") || /^(INDEX|MEMORY)\.md$/.test(f)) continue;
-      let text: string;
-      try { text = readFileSync(join(d, f), "utf8"); } catch { continue; } // a subdir (docs/lit) — skip
-      const { data } = parseFrontmatter(text);
-      map.set(f.replace(/\.md$/, ""), { substrate: String(data.substrate ?? substrate), status: String(data.status ?? "?") });
-    }
-  }
-  return map;
-}
 
 /** Claim spans in one section's markdown — fence content excluded, lines 1-based. */
 export function scanClaims(md: string, section: string): Claim[] {
@@ -82,12 +60,14 @@ export function scanClaims(md: string, section: string): Claim[] {
     if (!classes.includes("claim")) continue;
     const grade = classes.includes("validated") ? "validated"
       : classes.includes("conjectured") ? "conjectured"
+      : classes.includes("historical") ? "historical"
       : classes.includes("unsourced") ? "unsourced"
       : "ungraded";
     out.push({
       section,
       line: md.slice(0, f.start).split("\n").length,
       grade,
+      conflictingGrades: classes.filter(c => ["validated", "conjectured", "historical", "unsourced"].includes(c)).length > 1,
       text: f.text.replace(/\s+/g, " ").trim(),
       grounds: attrs.grounds ? attrs.grounds.split(",").map((g) => g.trim()).filter(Boolean) : [],
       ...(attrs.override ? { override: attrs.override } : {}),
@@ -117,9 +97,9 @@ function main(argv: string[]): number {
     const cs = scanClaims(md, slug);
     claims.push(...cs);
     const fmGrounds = Array.isArray(data.grounds) ? (data.grounds as string[]) : [];
-    const tally = { validated: 0, conjectured: 0, unsourced: 0, ungraded: 0 };
+    const tally = { validated: 0, conjectured: 0, historical: 0, unsourced: 0, ungraded: 0 };
     for (const c of cs) tally[c.grade]++;
-    const tallyStr = `${tally.validated}V ${tally.conjectured}C ${tally.unsourced}U ${tally.ungraded}G`;
+    const tallyStr = `${tally.validated}V ${tally.conjectured}C ${tally.unsourced}U ${tally.ungraded}G${tally.historical ? ` ${tally.historical}H` : ""}`;
     // drafted words (prose only — fences and headings excluded): a fresh stub is 0,
     // so "skeleton just created" vs "drafted" vs "clean" is readable from the report
     // (a fresh scaffold and a finished paper used to be indistinguishable here) —
@@ -148,9 +128,10 @@ function main(argv: string[]): number {
 
   console.log(`editio-status: ${rows.length} section(s) — ${paper}`);
   for (const r of rows) console.log(r);
-  const total = { validated: 0, conjectured: 0, unsourced: 0, ungraded: 0 };
+  const total = { validated: 0, conjectured: 0, historical: 0, unsourced: 0, ungraded: 0 };
   for (const c of claims) total[c.grade]++;
   console.log(`  claims: ${claims.length} total — ${total.validated} validated · ${total.conjectured} conjectured · ${total.unsourced} unsourced · ${total.ungraded} ungraded · ${totalWords} words drafted`);
+  if (total.historical) console.log(`  historical: ${total.historical} report(s) of closed evidence, not current positive support; review prose attribution`);
   const storeNote = units.size ? "" : existsSync(join(root, ".promptus")) ? "  (.promptus has no units yet — kb-add fills it)" : "  (no .promptus store found)";
   console.log(`  grounds: ${handles.size} handle(s) — ${handles.size - weak.length - unknown.length} resolved · ${weak.length} weak · ${unknown.length} unknown${storeNote}`);
   for (const w of weak) console.log(`    weak    ${w}`);
@@ -173,6 +154,17 @@ function main(argv: string[]): number {
   const violations: string[] = [];
   const onRecord: string[] = [];
   for (const c of claims) {
+    if (c.conflictingGrades) violations.push(`conflicting claim grades at sections/${c.section}.md:${c.line}`);
+    if (c.grade === "validated" && c.override) onRecord.push(`validated, overridden at sections/${c.section}.md:${c.line} — on the record: "${c.override}"`);
+    if (c.grade === "historical") {
+      if (c.override) violations.push(`historical reporting cannot use an override at sections/${c.section}.md:${c.line}`);
+      if (!c.grounds.length) violations.push(`historical report with no grounds at sections/${c.section}.md:${c.line}`);
+      for (const g of c.grounds) {
+        const u = units.get(g);
+        if (!u || !HISTORICAL.has(u.status)) violations.push(`historical report requires resolved closed evidence: ${g} = ${u ? `${u.substrate}:${u.status}` : "unknown"} at sections/${c.section}.md:${c.line}`);
+        else onRecord.push(`historical-only ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}; not positive support`);
+      }
+    }
     if (c.grade === "ungraded") violations.push(`ungraded claim at sections/${c.section}.md:${c.line}${c.override ? ` (override does not apply to ungraded — run the audit loop and grade the span)` : ""}`);
     if (c.grade === "unsourced") {
       if (c.override) onRecord.push(`unsourced, overridden at sections/${c.section}.md:${c.line} — on the record: "${c.override}"`);
@@ -186,8 +178,11 @@ function main(argv: string[]): number {
         const u = units.get(g)!;
         if (groundStrength(u) !== "firm") violations.push(`overclaim: .validated over ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}`);
       }
+      if (resolved.length && resolved.length !== c.grounds.length) violations.push(`validated claim includes unknown grounds at sections/${c.section}.md:${c.line}`);
     }
-    if (c.grade === "conjectured" && !c.override) {
+    if (c.grade === "conjectured") {
+      if (c.override) violations.push(`override does not apply to conjectured claims at sections/${c.section}.md:${c.line}`);
+      if (c.grounds.some(g => !units.has(g))) violations.push(`conjectured claim includes unknown grounds at sections/${c.section}.md:${c.line}`);
       for (const g of c.grounds.filter((x) => units.has(x))) {
         const u = units.get(g)!;
         if (groundStrength(u) === "invalid") violations.push(`contradicted: .conjectured over ${g} = ${u.substrate}:${u.status} at sections/${c.section}.md:${c.line}`);
@@ -201,7 +196,8 @@ function main(argv: string[]): number {
     console.error("  fix the prose, or ground the claim (recall -> grade). override=\"reason\" excuses an unsourced claim or a validated claim's weak grounds — never an ungraded one.");
     return 1;
   }
-  console.log(`  gate: publish-clean — no ungraded, no unsourced, no overclaims${onRecord.length ? ` (${onRecord.length} override(s) on the record)` : ""}.`);
+  const overrides = onRecord.filter(line => !line.startsWith("historical-only")).length;
+  console.log(`  gate: publish-clean — no ungraded, no unsourced, no overclaims${overrides ? ` (${overrides} override(s) on the record)` : ""}.`);
   return 0;
 }
 

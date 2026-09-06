@@ -17,6 +17,7 @@ import { loadVocab, type Vocab } from "./lib/vocab.ts";
 import { inspectThinkerExchange } from "./lib/thinker.ts";
 import { SEARCH_INDEX_SCHEMA } from "./lib/search.ts";
 import { collectUnits, type Unit } from "./kb-index.ts";
+import { recoveryFor } from "./lib/diagnostics.ts";
 
 type Severity = "error" | "warning" | "info";
 
@@ -24,6 +25,10 @@ interface Issue {
   severity: Severity;
   code: string;
   message: string;
+  surface: string;
+  paths: string[];
+  recovery: string;
+  automaticRepair: boolean;
 }
 
 interface CatalogCard {
@@ -414,7 +419,11 @@ function main(argv: string[]): number {
   if (!template) throw new Error("cannot read the Promptus template vocab");
 
   const issues: Issue[] = [];
-  const addIssue = (severity: Severity, code: string, message: string) => issues.push({ severity, code, message });
+  const addIssue = (severity: Severity, code: string, message: string) => {
+    const recovery = recoveryFor(code, root);
+    if (recovery.surface === "handoff") recovery.paths = [storePath(root, vocab, "ledger")];
+    issues.push({ severity, code, message, ...recovery });
+  };
   const fingerprintStarted = performance.now();
   const sourceBytes = new Map<string, Buffer>();
   const source = sourceFingerprint(root, sourceBytes);
@@ -801,7 +810,10 @@ function main(argv: string[]): number {
     console.log(`  ${graphTraversalReady ? "ok  " : "FAIL"} graph traversal gate (${graphTraversalComplete ? "complete" : "incomplete"}): ${cachedGraph.unresolvedRelations} unresolved relation(s) · ${aliasRegistry.recoverableDangling} recoverable alias edge(s) unapplied · ${cachedGraph.dangling} dangling handle(s)`);
     console.log(`  ${hardIntegrityReady ? "ok  " : "FLAG"} cached integrity (${healthFresh ? "current" : "STALE — not authoritative"}): ${cached.duplicateIds} duplicate · ${cached.unresolvedRelations} relation · ${cached.unclassified} unclassified · ${cached.artifactFailures} current artifact failure(s) · ${cached.archivalArtifactWarnings} archival warning(s)`);
     if (thinkerExchange.present && thinkerExchange.markerValid) console.log(`  ${thinkerReady ? "ok  " : "FAIL"} thinker exchange: ${thinkerExchange.rounds.length} round(s)`);
-    for (const issue of issues) console.log(`  ${issue.severity.toUpperCase().padEnd(7)} ${issue.code}: ${issue.message}`);
+    for (const issue of issues) {
+      console.log(`  ${issue.severity.toUpperCase().padEnd(7)} ${issue.code}: ${issue.message}`);
+      if (issue.severity === "error") console.log(`    ${issue.surface}: ${issue.recovery}`);
+    }
     console.log(`  ${result.guarantee}`);
   }
   return sessionReady ? 0 : 1;
@@ -810,6 +822,9 @@ function main(argv: string[]): number {
 try {
   process.exit(main(process.argv.slice(2)));
 } catch (error) {
-  console.error(`promptus-session-doctor: ${error instanceof Error ? error.message : String(error)}`);
+  const message = error instanceof Error ? error.message : String(error);
+  if (process.argv.includes("--json")) console.log(JSON.stringify({ ready: false, issues: [{ severity: "error", code: "PREFLIGHT_UNAVAILABLE", message,
+    ...recoveryFor("PREFLIGHT_UNAVAILABLE", arg(process.argv, "root") ?? process.cwd()) }], guarantee: "No repair was attempted." }));
+  else console.error(`promptus-session-doctor: ${message}`);
   process.exit(2);
 }

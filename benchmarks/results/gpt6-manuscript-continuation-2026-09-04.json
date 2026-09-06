@@ -1,0 +1,223 @@
+{
+  "schema": "organon.fresh-agent-manuscript.v1",
+  "created": "2026-09-05T00:12:28.345Z",
+  "model": "gpt-6-astra",
+  "task": "/root/gpt6_paper_continuation",
+  "method": "Fresh-context GPT-6 agent: retrieve synthetic evidence, finish one short Evaluation section, bind load-bearing numbers, render and run gates. Evidence store read-only; no overrides, PDF, network, installation or live projects.",
+  "suiteSha256": "8f67deb19aefdc7bed20f97655cf5414659a425f6017c7917ad0d42618c0e670",
+  "sourceBefore": {
+    "hash": "ed20229692b0dcf8f07c468bba002f26c904975cca78f37fed627a927c8b54c3",
+    "files": 9
+  },
+  "sourceAfter": {
+    "hash": "ed20229692b0dcf8f07c468bba002f26c904975cca78f37fed627a927c8b54c3",
+    "files": 9
+  },
+  "agentReport": {
+    "outcome": "Evaluation drafted and rendered; number gate passes; claim gate has one unresolved evidence-role failure.",
+    "root": "/tmp/promptus-continuity-xQxEBk",
+    "changed_files": [
+      ".editio/paper/sections/evaluation.md",
+      ".editio/paper/numbers.json",
+      ".editio/paper/front/numbers.tex",
+      ".editio/paper/front/numbers.lock.json",
+      ".editio/paper/sections/abstract.tex",
+      ".editio/paper/sections/introduction.tex",
+      ".editio/paper/sections/motivation.tex",
+      ".editio/paper/sections/background.tex",
+      ".editio/paper/sections/methods.tex",
+      ".editio/paper/sections/evaluation.tex",
+      ".editio/paper/sections/related-work.tex",
+      ".editio/paper/sections/conclusion.tex",
+      "agent-report.json"
+    ],
+    "regenerated_existing_files": [
+      ".editio/paper/front/identity.tex (same placeholder metadata)"
+    ],
+    "commands": [
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/promptus-session-doctor.ts",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-status.ts",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-find.ts Northbridge --snippet",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/docs/northbridge-run-validates-coefficient-seventeen.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/docs/lit/northbridge-calibration-protocol.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/memory/northbridge-deployment-uses-batches-of-four.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/docs/checksum-gates-northbridge-calibration-publication.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02.001'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-get.ts '.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02.002'",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-numbers.ts --write",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-render.ts --all",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-status.ts --gate",
+        "exit_code": 1
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-numbers.ts --gate",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-render.ts --all",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-status.ts --gate",
+        "exit_code": 1
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/editio/scripts/editio-numbers.ts --gate",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/kb-find.ts 'solvent echo' --snippet",
+        "exit_code": 0
+      },
+      {
+        "command": "bun /mnt/c/users/mohan/desktop/telotia/organon/promptus/scripts/promptus-session-doctor.ts --artifacts",
+        "exit_code": 0
+      },
+      {
+        "command": "sha256sum artifacts/northbridge-run.txt",
+        "exit_code": 0
+      }
+    ],
+    "evidence_paths_used": [
+      "/tmp/promptus-continuity-xQxEBk/.promptus/TELOS.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/docs/northbridge-run-validates-coefficient-seventeen.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/docs/lit/northbridge-calibration-protocol.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/memory/northbridge-deployment-uses-batches-of-four.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/docs/checksum-gates-northbridge-calibration-publication.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02.001",
+      "/tmp/promptus-continuity-xQxEBk/.promptus/ledger/RESEARCH-LEDGER.md#2026-09-04T20:08:02.002",
+      "/tmp/promptus-continuity-xQxEBk/artifacts/northbridge-run.txt"
+    ],
+    "artifact_verification": {
+      "run": "NB-42",
+      "recorded_run_checksum": "7f3c",
+      "sha256": "b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854",
+      "matches_recorded_artifact_hash": true
+    },
+    "claim_gate": {
+      "exit_code": 1,
+      "diagnostic": "overclaim: .validated over reject-the-solvent-echo-normalization-route = ledger:REFUTED at sections/evaluation.md:14",
+      "initial_attempt": "Stable IDs from kb-find were unrecognized by Editio, causing six unknown-ground violations; changed to documented filename/title slugs, leaving the historical rejection failure.",
+      "overrides": 0
+    },
+    "review": {
+      "style": "No actionable style findings: concrete, bounded account without significance inflation.",
+      "grounding": "Current coefficient, checksum, batch rule, adopted decision, and replication frontier have firm grounds. Rejection mechanism faithfully reports DEADEND/REFUTED history; the gate cannot distinguish documenting a rejection from asserting the rejected proposition.",
+      "verdict": "Draft and rendering complete; unresolved claim-gate diagnostic prevents gate-clean handoff."
+    },
+    "remaining_limitations": [
+      "Claim gate rejects the historically correct rejected-route account because its backing ledger event is REFUTED; no override or source mutation used.",
+      "Blinded replication remains the recorded next step; no experiment performed or significance claimed.",
+      "Other section Markdown stubs and placeholder identity preserved. Whole paper is not ready for publication.",
+      "No PDF build or TeX installation performed.",
+      "No store, cache, NOW, ledger, or artifact writes performed."
+    ]
+  },
+  "independentGateReruns": [
+    {
+      "script": "editio-status.ts",
+      "exitCode": 1,
+      "stdout": "editio-status: 8 section(s) — /tmp/promptus-continuity-xQxEBk/.editio/paper\n  abstract           doco:Abstract          drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  introduction       deo:Introduction       drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  motivation         deo:Motivation         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  background         deo:Background         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  methods            deo:Methods            drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  evaluation         deo:Evaluation         drafting   grounds 0  claims 6V 0C 0U 0G  words 123/250\n  related-work       deo:RelatedWork        drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  conclusion         deo:Conclusion         drafting   grounds 0  claims 0V 0C 0U 0G  words 0\n  claims: 6 total — 6 validated · 0 conjectured · 0 unsourced · 0 ungraded · 123 words drafted\n  grounds: 6 handle(s) — 5 resolved · 1 weak · 0 unknown\n    weak    reject-the-solvent-echo-normalization-route = ledger:REFUTED (evaluation.md:14)\n",
+      "stderr": "editio-status: GATE FAILED — 1 violation(s):\n    overclaim: .validated over reject-the-solvent-echo-normalization-route = ledger:REFUTED at sections/evaluation.md:14\n  fix the prose, or ground the claim (recall -> grade). override=\"reason\" excuses an unsourced claim or a validated claim's weak grounds — never an ungraded one.\n"
+    },
+    {
+      "script": "editio-numbers.ts",
+      "exitCode": 0,
+      "stdout": "editio-numbers: 3 handle(s) — /tmp/promptus-continuity-xQxEBk/.editio/paper\n  northbridge-current-coefficient = 17           fresh  used ×1\n  northbridge-old-coefficient = 11           fresh  used ×1\n  northbridge-batch-limit  = 4            fresh  used ×2\n  bindings: front/numbers.tex present · 4 use(s) in 1 file(s) (sections wired or not, plus front/macros.tex)\n  gate: numbers-clean — every handle bound and matching, every source fresh (or pinned on the record).\n",
+      "stderr": ""
+    }
+  ],
+  "sourceParserDiagnostic": [
+    [
+      "reject-the-solvent-echo-normalization-route",
+      {
+        "substrate": "ledger",
+        "status": "REFUTED"
+      }
+    ],
+    [
+      "adopt-coefficient-seventeen-under-the-batch-four-constraint",
+      {
+        "substrate": "ledger",
+        "status": "RESOLVED"
+      }
+    ],
+    [
+      "northbridge-run-validates-coefficient-seventeen",
+      {
+        "substrate": "finding",
+        "status": "VALIDATED"
+      }
+    ],
+    [
+      "use-coefficient-eleven-for-northbridge-calibration",
+      {
+        "substrate": "finding",
+        "status": "VALIDATED"
+      }
+    ]
+  ],
+  "sourceArtifacts": {
+    "editio/scripts/editio-status.ts": "3a1b2fae2f463e95db298a73b1edf1841eecea686ff49904a2b528ed0fe64248",
+    "editio/skills/editio/SKILL.md": "fb67b81d1e393da34b00e8f9d9469ce593e35d9779157e33ad6b7fe60b1861b8",
+    "editio/commands/editio.md": "86d966b6674d5b9dd4f471089e95a07def8aaf8954999955436b55986211bb8f"
+  },
+  "paperFiles": {
+    ".editio/paper/sections/evaluation.md": "---\nclass: deo:Evaluation\nstatus: drafting\ngrounds: []\nupdated: 2026-09-05\nbudget: 250\n---\n# Evaluation\n\n[In the synthetic Northbridge pilot, the contaminant-controlled run NB-42 validates coefficient @num:northbridge-current-coefficient, replacing the preliminary coefficient @num:northbridge-old-coefficient.]{.claim .validated grounds=northbridge-run-validates-coefficient-seventeen} [The required raw-output checksum for NB-42 is `7f3c`; retaining it is a condition for carrying the coefficient into publication.]{.claim .validated grounds=checksum-gates-northbridge-calibration-publication}\n\n[Deployment has a maximum batch size of @num:northbridge-batch-limit, and a calibration must not be split across batches.]{.claim .validated grounds=northbridge-deployment-uses-batches-of-four} [The recorded replication decision adopts the current coefficient in batches of @num:northbridge-batch-limit and keeps solvent echo normalization closed.]{.claim .validated grounds=adopt-coefficient-seventeen-under-the-batch-four-constraint}\n\n[The rejected solvent echo normalization route reproduced the preliminary coefficient because contaminant carry-over entered the reference channel. Its rejection record permits reconsideration only if the reference chemistry changes.]{.claim .validated grounds=reject-the-solvent-echo-normalization-route} [The recorded next step is blinded replication.]{.claim .validated grounds=resume-northbridge-at-the-blinded-replication} This section reports the recorded pilot outcome and makes no claim of replication success or statistical significance.\n",
+    ".editio/paper/sections/evaluation.tex": "% GENERATED by editio-render from sections/evaluation.md — edits here are disposable.\n% class: deo:Evaluation · status: drafting\n\n\\section{Evaluation}\\label{sec:evaluation}\n\\editiostamp{2026-09-05}{}\n\n\\claimV{In the synthetic Northbridge pilot, the contaminant-controlled run NB-42 validates coefficient \\editionum{northbridge-current-coefficient}, replacing the preliminary coefficient \\editionum{northbridge-old-coefficient}.}\\editiogrounds{northbridge-run-validates-coefficient-seventeen} \\claimV{The required raw-output checksum for NB-42 is \\texttt{7f3c}; retaining it is a condition for carrying the coefficient into publication.}\\editiogrounds{checksum-gates-northbridge-calibration-publication}\n\n\\claimV{Deployment has a maximum batch size of \\editionum{northbridge-batch-limit}, and a calibration must not be split across batches.}\\editiogrounds{northbridge-deployment-uses-batches-of-four} \\claimV{The recorded replication decision adopts the current coefficient in batches of \\editionum{northbridge-batch-limit} and keeps solvent echo normalization closed.}\\editiogrounds{adopt-coefficient-seventeen-under-the-batch-four-constraint}\n\n\\claimV{The rejected solvent echo normalization route reproduced the preliminary coefficient because contaminant carry-over entered the reference channel. Its rejection record permits reconsideration only if the reference chemistry changes.}\\editiogrounds{reject-the-solvent-echo-normalization-route} \\claimV{The recorded next step is blinded replication.}\\editiogrounds{resume-northbridge-at-the-blinded-replication} This section reports the recorded pilot outcome and makes no claim of replication success or statistical significance.\n",
+    ".editio/paper/numbers.json": "{\n  \"northbridge-current-coefficient\": {\n    \"value\": \"17\",\n    \"source\": [\"artifacts/northbridge-run.txt\", \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\"],\n    \"note\": \"Recorded synthetic NB-42 coefficient; transcribed from raw output, no experiment rerun.\"\n  },\n  \"northbridge-old-coefficient\": {\n    \"value\": \"11\",\n    \"source\": [\".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md\", \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\"],\n    \"note\": \"Historical preliminary coefficient, superseded by the current finding.\"\n  },\n  \"northbridge-batch-limit\": {\n    \"value\": \"4\",\n    \"source\": [\"artifacts/northbridge-run.txt\", \".promptus/memory/northbridge-deployment-uses-batches-of-four.md\"],\n    \"note\": \"Maximum deployment batch size; do not split a calibration across batches.\"\n  }\n}\n",
+    ".editio/paper/front/numbers.tex": "% front/numbers.tex — GENERATED by editio-numbers --write from numbers.json.\n% The ONE place values exist; everything else references \\editionum{handle}.\n\\expandafter\\gdef\\csname editionum@northbridge-current-coefficient\\endcsname{17}\n\\expandafter\\gdef\\csname editionum@northbridge-old-coefficient\\endcsname{11}\n\\expandafter\\gdef\\csname editionum@northbridge-batch-limit\\endcsname{4}\n",
+    ".editio/paper/front/numbers.lock.json": "{\n  \"written\": \"2026-09-05T00:10:09.540Z\",\n  \"handles\": {\n    \"northbridge-current-coefficient\": {\n      \"value\": \"17\",\n      \"sources\": {\n        \"artifacts/northbridge-run.txt\": \"b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854\",\n        \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\": \"1d262915b8883cb7081e7d990e48a56350bf65840b73785daa53357c372e4ce0\"\n      }\n    },\n    \"northbridge-old-coefficient\": {\n      \"value\": \"11\",\n      \"sources\": {\n        \".promptus/docs/use-coefficient-eleven-for-northbridge-calibration.md\": \"fe87323ed2ee7c3854bb45e79f9902ae6c492b6339a7d0cc7f2abc7d4a56b932\",\n        \".promptus/docs/northbridge-run-validates-coefficient-seventeen.md\": \"1d262915b8883cb7081e7d990e48a56350bf65840b73785daa53357c372e4ce0\"\n      }\n    },\n    \"northbridge-batch-limit\": {\n      \"value\": \"4\",\n      \"sources\": {\n        \"artifacts/northbridge-run.txt\": \"b8520dc9660ee911ca9bbff894b23b1cf8fd4f52531b467f1c81ec4e98c16854\",\n        \".promptus/memory/northbridge-deployment-uses-batches-of-four.md\": \"d7591c53143b8b7acbe8d3e30eab09fc55289982b00065bced303be1820a556d\"\n      }\n    }\n  }\n}\n"
+  },
+  "limitations": [
+    "One synthetic operational trial, without a baseline operational agent or repeated runs.",
+    "Number gate passed; claim gate failed on a correctly attributed historical rejection. The failure is retained, not overridden.",
+    "Parent diagnostic found Editio classifies a relation-superseded source as VALIDATED. No exploit claim beyond the observed resolver mismatch is made here.",
+    "Stable-ID failure and slug workaround are reported by the test agent; an independent resolver audit is pending.",
+    "No complete paper or publication readiness result."
+  ]
+}

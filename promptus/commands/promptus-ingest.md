@@ -20,7 +20,9 @@ nothing is recoverable. Dry-run by default.
    bun "${CLAUDE_PLUGIN_ROOT}/scripts/kb-ingest.ts" backfill --apply --root .
    ```
    It reports, per note, how the source was derived (ledger run-id / own citation) or that it was
-   **FLAGGED** — a flagged note needs a `source` you add by hand; the script will not guess one.
+   **FLAGGED** — a flagged note needs verified provenance supplied through
+   `kb-amend --path <lit-file> --substrate lit --kind <kind> --status <status> --source <locator>`.
+   Do not invent a source or hand-edit metadata; leave it flagged when provenance is unknown.
 
 2. **Promote a misfiled external note.** When a genuinely-external note (a literature/prior-art/
    positioning survey) is sitting in the finding store, reclassify it — but decide `lit` vs `finding`
@@ -53,4 +55,6 @@ nothing is recoverable. Dry-run by default.
 It does not invent a source, edit a unit's prose, extract or validate thinker claims, or decide
 `lit`-vs-`finding` for you — that
 classification is yours. Default `status` is `BACKGROUND` (reference knowledge); promote a unit to
-`CITE` by hand when you actually lean on it.
+`CITE` through `kb-amend --path <lit-file> --substrate lit --kind <kind> --status CITE`
+when verified provenance and actual use justify that transition. Quarantined thinker claims
+still require independent adjudication; changing metadata is not validation.

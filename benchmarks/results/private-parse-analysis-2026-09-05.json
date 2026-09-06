@@ -1,0 +1,169 @@
+{
+  "schema": "organon.private-parse-analysis.v1",
+  "sourceReceiptSha256": "830e42fc33d3d9d9c00c6716a617eb5ed3ba88ca74836b707d4c0624f910dc4a",
+  "analyzerSha256": "7f8e2365b9e5da6d27da6b32506f2f9837ebc54c546bee3d4f602fe79409522f",
+  "results": [
+    {
+      "label": "psi",
+      "passed": true,
+      "arms": {
+        "full": {
+          "workflow": {
+            "n": 6,
+            "medianMs": 21432.542754999944,
+            "meanMs": 21134.455401500014
+          },
+          "tenReads": {
+            "n": 6,
+            "medianMs": 76180.01413199992,
+            "meanMs": 71848.64612850013
+          },
+          "clean": {
+            "n": 60,
+            "medianMs": 455.20400450000307,
+            "meanMs": 5071.419072700011
+          },
+          "ordinary": {
+            "n": 45,
+            "medianMs": 448.66836500004865,
+            "meanMs": 457.09000884445203
+          },
+          "phrase": {
+            "n": 15,
+            "medianMs": 18608.208836999955,
+            "meanMs": 18914.40626426669
+          },
+          "cacheBytes": 0,
+          "derivedBytes": 21847020,
+          "maxSampledTreeRssKiB": 609436,
+          "maxLogicalPeakBoundBytes": 54649307
+        },
+        "reuse": {
+          "workflow": {
+            "n": 6,
+            "medianMs": 11624.286499499925,
+            "meanMs": 11940.012360333261
+          },
+          "tenReads": {
+            "n": 6,
+            "medianMs": 68922.79185849958,
+            "meanMs": 67152.70257866646
+          },
+          "clean": {
+            "n": 60,
+            "medianMs": 496.2641140000196,
+            "meanMs": 5521.26902183332
+          },
+          "ordinary": {
+            "n": 45,
+            "medianMs": 491.7997630001046,
+            "meanMs": 495.6108983777606
+          },
+          "phrase": {
+            "n": 15,
+            "medianMs": 20004.63820799999,
+            "meanMs": 20598.2433922
+          },
+          "cacheBytes": 5137998,
+          "derivedBytes": 26985093,
+          "maxSampledTreeRssKiB": 654728,
+          "maxLogicalPeakBoundBytes": 59787371
+        }
+      },
+      "hundredReadEstimatedMs": {
+        "full": 528276.3626715011,
+        "reuse": 564066.9145436652
+      },
+      "hundredOrdinaryReadEstimatedMs": {
+        "full": 66843.45628594521,
+        "reuse": 61501.10219810932
+      },
+      "note": "Strata and 100-read weighting explain this controlled workload, not observed agent query frequencies."
+    },
+    {
+      "label": "mot",
+      "passed": true,
+      "arms": {
+        "full": {
+          "workflow": {
+            "n": 6,
+            "medianMs": 30285.883993000258,
+            "meanMs": 29500.60167583342
+          },
+          "tenReads": {
+            "n": 6,
+            "medianMs": 90049.27781950077,
+            "meanMs": 92295.94674883333
+          },
+          "clean": {
+            "n": 60,
+            "medianMs": 471.6011249998119,
+            "meanMs": 6279.534507299991
+          },
+          "ordinary": {
+            "n": 45,
+            "medianMs": 465.5185869997367,
+            "meanMs": 464.6292121777725
+          },
+          "phrase": {
+            "n": 15,
+            "medianMs": 23080.956172999926,
+            "meanMs": 23724.250392666647
+          },
+          "cacheBytes": 0,
+          "derivedBytes": 24422920,
+          "maxSampledTreeRssKiB": 678412,
+          "maxLogicalPeakBoundBytes": 60478957
+        },
+        "reuse": {
+          "workflow": {
+            "n": 6,
+            "medianMs": 15374.612926000264,
+            "meanMs": 15393.121999666715
+          },
+          "tenReads": {
+            "n": 6,
+            "medianMs": 75954.33759100083,
+            "meanMs": 71077.9014860002
+          },
+          "clean": {
+            "n": 60,
+            "medianMs": 518.386796500301,
+            "meanMs": 5568.477948633348
+          },
+          "ordinary": {
+            "n": 45,
+            "medianMs": 506.60211500013247,
+            "meanMs": 508.71100197779015
+          },
+          "phrase": {
+            "n": 15,
+            "medianMs": 20676.70857999986,
+            "meanMs": 20747.778788600022
+          },
+          "cacheBytes": 4959091,
+          "derivedBytes": 29382099,
+          "maxSampledTreeRssKiB": 723740,
+          "maxLogicalPeakBoundBytes": 65438132
+        }
+      },
+      "hundredReadEstimatedMs": {
+        "full": 657454.0524058326,
+        "reuse": 572240.9168630015
+      },
+      "hundredOrdinaryReadEstimatedMs": {
+        "full": 75963.52289361067,
+        "reuse": 66264.22219744574
+      },
+      "note": "Strata and 100-read weighting explain this controlled workload, not observed agent query frequencies."
+    }
+  ],
+  "additionalObservedResources": {
+    "commandCount": 416,
+    "failedCommands": 0,
+    "maxSampledCommandTreeRssKiB": 761208,
+    "privateNotesAndRuntimeBytes": 2016521,
+    "remainingWorkingCopyBytes": 0
+  },
+  "limits": "Working-copy scratch was sampled between phases. Private notes/runtime bytes are reported separately; RSS sampling can miss short peaks and double-count shared pages. Ordinary-only 100-read weighting is post-inspection sensitivity, not a preregistered adoption test. Analysis uses midpoint medians for even samples; the original runner uses an upper-middle sample."
+}

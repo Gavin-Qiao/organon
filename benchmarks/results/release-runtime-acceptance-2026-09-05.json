@@ -1,0 +1,93 @@
+{
+  "schema": "organon.production-acceptance.v1",
+  "created": "2026-09-05T12:44:37.641Z",
+  "scope": "Three alternating updates per arm, 512 synthetic pages + 1024 ledger entries, OS-temp filesystem. Cache disabled vs production cache enabled. Not a live-project speedup or statistical benchmark.",
+  "sourceFiles": {
+    "kb-index.ts": "9fe560c350e204f1ad982942eb893de4228429b650ee0a9e670ef737c708e377",
+    "kb-find.ts": "277f33e5db7f0f63f4472b942f8a046b37fa3b9888c17b73411c1529829968f8",
+    "lib/parse-cache.ts": "6c1566210cb68be0c5d8a14766489b02ab0adceebe6c5dae1d8da9a553c4bee4",
+    "lib/read-store.ts": "39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0"
+  },
+  "rows": [
+    {
+      "arm": "disabled",
+      "round": 0,
+      "indexMs": 134.35593900000003,
+      "phraseMs": 83.14715899999993,
+      "getMs": 28.54909299999997,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "48902a011d96b73803a89b1db17a89f61e4ad1e193eb899dbd49d9459b3976be"
+      ]
+    },
+    {
+      "arm": "reuse",
+      "round": 0,
+      "indexMs": 184.53126099999997,
+      "phraseMs": 94.84659399999998,
+      "getMs": 29.38838899999996,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "48902a011d96b73803a89b1db17a89f61e4ad1e193eb899dbd49d9459b3976be"
+      ]
+    },
+    {
+      "arm": "reuse",
+      "round": 1,
+      "indexMs": 185.80710499999986,
+      "phraseMs": 100.96884899999986,
+      "getMs": 31.44320800000014,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "658c6031be66235320b1bd2c440f6ec0bedec6d523dd6c56b3fa5786a3940b64"
+      ]
+    },
+    {
+      "arm": "disabled",
+      "round": 1,
+      "indexMs": 133.20005800000013,
+      "phraseMs": 81.201186,
+      "getMs": 27.889642000000094,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "658c6031be66235320b1bd2c440f6ec0bedec6d523dd6c56b3fa5786a3940b64"
+      ]
+    },
+    {
+      "arm": "disabled",
+      "round": 2,
+      "indexMs": 127.70025800000008,
+      "phraseMs": 78.86969799999997,
+      "getMs": 27.334560999999894,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "bd4b50074e93607ca1eff4fdad9bfde0a1f5722c0c4a796ce86248ef4e0f4b4a"
+      ]
+    },
+    {
+      "arm": "reuse",
+      "round": 2,
+      "indexMs": 189.1149879999998,
+      "phraseMs": 104.21967999999993,
+      "getMs": 28.647215999999844,
+      "outputHash": "a3f9e4beb4f3f83922d6ab33f69eb1eaebd556e15a6c39197bbc4450f11ec496",
+      "projections": [
+        "70def5953e18689241c991941c381051e1983c59f3d3302acc090217acca060f",
+        "b0f94cf57aba734bf1deb9f9a17a836d47653adcbb3adba912198d8bb5668e35",
+        "bd4b50074e93607ca1eff4fdad9bfde0a1f5722c0c4a796ce86248ef4e0f4b4a"
+      ]
+    }
+  ],
+  "parity": true,
+  "parseCacheBytes": 73853
+}

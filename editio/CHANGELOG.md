@@ -6,6 +6,32 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+
+- Add explicit historical claim spans for attributed reports of rejected, superseded, or retired
+  evidence, with visible draft labels and provenance checks distinct from positive support.
+
+### Changed
+
+- Keep manuscript evidence collection source-only while the shared parser gains an optional
+  index-only memoization interface; packaged reader parity remains checked.
+- Keep status/audit requests read-only when no paper exists and build PDFs only when requested.
+- Continue the requested manuscript work beyond choosing a next operation. Require TeX only
+  for PDF builds; retain claim, number, and publication gates.
+- Align plugin and marketplace descriptions with implemented capabilities, excluding deferred
+  table generation, bibliography generation, and rebuttal tooling.
+
+### Fixed
+
+- Load number, shared-macro and identity definitions in the standalone section preview; verify
+  the bundled preview with a real TeX compile when the toolchain is available.
+- Preserve explicit manuscript grounds across page/ledger archiving and cross-archive lifecycle
+  relations; archive location does not promote or invalidate scientific status.
+- Read stable IDs, unique aliases, nested/custom stores, supersession and memory retirement through
+  a checked packaged copy of Promptus's canonical source parser; never trust stale raw status alone.
+- Reject ambiguous identity/lifecycle, mixed grades, partially unknown grounds, and unsupported
+  conjecture overrides at the manuscript gate.
+
 ## [0.7.0] - 2026-08-23
 
 ### Added

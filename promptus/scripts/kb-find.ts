@@ -16,6 +16,9 @@ import {
   type SearchDocument, type SearchIndex, type SearchSourceDocument,
 } from "./lib/search.ts";
 import { unitText } from "./lib/units.ts";
+import { semanticSnapshot, semanticCandidates, type SemanticSnapshot } from "./lib/semantic.ts";
+import { createRelationResolver } from "./lib/relation-lifecycle.ts";
+import { cachedUnitText } from "./lib/parse-cache.ts";
 
 interface Card { substrate: string; status: string; title: string; path: string; id?: string; links: string[] }
 
@@ -55,12 +58,15 @@ const HELP = `kb-find — ranked, bounded lexical retrieval over Promptus units
 usage:
   kb-find "<query>" [--all] [--history] [--include-inactive]
                      [--substrate <s>] [--status <st>] [--hops <n>]
-                     [--limit <n>] [--snippet] [--root <dir>]
+                     [--limit <n>] [--snippet] [--semantic] [--root <dir>]
   kb-find             lists the highest-priority live cards (default cap: 20)
 query:
   words are ranked with BM25-style lexical scoring; "quoted phrases" are exact;
   +word requires a term; --all requires every unquoted term.
 flags:
+  --semantic        optional local QMD vectors; requires kb-semantic configure/update
+                    unavailable/stale backend falls back to current-source lexical search
+                    exact controls use lexical; inactive units need history/status/include-inactive
   --history          also search cold ledger/archive history
   --include-inactive do not demote SUPERSEDED, REFUTED, or RETIRED units
   --substrate <s>    only one store
@@ -71,12 +77,12 @@ flags:
   --root <dir>       project root
 then: kb-get "<path from a hit>" fetches the bounded source unit.`;
 
-function readIndex(dir: string, catalogText: string, cards: Card[], root: string): SearchIndex {
+function readIndex(dir: string, catalogText: string, cards: Card[], root: string, capturedSearch?: string): SearchIndex {
   const catalogHash = createHash("sha256").update(catalogText).digest("hex");
   const file = join(dir, "search.json");
   if (existsSync(file)) {
     try {
-      const parsed = JSON.parse(readFileSync(file, "utf8")) as SearchIndex;
+      const parsed = JSON.parse(capturedSearch ?? readFileSync(file, "utf8")) as SearchIndex;
       if (parsed.schema === SEARCH_INDEX_SCHEMA && parsed.catalogHash === catalogHash) return parsed;
     } catch { /* stale/old derived cache: rebuild below */ }
   }
@@ -96,11 +102,15 @@ function main(argv: string[]): number {
   if (argv.includes("--help") || argv.includes("-h")) { console.log(HELP); return 0; }
   const flags: Record<string, string> = {};
   const positionals: string[] = [];
+  const booleans = new Set(["all", "history", "include-inactive", "snippet", "semantic"]);
+  const values = new Set(["root", "limit", "substrate", "status", "hops"]);
   for (let i = 0; i < argv.length; i++) {
     if (argv[i].startsWith("--")) {
       const key = argv[i].slice(2);
+      if ((!booleans.has(key) && !values.has(key)) || key in flags) { console.error(`kb-find: unknown or duplicate flag --${key}`); return 1; }
       const next = argv[i + 1];
-      if (next === undefined || next.startsWith("--")) flags[key] = "";
+      if (booleans.has(key)) flags[key] = "";
+      else if (next === undefined || next.startsWith("--")) { console.error(`kb-find: --${key} requires a value`); return 1; }
       else { flags[key] = next; i++; }
     } else positionals.push(argv[i]);
   }
@@ -108,24 +118,71 @@ function main(argv: string[]): number {
   const root = findProjectRoot(flags.root ?? process.cwd());
   const dir = derivedDir(root);
   const catalogFile = join(dir, "CATALOG.md");
-  if (!existsSync(catalogFile)) { console.error("kb-find: no catalog — run `bun scripts/kb-index.ts` first."); return 1; }
+  if (!existsSync(catalogFile) && !("semantic" in flags)) { console.error("kb-find: no catalog — run `bun scripts/kb-index.ts` first."); return 1; }
   const limit = Number(flags.limit ?? 20);
   if (!Number.isInteger(limit) || limit < 1) { console.error("kb-find: --limit must be a positive integer."); return 1; }
-  const catalogText = readFileSync(catalogFile, "utf8");
-  const index = readIndex(dir, catalogText, parseCatalog(catalogText), root);
-  const textOf = (document: SearchDocument) => unitText(root, document.path, document.title);
-  const hits = searchIndex(index, query, {
+  const hops = Number(flags.hops ?? 0);
+  if (!Number.isSafeInteger(hops) || hops < 0) { console.error("kb-find: --hops must be a nonnegative integer"); return 1; }
+  const catalogText = existsSync(catalogFile) ? readFileSync(catalogFile, "utf8") : "";
+  let snapshot: SemanticSnapshot | undefined;
+  let snapshotText: Map<string, string> | undefined;
+  let capturedGraph: string | undefined;
+  let index: SearchIndex;
+  const refreshSource = () => { snapshot = semanticSnapshot(root); snapshotText = undefined; index = buildSearchIndex(snapshot.documents, snapshot.fingerprint); };
+  if ("semantic" in flags) refreshSource();
+  else {
+    let coherent = true;
+    let capturedSearch: string | undefined;
+    const state = join(dir, "index-state.json");
+    if (existsSync(state)) try {
+      const stateText = readFileSync(state, "utf8"), receipt = JSON.parse(stateText);
+      capturedSearch = readFileSync(join(dir, "search.json"), "utf8");
+      coherent = receipt.phase === "clean" && receipt.catalogHash === createHash("sha256").update(catalogText).digest("hex")
+        && receipt.searchHash === createHash("sha256").update(capturedSearch).digest("hex");
+      if (hops) {
+        capturedGraph = readFileSync(join(dir, "graph.json"), "utf8");
+        coherent &&= receipt.graphHash === createHash("sha256").update(capturedGraph).digest("hex");
+      }
+      coherent &&= readFileSync(state, "utf8") === stateText;
+    } catch { coherent = false; }
+    if (!coherent) { console.error("kb-find: INDEX_PUBLICATION_INCOMPLETE: using current-source lexical retrieval; run kb-index after the active writer finishes"); refreshSource(); }
+    else index = readIndex(dir, catalogText, parseCatalog(catalogText), root, capturedSearch);
+  }
+  const cachedText = cachedUnitText(root);
+  const textOf = (document: SearchDocument) => snapshot
+    ? (snapshotText ??= new Map(snapshot.documents.map(doc => [JSON.stringify([doc.path, doc.title]), doc.text]))).get(JSON.stringify([document.path, document.title])) ?? ""
+    : cachedText(document.path, document.title);
+  const options = {
     substrate: flags.substrate,
     status: flags.status,
     history: "history" in flags,
     all: "all" in flags,
     includeInactive: "include-inactive" in flags,
-  }, textOf);
+  };
+  let hits = searchIndex(index!, query, options, textOf), route = "";
+  if (snapshot && "semantic" in flags) {
+    route = "lexical";
+    if (!query || options.all || /"|(?:^|\s)\+/.test(query)) console.error("kb-find: explicit lexical controls or empty query; semantic route bypassed");
+    else try {
+      const candidates = semanticCandidates(root, snapshot, query, { ...options, limit });
+      const documents = new Map(index!.documents.map(doc => [doc.key, doc]));
+      hits = candidates.map((doc, i) => ({ document: documents.get(doc.key)!, score: candidates.length - i, matchedTerms: [] }));
+      route = "qmd";
+    } catch (error) {
+      console.error(`kb-find: semantic unavailable (${String(error)}); using current-source lexical fallback`);
+      refreshSource(); hits = searchIndex(index!, query, options, textOf); route = "lexical-fallback";
+    }
+  }
 
   const picked = new Map(hits.map((hit) => [hit.document.key, hit]));
-  const hops = Number(flags.hops ?? 0);
-  if (hops > 0 && existsSync(join(dir, "graph.json"))) {
-    const graph = JSON.parse(readFileSync(join(dir, "graph.json"), "utf8")) as { out: Record<string, string[]>; unitOut?: Record<string, string[]> };
+  if (hops > 0 && (snapshot || existsSync(join(dir, "graph.json")))) {
+    const sourceGraph = () => {
+      const units = snapshot!.documents.map(doc => ({ ...doc, relPath: doc.path })), resolver = createRelationResolver(units);
+      return { out: Object.fromEntries(units.map(doc => [graphKeyOf(doc as unknown as SearchDocument), [...doc.links, ...doc.relations.map(r => r.target)].flatMap(link => {
+        const target = resolver.resolve(link); return target && !target.cold ? [graphKeyOf(target as unknown as SearchDocument)] : [];
+      })])) };
+    };
+    const graph = (snapshot ? sourceGraph() : JSON.parse(capturedGraph ?? readFileSync(join(dir, "graph.json"), "utf8"))) as { out: Record<string, string[]>; unitOut?: Record<string, string[]> };
     const graphOut = graph.unitOut ?? graph.out;
     const seen = new Set([...picked.values()].filter((hit) => !hit.document.cold).map((hit) => graphKeyOf(hit.document)));
     let frontier = [...seen];
@@ -134,8 +191,10 @@ function main(argv: string[]): number {
       for (const node of frontier) for (const target of graphOut[node] ?? []) if (!seen.has(target)) { seen.add(target); next.push(target); }
       frontier = next;
     }
-    for (const document of index.documents) {
-      if (!document.cold && seen.has(graphKeyOf(document)) && !picked.has(document.key)) {
+    for (const document of index!.documents) {
+      if (!document.cold && (!options.substrate || document.substrate === options.substrate) && (!options.status || document.status === options.status)
+        && (!snapshot || options.status || options.history || options.includeInactive || !["SUPERSEDED", "REFUTED", "RETIRED", "UNTRUSTED"].includes(document.status.toUpperCase()))
+        && seen.has(graphKeyOf(document)) && !picked.has(document.key)) {
         picked.set(document.key, { document, score: 0, matchedTerms: [] });
       }
     }
@@ -149,10 +208,11 @@ function main(argv: string[]): number {
     const document = hit.document;
     const snippet = "snippet" in flags ? snippetOf(root, document, terms) : "";
     const history = document.cold ? " · cold-history" : "";
-    console.log(`${document.substrate}:${document.status} · ${document.title} · ${document.path}${history}${snippet ? `\n    ↳ ${snippet}` : ""}`);
+    console.log(`${document.substrate}:${document.status} · ${document.title} · ${document.path}${history}${route ? ` · route:${route}` : ""}${snippet ? `\n    ↳ ${snippet}` : ""}`);
   }
   if (shown.length < ranked.length) console.log(`  … ${shown.length} of ${ranked.length} shown — raise --limit for more.`);
   return 0;
 }
 
-process.exit(main(process.argv.slice(2)));
+try { process.exitCode = main(process.argv.slice(2)); }
+catch (error) { console.error(`kb-find: ${String(error)}`); process.exitCode = 1; }

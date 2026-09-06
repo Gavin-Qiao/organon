@@ -94,6 +94,16 @@ installed and falls back to plain-language answers when Editio is absent.
 
 ## From research to paper
 
+An [end-to-end overhaul candidate](OVERHAUL.md) is ready for review: lower-friction agent instructions,
+safer recording, and measured comparisons with established local retrieval engines. This checkout
+contains candidates, not a new release or an installed search backend. The plan tracks the full
+completion boundary across Promptus and Editio.
+The candidate now shares canonical identity/lifecycle parsing across the plugins and distinguishes
+historical evidence in manuscripts. The isolated manuscript retest passes. Lexical remains the
+default; an optional local QMD candidate passes isolated SDK integration checks. Continuity,
+packaging, migration and manuscript checks are recorded in the [completion audit](OVERHAUL-VERIFICATION.md).
+See [candidate compatibility and rollback](MIGRATION.md) before any separately authorized adoption.
+
 Initialize Promptus first:
 
 ```text
@@ -116,6 +126,11 @@ Draft displays the grade and grounds of each marked claim span. Publish removes 
 blind also masks identity.
 
 ## Design constraints
+
+The current integration adds preview-first project adoption, bounded raw-parse caching,
+actionable resume diagnostics, and source-backed evidence navigation. See the
+[release integration plan](RELEASE-PLAN.md) and [Promptus operations guide](promptus/README.md#runtime-resource-controls-and-project-adoption).
+These are checkout capabilities, not a claim that installed plugins or live projects have updated.
 
 > [!IMPORTANT]
 > Markdown is the only source of truth. Derived indexes and generated TeX are disposable. Source

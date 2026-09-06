@@ -20,9 +20,10 @@ it never reindexes, repairs, refreshes NOW, records a baseline, or edits a unit.
    time.
 2. Treat exit `0` as permission to trust the reported handoff and retrieval surfaces. Read the
    exact north star, NOW, blocker, next action, and resume point from the report before acting.
-3. Treat exit `1` as **stop and report**. Name the issue codes and the smallest operator-visible
-   remediation, but do not reindex, rewrite NOW, repair links, upgrade vocab, or baseline debt
-   unless the operator separately authorizes that mutation.
+3. Treat exit `1` as **do not trust the affected state**. Report the issue codes and inspect
+   authoritative source when available; independent authorized work may continue. The preflight
+   itself never repairs anything. Perform remediation only when covered by the existing task;
+   a status-only request does not authorize writes, and expanding scope still needs direction.
 4. Treat exit `2` as a tool/precondition failure (for example, no reachable `.promptus/` store or
    unreadable required source). Report the error without claiming anything about project state.
 
