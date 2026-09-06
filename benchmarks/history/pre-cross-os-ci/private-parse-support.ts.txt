@@ -67,7 +67,6 @@ function treeRss(pid: number, seen = new Set<number>()): number {
   } catch { return 0; } // process exited between samples
 }
 export async function boundedCommand(argv: string[], log: string, options: { rssKiB?: number; timeoutMs?: number } = {}) {
-  if (process.platform !== "linux") throw Error("private-trial-platform: Linux /proc and GNU time are required for certified RSS telemetry");
   const start = performance.now(); let stdout = "", stderr = "", sampledTreeRssKiB = 0, killed: string | null = null;
   const child = spawn("/usr/bin/time", ["-f", "__PRIVATE_RESOURCE__ %M", ...argv], { detached: true, stdio: ["ignore", "pipe", "pipe"],
     env: { ...process.env, ORGANON_PUBLICATION_METRICS: "0", ORGANON_PUBLICATION_FAULT: "", ORGANON_PUBLICATION_CRASH: "0", CUDA_VISIBLE_DEVICES: "", HF_HUB_OFFLINE: "1" } });

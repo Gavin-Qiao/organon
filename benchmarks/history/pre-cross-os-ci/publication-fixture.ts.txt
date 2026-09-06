@@ -1,5 +1,5 @@
 /** Synthetic-only fixture and narrowly instrumented runtime staging. */
-import { copyFileSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
+import { copyFileSync, cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { MARKER, sha } from "./publication-fence.ts";
 export const SCRIPTS = resolve(import.meta.dir, "../promptus/scripts");
@@ -10,7 +10,7 @@ export function treeHashes(dir: string, prefix = ""): Record<string, string> {
   }));
 }
 export function stageRuntime(parent: string) {
-  const runtime = realpathSync(mkdtempSync(join(parent, "publication-runtime-")));
+  const runtime = mkdtempSync(join(parent, "publication-runtime-"));
   cpSync(SCRIPTS, join(runtime, "scripts"), { recursive: true });
   // Scripts can resolve their own packaged schema/templates.
   cpSync(resolve(SCRIPTS, "../templates"), join(runtime, "templates"), { recursive: true });
@@ -56,7 +56,7 @@ export function stageRuntime(parent: string) {
   return { runtime, runtimeHash, hashes };
 }
 export function createFixture(parent: string, runtime: ReturnType<typeof stageRuntime>, pages = 4, events = 8, ballast = 0) {
-  const root = realpathSync(mkdtempSync(join(parent, "publication-fixture-")));
+  const root = mkdtempSync(join(parent, "publication-fixture-"));
   for (const dir of ["schema", "ledger", "docs/lit", "memory"]) mkdirSync(join(root, ".promptus", dir), { recursive: true });
   copyFileSync(resolve(SCRIPTS, "../templates/schema/kb-vocab.json"), join(root, ".promptus/schema/kb-vocab.json"));
   writeFileSync(join(root, ".promptus/TELOS.md"), "# Synthetic publication fixture\nNo scientific evidence.\n");

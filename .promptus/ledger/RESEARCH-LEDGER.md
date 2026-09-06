@@ -1,6 +1,6 @@
 # Research Ledger — Promptus
 
-**Updated:** 2026-09-06 (landing and release PR preparation authorized)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
+**Updated:** 2026-09-06 (PR 57 platform corrections awaiting CI)  ·  **Operator:** Mohan Qiao  ·  **Agent:** Claude (Opus 4.x)
 **Timezone:** America/Montreal (UTC-4) — all timestamps below use it.
 
 > Append-only. Never hand-edit a `### [ts] …` entry; units enter through
@@ -27,22 +27,28 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260906T050245Z-land-the-implementation-and-prepare-separate-minor-release-prs -->
-Source implementation is complete. The operator authorized commit/push and release PR preparation on September 6, stopping before merge, tags, publication or installation. RELEASE-VERIFICATION.md retains the implementation scope and limitations. The existing 478-test result is historical; local gates are being repeated before landing.
+<!-- kb:now-through event-20260906T050827Z-correct-cross-platform-benchmark-fixture-and-resource-contracts -->
+Implementation is committed and pushed on feat/research-continuity-release-integration, PR https://github.com/Gavin-Qiao/organon/pull/57. Implementation commit: ae7482e. A subsequent documentation-only commit records this handoff. No release-cut PR, merge, tag, publication or installation has occurred.
+
+- Repeated local gates: 478 tests pass, 0 fail, 3,069 assertions / 47 files; both adapters and reader parity pass; all configured pre-commit hygiene checks pass. Original sealed Markdown hard-break whitespace is accepted by that gate and retained despite generic git diff --check warning.
+- First PR CI passed Linux/title/hygiene but failed macOS/Windows fixture portability. Scoped corrections canonicalize temp roots, normalize path checks, finalize SQLite statements and explicitly refuse Linux-only RSS telemetry on other hosts. Original source dependencies are archived byte-identically under benchmarks/history/pre-cross-os-ci. Inspect latest CI, not the original failed run, before declaring readiness.
+- GitHub refused the direct main push with GH006: PR plus four required checks. No branch protections were altered or bypassed. PR 57 is the implementation landing prerequisite, not a release-cut PR.
+- Both Unreleased changelogs and .github/release-notes/research-continuity.md describe user-facing changes, defaults and compatibility. Prepare Promptus 0.10.0 and Editio 0.8.0 only after implementation merges and main CI passes.
+- RELEASE-VERIFICATION.md retains exact implementation limits: persistent raw cache defaults OFF; optional semantics has no implicit downloads and its database/model growth is not covered by the raw quota. No general cache speedup is claimed.
 
 ## Open frontier
 
-Land validated implementation on main, verify cross-platform CI, then create separate release cuts for Promptus 0.10.0 and Editio 0.8.0. Persistent raw caching remains opt-in and off by default. Both changelogs already record capabilities; finalize categories, compatibility notes, dates and compare links on release branches only. Keep original receipts and full successor artifact custody intact.
+Inspect PR 57 checks and review. The operator authorized commit/push and PR preparation, explicitly stopping before merge, tagging and installation. Release-cut work is gated on a merged implementation and green main; obtain merge direction rather than bypass protection or preemptively tag the feature commit.
 
 ## Next actions
 
-1. Finish local gates and commit with a scoped Conventional title and flat bullet body.
-2. Push main, inspect CI, address concrete release-blocking failures within scope.
-3. Prepare and push the two release branches and open PRs after main CI passes. Do not merge, tag or install.
+1. Report PR 57 and the remote protection boundary. Check CI status without assuming completion.
+2. When merge is authorized and required checks pass, merge the implementation and verify main CI.
+3. Then prepare separate version/changelog release PRs following RELEASING.md; do not merge, tag or install without the relevant direction.
 
 ## <<< RESUME HERE >>>
 
-Run session-doctor and inspect git/remote before continuing. No live research project or installed plugin has been changed. This handoff records authorized work in progress, not a claim that commits, CI or PRs already completed. Existing graph and archival drift remains visible; no baseline or scientific repair is authorized.
+Run session-doctor, inspect git branch/status and PR 57. Source/evidence work is committed, not lost. The four live research projects and installed plugins remain untouched. No cache cleanup, artifact debt baseline, scientific repair or fresh experiment is authorized. Preserve the historical findings, sealed exchange and successor artifact custody.
 
 <!-- now:end -->
 
@@ -2264,5 +2270,227 @@ Related: [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-
 <!-- kb:id event-20260906T050245Z-land-the-implementation-and-prepare-separate-minor-release-prs -->
 The operator authorized committing/pushing the completed implementation and preparing release PRs, with scoped Conventional titles and flat bullet summaries. Stop before merging, tagging, publication or installation. Remote main was verified at dfbbbc1571a36a9dc07defa0af7df0961d0e764e and there were no open PRs. Prepare Promptus 0.10.0 and Editio 0.8.0 as separate minor release cuts after implementation CI passes; versioned changelogs remain the source of release notes. Preserve lexical/default-no-raw-cache behavior and explicitly explain hook removal, grounding compatibility, and separate live adoption. No additional project scope is granted.
 Related: [[event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat]]
+
+### [2026-09-06 01:04:43] RESULT/VALIDATED — Push the implementation PR and retain the protected main release boundary
+<!-- kb:id event-20260906T050443Z-push-the-implementation-pr-and-retain-the-protected-main-release -->
+<!-- kb:artifact cross-plugin-notes|.github/release-notes/research-continuity.md|- -->
+Committed the approved implementation as ae7482e (feat(organon): improve research continuity and grounded writing), with a scoped Conventional title and flat bullet summary. Repeated bun run check: 478 pass, 0 fail, 3,069 assertions across 47 files; both plugin adapters and canonical reader parity pass. All configured pre-commit hygiene gates pass. Current health verified 207 artifact dependencies with inherited warnings retained. A generic staged diff check flags the sealed thinker validation plan's original Markdown hard line break; the repository's Markdown-aware whitespace check accepts it. The sealed source was not altered.
+
+GitHub rejected git push origin main with GH006: changes require a pull request and four required checks. Repository documentation allowing direct normal pushes does not override remote branch protection. No protection was changed or bypassed. Pushed the exact implementation on feat/research-continuity-release-integration and opened https://github.com/Gavin-Qiao/organon/pull/57 with a scoped Conventional title, full summary/why/impact/checks/release-note sections and no emoji/checklists.
+
+Both plugin Unreleased changelogs remain the source of pending release notes; .github/release-notes/research-continuity.md records cross-plugin changes and compatibility. Intended subsequent minor cuts are Promptus 0.10.0 and Editio 0.8.0, but RELEASING.md requires the implementation on green main first. Release branches/PRs have therefore not been cut yet. The operator-approved stopping boundary forbids merging, tagging or installing. PR 57 review/merge is now the external prerequisite; no live Psi/MoT/Probatio/Mensura or installed-plugin state changed.
+Related: [[event-20260906T050245Z-land-the-implementation-and-prepare-separate-minor-release-prs]]
+
+### [2026-09-06 01:07:51] RESULT/VALIDATED — Retain pre-CI custody for event-20260905T045906Z-complete-the-private-cpu-replay-while-retaining-the-qmd-readines
+<!-- kb:id event-20260906T050751Z-retain-pre-ci-custody-for-event-20260905t045906z-complete-the-pr -->
+<!-- kb:artifact cpu-protocol|benchmarks/LOCAL-CPU-REPLAY.md|947be38848f8365f03776ece31e06265e63637b273264365753cc60c86710074 -->
+<!-- kb:artifact cpu-harness|benchmarks/history/pre-cross-os-ci/local-retrieval-snapshot.ts.txt|4ddba74ffe6ffd613a0754849f608efc2db12517bd98597658fafb0348cb7746 -->
+<!-- kb:artifact cpu-test|benchmarks/local-retrieval-snapshot.test.ts|9b72b23b937cb75f17de337f4773b69adc5fc863029ff7090cfb1a2110db34ee -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-replay.ts|0dff82b1c10464f40185369f28b2fafa16e0abd0dbcae7074b3484db42cdeb36 -->
+<!-- kb:artifact cpu-harness|benchmarks/local-semantic-replay.ts|6a6c9a9992be383fdff4a79c7b6aab1f67587eec5d7faa228025218414cb19a4 -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-during-build.ts|f9e3eb39f36ee93695fb7e78bbf29bcce0934e1683eced856d7e6c8a242d55fc -->
+<!-- kb:artifact cpu-harness|benchmarks/local-retrieval-report.ts|2dcc17a32979f18d2baea158537f4046c6d566500f247c27e79ab070a0f4f7fb -->
+<!-- kb:artifact cpu-test|benchmarks/local-retrieval-report.test.ts|5a2e75f00e1338dde364331a7f9a0628ac3592e212aa4b975f56e4d552fe57f9 -->
+Completed the bounded CPU-only replay on newly captured, content-verified private Psi and MoT snapshots. Both lexical/SQLite replays and both corrected zvec-grep replays pass their declared checks. The actual QMD adapter's full Psi CPU build reaches its 20-minute timeout; this negative result is retained, not converted to a passing benchmark. A concurrent read returns lexical fallback while the build lease is held. No QMD MoT or incremental-refresh result is claimed after stopping that arm at the readiness failure.
+
+The summary and linked finding distinguish memory-backed tmpfs timings, different model/adapter configurations, exact lexical equivalence, synthetic freshness checks and unmeasured independent semantic relevance. Three individual ledger additions per corpus preserve canonical digests and result scores/order. Initial zvec source-only trials omitted the complete ordinary lexical cache, so those early immediate-lexical timings were rejected and both replays repeated with a counted full baseline. Initial harness assertion/CLI failures remain retained. No production plugin source, live project store, installed cache, model package or Git publication state was changed by this follow-up.
+
+Verification: affected tests pass 10/10 with 54 assertions. The complete repository suite passes 413 tests, zero failures, 2297 assertions across 39 files. Diff whitespace checks pass. Both frozen snapshot manifests reverify. New benchmark and protocol sources are bound below; the finding owns the immutable public numeric receipt. Private original receipts remain under /tmp/organon-replay-psi-gXO6c3, /tmp/organon-replay-mot-wygTTe, /tmp/organon-semantic-private-psi-qmd-XMqeA2, /tmp/organon-semantic-private-psi-zvec-HlVv0I and /tmp/organon-semantic-private-mot-zvec-UTi2GE. Earlier attempts and the two frozen captures remain retained. All timed processes are terminal.
+
+This completes the experiment pass, not adoption. Keep lexical default; investigate persistent-disk writer-aware SQLite before integration, and independently judge zvec-grep semantic quality before choosing it. The earlier overhaul candidate remains uncommitted, unreleased and uninstalled, with the new CPU-readiness limitation now explicit.
+
+Related: [[fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T045906Z-complete-the-private-cpu-replay-while-retaining-the-qmd-readines]] · [[fresh-private-corpora-expose-a-cpu-readiness-limit-in-the-qmd-ca]]
+↳ supersedes event-20260905T045906Z-complete-the-private-cpu-replay-while-retaining-the-qmd-readines
+
+### [2026-09-06 01:07:52] RESULT/VALIDATED — Retain pre-CI custody for event-20260905T054624Z-complete-the-blind-private-retrieval-quality-pilot-without-chang
+<!-- kb:id event-20260906T050752Z-retain-pre-ci-custody-for-event-20260905t054624z-complete-the-bl -->
+<!-- kb:artifact quality-source-0|benchmarks/history/pre-cross-os-ci/quality-sources.ts.txt|3405b1e5b6eb8ebc99b43144c96751a52cd52da29dfbe102aa612ac7829f86bd -->
+<!-- kb:artifact quality-source-1|benchmarks/history/pre-cross-os-ci/quality-sources.test.ts.txt|a64615a0ef1e5f3bfc938338d5d3de85874d8103fdcf4a7aba53c7f8c4f49728 -->
+<!-- kb:artifact quality-source-2|benchmarks/private-retrieval-quality.ts|16c057c4ba28da45f2ca4fda537b468f81432fb5bb8ce62809b936ece65b265a -->
+<!-- kb:artifact quality-source-3|benchmarks/private-retrieval-quality.test.ts|478f6a64793ca17fe83fb8673d6386a2cd01019921d5531d2402b79178892c1c -->
+<!-- kb:artifact quality-source-4|benchmarks/private-quality-report.ts|2fe0beedd91cf79480227fe41d06de7c29cd9a6f1b78b785b8f8c07c84a38962 -->
+<!-- kb:artifact quality-source-5|benchmarks/private-quality-report.test.ts|8eb849b281fc20014ab7f46b715fb764aff41c83c3fe051da08ebe8223309311 -->
+<!-- kb:artifact quality-source-6|benchmarks/PRIVATE-RETRIEVAL-QUALITY.md|f55bae72828ae483ca226c0fb5994c5428a2156868391bb522162ea2aa108ae9 -->
+Completed the operator-authorized Luna-max retrieval quality pilot on frozen private Psi/MoT copies. Five fresh-context agents supplied source-only authorship, methodology/scoring audit and blind passage judgments. The protocol, source reader, frozen-question gate, two-build runner, metric implementation, public numeric allowlist and tests are artifact-bound here. The result is digested in [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]], which owns the public receipt.
+
+Across 20 positive questions, lexical versus zvec-grep Potion 32M CPU: Hit@5 18/20 versus 17/20; direct-evidence precision@5 61% versus 59%; useful-context-inclusive precision@5 90% versus 94%. Four unsupported probes were separate. All 181 final passage judgments and positive quotations passed the gate; 10 initial quotation transcription failures were caught, original drafts retained, and zero relevance grades/rationales changed during repairs. Both independent vector builds returned identical ordered top-five results for every question. A small model-labelled pilot establishes no universal winner or scientific truth; keep lexical default and leave any combined-route or adoption work for separate direction.
+
+Private frozen questions, source mappings, rankings, original/final judgments and vectors remain in /tmp/organon-quality-y4Hlbc. Captures and frozen code/model guards passed after the run. Full suite: 420 pass, 0 fail, 2327 assertions across 42 files. No production source, live project store, installed plugin, model/dependency installation, commit, push, tag or release changed. The original overhaul and CPU experiment custody chains remain intact; only this pilot's OPEN plan is superseded. Refresh final NOW and strict health immediately after this entry.
+Related: [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T054624Z-complete-the-blind-private-retrieval-quality-pilot-without-chang]] · [[finding-20260905T054524Z-a-blind-private-retrieval-pilot-does-not-justify-replacing-lexic]]
+↳ supersedes event-20260905T054624Z-complete-the-blind-private-retrieval-quality-pilot-without-chang
+
+### [2026-09-06 01:07:53] RESULT/VALIDATED — Retain pre-CI custody for event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati
+<!-- kb:id event-20260906T050753Z-retain-pre-ci-custody-for-event-20260905t125314z-advance-full-so -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|9fe560c350e204f1ad982942eb893de4228429b650ee0a9e670ef737c708e377 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|76b9f9dd81cf8278a3bccd9718709f58fd0c98cc52fcf03ee2a341ec4817cdee -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|promptus/CHANGELOG.md|f651e5a9a3b281f0300f8701191aeb6a99180404f78e922f61513986bdb318bd -->
+<!-- kb:artifact claude-manifest|promptus/.claude-plugin/plugin.json|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|promptus/.codex-plugin/plugin.json|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|60c12ced99f5c2baa37a33df952c30a1f992ed3bbd408ddd1236f8f7c0e6b59e -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|CONTRIBUTING.md|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|RELEASING.md|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|README.md|08326c7feba553418f143f5ef8f31e188e100922a816cd92c52cf4868ce20a37 -->
+<!-- kb:artifact promptus-readme|promptus/README.md|cdf33b1567405d47ddf9d5aa52348dafacd3dcf8f75775a53bf6c703b1a20536 -->
+<!-- kb:artifact editio-readme|editio/README.md|bdef4882a5b7c44b57e401b4f5c4a62615bbeb28462265b8c5c2bbf9cabfa5f3 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/README.md|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+<!-- kb:artifact claude-manifest|editio/.claude-plugin/plugin.json|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|editio/.codex-plugin/plugin.json|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|dc7b35d88c01266ceb5e2654b332d7f0efaf0a095eab32115545b5b47f10a9a9 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|ab6bde044a95f641e6ac20dfdaeb1e5514163f9d6fdcf14f7363c92ba0259267 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|8645e3ea7265683e8fa009c482c54a99306ab290350db5c88cdcde8344b76b40 -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|56be8dd84832e5bb6e31806347c68295561d59fe1e3f9ae7307d2395fd19f2b2 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/history/pre-cross-os-ci/engine-workload-adapters.ts.txt|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|RETRIEVAL.md|0d653a838ff6f466e9ca5b5882bacd4ffdb805276afb4036b7dedbeeb4517559 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|338d9a9aae2fa880c85c4d542f08b4d3bca53597a120388ecbed11ee9aa77493 -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|277f33e5db7f0f63f4472b942f8a046b37fa3b9888c17b73411c1529829968f8 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|7a4277134bbddfbf1e729fd164cfb099d8b6ec68c5b4769c09bfc9b3db86c41c -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/history/pre-cross-os-ci/packaging.test.ts.txt|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|MIGRATION.md|4def9f33f982af3a5e7fec7815b7dc55b780b0ed5eed5d8e9b44c5784f23f0a7 -->
+<!-- kb:artifact ingest-workflow|promptus/commands/promptus-ingest.md|6157aadbf3e395bbeed0e2b574f58d8ad608a48c3ba0706cbea58ccd9a3b0d29 -->
+<!-- kb:artifact telos-workflow|promptus/skills/telos/SKILL.md|6edc6e1366a8f7360ee402774fb6f18306831b3fd197b2a22edc460de8fa676f -->
+<!-- kb:artifact latex-workflow|editio/skills/editio-latex/SKILL.md|37dfc2ba56f280c9999dc92c917d0fa8740a276ca3e2a0f6fa2ec240f5069250 -->
+<!-- kb:artifact authoring-contract|editio/skills/editio-latex/references/authoring-subset.md|09064c18abce57a943178ade6a543d865640bb5672c24f0f19c2227adfa15023 -->
+<!-- kb:artifact section-preview|editio/templates/latex/preview.tex|ffd613f21cc1832cbc74af09c2988301ecf050cd92330f8edf168676dbad3eb2 -->
+<!-- kb:artifact preview-regression|editio/scripts/test/preview.test.ts|35c6b5e958d492fe7989f0c0295c0978a26e989a354a6cced565693c0aa5101b -->
+<!-- kb:artifact batch-benchmark|benchmarks/batch-maintenance.ts|8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca -->
+<!-- kb:artifact failure-fixture|benchmarks/continuation-failure-fixture.ts|2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0 -->
+<!-- kb:artifact failure-verifier|benchmarks/continuation-failure-verify.ts|762014d04f549d455a6ac320fc1d5783f62a58005b7642ebef18f6031af9a868 -->
+<!-- kb:artifact completion-audit|OVERHAUL-VERIFICATION.md|457c6f964c1f095d19ba5be8a873b0045695d5b68d3b76f7075c1cce9f1cd102 -->
+<!-- kb:artifact hygiene-policy|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+The operator authorized implementation of RELEASE-PLAN.md. The release integration adds optional exact-byte parse reuse, cache-free ledger slice mapping, coherent index publication fallback, evidence navigation, structured recovery advice and preview-first derived adoption. All 93 predecessor dependency records are retained, with hashes advanced only to their current source bytes. Historical stage verification is not a claim about this new implementation. RELEASE-VERIFICATION.md and the final result provide the current gate and performance limits; persistent raw caching remains off by default because production acceptance did not establish a benefit.
+Related: [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+↳ supersedes event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati
+
+### [2026-09-06 01:07:54] RESULT/VALIDATED — Retain pre-CI custody for event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat
+<!-- kb:id event-20260906T050754Z-retain-pre-ci-custody-for-event-20260905t125535z-complete-releas -->
+<!-- kb:artifact release-0|RELEASE-PLAN.md|7f993123f28d366c35ea22541e97fe3d138ba5084d8ed3cd72fa5895238fffef -->
+<!-- kb:artifact release-1|RELEASE-VERIFICATION.md|632f04273962e5341e681156e502f5ce8228d9e23b45c39e6b6749a4397ab433 -->
+<!-- kb:artifact release-2|promptus/scripts/lib/parse-cache.ts|8acfa01670578c5799acf4aeefdfe83f5a9e72b3028e8bf045040c293766f0da -->
+<!-- kb:artifact release-3|promptus/scripts/lib/diagnostics.ts|b8d8e41f1f4331e461ae120674b54712e0e8a3270b5947b706a7bd5835764808 -->
+<!-- kb:artifact release-4|promptus/scripts/lib/store-lock.ts|abbe268d3826f49147bd6eabc9cb568722391ad863795dcf172dcfb38e7d33ac -->
+<!-- kb:artifact release-5|promptus/scripts/kb-cache.ts|ecd092110bc230229fd1b6fc525b2724138cabef68ce0e864eed0b1790ab12d1 -->
+<!-- kb:artifact release-6|promptus/scripts/kb-evidence.ts|2e793d3fe8e5428a547d7c2dd521ea93fbfa6dd98dad5f8ff8b59778255d2545 -->
+<!-- kb:artifact release-7|promptus/scripts/promptus-upgrade.ts|e40c4e8bbba24785b6b0a75ead76bacabaf4969619667e0c5fbb2c5add317ed7 -->
+<!-- kb:artifact release-8|promptus/scripts/test/release-integration.test.ts|775a6091306b690d8e6ef6c6ce3a2913a5b57a95a858163725c1e32391398b9f -->
+<!-- kb:artifact release-9|benchmarks/history/pre-cross-os-ci/publication-fixture.ts.txt|71f55e29a0a1c5808a2cbf43c94372ff014bd9c702522d09e04e0f2d690fcd1c -->
+<!-- kb:artifact release-10|benchmarks/parse-reuse-stage.ts|28ae22a7a6be16a9416c19382922ff7e861f2c3fb498b1ffdcbd475a3ef77be2 -->
+<!-- kb:artifact release-11|benchmarks/publication-fence.test.ts|599d29b1130bd563b9bda09441e76020a38b94a60bd10396cad2c241d7e770ec -->
+<!-- kb:artifact release-12|benchmarks/release-runtime-acceptance.ts|911908b2a83adc2d70905799513d7bb2afbbfa125ee9736e17547fc794b9c8c4 -->
+<!-- kb:artifact release-13|benchmarks/results/release-runtime-acceptance-2026-09-05.json|3c7a930108a6972d6ef02c5fd19142483445a3ae034fa25e074d99f1602fe735 -->
+<!-- kb:artifact release-14|benchmarks/results/release-runtime-acceptance-final-2026-09-05.json|f140cf3696cbee084175cddc3e0422936f9860acba977dffa750afc34f899598 -->
+<!-- kb:artifact release-15|benchmarks/results/release-integration-gates-2026-09-05.json|e737d8c4554ea3b4e5c0c50802f45762cdffe79491e3e966edc1690a0024bdd2 -->
+Implemented the operator-authorized expanded release plan in the checkout. New source surfaces provide exact-byte optional raw parse reuse; cache-free per-process ledger slice lookup; coherent index publication detection/current-source fallback; structured recovery advice; bounded source-only evidence navigation; cache usage and targeted eviction; semantic resource preview; and exact-project, package/source/policy/limit-token-bound derived adoption. Promptus skill routing, READMEs, migration guidance and both affected changelogs describe the actual boundaries.
+
+Final repository suite: 478 pass, 0 fail, 3,069 assertions across 47 files. Both adapters and checked Editio reader parity pass. The amended skill validates and git diff --check passes. Thirteen release-integration tests cover exact projection parity, stat-preserving outside edits, archive/delete movement, lifecycle cloning, corruption/loss, quota/space policy, optional write failure, safe eviction/contention, interrupted publication, support/refutation/replacement navigation, body limits, diagnostics, read-only upgrade preview, changed-token refusal, repeatable derived application and partial failure.
+
+The production acceptance decision is deliberately narrower than the earlier prototype result. Three alternating updates per arm on the existing 512-page/1,024-event synthetic fixture preserve byte-exact catalog/graph/search and query parity, and exact updated source fetches. Final median cache-disabled/enabled index times are 139.18/201.72 ms and phrase times 82.70/111.62 ms. Exact-byte verification and persistence cost outweigh reuse here. Persistent raw caching therefore defaults OFF (PROMPTUS_PARSE_CACHE_BYTES=0); it is an explicitly bounded option, not an automatic project upgrade. No general runtime speedup is claimed from this comparison. Existing batch maintenance improvements and the cache-free slice map do not require extra disk storage. QMD growth remains explicitly uncapped by the raw-cache limit; its preview warns against enabling builds on tight disks without an external filesystem quota. No model/backend or private-corpus experiment was restarted.
+
+The first full-suite attempt exposed historical benchmark instrumentation collisions with production caching/locking. Disposable staging now reconstructs the earlier experiment boundary. Its old negative control is a positive production stale-publication regression. The three original harness/test sources are archived byte-identically and the original measured receipts remain unchanged. Custody successors retain all 6 and 93 predecessor dependency records; the two historical empirical findings are retained through custody-only successors with unchanged measured bodies and archived original dependencies. No artifact dependency was dropped to silence a gate. An unavailable `python` command was replaced with the available `python3` for skill validation.
+
+RELEASE-VERIFICATION.md maps the required areas and limitations. Source implementation is complete; external delivery is not: no commit, push, manifest bump, PR, tag, release, plugin installation or live Psi/MoT/Probatio/Mensura read/write occurred. The upgrade tool intentionally does not install plugins, overwrite custom instructions, migrate source, reload running agents or certify other projects. Native Windows/macOS CI and per-project continuation smoke checks remain delivery gates. No inherited graph or archival evidence debt was repaired or baselined.
+Related: [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat]] · [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+↳ supersedes event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat
+
+### [2026-09-06 01:08:27] FIX/OPEN — Correct cross-platform benchmark fixture and resource contracts
+<!-- kb:id event-20260906T050827Z-correct-cross-platform-benchmark-fixture-and-resource-contracts -->
+<!-- kb:artifact ci-fix-0|benchmarks/engine-workload-adapters.ts|cc669727aa74a7080c2bb6510aeb1d5b7dd3734a4052132d37390ade049e5d74 -->
+<!-- kb:artifact ci-fix-1|benchmarks/local-retrieval-snapshot.ts|ce008b44ebbd2148681bcf4ca8e2f2f57209a7505095c3144712b990bd1dece6 -->
+<!-- kb:artifact ci-fix-2|benchmarks/packaging.test.ts|9b0e881c913dc94a4a2cdb42aa834ecc0048fffad522d4b8e2bc591acebaea97 -->
+<!-- kb:artifact ci-fix-3|benchmarks/private-parse-support.test.ts|8d74d06a227805de3e3a7e8af63a0a6f9d25cc23970d3f1b9630412335b4f61e -->
+<!-- kb:artifact ci-fix-4|benchmarks/private-parse-support.ts|9201d07a46aa486054fddc9a6d4c1ff94b22deab27cda4a53f2b90a46c335f45 -->
+<!-- kb:artifact ci-fix-5|benchmarks/publication-fixture.ts|9732be58ea939c21e0003d3a597db8f411a433e87417ca428746b6f009c38e96 -->
+<!-- kb:artifact ci-fix-6|benchmarks/quality-sources.test.ts|70686af77f3f7f73a3c35404734fb6a345adcc843c92bdb5f84160c9368651f6 -->
+<!-- kb:artifact ci-fix-7|benchmarks/quality-sources.ts|4e8621b39b353366bc87a59a3bd3f82b482813c86230823ee21e8bdfb54302ec -->
+PR 57's first CI run (34013049981) passed Linux test/validate, hygiene and Conventional PR title, but failed macOS and Windows benchmark/test portability. Logs show physical temporary-root alias mismatches on macOS, forward-slash prefix/assertion assumptions on Windows, open SQLite statements retaining a Windows file handle, and a Linux-only /proc plus GNU-time telemetry helper being invoked on unsupported hosts.
+
+Normalize newly minted fixture/snapshot roots through realpath before writing their marker. Use platform-aware containment for snapshot/quality paths while retaining symlink refusal and exact marker/hash checks. Normalize the package argv assertion to its documented forward-slash representation. Finalize all SQLite benchmark statements before database close. Guard the private telemetry runner with an explicit Linux-only refusal and test that refusal on other OSes; do not silently return zero resource measurements. Production plugin runtime behavior is unchanged by these benchmark/test fixes.
+
+The affected seven-file local subset passed 53 tests with 728 assertions before the final explicit SQLite statement finalization adjustment. The full suite is repeated before push. Historical dependencies altered by these fixes retain byte-identical ae7482e copies under benchmarks/history/pre-cross-os-ci, verified against their original hashes. Custody successors keep every prior dependency and preserve the original measurements; no result is rewritten as cross-platform evidence. CI must rerun on the new commit before PR 57 is considered ready. No merge, release, tagging or installation occurred.
+Related: [[event-20260906T050443Z-push-the-implementation-pr-and-retain-the-protected-main-release]]
 
 <!-- kb:append-point -->

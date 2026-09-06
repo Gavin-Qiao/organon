@@ -37,36 +37,29 @@ export async function openEngine(name: EngineName, scratch: string, dependencies
     const file = join(scratch, "fts.sqlite"), db = new Database(file);
     db.exec("CREATE VIRTUAL TABLE IF NOT EXISTS units USING fts5(key UNINDEXED, title, path, body, tokenize='unicode61 remove_diacritics 2')");
     const insert = db.prepare("INSERT INTO units VALUES (?, ?, ?, ?)");
-    const select = db.prepare("SELECT key FROM units WHERE units MATCH ? ORDER BY bm25(units,0,2.5,0.5,1) LIMIT 100");
-    const scan = db.prepare("SELECT rowid, key, title, path, body FROM units");
-    const remove = db.prepare("DELETE FROM units WHERE rowid=?");
     return {
       query: async query => {
         const match = [...new Set(searchTokens(query))].map(term => `"${term.replaceAll('"', '""')}"`).join(" OR ");
-        return match ? (select.all(match) as { key: string }[]).map(row => row.key) : [];
+        return match ? (db.prepare("SELECT key FROM units WHERE units MATCH ? ORDER BY bm25(units,0,2.5,0.5,1) LIMIT 100").all(match) as { key: string }[]).map(row => row.key) : [];
       },
       update: async sources => {
         // Compare projected content, not just file mtimes. One transaction covers
         // deletion, changed rows and insertion; unchanged rows retain their rowid.
-        const old = new Map((scan.all() as any[]).map(row => [row.key, row]));
+        const old = new Map((db.prepare("SELECT rowid, key, title, path, body FROM units").all() as any[]).map(row => [row.key, row]));
         let changed = 0, deleted = 0;
         db.transaction(() => {
           for (const source of sources) {
             const row = old.get(source.id); old.delete(source.id);
             if (row && row.title === source.title && row.path === source.path && row.body === source.text) continue;
-            if (row) remove.run(row.rowid);
+            if (row) db.prepare("DELETE FROM units WHERE rowid=?").run(row.rowid);
             insert.run(source.id!, source.title, source.path, source.text); changed++;
           }
-          for (const row of old.values()) { remove.run(row.rowid); deleted++; }
+          for (const row of old.values()) { db.prepare("DELETE FROM units WHERE rowid=?").run(row.rowid); deleted++; }
         })();
         return { changed, deleted };
       },
-      indexedText: async id => {
-        const statement = db.prepare("SELECT body FROM units WHERE key=?");
-        try { return (statement.get(id) as { body: string } | null)?.body ?? null; }
-        finally { statement.finalize(); }
-      },
-      close: async () => { for (const statement of [insert, select, scan, remove]) statement.finalize(); db.close(); }, storage: () => treeBytes(file) + treeBytes(`${file}-wal`), workerRss: noWorker,
+      indexedText: async id => (db.prepare("SELECT body FROM units WHERE key=?").get(id) as { body: string } | null)?.body ?? null,
+      close: async () => { db.close(); }, storage: () => treeBytes(file) + treeBytes(`${file}-wal`), workerRss: noWorker,
     };
   }
   if (name === "zvec-hybrid") {

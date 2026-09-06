@@ -1,7 +1,7 @@
 /** Private, source-only capture for local retrieval experiments. Never follows links. */
 import { createHash } from "node:crypto";
 import { copyFileSync, existsSync, lstatSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, realpathSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve, relative, isAbsolute } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { tmpdir } from "node:os";
 export const SNAPSHOT_MARKER = "organon.private-retrieval-snapshot.v1";
 export const digest = (data: string | Buffer) => createHash("sha256").update(data).digest("hex");
@@ -21,8 +21,7 @@ export function manifest(root: string): Array<{ path: string; bytes: number; sha
 }
 export function assertSnapshot(root: string) {
   const path = realpathSync(root), temp = realpathSync(tmpdir());
-  const rel = relative(temp, path);
-  if (!rel || isAbsolute(rel) || rel.split(/[\\/]/).includes("..") || lstatSync(root).isSymbolicLink()) throw new Error("snapshot must be a physical OS-temp directory");
+  if (!path.startsWith(temp + "/") || lstatSync(root).isSymbolicLink()) throw new Error("snapshot must be a physical OS-temp directory");
   const receipt = JSON.parse(readFileSync(join(path, "snapshot.json"), "utf8"));
   if (receipt.schema !== SNAPSHOT_MARKER || receipt.root !== path || !receipt.verified) throw new Error("unverified snapshot");
   if (digest(JSON.stringify(manifest(path))) !== receipt.manifestHash) throw new Error("snapshot source drift");
@@ -32,7 +31,7 @@ export function capture(sourceInput: string, label: string) {
   if (!/^[a-z0-9-]+$/.test(label)) throw new Error("invalid label");
   const source = realpathSync(resolve(sourceInput));
   if (!existsSync(join(source, ".promptus/TELOS.md"))) throw new Error("missing Telos");
-  const root = realpathSync(mkdtempSync(join(tmpdir(), `organon-private-${label}-`)));
+  const root = mkdtempSync(join(tmpdir(), `organon-private-${label}-`));
   const started = new Date().toISOString(), before = manifest(source);
   for (const file of before) {
     const target = join(root, ".promptus", file.path);

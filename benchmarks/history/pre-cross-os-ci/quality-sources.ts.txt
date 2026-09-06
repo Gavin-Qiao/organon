@@ -7,7 +7,7 @@ import { semanticSnapshot } from "../promptus/scripts/lib/semantic.ts";
 export const QUALITY_MARKER="organon.private-quality.v1";
 export function assertQuality(root:string){
  const physical=realpathSync(root);
- if(!physical.startsWith(join(realpathSync(tmpdir()),"organon-quality-"))||readFileSync(join(root,"marker"),"utf8")!==QUALITY_MARKER)throw new Error("unmarked private quality workspace");
+ if(!physical.startsWith(realpathSync(tmpdir())+"/organon-quality-")||readFileSync(join(root,"marker"),"utf8")!==QUALITY_MARKER)throw new Error("unmarked private quality workspace");
  return physical;
 }
 export function corpus(root:string,label:string):any[]{

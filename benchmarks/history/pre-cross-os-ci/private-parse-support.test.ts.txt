@@ -1,5 +1,5 @@
 import { test, expect, afterAll } from "bun:test";
-import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -7,7 +7,7 @@ import { stageBudgetedRuntime, privateParent, publicStats, publicCommand, bounde
 import { createFixture } from "./publication-fixture.ts";
 import { controlPath } from "./publication-fence.ts";
 
-const parent = realpathSync(mkdtempSync(join(tmpdir(), "organon-private-parse-test-")));
+const parent = mkdtempSync(join(tmpdir(), "organon-private-parse-test-"));
 afterAll(() => rmSync(parent, { recursive: true }));
 test("private parent rejects repository and frozen capture roots", () => {
   expect(() => privateParent(join(import.meta.dir, ".."))).toThrow();
@@ -28,10 +28,6 @@ test("telemetry allowlist never copies private paths, reasons, text or extra fie
 });
 test("subprocess timeout kills its process group and keeps raw diagnostics private", async () => {
   const log = join(parent, "timeout.json");
-  if (process.platform !== "linux") {
-    await expect(boundedCommand([process.execPath, "-e", "process.exit(0)"], log)).rejects.toThrow("private-trial-platform");
-    expect(existsSync(log)).toBe(false); return;
-  }
   const result = await boundedCommand([process.execPath, "-e", 'console.log("private timeout probe"); setInterval(() => {}, 1000);'], log, { timeoutMs: 150 });
   expect(result.killed).toBe("command-timeout"); expect(result.ms).toBeLessThan(3000);
   expect(readFileSync(log, "utf8")).toContain("private timeout probe");

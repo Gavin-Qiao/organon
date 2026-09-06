@@ -30,7 +30,7 @@ test("isolated plugin packages retain default recall, explicit root and standalo
     const add = run(join(p, "scripts/kb-add.ts"), project, ["--substrate", "finding", "--kind", "CLAIM", "--status", "VALIDATED", "--title", "Packaged boundary result", "--json"], "A synthetic package supports boundarytoken.\n");
     expect(add.status).toBe(0);
     const receipt = JSON.parse(add.stdout);
-    expect(receipt.next_action.argv.map((arg: string) => arg.replace(/\\/g, "/"))).toContain(project.replace(/\\/g, "/"));
+    expect(receipt.next_action.argv).toContain(project);
     expect(run(join(p, "scripts/kb-index.ts"), project, []).status).toBe(0);
     const lexical = run(join(p, "scripts/kb-find.ts"), project, ["boundarytoken"]);
     expect(lexical.status).toBe(0); expect(lexical.stdout).toContain(receipt.path);
