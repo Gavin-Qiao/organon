@@ -12,7 +12,7 @@ For Claude Code and Codex.
 [![Bun](https://img.shields.io/badge/runtime-bun-14151a?logo=bun&logoColor=white)](https://bun.sh)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](LICENSE)
 
-[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Upgrade guide](MIGRATION.md) · [Benchmarks](benchmarks/README.md) · [Contributing](CONTRIBUTING.md)
+[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Upgrade guide](MIGRATION.md) · [Delivery status](RELEASE-STATUS.md) · [Benchmarks](benchmarks/README.md)
 
 </div>
 

@@ -27,22 +27,22 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260906T053332Z-publish-and-install-promptus-then-cut-the-independent-editio-rel -->
-Promptus 0.10.0 is published from exact PR 58 merge 504ded3c98f5494519ec1e45b2a1db853cf15ab3. Release workflow 34014163330 and main CI 34014143866 passed. Codex installation succeeded; all 111 source files match and four extra generated command adapters are accounted for. The prior cache remains. Editio 0.8.0 is being cut on release/editio-v0.8.0; installed Editio remains 0.7.0 until publication.
+<!-- kb:now-through event-20260906T054449Z-complete-release-and-codex-installation-while-preserving-live-ad -->
+Promptus 0.10.0 and Editio 0.8.0 are released and installed/enabled in Codex. PR 58 merge/tag: 504ded3c98f5494519ec1e45b2a1db853cf15ab3; PR 59 merge/tag: f5fa92bc9165f12017f8e322c45bc22d601614f4. Publication runs 34014163330 and 34014502815 passed; merged-main CI passed. All 111 Promptus and 60 Editio source files match installed packages, with four expected generated command adapters only. Prior caches remain. See RELEASE-STATUS.md for exact links and boundaries.
 
 ## Open frontier
 
-Complete the Editio release gate and PR, merge after required checks, tag the exact merged commit, watch publication and update Codex. Installed-package project previews are running for Psi, MoT and Mensura. Apply only fresh tokens with no non-derived preflight errors. Probatio retains its pinned runtime; its plugin skills update separately. Four initial artifact preflights passed with warnings, not yet adoption receipts.
+Four-project adoption is incomplete, not a release failure. Initial artifact preflights passed, then live writers changed source. Psi's two attempts and MoT's one attempt refused stale plan tokens before maintenance. Mensura preview found stale NOW and cache. Probatio pins its reviewed tools/promptus runtime at upstream 0.9.1 plus alias overlay. No live project source, policy or derived indexes were changed by this release session. No agent reload or post-adoption continuation is claimed; Claude CLI is unavailable here.
 
 ## Next actions
 
-1. Complete the independent Editio release cut through its green PR and exact merged-commit tag.
-2. Update Editio through the supported Codex command and verify package versions and bytes. Promptus installation is verified; Claude is absent from this shell PATH.
-3. Preview each project separately after installation. Apply only derived-state adoption where preflight permits it. Preserve Probatio's tools/promptus pin; installed skills do not replace that runtime. Preserve all research Markdown, manuscripts, custom policy and warning debt; no scientific repair or new optional backend.
+1. Land the final documentation/ledger delivery receipt through the protected-main PR route; inspect git and GitHub if resuming. Do not bump or retag already-published plugins for this root-doc-only record.
+2. Let owning research sessions finish their batches and checkpoint, then start fresh Codex tasks to load the installed skills/hooks. Obtain and apply fresh plans independently; stale handoffs require their owning session, not an Organon evidence repair.
+3. Preserve Probatio's vendored runtime until a separately reviewed upgrade audits its alias overlay. Keep raw caching off, semantics unconfigured, existing warnings visible, and all custom instructions intact.
 
 ## <<< RESUME HERE >>>
 
-Run read-only session-doctor and inspect git/PR state. Promptus release and installation are verified, Editio release and live-project derived adoption remain in progress. Persistent raw caching stays off. New tasks must load updated skills; an installed manifest alone does not prove session adoption.
+Run Organon's read-only session-doctor, inspect git/PR status and RELEASE-STATUS.md. Publication and Codex installation are verified; coordinated project/session adoption remains. No new retrieval experiment, automatic source migration, scientific repair, cache deletion or branch deletion is needed or authorized by this handoff.
 
 <!-- now:end -->
 
@@ -2895,5 +2895,60 @@ Codex's supported plugin add command installed Promptus 0.10.0. Both installed a
 The independent Editio release branch now finalizes 0.8.0, both adapter manifests and comparison links. Canonical grounding, historical claim syntax and stricter evidence-gate compatibility are recorded in its changelog and human docs. No live manuscript is changed. Installed Editio remains 0.7.0 until this release PR merges and publication passes.
 
 Fresh installed-package adoption previews are running for Psi, MoT and Mensura. They use the installed root itself after its complete source equality was verified; Codex-generated adapters are included in its package-bound token. Probatio's pinned tools/promptus runtime remains untouched. The prior four-project artifact preflights were ready with inherited warnings; no live adoption result is yet certified.
+
+### [2026-09-06 01:44:48] RESULT/VALIDATED — Retain release-delivery-closure custody for event-20260906T050754Z-retain-pre-ci-custody-for-event-20260905t125535z-complete-releas
+<!-- kb:id event-20260906T054448Z-retain-release-delivery-closure-custody-for-event-20260906t05075 -->
+<!-- kb:artifact release-0|benchmarks/history/release-delivery-closure/RELEASE-PLAN.md.txt|7f993123f28d366c35ea22541e97fe3d138ba5084d8ed3cd72fa5895238fffef -->
+<!-- kb:artifact release-1|RELEASE-VERIFICATION.md|632f04273962e5341e681156e502f5ce8228d9e23b45c39e6b6749a4397ab433 -->
+<!-- kb:artifact release-2|promptus/scripts/lib/parse-cache.ts|8acfa01670578c5799acf4aeefdfe83f5a9e72b3028e8bf045040c293766f0da -->
+<!-- kb:artifact release-3|promptus/scripts/lib/diagnostics.ts|b8d8e41f1f4331e461ae120674b54712e0e8a3270b5947b706a7bd5835764808 -->
+<!-- kb:artifact release-4|promptus/scripts/lib/store-lock.ts|abbe268d3826f49147bd6eabc9cb568722391ad863795dcf172dcfb38e7d33ac -->
+<!-- kb:artifact release-5|promptus/scripts/kb-cache.ts|ecd092110bc230229fd1b6fc525b2724138cabef68ce0e864eed0b1790ab12d1 -->
+<!-- kb:artifact release-6|promptus/scripts/kb-evidence.ts|2e793d3fe8e5428a547d7c2dd521ea93fbfa6dd98dad5f8ff8b59778255d2545 -->
+<!-- kb:artifact release-7|promptus/scripts/promptus-upgrade.ts|e40c4e8bbba24785b6b0a75ead76bacabaf4969619667e0c5fbb2c5add317ed7 -->
+<!-- kb:artifact release-8|promptus/scripts/test/release-integration.test.ts|775a6091306b690d8e6ef6c6ce3a2913a5b57a95a858163725c1e32391398b9f -->
+<!-- kb:artifact release-9|benchmarks/history/pre-cross-os-ci/publication-fixture.ts.txt|71f55e29a0a1c5808a2cbf43c94372ff014bd9c702522d09e04e0f2d690fcd1c -->
+<!-- kb:artifact release-10|benchmarks/parse-reuse-stage.ts|28ae22a7a6be16a9416c19382922ff7e861f2c3fb498b1ffdcbd475a3ef77be2 -->
+<!-- kb:artifact release-11|benchmarks/publication-fence.test.ts|599d29b1130bd563b9bda09441e76020a38b94a60bd10396cad2c241d7e770ec -->
+<!-- kb:artifact release-12|benchmarks/release-runtime-acceptance.ts|911908b2a83adc2d70905799513d7bb2afbbfa125ee9736e17547fc794b9c8c4 -->
+<!-- kb:artifact release-13|benchmarks/results/release-runtime-acceptance-2026-09-05.json|3c7a930108a6972d6ef02c5fd19142483445a3ae034fa25e074d99f1602fe735 -->
+<!-- kb:artifact release-14|benchmarks/results/release-runtime-acceptance-final-2026-09-05.json|f140cf3696cbee084175cddc3e0422936f9860acba977dffa750afc34f899598 -->
+<!-- kb:artifact release-15|benchmarks/results/release-integration-gates-2026-09-05.json|e737d8c4554ea3b4e5c0c50802f45762cdffe79491e3e966edc1690a0024bdd2 -->
+Implemented the operator-authorized expanded release plan in the checkout. New source surfaces provide exact-byte optional raw parse reuse; cache-free per-process ledger slice lookup; coherent index publication detection/current-source fallback; structured recovery advice; bounded source-only evidence navigation; cache usage and targeted eviction; semantic resource preview; and exact-project, package/source/policy/limit-token-bound derived adoption. Promptus skill routing, READMEs, migration guidance and both affected changelogs describe the actual boundaries.
+
+Final repository suite: 478 pass, 0 fail, 3,069 assertions across 47 files. Both adapters and checked Editio reader parity pass. The amended skill validates and git diff --check passes. Thirteen release-integration tests cover exact projection parity, stat-preserving outside edits, archive/delete movement, lifecycle cloning, corruption/loss, quota/space policy, optional write failure, safe eviction/contention, interrupted publication, support/refutation/replacement navigation, body limits, diagnostics, read-only upgrade preview, changed-token refusal, repeatable derived application and partial failure.
+
+The production acceptance decision is deliberately narrower than the earlier prototype result. Three alternating updates per arm on the existing 512-page/1,024-event synthetic fixture preserve byte-exact catalog/graph/search and query parity, and exact updated source fetches. Final median cache-disabled/enabled index times are 139.18/201.72 ms and phrase times 82.70/111.62 ms. Exact-byte verification and persistence cost outweigh reuse here. Persistent raw caching therefore defaults OFF (PROMPTUS_PARSE_CACHE_BYTES=0); it is an explicitly bounded option, not an automatic project upgrade. No general runtime speedup is claimed from this comparison. Existing batch maintenance improvements and the cache-free slice map do not require extra disk storage. QMD growth remains explicitly uncapped by the raw-cache limit; its preview warns against enabling builds on tight disks without an external filesystem quota. No model/backend or private-corpus experiment was restarted.
+
+The first full-suite attempt exposed historical benchmark instrumentation collisions with production caching/locking. Disposable staging now reconstructs the earlier experiment boundary. Its old negative control is a positive production stale-publication regression. The three original harness/test sources are archived byte-identically and the original measured receipts remain unchanged. Custody successors retain all 6 and 93 predecessor dependency records; the two historical empirical findings are retained through custody-only successors with unchanged measured bodies and archived original dependencies. No artifact dependency was dropped to silence a gate. An unavailable `python` command was replaced with the available `python3` for skill validation.
+
+RELEASE-VERIFICATION.md maps the required areas and limitations. Source implementation is complete; external delivery is not: no commit, push, manifest bump, PR, tag, release, plugin installation or live Psi/MoT/Probatio/Mensura read/write occurred. The upgrade tool intentionally does not install plugins, overwrite custom instructions, migrate source, reload running agents or certify other projects. Native Windows/macOS CI and per-project continuation smoke checks remain delivery gates. No inherited graph or archival evidence debt was repaired or baselined.
+Related: [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat]] · [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]]
+
+
+
+## Release custody continuation
+
+Historical claims and every dependency are retained. Documentation or version metadata changed during the authorized release workflow; prior dependency bytes from f5fa92b are preserved under benchmarks/history/release-delivery-closure. These original test and measurement receipts certify their recorded scope, not the subsequent release or installation. Current delivery state is recorded separately.
+Related: [[event-20260906T050754Z-retain-pre-ci-custody-for-event-20260905t125535z-complete-releas]] · [[event-20260905T122231Z-expand-the-release-goal-with-four-operational-requirements]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[finding-20260905T125313Z-retain-synthetic-parse-reuse-evidence-with-archived-harness-cust]] · [[finding-20260905T125314Z-retain-publication-fence-evidence-with-archived-negative-control]] · [[finding-20260905T120244Z-private-psi-and-mot-copies-confirm-parse-reuse-maintenance-gains]] · [[event-20260905T125535Z-complete-release-integration-with-opt-in-caching-and-four-operat]]
+↳ supersedes event-20260906T050754Z-retain-pre-ci-custody-for-event-20260905t125535z-complete-releas
+
+### [2026-09-06 01:44:49] RESULT/VALIDATED — Complete release and Codex installation while preserving live adoption boundaries
+<!-- kb:id event-20260906T054449Z-complete-release-and-codex-installation-while-preserving-live-ad -->
+<!-- kb:artifact delivery-record|RELEASE-STATUS.md|- -->
+The operator-authorized release and Codex installation workflow is complete; four-project session adoption remains incomplete. Implementation and human-doc PR 57 merged at 82da5083a15118e9852395c362ccb37ff9702914. Promptus PR 58 merged at 504ded3c98f5494519ec1e45b2a1db853cf15ab3 and Editio PR 59 at f5fa92bc9165f12017f8e322c45bc22d601614f4. Remote tags promptus-v0.10.0 and editio-v0.8.0 name those exact merged commits. Publication runs 34014163330 and 34014502815 passed, and both release records are public, non-draft and non-prerelease. Both merged-main runs passed cross-platform CI. Each local release gate passed 478 tests, 0 failures and 3,069 assertions; adapter parity, strict health and hygiene passed.
+
+Supported Codex plugin add installed and enabled Promptus 0.10.0 and Editio 0.8.0 from the configured local marketplace. Both installed adapter versions agree. A complete per-file SHA-256 comparison verified all 111 Promptus and 60 Editio source files, with only four expected Codex-generated command adapters extra under Promptus. No manual cache rewrite, marketplace reconfiguration, model download, GPU dependency, new semantic backend or raw cache activation occurred. Old caches remain. Claude CLI is unavailable in this environment, so no Claude update or host-wide session reload is claimed.
+
+All four initial artifact preflights passed with existing graph/archival warnings. Live research then changed during adoption: Psi's first and fresh-token apply attempts both returned UPGRADE_PLAN_CHANGED before maintenance; MoT's apply did the same. Subsequent diagnostic previews found derived-index lag as new research units arrived. Mensura's installed-package preview returned HANDOFF_STALE and CACHE_STALE, so no apply was attempted. Probatio explicitly pins a vendored 0.9.1 runtime with an alias overlay; its runtime and custom policy were preserved. No live project source, manuscript, vocabulary, instructions or derived index was written by this release session. A point-in-time successful preflight is not an adoption receipt, and no post-adoption continuation success is claimed.
+
+RELEASE-STATUS.md records exact publication/install checks and the per-project boundary. RELEASE-PLAN.md now distinguishes its historical starting state from current delivery, and the cross-plugin release summary is finalized against both changelogs. Historical plan dependencies are retained byte-identically via successor custody rather than rewritten. The next safe decision is coordinated pickup: current research agents finish their batches and checkpoint, then fresh tasks load the installed bundle and obtain fresh per-project plans. Probatio's vendored runtime requires its own reviewed upgrade and overlay audit, not an implicit consequence of the shared plugin update.
 
 <!-- kb:append-point -->

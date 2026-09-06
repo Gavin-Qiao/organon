@@ -1,7 +1,10 @@
 # Research continuity and grounded writing
 
-Cross-plugin release draft for Promptus and Editio. Each plugin's versioned
-CHANGELOG.md remains the publication source; this is not a monorepo release.
+Finalized cross-plugin summary, reconciled into the published
+[Promptus release](https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.10.0) and
+[Editio release](https://github.com/Gavin-Qiao/organon/releases/tag/editio-v0.8.0).
+Each plugin's versioned CHANGELOG.md remains the publication source; this is not a monorepo
+release. [Delivery status](../../RELEASE-STATUS.md) separates publication from project adoption.
 
 ## Promptus
 
