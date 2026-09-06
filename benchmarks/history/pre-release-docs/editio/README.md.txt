@@ -11,7 +11,7 @@ Per-section Markdown, checked claims and numbers, three render modes.
 [![Promptus](https://img.shields.io/badge/requires-promptus-5b5bd6)](../promptus/README.md)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](../LICENSE)
 
-[Quick start](#quick-start) · [Audit loop](#the-audit-loop) · [Upgrade](../MIGRATION.md#manuscripts) · [Venues](#venue-profiles) · [Organon](../README.md)
+[Quick start](#quick-start) · [Audit loop](#the-audit-loop) · [Toolchain](#what-ships) · [Venues](#venue-profiles) · [Organon](../README.md)
 
 </div>
 
@@ -66,10 +66,7 @@ codex plugin add promptus@organon
 codex plugin add editio@organon
 ```
 
-Start a new Codex task, then ask it to use the `editio` skill to start an arXiv paper.
-For an existing manuscript, follow the [compatibility guide](../MIGRATION.md#manuscripts):
-an updated evidence gate can correctly reject previously accepted stale grounds. Updating the
-plugin does not rewrite the paper or build PDFs automatically.
+Then ask Codex to use the `editio` skill to start an arXiv paper.
 
 Editio requires a TeX distribution at build time. The `editio-latex` skill detects the local
 environment first and gives platform-aware setup guidance; Editio does not vendor TeX.
@@ -120,7 +117,7 @@ bun editio/scripts/editio-status.ts --gate
 - no ungraded claim spans;
 - no unsourced claim without a recorded override;
 - no validated claim resting on weak, unknown, absent, or invalidated grounds without a recorded
-  override;
+  override.
 - no conjectured claim resting on invalidated or unknown grounds; overrides do not apply here;
 - no conflicting grades or historical report without resolvable closed evidence.
 

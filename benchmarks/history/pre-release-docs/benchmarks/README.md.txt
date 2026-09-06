@@ -370,10 +370,7 @@ restored adequate cadence, adoption remains deferred.
 ## Retrieval
 
 The retrieval experiments compare Promptus's status-aware lexical ranker with dense and mixed
-candidate routes over the same units. These historical experiments precede the optional
-local QMD adapter; embeddings remain off by default. See [the retrieval guide](../RETRIEVAL.md)
-for the implemented route and its limits, and [release verification](../RELEASE-VERIFICATION.md)
-for the production raw-cache acceptance result. Prototype gains do not certify production speedups.
+candidate routes over the same units. Embeddings are not a shipped Promptus feature.
 
 ### Public dry run and remote opt-in
 

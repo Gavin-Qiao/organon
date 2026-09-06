@@ -1,9 +1,8 @@
-# Local retrieval: architecture and evidence
+# Retrieval architecture for the overhaul
 
 Decision: retain Promptus lexical retrieval as the default, with an optional,
-local QMD vector route for conceptual recall. The adapter is implemented; activation
-requires explicit per-project configuration and separately staged dependencies.
-No installation acquires an embedding model or vector database automatically.
+local QMD vector route for conceptual recall. The adapter is implemented and under
+evaluation in this checkout; it is not released or installed in a project.
 
 ## Why this combination
 
@@ -92,7 +91,7 @@ they remain unchanged afterward. Earlier runs hash at completion; no edits were
 made to their evaluated inputs while they ran. The failed sandbox IPC receipt is
 preserved separately. No live Psi, MoT, Probatio or Mensura store was accessed.
 
-## Implemented adapter
+## Implemented candidate
 
 `kb-semantic configure` binds separately staged QMD 2.8.3, Node >=22 and a local
 GGUF. `update` projects canonical units into `.promptus/cache/semantic`, filters

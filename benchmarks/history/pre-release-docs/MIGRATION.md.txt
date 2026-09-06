@@ -1,28 +1,8 @@
-# Upgrade and compatibility guide
+# Adopting the overhaul candidate
 
-Publication, host installation, and project adoption are three separate steps. Follow
-this guide for each project you intend to update; a release never rewrites research
-Markdown or proves that an already-running agent has loaded new instructions.
-
-## Update the host first
-
-Keep the previous plugin version and a recoverable project snapshot. Inspect the configured
-marketplace before updating: a local checkout must already contain the reviewed release;
-a Git marketplace needs a refresh. Do not rewrite installed cache files by hand.
-
-For Codex, inspect `codex plugin marketplace list`. Refresh a configured Git marketplace
-with `codex plugin marketplace upgrade organon`, then install the selected source with:
-
-```bash
-codex plugin add promptus@organon
-codex plugin add editio@organon
-```
-
-For Claude Code, refresh the Organon marketplace through its plugin manager and update
-the installed plugins there. Verify both installed manifests, not just the repository tags.
-Start a new agent task after installation; existing tasks can retain older skills and hooks.
-Then perform the per-project preview below. Keep optional raw caching off and semantics
-unconfigured unless a separate measured need justifies their resource use.
+This checkout is an unreleased candidate. These are compatibility and future rollout
+instructions, not permission to release, install, or change a live project. The current
+work has used synthetic fixtures and temporary package copies only.
 
 ## Existing projects
 
@@ -60,7 +40,7 @@ work, and a checkpoint is not an implicit archive-maintenance operation.
 
 ## Derived maintenance
 
-The update removes the shell-detecting post-command auto-index hook from both
+The candidate removes the shell-detecting post-command auto-index hook from both
 adapters. `kb-add` still appends the catalog entry and returns a target-bound next
 action. After a batch, run `kb-index` for derived refresh or `promptus-check --strict`
 for refresh plus integrity verification. Use explicit `--root` outside the project.
@@ -92,10 +72,10 @@ legacy migration and Editio gating/rendering without a sibling Promptus installa
 The checked canonical reader is bundled inside Editio; no runtime cross-plugin import
 or installed-cache discovery is needed.
 
-Isolated package checks and cross-platform repository CI do not certify desktop hook
-delivery or native QMD on every OS. Releases require the normal reviewed PR, then an
-exact merged-commit tag; installation and live-project adoption remain separate actions.
-Use [RELEASING.md](RELEASING.md) for that workflow.
+These are local Linux execution checks, not certification of desktop hook delivery
+or native QMD on every OS. Repository CI retains Windows/macOS tests. A future release
+requires the normal reviewed PR, then an exact merged-commit tag; installation requires
+its own authority. Use [RELEASING.md](RELEASING.md) for that workflow.
 
 For a separately authorized rollback, restore the prior plugin and compatible authored
 project snapshot. Omit `--semantic` to disable optional recall; its exact project-local

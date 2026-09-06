@@ -12,7 +12,7 @@ For Claude Code and Codex.
 [![Bun](https://img.shields.io/badge/runtime-bun-14151a?logo=bun&logoColor=white)](https://bun.sh)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](LICENSE)
 
-[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Upgrade guide](MIGRATION.md) · [Benchmarks](benchmarks/README.md) · [Contributing](CONTRIBUTING.md)
+[Promptus](promptus/README.md) · [Editio](editio/README.md) · [Benchmarks](benchmarks/README.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -92,22 +92,17 @@ installed and falls back to plain-language answers when Editio is absent.
 
 </details>
 
-## What changes in daily work
-
-- **Resume with evidence.** Actionable preflight diagnostics and source-backed evidence cards
-  expose recorded support, replacements, and open work without deciding scientific truth.
-- **Keep maintenance bounded.** Record a batch, then rebuild and check once. Lexical retrieval
-  stays the default; persistent raw caching is off, and local semantic recall is optional.
-- **Write from the current record.** Manuscript grounds retain canonical identity and lifecycle;
-  historical claims report rejected evidence without turning it into positive support.
-- **Adopt one project at a time.** Preview exact source, policy, and package fingerprints before
-  a derived-only refresh. Installation never implies that a running research session has updated.
-
-See the [upgrade guide](MIGRATION.md), [retrieval design](RETRIEVAL.md), and
-[implementation verification](RELEASE-VERIFICATION.md). Release badges identify published
-versions; the verification records describe their own tested scope, not live-project adoption.
-
 ## From research to paper
+
+An [end-to-end overhaul candidate](OVERHAUL.md) is ready for review: lower-friction agent instructions,
+safer recording, and measured comparisons with established local retrieval engines. This checkout
+contains candidates, not a new release or an installed search backend. The plan tracks the full
+completion boundary across Promptus and Editio.
+The candidate now shares canonical identity/lifecycle parsing across the plugins and distinguishes
+historical evidence in manuscripts. The isolated manuscript retest passes. Lexical remains the
+default; an optional local QMD candidate passes isolated SDK integration checks. Continuity,
+packaging, migration and manuscript checks are recorded in the [completion audit](OVERHAUL-VERIFICATION.md).
+See [candidate compatibility and rollback](MIGRATION.md) before any separately authorized adoption.
 
 Initialize Promptus first:
 

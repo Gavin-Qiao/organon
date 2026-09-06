@@ -14,9 +14,6 @@ Routine validated work may land directly on `main`. A release cut is the only ma
 boundary: its versioned changelog finalization and both manifest bumps must merge through a PR,
 and only the exact merged release commit may receive the release tag.
 
-Remote branch protection can also require a PR for routine changes. Follow the effective
-GitHub checks and use a PR when required; this policy is not permission to bypass protection.
-
 ## Versioning ([SemVer](https://semver.org), per plugin)
 
 - **MAJOR** — incompatible change to the store layout, the controlled vocab, or a script's CLI.
@@ -57,10 +54,9 @@ calls it out.
    release titled `P vX.Y.Z`. If the `[X.Y.Z]` section in `P/CHANGELOG.md` is missing or
    empty, it stops *before* publishing.
 
-> **Review human docs before release.** Remove stale candidate-only framing from current
-> usage guides, check examples and compatibility advice, and preserve historical experiment
-> limits. The tag-prefix-filtered badges update themselves; versions never live in README
-> prose (see `CONTRIBUTING.md`, "Docs stay truthful").
+> **READMEs need nothing at a release.** The version badges are tag-prefix filtered and
+> update themselves; versions never live in prose (see `CONTRIBUTING.md`, "Docs stay
+> truthful").
 
 ## What the release workflow guards
 

@@ -11,7 +11,7 @@ Gated Markdown for long-running agentic work, retrieved with its confidence atta
 [![Bun](https://img.shields.io/badge/runtime-bun-14151a?logo=bun&logoColor=white)](https://bun.sh)
 [![GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-0f766e)](../LICENSE)
 
-[Quick start](#quick-start) · [Operations](#runtime-resource-controls-and-project-adoption) · [Upgrade](../MIGRATION.md) · [Reference](#commands-and-skills) · [Organon](../README.md)
+[Quick start](#quick-start) · [Model](#four-stores-one-record) · [Workflows](#specialized-workflows) · [Reference](#commands-and-skills) · [Organon](../README.md)
 
 </div>
 
@@ -71,8 +71,8 @@ work → store durable results → check the batch → retrieve as needed → ch
 
 The `promptus` skill is the portable map. Claude Code exposes the same map as `/promptus:help`.
 Task-specific workflows load when needed; ordinary work does not require a thinker round,
-trajectory review, or manuscript audit. Isolated tests check these instruction paths;
-they do not establish a general improvement in long-running research behavior.
+trajectory review, or manuscript audit. These instruction changes are an unreleased candidate;
+fresh-agent behavioral improvement has not yet been measured.
 
 ## How it works
 
@@ -396,8 +396,8 @@ Inspect source bodies with `kb-get` before citing them.
 The optional cache is disposable. Update rebuilds missing, unverified or corrupted database
 generations; changed models require reconfiguration. An interrupted `operation.lock` is not removed
 automatically: confirm its process has stopped before removing that exact lock. To disable the route,
-omit `--semantic`; retiring its project-local cache requires no Markdown migration. Isolated
-adapter tests do not certify a host installation or live-project adoption.
+omit `--semantic`; retiring its project-local cache requires no Markdown migration. No current
+installed plugin or live project was changed by these candidate tests.
 
 ## Research foundations
 
