@@ -27,22 +27,22 @@ hand-written header beats a vector at this scale.
 
 ## NOW
 
-<!-- kb:now-through event-20260906T052635Z-cut-promptus-after-green-implementation-merge-and-four-project-p -->
-Implementation PR 57, including the requested human-doc sweep, merged at 82da5083a15118e9852395c362ccb37ff9702914. Main CI run 34013867237 is green on all platforms. The authorized Promptus 0.10.0 release cut is being validated on release/promptus-v0.10.0; Editio 0.8.0 follows separately. Historical source dependencies remain byte-identical in archival custody.
+<!-- kb:now-through event-20260906T053332Z-publish-and-install-promptus-then-cut-the-independent-editio-rel -->
+Promptus 0.10.0 is published from exact PR 58 merge 504ded3c98f5494519ec1e45b2a1db853cf15ab3. Release workflow 34014163330 and main CI 34014143866 passed. Codex installation succeeded; all 111 source files match and four extra generated command adapters are accounted for. The prior cache remains. Editio 0.8.0 is being cut on release/editio-v0.8.0; installed Editio remains 0.7.0 until publication.
 
 ## Open frontier
 
-Complete the Promptus release gate and PR, merge after required checks, tag the exact merged commit and watch publication. Then cut Editio from green main. Operator authorization covers release and update; no bypass of remote protections. Four project artifact preflights passed with inherited warnings, but installation and derived adoption are still pending.
+Complete the Editio release gate and PR, merge after required checks, tag the exact merged commit, watch publication and update Codex. Installed-package project previews are running for Psi, MoT and Mensura. Apply only fresh tokens with no non-derived preflight errors. Probatio retains its pinned runtime; its plugin skills update separately. Four initial artifact preflights passed with warnings, not yet adoption receipts.
 
 ## Next actions
 
-1. Complete the two release cuts through reviewed, green PRs and exact merged-commit tags.
-2. Update installed Organon plugins through supported host commands; verify package versions and bytes. Codex currently uses a local Organon marketplace checkout; Claude is absent from this shell PATH.
+1. Complete the independent Editio release cut through its green PR and exact merged-commit tag.
+2. Update Editio through the supported Codex command and verify package versions and bytes. Promptus installation is verified; Claude is absent from this shell PATH.
 3. Preview each project separately after installation. Apply only derived-state adoption where preflight permits it. Preserve Probatio's tools/promptus pin; installed skills do not replace that runtime. Preserve all research Markdown, manuscripts, custom policy and warning debt; no scientific repair or new optional backend.
 
 ## <<< RESUME HERE >>>
 
-Run read-only session-doctor and inspect git/PR state. No release tag, publication or live-project update is yet certified. Persistent raw caching remains off. New tasks must load updated skills; an installed manifest alone does not prove session adoption.
+Run read-only session-doctor and inspect git/PR state. Promptus release and installation are verified, Editio release and live-project derived adoption remain in progress. Persistent raw caching stays off. New tasks must load updated skills; an installed manifest alone does not prove session adoption.
 
 <!-- now:end -->
 
@@ -2757,5 +2757,143 @@ Implementation PR 57 merged as 82da5083a15118e9852395c362ccb37ff9702914 after al
 This release branch finalizes Promptus 0.10.0, both adapter versions, compare links and categorized user-facing notes. The removed post-command hook is called out separately; batch maintenance is an adoption requirement. The local host has only verified Codex installations (Promptus 0.9.2, Editio 0.7.0), and uses this local Organon checkout as its marketplace. No installed cache is changed by the release cut.
 
 Read-only live artifact preflights passed for Psi (6,515 live units), MoT (6,399), Probatio (6,100), and Mensura (2,411). Graph and archival evidence warnings remain. These are pre-install point-in-time checks, not rollout receipts. Probatio pins tools/promptus as its integrity runtime; preserve that pin and custom AGENTS policy. The other projects already have explicit indexing cadence, so replacing project instructions is unnecessary. No live source or derived project files have been changed.
+
+### [2026-09-06 01:33:31] RESULT/VALIDATED — Retain pre-editio-release custody for event-20260906T052635Z-retain-pre-promptus-release-custody-for-event-20260906t051919z-r
+<!-- kb:id event-20260906T053331Z-retain-pre-editio-release-custody-for-event-20260906t052635z-ret -->
+<!-- kb:artifact writer|promptus/scripts/kb-add.ts|065f6632ad459be2938deb4e295877153c84ea39f2c3a7efbebec888940b217f -->
+<!-- kb:artifact indexer|promptus/scripts/kb-index.ts|9fe560c350e204f1ad982942eb893de4228429b650ee0a9e670ef737c708e377 -->
+<!-- kb:artifact check-gate|promptus/scripts/promptus-check.ts|117bc86ecb7783071bc552e93b383ee0b813f0c7e9b5aafb38b8fb8372d31134 -->
+<!-- kb:artifact session-doctor|promptus/scripts/promptus-session-doctor.ts|76b9f9dd81cf8278a3bccd9718709f58fd0c98cc52fcf03ee2a341ec4817cdee -->
+<!-- kb:artifact artifact-verifier|promptus/scripts/lib/artifacts.ts|ce817e8ae5b08940f9201d212539e0a0536935485c19097d032355f1d3aa6e35 -->
+<!-- kb:artifact search-builder|promptus/scripts/lib/search.ts|43d9ca9e12ea6af7bb77d678740b4c4def09b89312ca91bf21e03644f5db775e -->
+<!-- kb:artifact store-hasher|promptus/scripts/lib/store-hash.ts|8695e155d68e50d9aebd19e5a95664828feadc6ab0430fc82d5772fd0a477967 -->
+<!-- kb:artifact thinker-custody|promptus/scripts/lib/thinker.ts|c12a73de06a0978fcb8af79bc298e1d61827e6b099437af8639a9a9724d21c3b -->
+<!-- kb:artifact unit-parser|promptus/scripts/lib/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact artifact-regression|promptus/scripts/test/artifacts.test.ts|c675a537f1e23c69627037004b8fa7beeca1b0f07c7a64d45486cf203f9eedaa -->
+<!-- kb:artifact index-regression|promptus/scripts/test/kb.test.ts|cdc099c657558c6e4dc69218ff9dfe3210795eecd2fffe563bc6ac40ddb416b3 -->
+<!-- kb:artifact thinker-regression|promptus/scripts/test/thinker-round.test.ts|e037aba2fc061d4a0655718972e215070a5d0f94e3ca323ada8d73ae2dcc7d0c -->
+<!-- kb:artifact maintenance-harness|benchmarks/promptus-maintenance.ts|6aeaf04473478cd5548128d94dfcd6f808159bbf282a667ea3f5cdbb123dad9c -->
+<!-- kb:artifact candidate-compiler|benchmarks/promptus-maintenance-candidate-report.ts|6330ebdbee326064d141e6b393f7cbfa9828093d7d4ddac680a27b0ad01d65aa -->
+<!-- kb:artifact sqlite-harness|benchmarks/promptus-sqlite.ts|d0288ab6ae6e7a11381067d3d6b2674966282f0d76738792859a0827be9bd9eb -->
+<!-- kb:artifact sqlite-regression|benchmarks/promptus-sqlite.test.ts|c70d9262d120e46457f9ddd5279247613f5678b1213abef613257c896bf4e64c -->
+<!-- kb:artifact benchmark-receipt|benchmarks/results/maintenance-no-sqlite-candidate-v1-2026-08-26.json|4d3966e62aa528619f621351e3b5e59f558077e9ef43821bf184fbcb001dc8ea -->
+<!-- kb:artifact release-notes|benchmarks/history/pre-promptus-release/promptus/CHANGELOG.md.txt|f651e5a9a3b281f0300f8701191aeb6a99180404f78e922f61513986bdb318bd -->
+<!-- kb:artifact claude-manifest|benchmarks/history/pre-promptus-release/promptus/.claude-plugin/plugin.json.txt|da9cd4415bd814e7c63c3a02e6a8ceba58b409f2b6156b15d41407b7880d3d33 -->
+<!-- kb:artifact codex-manifest|benchmarks/history/pre-promptus-release/promptus/.codex-plugin/plugin.json.txt|3959296e14485396c2ea34edf57e13e18fadf30ccb584901649401f5a319b5e6 -->
+<!-- kb:artifact agent-contract|AGENTS.md|60c12ced99f5c2baa37a33df952c30a1f992ed3bbd408ddd1236f8f7c0e6b59e -->
+<!-- kb:artifact command-surface|package.json|fdf0cbff5c1a9497e904d343779d48d5816f1b6daada4dedaa62c0e2171c4549 -->
+<!-- kb:artifact contributor-workflow|benchmarks/history/pre-release-docs/CONTRIBUTING.md.txt|251013350557d99c797be201b3cd6acdbd80a9402cdd31515b12662c9b459e83 -->
+<!-- kb:artifact release-workflow|benchmarks/history/pre-release-docs/RELEASING.md.txt|1c1b4caec239203324b2a4b37741779a808ede89cef83acd9f4493f8faa4a5f6 -->
+<!-- kb:artifact marketplace-readme|benchmarks/history/pre-release-docs/README.md.txt|08326c7feba553418f143f5ef8f31e188e100922a816cd92c52cf4868ce20a37 -->
+<!-- kb:artifact promptus-readme|benchmarks/history/pre-release-docs/promptus/README.md.txt|cdf33b1567405d47ddf9d5aa52348dafacd3dcf8f75775a53bf6c703b1a20536 -->
+<!-- kb:artifact editio-readme|benchmarks/history/pre-release-docs/editio/README.md.txt|bdef4882a5b7c44b57e401b4f5c4a62615bbeb28462265b8c5c2bbf9cabfa5f3 -->
+<!-- kb:artifact benchmarks-readme|benchmarks/history/pre-release-docs/benchmarks/README.md.txt|be799e3bf86ca17618833490e570cf8662a03ac3a1e841775dd4641d0e27bce0 -->
+<!-- kb:artifact claude-manifest|benchmarks/history/pre-editio-release/editio/.claude-plugin/plugin.json.txt|57d8fcb5a34d30bf20e8810f95f55d98c2ff55ee6721f1d2d5e95fe59d33a842 -->
+<!-- kb:artifact codex-manifest|benchmarks/history/pre-editio-release/editio/.codex-plugin/plugin.json.txt|c81ee40141926b66392e0bb0388c3d398232e55c2bcc070e182cc8e4c864cee0 -->
+<!-- kb:artifact release-notes|benchmarks/history/pre-editio-release/editio/CHANGELOG.md.txt|dc7b35d88c01266ceb5e2654b332d7f0efaf0a095eab32115545b5b47f10a9a9 -->
+<!-- kb:artifact neurips-profile|editio/templates/venues/neurips/venue.json|ad70ebc7f28aada1e00052be9afd3f6f099970872485c78862df270b30374e9b -->
+<!-- kb:artifact doctor|editio/scripts/editio-doctor.ts|7a8865cf29d78483de8bd46edd563d4ea8cec6b52f9847c609098dc826432e57 -->
+<!-- kb:artifact amend-writer|promptus/scripts/kb-amend.ts|6421378c9d5fc607e95380d5ba01bcaaa11a57cbedf75273049a004c4d212eaf -->
+<!-- kb:artifact writer-concurrency-tests|promptus/scripts/test/concurrency.test.ts|ab6bde044a95f641e6ac20dfdaeb1e5514163f9d6fdcf14f7363c92ba0259267 -->
+<!-- kb:artifact promptus-router|promptus/skills/promptus/SKILL.md|8645e3ea7265683e8fa009c482c54a99306ab290350db5c88cdcde8344b76b40 -->
+<!-- kb:artifact recall-instructions|promptus/skills/recall/SKILL.md|1c49101f3e9c585daafc67051c2ada314fa910297f7d7f450862d2e5ba8a3e09 -->
+<!-- kb:artifact recording-instructions|promptus/skills/research-ledger/SKILL.md|b426a26f8881bedb557d66ad2a78c27b606dd41b4ab7c9e4d5b64a7b0aa1fc3b -->
+<!-- kb:artifact checkpoint-workflow|promptus/commands/checkpoint.md|8a010b2aa088f451a2f3667d7f6f87ca3b6870354e331e80f7a70a3d51dbbafb -->
+<!-- kb:artifact project-cadence-template|promptus/templates/AGENTS.md|933a14a6d6d59b24baf6b8de4a376b0dd08abaa5741760b1c19d5670a37da22d -->
+<!-- kb:artifact editio-router|editio/skills/editio/SKILL.md|9591fdcf57dba253bcc6f09506a703e3c5bbf12e3b089968351fb70d913286e4 -->
+<!-- kb:artifact editio-workflow|editio/commands/editio.md|0f74e73df43aa0cdf93ff9e61038c2edeae6f1be2e0c372ca060bb30a08f5ac7 -->
+<!-- kb:artifact marketplace-description|.claude-plugin/marketplace.json|79e5af436e07a832ca5314a896c230f7822bf0490e84b601a1cec25803daea61 -->
+<!-- kb:artifact engine-harness|benchmarks/promptus-engines.ts|0254a4b999367a5b0850c591cddf919e40533dcb10744ee2b9d75e23d6a80097 -->
+<!-- kb:artifact engine-harness-tests|benchmarks/promptus-engines.test.ts|a69dc6af9f8662f23facebb78ed246e3ef80e04d59551dd6f2f3971534f9b23b -->
+<!-- kb:artifact qmd-worker|benchmarks/qmd-engine-worker.mjs|36fa73ee41f89168e3d2cbfde28b60ab96a0b67d4517ce3d33460fedfbd307dd -->
+<!-- kb:artifact canonical-reader|promptus/scripts/lib/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact reader-copy-tool|promptus/scripts/sync-reader.ts|d7724299bc0cef4694b3526e9e490e0bff77998ef680eea6cbc64db655fab5b7 -->
+<!-- kb:artifact plugin-validation|promptus/scripts/validate-plugin.ts|f2fa09a7d7205bf9ee8c607d6af6839b6c3d1fc3cf7db58c3f103b32acfd6d37 -->
+<!-- kb:artifact grounds-resolver|editio/scripts/grounds.ts|4cad86df2cb35d6429c0cee4d642bb50145c841b0e1788abd69e103d1e81c81e -->
+<!-- kb:artifact claim-gate|editio/scripts/editio-status.ts|a79d2a9e06e025e2bf31b5c9a66a179992ff19d0d0f61599fed65f7b1342b34c -->
+<!-- kb:artifact renderer|editio/scripts/editio-render.ts|08acef22849e4a8658f5d88b6ea6b12d71a1784ca899f1822ba5d311e5abebed -->
+<!-- kb:artifact editio-helpers|editio/scripts/lib.ts|fe51b711a727ea43365fcc93466414552ead30b0d96fbc810bfefa10afedb145 -->
+<!-- kb:artifact grounding-regressions|editio/scripts/test/grounds.test.ts|d0308b564b59eaeba07fdfcd21f4d258049d48d745af4cdb19d2794afca065e7 -->
+<!-- kb:artifact grounding-reviewer|promptus/agents/grounded-writing-reviewer.md|56be8dd84832e5bb6e31806347c68295561d59fe1e3f9ae7307d2395fd19f2b2 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/read-store.ts|39288c4c46c0e5c404de48ee459c4fef0b45d8f870e42d8606bbff59ba5d4bf0 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/frontmatter.ts|adf8491a2ae8a6296675ff54330e44eced417c86701d94876e9d49577be0e0e8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/links.ts|7f9ad94082f797f5a01ca515346b981670ab70894f5386ca276907ada9f7a2d4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/units.ts|08a2f710951f234a9eeb7f81c1046d74e9f52611e66b97559899c96faa718a4f -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/vocab.ts|79dcf2561a4516b039736120ab549a3c1a4de31451c68b1cf0679cd490efbfe5 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/relation-lifecycle.ts|edcc820848690fe6342abcf033868ef8396128369dc78e1297e0e45d9ec4a9a8 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/ids.ts|5814049645cbe5f5136174abb8c1d26b7b07bd7d1b86d1d311a37d726f1296a4 -->
+<!-- kb:artifact packaged-reader|editio/scripts/vendor/promptus/default-vocab.json|5411b359f877b38b1420c04964a98b84ea77635bb6a459b0adbdb42ba6e2d72d -->
+<!-- kb:artifact workload-runner|benchmarks/engine-workload.ts|942f0803e5b018da1fd0896e1e2b035590750a29bc2dd155ee698e57b1d972ba -->
+<!-- kb:artifact workload-adapters|benchmarks/history/pre-cross-os-ci/engine-workload-adapters.ts.txt|0469b39daab298389eceb3b130574bb497a6181742e502b6f65b97a65408727c -->
+<!-- kb:artifact workload-worker|benchmarks/engine-workload-qmd.mjs|063f794d6711772157ffaf57101bdcabfa3e1630d07e3296fd6a7bc53eff21cb -->
+<!-- kb:artifact workload-tests|benchmarks/engine-workload.test.ts|3321e5a10951eb2102f93304785322118e07702d17170cce3535784c404f3fdf -->
+<!-- kb:artifact retrieval-decision|benchmarks/history/pre-release-docs/RETRIEVAL.md.txt|0d653a838ff6f466e9ca5b5882bacd4ffdb805276afb4036b7dedbeeb4517559 -->
+<!-- kb:artifact semantic-adapter|promptus/scripts/lib/semantic.ts|35cb431e920e0e486edfe13258fb80fc42129431e7e3537997743b369e3a17ef -->
+<!-- kb:artifact semantic-worker|promptus/scripts/lib/semantic-worker.mjs|afffd3728f23c04eb5e9720f61b6381f0cd23beddaa5f5f3284aa22a23dff19f -->
+<!-- kb:artifact semantic-cli|promptus/scripts/kb-semantic.ts|338d9a9aae2fa880c85c4d542f08b4d3bca53597a120388ecbed11ee9aa77493 -->
+<!-- kb:artifact retrieval-cli|promptus/scripts/kb-find.ts|277f33e5db7f0f63f4472b942f8a046b37fa3b9888c17b73411c1529829968f8 -->
+<!-- kb:artifact semantic-contract-tests|promptus/scripts/test/semantic.test.ts|738277375d825c70b2ca19bc789d6636d7ec22b3c622ba8c95548974c69a362d -->
+<!-- kb:artifact semantic-sdk-trial|benchmarks/semantic-adapter-trial.ts|e1742d2c43c7d2cc28e2b6722308b8fcdfa804e1e6eb5a41d560d48ab54558d5 -->
+<!-- kb:artifact overhaul-plan|OVERHAUL.md|7a4277134bbddfbf1e729fd164cfb099d8b6ec68c5b4769c09bfc9b3db86c41c -->
+<!-- kb:artifact init-workflow|promptus/commands/promptus-init.md|dbf5d648f9939608f91d1f5d0706d45712985cf9b026ae720785603693f78464 -->
+<!-- kb:artifact preflight-workflow|promptus/commands/promptus-session-doctor.md|ed765d102e7d8ce426d1ef5996565dfcab525bae164d900bf2f3461a14ce730c -->
+<!-- kb:artifact preflight-skill|promptus/skills/promptus-session-doctor/SKILL.md|712738cc63a13524e39210c10f3b75714b737f21b0d606fcc9ca7a35e51fb0dc -->
+<!-- kb:artifact claude-hooks|promptus/hooks/hooks.json|3b47213ce84dc9ee724f05dadb1e3cf7858c8d6ea913a4342e26ef4c0b85382e -->
+<!-- kb:artifact codex-hooks|promptus/hooks/codex.json|f4700ad2b7ce290476633cab8feda0e2c42b50c55497195bb88709da9675524d -->
+<!-- kb:artifact package-regressions|benchmarks/history/pre-cross-os-ci/packaging.test.ts.txt|75395d6ca5e236389fbc8e7ab9ed722d7329cdfd2408acfca3a0156e685721bc -->
+<!-- kb:artifact migration-guide|benchmarks/history/pre-release-docs/MIGRATION.md.txt|4def9f33f982af3a5e7fec7815b7dc55b780b0ed5eed5d8e9b44c5784f23f0a7 -->
+<!-- kb:artifact ingest-workflow|promptus/commands/promptus-ingest.md|6157aadbf3e395bbeed0e2b574f58d8ad608a48c3ba0706cbea58ccd9a3b0d29 -->
+<!-- kb:artifact telos-workflow|promptus/skills/telos/SKILL.md|6edc6e1366a8f7360ee402774fb6f18306831b3fd197b2a22edc460de8fa676f -->
+<!-- kb:artifact latex-workflow|editio/skills/editio-latex/SKILL.md|37dfc2ba56f280c9999dc92c917d0fa8740a276ca3e2a0f6fa2ec240f5069250 -->
+<!-- kb:artifact authoring-contract|editio/skills/editio-latex/references/authoring-subset.md|09064c18abce57a943178ade6a543d865640bb5672c24f0f19c2227adfa15023 -->
+<!-- kb:artifact section-preview|editio/templates/latex/preview.tex|ffd613f21cc1832cbc74af09c2988301ecf050cd92330f8edf168676dbad3eb2 -->
+<!-- kb:artifact preview-regression|editio/scripts/test/preview.test.ts|35c6b5e958d492fe7989f0c0295c0978a26e989a354a6cced565693c0aa5101b -->
+<!-- kb:artifact batch-benchmark|benchmarks/batch-maintenance.ts|8dd83ae1a0b0097f69cab5e5f6f00698c579ffe0b814407aced54f922b1890ca -->
+<!-- kb:artifact failure-fixture|benchmarks/continuation-failure-fixture.ts|2ff3479e642ca0ff5eeeb57f232dd644ba5dfa9100b1d510f7aacd35338a6cb0 -->
+<!-- kb:artifact failure-verifier|benchmarks/continuation-failure-verify.ts|762014d04f549d455a6ac320fc1d5783f62a58005b7642ebef18f6031af9a868 -->
+<!-- kb:artifact completion-audit|OVERHAUL-VERIFICATION.md|457c6f964c1f095d19ba5be8a873b0045695d5b68d3b76f7075c1cce9f1cd102 -->
+<!-- kb:artifact hygiene-policy|.pre-commit-config.yaml|7b52896ed12b87c67f491270904b16cf013ce7aeecec38a8d1ed5090a16413f8 -->
+The operator authorized implementation of RELEASE-PLAN.md. The release integration adds optional exact-byte parse reuse, cache-free ledger slice mapping, coherent index publication fallback, evidence navigation, structured recovery advice and preview-first derived adoption. All 93 predecessor dependency records are retained, with hashes advanced only to their current source bytes. Historical stage verification is not a claim about this new implementation. RELEASE-VERIFICATION.md and the final result provide the current gate and performance limits; persistent raw caching remains off by default because production acceptance did not establish a benefit.
+Related: [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+
+
+
+## Cross-OS custody continuation
+
+Historical evidence custody retained after PR 57 exposed cross-OS fixture/tooling defects. Original dependency bytes from ae7482e are archived under benchmarks/history/pre-cross-os-ci; original measurement receipts and scope remain unchanged. Current code normalizes physical temp roots and platform separators, finalizes SQLite statements, and explicitly limits GNU-time/proc telemetry to Linux. This successor preserves prior evidence, not a claim that its historical Linux results certified other platforms.
+Related: [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]]
+
+
+
+## Release custody continuation
+
+Historical claims and every dependency are retained. Documentation or version metadata changed during the authorized release workflow; prior dependency bytes from bd16aaa are preserved under benchmarks/history/pre-release-docs. These original test and measurement receipts certify their recorded scope, not the subsequent release or installation. Current delivery state is recorded separately.
+Related: [[event-20260906T050753Z-retain-pre-ci-custody-for-event-20260905t125314z-advance-full-so]] · [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]]
+
+
+
+## Release custody continuation
+
+Historical claims and every dependency are retained. Documentation or version metadata changed during the authorized release workflow; prior dependency bytes from 82da508 are preserved under benchmarks/history/pre-promptus-release. These original test and measurement receipts certify their recorded scope, not the subsequent release or installation. Current delivery state is recorded separately.
+Related: [[event-20260906T051919Z-retain-pre-release-docs-custody-for-event-20260906t050753z-retai]] · [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[event-20260906T050753Z-retain-pre-ci-custody-for-event-20260905t125314z-advance-full-so]]
+
+
+
+## Release custody continuation
+
+Historical claims and every dependency are retained. Documentation or version metadata changed during the authorized release workflow; prior dependency bytes from 504ded3 are preserved under benchmarks/history/pre-editio-release. These original test and measurement receipts certify their recorded scope, not the subsequent release or installation. Current delivery state is recorded separately.
+Related: [[event-20260906T052635Z-retain-pre-promptus-release-custody-for-event-20260906t051919z-r]] · [[event-20260905T085515Z-advance-source-custody-for-the-publication-benchmark-documentati]] · [[finding-20260905T085059Z-the-isolated-publication-fence-preserves-visibility-but-does-not]] · [[event-20260905T125314Z-advance-full-source-custody-after-release-integration-verificati]] · [[event-20260906T050753Z-retain-pre-ci-custody-for-event-20260905t125314z-advance-full-so]] · [[event-20260906T051919Z-retain-pre-release-docs-custody-for-event-20260906t050753z-retai]]
+↳ supersedes event-20260906T052635Z-retain-pre-promptus-release-custody-for-event-20260906t051919z-r
+
+### [2026-09-06 01:33:32] DECISION/VALIDATED — Publish and install Promptus then cut the independent Editio release
+<!-- kb:id event-20260906T053332Z-publish-and-install-promptus-then-cut-the-independent-editio-rel -->
+<!-- kb:artifact release-notes|editio/CHANGELOG.md|- -->
+Promptus release PR 58 passed all checks and merged at 504ded3c98f5494519ec1e45b2a1db853cf15ab3. The exact merged commit received promptus-v0.10.0; release workflow 34014163330 passed and published https://github.com/Gavin-Qiao/organon/releases/tag/promptus-v0.10.0 at 2026-09-06T05:31:14Z. Main CI 34014143866 also passed all platforms.
+
+Codex's supported plugin add command installed Promptus 0.10.0. Both installed adapter manifests agree; all 111 source files match the reviewed package byte-for-byte. The installed tree contains only four additional generated command-adapter files under .codex-plugin/migrated-command-skills. No manual installed-cache rewrite or marketplace change occurred; the prior 0.9.2 cache remains available. Running sessions still need a fresh task to load the new skills.
+
+The independent Editio release branch now finalizes 0.8.0, both adapter manifests and comparison links. Canonical grounding, historical claim syntax and stricter evidence-gate compatibility are recorded in its changelog and human docs. No live manuscript is changed. Installed Editio remains 0.7.0 until this release PR merges and publication passes.
+
+Fresh installed-package adoption previews are running for Psi, MoT and Mensura. They use the installed root itself after its complete source equality was verified; Codex-generated adapters are included in its package-bound token. Probatio's pinned tools/promptus runtime remains untouched. The prior four-project artifact preflights were ready with inherited warnings; no live adoption result is yet certified.
 
 <!-- kb:append-point -->
