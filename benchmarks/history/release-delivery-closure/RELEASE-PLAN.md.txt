@@ -1,10 +1,10 @@
 # Organon release integration plan
 
-Status: source implementation, release publication and Codex installation are complete.
-Four-project adoption remains incomplete because live writers invalidated plans, Mensura's
-handoff became stale, and Probatio pins a reviewed runtime. See [delivery status](RELEASE-STATUS.md)
-for exact releases and per-project boundaries. [RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md)
-retains the implementation evidence; the earlier [overhaul](OVERHAUL.md) remains historical.
+Status: source implementation completed on 2026-09-05; local verification is recorded in
+[RELEASE-VERIFICATION.md](RELEASE-VERIFICATION.md) and the final ledger result. External
+release and adoption gates remain open. This is the current release frontier, extending
+the completed source-candidate scope in [OVERHAUL.md](OVERHAUL.md), not rewriting
+its historical completion evidence.
 
 ## Goal
 
@@ -18,7 +18,7 @@ All four added areas are required release work, not optional future suggestions.
 Reuse existing capabilities wherever they meet the criteria; extend them only
 where a concrete gap remains. Adding a new command for every area is not required.
 
-## Implementation decision and historical starting boundary
+## Starting boundary
 
 Implementation decision: persistent raw caching is opt-in (default allowance 0), because
 production acceptance preserved parity but showed overhead. The cache-free read path and
@@ -26,12 +26,12 @@ batch cadence remain available without an extra stored index. Optional QMD growt
 as uncapped rather than disguised as covered by the raw-cache quota; low-disk projects retain
 lexical retrieval. See RELEASE-VERIFICATION.md for exact scope and limitations.
 
-- At the start of this plan, the earlier skills, maintenance, semantic-adapter and Editio
-  grounding candidate was uncommitted and unreleased. Its recorded verification remains
-  scoped to those bytes, not the subsequent expanded implementation.
-- Parse reuse began as a benchmark-only prototype. Frozen Psi/MoT copies showed lower
-  write-to-fetch latency but no ordinary-read improvement. The later production acceptance
-  did not justify enabling persistent raw caching by default.
+- The earlier skills, maintenance, semantic-adapter and Editio grounding candidate
+  is uncommitted and unreleased. Its recorded verification remains scoped to those
+  bytes; the expanded scope below is not yet certified.
+- Parse reuse is benchmark-only. Frozen Psi/MoT copies showed lower write-to-fetch
+  latency but no ordinary-read improvement; phrase verification from cached text
+  is a proposed integration, not a demonstrated retrieval speedup.
 - Keep lexical retrieval as the default. No new backend/model comparison, mandatory
   GPU, database, embedding model, or second stored text index is in this plan.
 - Preserve previous findings, benchmark receipts and sealed thinker artifacts.
@@ -74,13 +74,12 @@ lexical retrieval. See RELEASE-VERIFICATION.md for exact scope and limitations.
 
 ## Authority and finish lines
 
-The original "Let's implement that" authorized implementation, tests and affected docs,
-not external delivery. Later operator requests authorized commit/push and then completing
-release and update, explicitly including human documentation. Those steps followed the
-repository's PR and exact-merged-tag boundaries. No authority extended to scientific
-repairs, replacing custom project policy, or casually upgrading Probatio's reviewed runtime
-overlay. Existing Markdown requires no overhaul-specific source migration; legacy layout
-migration remains a separately scoped operation.
+The operator's subsequent "Let's implement that" authorizes source implementation,
+tests and affected documentation. It does not itself authorize a commit, push,
+release, installation, live-project mutation, or broad repair. External delivery
+retains repository policy and its separate scope. No live project is inspected or
+changed by this implementation. Existing Markdown requires no overhaul-specific
+source migration; legacy layout migration remains a separately scoped operation.
 
 The source candidate is complete only when every required row has implementation,
 relevant tests and truthful documentation. Release completion additionally needs
