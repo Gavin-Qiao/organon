@@ -6,8 +6,6 @@ Releases are git tags `editio-vX.Y.Z`.
 
 ## [Unreleased]
 
-## [0.8.0] - 2026-09-06
-
 ### Added
 
 - Add explicit historical claim spans for attributed reports of rejected, superseded, or retired
@@ -350,8 +348,7 @@ Releases are git tags `editio-vX.Y.Z`.
   moved from the promptus plugin. The upstream blader/humanizer MIT notice rides along in
   `NOTICE`. promptus's `grannie` dials it softly when editio is installed.
 
-[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.8.0...HEAD
-[0.8.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.7.0...editio-v0.8.0
+[Unreleased]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.7.0...HEAD
 [0.7.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.6.0...editio-v0.7.0
 [0.6.0]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.2...editio-v0.6.0
 [0.5.2]: https://github.com/Gavin-Qiao/organon/compare/editio-v0.5.1...editio-v0.5.2

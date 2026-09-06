@@ -1,6 +1,6 @@
 {
   "name": "editio",
-  "version": "0.8.0",
+  "version": "0.7.0",
   "description": "Evidence-grounded academic writing: structured Markdown drafting, claim and number gates, draft/publish/blind renders, figures, workspace diagnostics, and venue profiles. Includes the humanizer style toolkit. Uses a Promptus evidence store.",
   "author": {
     "name": "Mohan Qiao",
